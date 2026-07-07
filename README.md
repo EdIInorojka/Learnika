@@ -2,7 +2,7 @@
 
  
 
-[PROJECT_NAME] is an educational platform that helps children learn independently through diagnostics, personalized learning tracks, step-by-step homework support, optional voice input and measurable progress.
+Learnika is an educational platform that helps children learn independently through diagnostics, personalized learning tracks, step-by-step homework support, optional voice input and measurable progress.
 
  
 

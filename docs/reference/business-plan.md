@@ -6,11 +6,11 @@
 
  
 
-[PROJECT_NAME] is a B2C and B2B educational platform for children ages 3-18, parents, teachers, mentors and schools. It begins with mathematics for grades 7-9 in Russia and expands only after educational effectiveness, retention and unit economics are demonstrated.
+Learnika is a B2C and B2B educational platform for children ages 3-18, parents, teachers, mentors and schools. It begins with mathematics for grades 7-9 in Russia and expands only after educational effectiveness, retention and unit economics are demonstrated.
 
  
 
-The first product addresses four recurring needs:
+The first product addresses five recurring needs:
 
  
 

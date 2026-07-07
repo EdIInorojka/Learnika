@@ -110,6 +110,26 @@ This folder is the source of truth for product, architecture, curriculum, AI, vo
 
 - `runbooks/release-checklist.md`
 
+## Wave 0 gate artifacts
+
+These files document the approved Wave 0 gate only. They do not start Wave 1.
+
+- `wave-0/repository-audit.md`
+- `wave-0/prototype-plan.md`
+- `wave-0/context-map-and-dependencies.md`
+- `wave-0/data-auth-privacy-inventory.md`
+- `wave-0/provider-policy.md`
+- `wave-0/math-curriculum-safety.md`
+- `wave-0/homework-voice-contract-plan.md`
+- `wave-0/analytics-metrics-plan.md`
+- `wave-0/qa-evaluation-gate.md`
+- `wave-0/delivery-expectations.md`
+- `wave-0/ownership-matrix.md`
+- `wave-0/backlog-waves-1-3.md`
+- `wave-0/open-decisions-and-evidence.md`
+- `wave-0/gate-checklist.md`
+- `wave-0/subagent-review.md`
+
  
 
 ## Codex wave prompts

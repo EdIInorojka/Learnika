@@ -10,7 +10,7 @@ Make personalized learning support accessible to every child while preserving in
 
 ## Long-term vision
 
-[PROJECT_NAME] accompanies a learner from age 3 to 18 through age-appropriate products on a shared platform. It understands curriculum, selected textbooks, school pace, knowledge gaps, solution behavior and goals.
+Learnika accompanies a learner from age 3 to 18 through age-appropriate products on a shared platform. It understands curriculum, selected textbooks, school pace, knowledge gaps, solution behavior and goals.
 
  
 

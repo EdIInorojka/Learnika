@@ -284,9 +284,9 @@ Workflow root and state.
 
  
 
-### Asset
+### HomeworkAsset
 
-Original or sanitized file with storage and retention metadata.
+Workflow reference to an original or sanitized file with storage and retention metadata.
 
  
 
