@@ -20,6 +20,11 @@ export default [
     files: ["**/*.{js,mjs,cjs,ts,tsx}"],
     languageOptions: {
       ecmaVersion: "latest",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        setTimeout: "readonly",
+      },
       sourceType: "module",
     },
     rules: {

@@ -140,18 +140,21 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 1 provides the monorepo tooling baseline only. It does not start
-application services, Docker, WSL, databases, storage, queues or app shells.
+Wave 1 Slice 2 provides the monorepo tooling baseline and local infrastructure
+only. It does not start application services or app shells.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
 ```powershell
 corepack.cmd enable
 pnpm.cmd install
+Copy-Item .env.example .env
+pnpm.cmd run infra:up
+pnpm.cmd run infra:validate
 pnpm.cmd run validate
 ```
 
-Available Slice 1 root scripts:
+Available Slice 1 and Slice 2 root scripts:
 
 ```powershell
 pnpm.cmd run format
@@ -160,9 +163,30 @@ pnpm.cmd run lint
 pnpm.cmd run typecheck
 pnpm.cmd run test
 pnpm.cmd run validate
+pnpm.cmd run infra:config
+pnpm.cmd run infra:up
+pnpm.cmd run infra:ps
+pnpm.cmd run infra:logs
+pnpm.cmd run infra:down
+pnpm.cmd run infra:validate
 ```
 
+To delete local infrastructure containers and named volumes, use the explicit
+confirmation flag:
+
+```powershell
+pnpm.cmd run infra:clean -- --yes
+```
+
+Local services bind to `127.0.0.1`:
+
+- PostgreSQL: `5432`
+- Redis: `6379`
+- MinIO API: `9000`
+- MinIO console: `9001`
+
 A fresh clone must install reproducibly with Node.js 24.x and pnpm 11.7.0.
+Local credentials in `.env.example` are placeholders for development only.
 
  
 

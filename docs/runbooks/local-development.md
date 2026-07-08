@@ -2,7 +2,7 @@
 
  
 
-This is the target runbook. Wave 1 must update commands to match the actual repository.
+This runbook is updated one Wave 1 slice at a time. Slice 2 covers local infrastructure only; application shells, migrations, provider mocks and product flows are still deferred.
 
  
 
@@ -14,7 +14,7 @@ This is the target runbook. Wave 1 must update commands to match the actual repo
 
 - pnpm via Corepack;
 
-- Python 3.12+;
+- Python 3.12+; required when the Python service shell is created in a later slice;
 
 - Docker and Docker Compose;
 
@@ -26,109 +26,48 @@ This is the target runbook. Wave 1 must update commands to match the actual repo
 
 ## First setup
 
-```bash
-
+```powershell
 git clone <repository-url>
-
 cd <repository>
-
-cp .env.example .env
-
-corepack enable
-
-pnpm install
-
-pnpm bootstrap
-
+corepack.cmd enable
+pnpm.cmd install
+Copy-Item .env.example .env
+pnpm.cmd run infra:up
+pnpm.cmd run infra:validate
 ```
 
- 
-
-`pnpm bootstrap` should:
-
- 
-
-- start local PostgreSQL, Redis and object storage;
-
-- create development buckets;
-
-- apply migrations;
-
-- seed safe curriculum and demo data;
-
-- install Python dependencies;
-
-- verify FFmpeg or media-worker container;
-
-- configure deterministic OCR, Speech-to-Text and LLM mocks;
-
-- verify services.
+`pnpm.cmd run bootstrap` is currently an alias for `pnpm.cmd run infra:validate`. It starts and validates PostgreSQL, Redis and MinIO only.
 
  
 
 ## Start
 
-```bash
-
-pnpm dev
-
+```powershell
+pnpm.cmd run infra:up
 ```
 
- 
+Expected Slice 2 local services:
 
-Expected local services:
-
- 
-
-- web application;
-
-- core API;
-
-- background worker;
-
-- math-AI service;
-
-- PostgreSQL;
-
-- Redis;
-
-- S3-compatible local storage;
-
-- optional telemetry viewer.
+- PostgreSQL on `127.0.0.1:5432`;
+- Redis on `127.0.0.1:6379`;
+- MinIO API on `127.0.0.1:9000`;
+- MinIO console on `127.0.0.1:9001`.
 
  
 
 ## Checks
 
-```bash
-
-pnpm format:check
-
-pnpm lint
-
-pnpm typecheck
-
-pnpm test
-
-pnpm test:integration
-
-pnpm test:e2e
-
-pnpm contracts:check
-
-pnpm migrations:check
-
-pnpm ai:eval
-
-pnpm voice:eval
-
-pnpm retention:check
-
+```powershell
+pnpm.cmd run format:check
+pnpm.cmd run lint
+pnpm.cmd run typecheck
+pnpm.cmd run validate
+pnpm.cmd run infra:config
+pnpm.cmd run infra:check:env
+pnpm.cmd run infra:validate
 ```
 
- 
-
-The exact commands must be real and kept current.
+Later slices will add real app, integration, E2E, contract, migration, AI, voice and retention checks when those surfaces exist.
 
  
 
@@ -170,17 +109,15 @@ Use generated synthetic accounts. Never commit real contacts or child data.
 
 ## Database reset
 
-```bash
+Database migrations and seeds are not implemented in Slice 2.
 
-pnpm db:reset
+To remove local infrastructure containers and named volumes:
 
-pnpm db:seed
-
+```powershell
+pnpm.cmd run infra:clean -- --yes
 ```
 
- 
-
-The command must clearly warn before deleting data.
+`infra:clean` refuses to run without `--yes` because it deletes local Docker volumes.
 
  
 
