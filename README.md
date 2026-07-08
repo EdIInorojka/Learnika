@@ -140,10 +140,10 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 3 provides the monorepo tooling baseline, local infrastructure and
-minimal app/service shells. Product flows, authentication, database schema,
-migrations, homework, voice, billing, mobile and school features are still
-deferred.
+Wave 1 Slice 4 provides the monorepo tooling baseline, local infrastructure,
+minimal app/service shells and Prisma database foundation. Product flows,
+authentication endpoints, onboarding, homework, voice, billing, mobile and
+school features are still deferred.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
@@ -153,6 +153,8 @@ pnpm.cmd install
 Copy-Item .env.example .env
 pnpm.cmd run infra:up
 pnpm.cmd run infra:validate
+pnpm.cmd run db:migrate:deploy
+pnpm.cmd run db:validate
 pnpm.cmd run validate
 ```
 
@@ -189,6 +191,12 @@ pnpm.cmd run dev:api
 pnpm.cmd run dev:math-ai
 pnpm.cmd run build:web
 pnpm.cmd run build:api
+pnpm.cmd run db:generate
+pnpm.cmd run db:validate
+pnpm.cmd run db:migrate:dev -- --name <migration_name>
+pnpm.cmd run db:migrate:deploy
+pnpm.cmd run db:reset -- --yes
+pnpm.cmd run db:studio
 ```
 
 To delete local infrastructure containers and named volumes, use the explicit
@@ -213,6 +221,7 @@ Shell services bind to `127.0.0.1`:
 
 A fresh clone must install reproducibly with Node.js 24.x and pnpm 11.7.0.
 Local credentials in `.env.example` are placeholders for development only.
+`DATABASE_URL` points Prisma to the local PostgreSQL container.
 
  
 

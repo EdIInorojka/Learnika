@@ -2,7 +2,7 @@
 
  
 
-This runbook is updated one Wave 1 slice at a time. Slice 3 covers minimal app and service shells only; migrations, provider mocks and product flows are still deferred.
+This runbook is updated one Wave 1 slice at a time. Slice 4 covers the Prisma database foundation only; provider mocks and product flows are still deferred.
 
  
 
@@ -34,6 +34,8 @@ pnpm.cmd install
 Copy-Item .env.example .env
 pnpm.cmd run infra:up
 pnpm.cmd run infra:validate
+pnpm.cmd run db:migrate:deploy
+pnpm.cmd run db:validate
 Set-Location services\math-ai
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
@@ -83,9 +85,12 @@ pnpm.cmd run infra:check:env
 pnpm.cmd run infra:validate
 pnpm.cmd run build:web
 pnpm.cmd run build:api
+pnpm.cmd run db:generate
+pnpm.cmd run db:validate
+pnpm.cmd run db:migrate:deploy
 ```
 
-Later slices will add real integration, E2E, contract, migration, AI, voice and retention checks when those surfaces exist.
+Later slices will add real integration, E2E, contract, AI, voice and retention checks when those surfaces exist.
 
  
 
@@ -125,9 +130,43 @@ Use generated synthetic accounts. Never commit real contacts or child data.
 
  
 
-## Database reset
+## Database
 
-Database migrations and seeds are not implemented in Slice 3.
+Slice 4 adds Prisma schema and migrations for the local PostgreSQL database foundation. The schema currently covers only account, family tenant, child profile, consent, textbook-selection metadata and audit-log foundation.
+
+Create a new development migration after changing `apps/api/prisma/schema.prisma`:
+
+```powershell
+pnpm.cmd run db:migrate:dev -- --name <migration_name>
+```
+
+Apply committed migrations to the local database:
+
+```powershell
+pnpm.cmd run db:migrate:deploy
+```
+
+Validate the schema and Slice 4 tenant guard checks:
+
+```powershell
+pnpm.cmd run db:validate
+```
+
+Open Prisma Studio locally:
+
+```powershell
+pnpm.cmd run db:studio
+```
+
+Reset and recreate the local PostgreSQL schema from migrations:
+
+```powershell
+pnpm.cmd run db:reset -- --yes
+```
+
+`db:reset` refuses to run without `--yes` and only targets the documented local `learnika_local` database. Slice 4 does not add a seed script.
+
+## Infrastructure reset
 
 To remove local infrastructure containers and named volumes:
 

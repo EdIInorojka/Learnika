@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  PARENT
+  CHILD
+  MENTOR
+  TEACHER
+  ADMIN
+}
+
+enum FamilyMemberRole {
+  OWNER
+  CAREGIVER
+  CHILD
+  MENTOR
+}
+
+enum ConsentSubjectType {
+  FAMILY
+  CHILD
+}
+
+enum AuditActorType {
+  USER
+  SYSTEM
+}
+
+enum AuditOutcome {
+  SUCCESS
+  DENIED
+  ERROR
+}
+
+model User {
+  id                    String          @id @default(uuid()) @db.Uuid
+  accountRole           UserRole
+  email                 String?         @unique @db.VarChar(320)
+  locale                String          @default("ru") @db.VarChar(16)
+  disabledAt            DateTime?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  auditLogs             AuditLog[]      @relation("AuditActor")
+  childProfile          ChildProfile?
+  consentRecordsGranted ConsentRecord[] @relation("ConsentGrantedBy")
+  familyMemberships     FamilyMember[]
+}
+
+model Family {
+  id                 String              @id @default(uuid()) @db.Uuid
+  displayName        String?             @db.VarChar(120)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  auditLogs          AuditLog[]
+  childProfiles      ChildProfile[]
+  consentRecords     ConsentRecord[]
+  members            FamilyMember[]
+  textbookSelections TextbookSelection[]
+}
+
+model FamilyMember {
+  id        String           @id @default(uuid()) @db.Uuid
+  familyId  String           @db.Uuid
+  userId    String           @db.Uuid
+  role      FamilyMemberRole
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  family    Family           @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([familyId, userId])
+  @@index([familyId, role])
+  @@index([userId])
+}
+
+model ChildProfile {
+  id                 String              @id @default(uuid()) @db.Uuid
+  familyId           String              @db.Uuid
+  userId             String?             @unique @db.Uuid
+  nickname           String?             @db.VarChar(120)
+  gradeLevel         Int?
+  locale             String              @default("ru") @db.VarChar(16)
+  archivedAt         DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  consentRecords     ConsentRecord[]
+  family             Family              @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  user               User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  textbookSelections TextbookSelection[]
+
+  @@index([familyId])
+  @@index([familyId, gradeLevel])
+}
+
+model ConsentRecord {
+  id              String             @id @default(uuid()) @db.Uuid
+  familyId        String             @db.Uuid
+  childProfileId  String?            @db.Uuid
+  subjectType     ConsentSubjectType
+  purpose         String             @db.VarChar(80)
+  documentVersion String             @db.VarChar(80)
+  policyVersion   String             @db.VarChar(80)
+  grantedByUserId String             @db.Uuid
+  grantedAt       DateTime           @default(now())
+  revokedAt       DateTime?
+  createdAt       DateTime           @default(now())
+  childProfile    ChildProfile?      @relation(fields: [childProfileId], references: [id], onDelete: SetNull)
+  family          Family             @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  grantedBy       User               @relation("ConsentGrantedBy", fields: [grantedByUserId], references: [id], onDelete: Restrict)
+
+  @@index([familyId, childProfileId])
+  @@index([familyId, purpose, documentVersion])
+  @@index([grantedByUserId])
+}
+
+model TextbookSelection {
+  id             String       @id @default(uuid()) @db.Uuid
+  familyId       String       @db.Uuid
+  childProfileId String       @db.Uuid
+  subject        String       @default("math") @db.VarChar(40)
+  gradeLevel     Int?
+  textbookCode   String       @db.VarChar(120)
+  selectedAt     DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+  childProfile   ChildProfile @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  family         Family       @relation(fields: [familyId], references: [id], onDelete: Cascade)
+
+  @@index([familyId, childProfileId])
+  @@index([familyId, subject, gradeLevel])
+}
+
+model AuditLog {
+  id            String         @id @default(uuid()) @db.Uuid
+  familyId      String?        @db.Uuid
+  actorUserId   String?        @db.Uuid
+  actorType     AuditActorType
+  action        String         @db.VarChar(120)
+  targetType    String?        @db.VarChar(120)
+  targetId      String?        @db.VarChar(120)
+  outcome       AuditOutcome
+  policyVersion String?        @db.VarChar(80)
+  createdAt     DateTime       @default(now())
+  actor         User?          @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  family        Family?        @relation(fields: [familyId], references: [id], onDelete: SetNull)
+
+  @@index([action, createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([familyId, createdAt])
+}
