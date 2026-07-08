@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Package-manager and build caches
+.turbo/
+.pnpm-store/
+
+# Build and test output
+coverage/
+dist/
+build/
+out/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+

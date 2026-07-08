@@ -1,0 +1,28 @@
+{
+  "name": "learnika",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=24.0.0 <25.0.0",
+    "pnpm": "11.7.0"
+  },
+  "scripts": {
+    "preinstall": "node -e \"const major = process.versions.node.split('.')[0]; if (major !== '24') { console.error('Learnika requires Node.js 24.x. Current: ' + process.version); process.exit(1); }\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --build --pretty false",
+    "test": "node -e \"console.log('No tests configured for Slice 1 monorepo baseline.')\"",
+    "validate": "pnpm.cmd run format:check && pnpm.cmd run lint && pnpm.cmd run typecheck && pnpm.cmd run test",
+    "validation": "pnpm.cmd run validate"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.6.0",
+    "prettier": "3.9.4",
+    "turbo": "2.10.4",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.63.0"
+  }
+}

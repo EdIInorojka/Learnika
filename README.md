@@ -140,27 +140,29 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-The final commands are established in Wave 1. The target experience is:
+Wave 1 Slice 1 provides the monorepo tooling baseline only. It does not start
+application services, Docker, WSL, databases, storage, queues or app shells.
 
- 
+On Windows PowerShell, use `.cmd` package-tool shims:
 
-```bash
-
-cp .env.example .env
-
-corepack enable
-
-pnpm install
-
-pnpm bootstrap
-
-pnpm dev
-
+```powershell
+corepack.cmd enable
+pnpm.cmd install
+pnpm.cmd run validate
 ```
 
- 
+Available Slice 1 root scripts:
 
-A fresh clone must start with one documented command sequence and must not require production secrets.
+```powershell
+pnpm.cmd run format
+pnpm.cmd run format:check
+pnpm.cmd run lint
+pnpm.cmd run typecheck
+pnpm.cmd run test
+pnpm.cmd run validate
+```
+
+A fresh clone must install reproducibly with Node.js 24.x and pnpm 11.7.0.
 
  
 
