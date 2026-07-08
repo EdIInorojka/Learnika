@@ -1,0 +1,12 @@
+{
+  "name": "@learnika/math-ai",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/python.mjs -m uvicorn learnika_math_ai.main:app --app-dir src --reload --host 127.0.0.1 --port 8000",
+    "start": "node scripts/python.mjs -m uvicorn learnika_math_ai.main:app --app-dir src --host 127.0.0.1 --port 8000",
+    "lint": "node scripts/check-python.mjs",
+    "typecheck": "node scripts/check-python.mjs",
+    "test": "node scripts/check-python.mjs"
+  }
+}

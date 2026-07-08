@@ -1,5 +1,7 @@
 node_modules/
 .turbo/
+**/.venv/
+**/__pycache__/
 coverage/
 dist/
 build/

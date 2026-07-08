@@ -6,8 +6,12 @@ export default [
     ignores: [
       "node_modules/**",
       ".turbo/**",
+      "**/.next/**",
+      "**/.venv/**",
+      "**/__pycache__/**",
       "coverage/**",
       "dist/**",
+      "apps/**/dist/**",
       "build/**",
       "out/**",
       "docs/**",
@@ -22,7 +26,9 @@ export default [
       ecmaVersion: "latest",
       globals: {
         console: "readonly",
+        fetch: "readonly",
         process: "readonly",
+        Response: "readonly",
         setTimeout: "readonly",
       },
       sourceType: "module",

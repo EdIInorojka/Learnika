@@ -140,8 +140,10 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 2 provides the monorepo tooling baseline and local infrastructure
-only. It does not start application services or app shells.
+Wave 1 Slice 3 provides the monorepo tooling baseline, local infrastructure and
+minimal app/service shells. Product flows, authentication, database schema,
+migrations, homework, voice, billing, mobile and school features are still
+deferred.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
@@ -154,7 +156,20 @@ pnpm.cmd run infra:validate
 pnpm.cmd run validate
 ```
 
-Available Slice 1 and Slice 2 root scripts:
+For the Python service shell, create a local virtual environment:
+
+```powershell
+Set-Location services\math-ai
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Set-Location ..\..
+```
+
+If `python` is not on PATH, set `LEARNIKA_PYTHON` to a Python 3.12 executable
+for the current shell before running math-ai scripts. Do not commit
+machine-specific Python paths.
+
+Available root scripts:
 
 ```powershell
 pnpm.cmd run format
@@ -169,6 +184,11 @@ pnpm.cmd run infra:ps
 pnpm.cmd run infra:logs
 pnpm.cmd run infra:down
 pnpm.cmd run infra:validate
+pnpm.cmd run dev:web
+pnpm.cmd run dev:api
+pnpm.cmd run dev:math-ai
+pnpm.cmd run build:web
+pnpm.cmd run build:api
 ```
 
 To delete local infrastructure containers and named volumes, use the explicit
@@ -184,6 +204,12 @@ Local services bind to `127.0.0.1`:
 - Redis: `6379`
 - MinIO API: `9000`
 - MinIO console: `9001`
+
+Shell services bind to `127.0.0.1`:
+
+- Web: `3000`, health route `/health`
+- API: `3001`, health routes `/health/live` and `/health/ready`
+- Math AI: `8000`, health routes `/health/live` and `/health/ready`
 
 A fresh clone must install reproducibly with Node.js 24.x and pnpm 11.7.0.
 Local credentials in `.env.example` are placeholders for development only.

@@ -2,7 +2,7 @@
 
  
 
-This runbook is updated one Wave 1 slice at a time. Slice 2 covers local infrastructure only; application shells, migrations, provider mocks and product flows are still deferred.
+This runbook is updated one Wave 1 slice at a time. Slice 3 covers minimal app and service shells only; migrations, provider mocks and product flows are still deferred.
 
  
 
@@ -14,7 +14,7 @@ This runbook is updated one Wave 1 slice at a time. Slice 2 covers local infrast
 
 - pnpm via Corepack;
 
-- Python 3.12+; required when the Python service shell is created in a later slice;
+- Python 3.12+;
 
 - Docker and Docker Compose;
 
@@ -34,7 +34,14 @@ pnpm.cmd install
 Copy-Item .env.example .env
 pnpm.cmd run infra:up
 pnpm.cmd run infra:validate
+Set-Location services\math-ai
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Set-Location ..\..
+pnpm.cmd run validate
 ```
+
+If `python` is not on PATH, set `LEARNIKA_PYTHON` to a Python 3.12 executable for the current shell before running math-ai scripts. Do not commit machine-specific Python paths.
 
 `pnpm.cmd run bootstrap` is currently an alias for `pnpm.cmd run infra:validate`. It starts and validates PostgreSQL, Redis and MinIO only.
 
@@ -44,14 +51,23 @@ pnpm.cmd run infra:validate
 
 ```powershell
 pnpm.cmd run infra:up
+pnpm.cmd run dev:web
+pnpm.cmd run dev:api
+pnpm.cmd run dev:math-ai
 ```
 
-Expected Slice 2 local services:
+Expected local infrastructure:
 
 - PostgreSQL on `127.0.0.1:5432`;
 - Redis on `127.0.0.1:6379`;
 - MinIO API on `127.0.0.1:9000`;
 - MinIO console on `127.0.0.1:9001`.
+
+Expected Slice 3 shells:
+
+- Web on `127.0.0.1:3000`, health route `/health`;
+- API on `127.0.0.1:3001`, health routes `/health/live` and `/health/ready`;
+- Math AI on `127.0.0.1:8000`, health routes `/health/live` and `/health/ready`.
 
  
 
@@ -65,9 +81,11 @@ pnpm.cmd run validate
 pnpm.cmd run infra:config
 pnpm.cmd run infra:check:env
 pnpm.cmd run infra:validate
+pnpm.cmd run build:web
+pnpm.cmd run build:api
 ```
 
-Later slices will add real app, integration, E2E, contract, migration, AI, voice and retention checks when those surfaces exist.
+Later slices will add real integration, E2E, contract, migration, AI, voice and retention checks when those surfaces exist.
 
  
 
@@ -109,7 +127,7 @@ Use generated synthetic accounts. Never commit real contacts or child data.
 
 ## Database reset
 
-Database migrations and seeds are not implemented in Slice 2.
+Database migrations and seeds are not implemented in Slice 3.
 
 To remove local infrastructure containers and named volumes:
 

@@ -1,0 +1,23 @@
+{
+  "name": "@learnika/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm.cmd run build && node --watch dist/main.js",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "lint": "eslint src --max-warnings=0",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node -e \"console.log('No tests configured for @learnika/api shell yet.')\""
+  },
+  "dependencies": {
+    "@nestjs/common": "11.1.27",
+    "@nestjs/core": "11.1.27",
+    "@nestjs/platform-fastify": "11.1.27",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "26.1.0"
+  }
+}

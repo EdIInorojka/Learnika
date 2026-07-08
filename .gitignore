@@ -10,6 +10,7 @@ coverage/
 dist/
 build/
 out/
+*.tsbuildinfo
 
 # Local environment files
 .env
@@ -26,4 +27,3 @@ pnpm-debug.log*
 Thumbs.db
 .idea/
 .vscode/
-
