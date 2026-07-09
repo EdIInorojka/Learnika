@@ -9,6 +9,13 @@ const levelRank: Record<LogLevel, number> = {
   debug: 3,
   verbose: 4,
 };
+const sensitiveLogPattern =
+  /authorization|cookie|password|refresh.?token|access.?token|secret|set-cookie/i;
+
+function sanitizeLogValue(value: unknown): string {
+  const message = value instanceof Error ? value.message : String(value);
+  return sensitiveLogPattern.test(message) ? "[redacted-sensitive-log-message]" : message;
+}
 
 export class SafeLogger implements LoggerService {
   constructor(private readonly level: LogLevel = "log") {}
@@ -41,10 +48,10 @@ export class SafeLogger implements LoggerService {
     const event = {
       context,
       level,
-      message: String(message),
+      message: sanitizeLogValue(message),
       service: "api",
       timestamp: new Date().toISOString(),
-      trace,
+      trace: trace && sensitiveLogPattern.test(trace) ? "[redacted-sensitive-trace]" : trace,
     };
 
     const line = JSON.stringify(event);

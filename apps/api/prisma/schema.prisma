@@ -41,14 +41,34 @@ model User {
   id                    String          @id @default(uuid()) @db.Uuid
   accountRole           UserRole
   email                 String?         @unique @db.VarChar(320)
+  passwordHash          String?         @db.VarChar(255)
   locale                String          @default("ru") @db.VarChar(16)
   disabledAt            DateTime?
   createdAt             DateTime        @default(now())
   updatedAt             DateTime        @updatedAt
   auditLogs             AuditLog[]      @relation("AuditActor")
+  authSessions          AuthSession[]
   childProfile          ChildProfile?
   consentRecordsGranted ConsentRecord[] @relation("ConsentGrantedBy")
   familyMemberships     FamilyMember[]
+}
+
+model AuthSession {
+  id                    String    @id @default(uuid()) @db.Uuid
+  userId                String    @db.Uuid
+  accessTokenHash       String    @unique @db.VarChar(128)
+  refreshTokenHash      String    @unique @db.VarChar(128)
+  accessTokenExpiresAt  DateTime
+  refreshTokenExpiresAt DateTime
+  revokedAt             DateTime?
+  createdAt             DateTime  @default(now())
+  lastUsedAt            DateTime?
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([accessTokenHash])
+  @@index([refreshTokenHash])
+  @@index([revokedAt, refreshTokenExpiresAt])
+  @@index([userId])
 }
 
 model Family {

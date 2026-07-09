@@ -7,6 +7,7 @@ const schema = fs.readFileSync(path.join(prismaDir, "schema.prisma"), "utf8");
 
 const requiredModels = [
   "User",
+  "AuthSession",
   "Family",
   "FamilyMember",
   "ChildProfile",
@@ -34,6 +35,10 @@ const forbiddenModels = [
 ];
 const requiredSnippets = [
   "model FamilyMember",
+  "model AuthSession",
+  "passwordHash          String?",
+  "accessTokenHash       String",
+  "refreshTokenHash      String",
   "@@unique([familyId, userId])",
   "model ChildProfile",
   "familyId           String",
@@ -72,6 +77,4 @@ assert(
   "Seed script exists; Slice 4 uses no seed data.",
 );
 
-console.log(
-  "[db] Prisma schema includes family tenant constraints and no forbidden Slice 4 models.",
-);
+console.log("[db] Prisma schema includes family tenant and auth-session constraints.");

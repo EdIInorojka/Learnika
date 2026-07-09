@@ -14,13 +14,15 @@
     "db:validate": "node prisma/run-prisma.mjs validate && node prisma/validate-data-foundation.mjs",
     "lint": "eslint src --max-warnings=0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node -e \"console.log('No tests configured for @learnika/api shell yet.')\""
+    "test": "pnpm.cmd run db:generate && pnpm.cmd run build && node test/auth.e2e.mjs"
   },
   "dependencies": {
     "@nestjs/common": "11.1.27",
     "@nestjs/core": "11.1.27",
     "@nestjs/platform-fastify": "11.1.27",
+    "@prisma/adapter-pg": "7.8.0",
     "@prisma/client": "7.8.0",
+    "argon2": "0.44.0",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2"
   },

@@ -2,7 +2,7 @@
 
  
 
-This runbook is updated one Wave 1 slice at a time. Slice 4 covers the Prisma database foundation only; provider mocks and product flows are still deferred.
+This runbook is updated one Wave 1 slice at a time. Slice 5 covers parent-only auth foundation; onboarding, provider mocks and product flows are still deferred.
 
  
 
@@ -124,6 +124,8 @@ Use generated synthetic accounts. Never commit real contacts or child data.
 
 - no production key is required for basic development;
 
+- auth token secrets in `.env.example` are local-only placeholders;
+
 - AI, OCR and Speech-to-Text use deterministic mocks unless explicitly enabled;
 
 - secrets are never pasted into Codex prompts or issue text.
@@ -133,6 +135,7 @@ Use generated synthetic accounts. Never commit real contacts or child data.
 ## Database
 
 Slice 4 adds Prisma schema and migrations for the local PostgreSQL database foundation. The schema currently covers only account, family tenant, child profile, consent, textbook-selection metadata and audit-log foundation.
+Slice 5 adds parent password hashes and revocable auth sessions. It does not grant access to family, child, consent, homework, voice, billing or school resources.
 
 Create a new development migration after changing `apps/api/prisma/schema.prisma`:
 
@@ -164,7 +167,27 @@ Reset and recreate the local PostgreSQL schema from migrations:
 pnpm.cmd run db:reset -- --yes
 ```
 
-`db:reset` refuses to run without `--yes` and only targets the documented local `learnika_local` database. Slice 4 does not add a seed script.
+`db:reset` refuses to run without `--yes` and only targets the documented local `learnika_local` database. Slices 4 and 5 do not add a seed script.
+
+## Parent auth API
+
+Slice 5 exposes parent-only auth foundation routes on the API service:
+
+```text
+POST /auth/register-parent
+POST /auth/login
+POST /auth/refresh
+POST /auth/logout
+GET /auth/me
+```
+
+Run the auth test against local PostgreSQL:
+
+```powershell
+pnpm.cmd --filter @learnika/api test
+```
+
+Passwords are hashed with Argon2id. Access and refresh tokens are opaque bearer tokens and are stored only as hashes. Do not paste real passwords, tokens, cookies or auth headers into logs, prompts or issue text.
 
 ## Infrastructure reset
 

@@ -1,3 +1,5 @@
+import { loadLocalEnvironment } from "./local-env";
+
 export type LogLevel = "debug" | "error" | "log" | "verbose" | "warn";
 
 export interface AppConfig {
@@ -23,6 +25,8 @@ function parseLogLevel(value: string | undefined): LogLevel {
 }
 
 export function getAppConfig(): AppConfig {
+  loadLocalEnvironment();
+
   return {
     environment: process.env.NODE_ENV ?? "development",
     host: process.env.API_HOST ?? "127.0.0.1",

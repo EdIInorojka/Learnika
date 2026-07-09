@@ -140,10 +140,10 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 4 provides the monorepo tooling baseline, local infrastructure,
-minimal app/service shells and Prisma database foundation. Product flows,
-authentication endpoints, onboarding, homework, voice, billing, mobile and
-school features are still deferred.
+Wave 1 Slice 5 provides the monorepo tooling baseline, local infrastructure,
+minimal app/service shells, Prisma database foundation and parent-only auth
+foundation. Onboarding, child profile flows, family setup, consent screens,
+homework, voice, billing, mobile and school features are still deferred.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
@@ -199,6 +199,21 @@ pnpm.cmd run db:reset -- --yes
 pnpm.cmd run db:studio
 ```
 
+Parent auth API foundation routes:
+
+```text
+POST /auth/register-parent
+POST /auth/login
+POST /auth/refresh
+POST /auth/logout
+GET /auth/me
+```
+
+These routes use synthetic/local data during development, Argon2id password
+hashing and opaque bearer tokens stored only as hashes. Parent auth does not
+grant access to family, child, consent, homework or learning resources in Slice
+5.
+
 To delete local infrastructure containers and named volumes, use the explicit
 confirmation flag:
 
@@ -221,7 +236,9 @@ Shell services bind to `127.0.0.1`:
 
 A fresh clone must install reproducibly with Node.js 24.x and pnpm 11.7.0.
 Local credentials in `.env.example` are placeholders for development only.
-`DATABASE_URL` points Prisma to the local PostgreSQL container.
+`DATABASE_URL` points Prisma to the local PostgreSQL container. `AUTH_TOKEN_SECRET`
+and token TTL values are local placeholders and must be replaced outside local
+development.
 
  
 
