@@ -11,6 +11,7 @@ const baseUrl = `http://127.0.0.1:${apiPort}`;
 const runId = Date.now();
 const parentAEmail = `parent-a-${runId}@example.test`;
 const parentBEmail = `parent-b-${runId}@example.test`;
+const parentCEmail = `parent-c-${runId}@example.test`;
 const password = "SyntheticParentPassword42!";
 const wrongPassword = "SyntheticParentPassword43!";
 const childANickname = `LearnerA${runId}`;
@@ -37,7 +38,7 @@ function authHeader(accessToken) {
 async function cleanupSyntheticUsers() {
   const users = await prisma.user.findMany({
     select: { id: true },
-    where: { email: { in: [parentAEmail, parentBEmail] } },
+    where: { email: { in: [parentAEmail, parentBEmail, parentCEmail] } },
   });
   const userIds = users.map((user) => user.id);
 
@@ -245,6 +246,12 @@ test("parent auth and family setup flow keeps tenant boundaries and sensitive da
   assert.equal(initialStatus.body.data.family, null);
   assert.equal(initialStatus.body.data.setupComplete, false);
 
+  const missingMembershipChildren = await request("/family-setup/children", {
+    headers: authHeader(parentAToken),
+  });
+  assert.equal(missingMembershipChildren.status, 404);
+  assert.equal(missingMembershipChildren.text.includes(parentAEmail), false);
+
   const familyA = await createFamily(parentAToken, "Local Dev Family A");
   assert.equal(typeof familyA.id, "string");
 
@@ -288,6 +295,18 @@ test("parent auth and family setup flow keeps tenant boundaries and sensitive da
   assert.equal(listedChildren.status, 200);
   assert.equal(listedChildren.body.data.children.length, 1);
   assert.equal(listedChildren.body.data.children[0].id, childA.id);
+
+  const malformedChildId = await request("/family-setup/children/not-a-uuid/learning-context", {
+    body: JSON.stringify({
+      gradeLevel: 8,
+      subject: "math",
+      textbookCode: "math-8-local",
+    }),
+    headers: authHeader(parentAToken),
+    method: "PUT",
+  });
+  assert.equal(malformedChildId.status, 400);
+  assert.equal(malformedChildId.text.includes("not-a-uuid"), false);
 
   const invalidConsent = await request("/family-setup/consents", {
     body: JSON.stringify({ purpose: "local_dev_family_onboarding", subjectType: "FAMILY" }),
@@ -366,6 +385,46 @@ test("parent auth and family setup flow keeps tenant boundaries and sensitive da
   assert.equal(parentBChildren.body.data.children[0].id, childB.id);
   assert.notEqual(parentBChildren.body.data.children[0].id, childA.id);
 
+  const parentBMe = await request("/auth/me", {
+    headers: authHeader(parentB.tokens.accessToken),
+  });
+  assert.equal(parentBMe.status, 200);
+  assert.equal(parentBMe.body.data.user.email, parentBEmail);
+  assert.notEqual(parentBMe.body.data.user.email, parentAEmail);
+
+  const parentAFamilyAfterB = await request("/family-setup/family", {
+    headers: authHeader(parentAToken),
+  });
+  assert.equal(parentAFamilyAfterB.status, 200);
+  assert.equal(parentAFamilyAfterB.body.data.family.id, familyA.id);
+  assert.equal(parentAFamilyAfterB.text.includes(familyB.id), false);
+  assert.equal(parentAFamilyAfterB.text.includes("Local Dev Family B"), false);
+
+  const parentAChildrenAfterB = await request("/family-setup/children", {
+    headers: authHeader(parentAToken),
+  });
+  assert.equal(parentAChildrenAfterB.status, 200);
+  assert.equal(parentAChildrenAfterB.body.data.children.length, 1);
+  assert.equal(parentAChildrenAfterB.body.data.children[0].id, childA.id);
+  assert.equal(parentAChildrenAfterB.text.includes(childB.id), false);
+  assert.equal(parentAChildrenAfterB.text.includes(childBNickname), false);
+
+  const parentAConsentsForChildB = await request("/family-setup/consents", {
+    body: JSON.stringify({
+      childProfileId: childB.id,
+      documentVersion: "local-dev-child-consent-v1",
+      policyVersion: "slice-7-local-policy-v1",
+      purpose: "local_dev_child_learning",
+      subjectType: "CHILD",
+    }),
+    headers: authHeader(parentAToken),
+    method: "POST",
+  });
+  assert.equal(parentAConsentsForChildB.status, 404);
+  assert.equal(parentAConsentsForChildB.text.includes(childB.id), false);
+  assert.equal(parentAConsentsForChildB.text.includes(childBNickname), false);
+  assert.equal(parentAConsentsForChildB.text.includes(familyB.id), false);
+
   const parentAReadsChildB = await request(`/family-setup/children/${childB.id}/learning-context`, {
     body: JSON.stringify({
       gradeLevel: 8,
@@ -376,6 +435,9 @@ test("parent auth and family setup flow keeps tenant boundaries and sensitive da
     method: "PUT",
   });
   assert.equal(parentAReadsChildB.status, 404);
+  assert.equal(parentAReadsChildB.text.includes(childB.id), false);
+  assert.equal(parentAReadsChildB.text.includes(childBNickname), false);
+  assert.equal(parentAReadsChildB.text.includes(familyB.id), false);
 
   const parentBReadsChildA = await request(`/family-setup/children/${childA.id}/learning-context`, {
     body: JSON.stringify({
@@ -387,6 +449,78 @@ test("parent auth and family setup flow keeps tenant boundaries and sensitive da
     method: "PUT",
   });
   assert.equal(parentBReadsChildA.status, 404);
+  assert.equal(parentBReadsChildA.text.includes(childA.id), false);
+  assert.equal(parentBReadsChildA.text.includes(childANickname), false);
+  assert.equal(parentBReadsChildA.text.includes(familyA.id), false);
+
+  const deniedChildAccessEvents = await prisma.auditLog.findMany({
+    select: { outcome: true, policyVersion: true, targetId: true, targetType: true },
+    where: {
+      actorUserId: user.id,
+      outcome: "DENIED",
+      targetId: childB.id,
+      targetType: "ChildProfile",
+    },
+  });
+  assert.ok(deniedChildAccessEvents.length >= 2);
+  assert.ok(
+    deniedChildAccessEvents.every(
+      (event) =>
+        event.outcome === "DENIED" &&
+        event.policyVersion === "slice-7-family-tenant-v1" &&
+        event.targetType === "ChildProfile",
+    ),
+  );
+
+  const parentC = await registerParent(parentCEmail);
+  const parentCUser = await prisma.user.findUniqueOrThrow({
+    where: { email: parentCEmail },
+  });
+  const invalidRoleFamily = await prisma.family.create({
+    data: {
+      displayName: "Local Dev Invalid Role Family",
+      members: {
+        create: {
+          role: "MENTOR",
+          userId: parentCUser.id,
+        },
+      },
+    },
+  });
+
+  const invalidRoleChildren = await request("/family-setup/children", {
+    headers: authHeader(parentC.tokens.accessToken),
+  });
+  assert.equal(invalidRoleChildren.status, 403);
+  assert.equal(invalidRoleChildren.text.includes(invalidRoleFamily.id), false);
+  assert.equal(invalidRoleChildren.text.includes("Local Dev Invalid Role Family"), false);
+
+  const invalidRoleCreateFamily = await request("/family-setup/family", {
+    body: JSON.stringify({ displayName: "Should Not Be Created" }),
+    headers: authHeader(parentC.tokens.accessToken),
+    method: "POST",
+  });
+  assert.equal(invalidRoleCreateFamily.status, 403);
+  assert.equal(invalidRoleCreateFamily.text.includes(invalidRoleFamily.id), false);
+
+  const deniedRoleEvents = await prisma.auditLog.findMany({
+    select: { familyId: true, outcome: true, policyVersion: true, targetType: true },
+    where: {
+      actorUserId: parentCUser.id,
+      familyId: invalidRoleFamily.id,
+      outcome: "DENIED",
+      targetType: "Family",
+    },
+  });
+  assert.ok(deniedRoleEvents.length >= 2);
+  assert.ok(
+    deniedRoleEvents.every(
+      (event) =>
+        event.outcome === "DENIED" &&
+        event.policyVersion === "slice-7-family-tenant-v1" &&
+        event.targetType === "Family",
+    ),
+  );
 
   const refreshed = await request("/auth/refresh", {
     body: JSON.stringify({ refreshToken: login.body.data.tokens.refreshToken }),
@@ -420,8 +554,11 @@ test("parent auth and family setup flow keeps tenant boundaries and sensitive da
   assert.equal(output.includes(refreshed.body.data.tokens.refreshToken), false);
   assert.equal(output.includes(parentAEmail), false);
   assert.equal(output.includes(parentBEmail), false);
+  assert.equal(output.includes(parentCEmail), false);
   assert.equal(output.includes(childANickname), false);
   assert.equal(output.includes(childBNickname), false);
+  assert.equal(output.includes(authSecret), false);
+  assert.equal(output.includes("Bearer"), false);
   assert.equal(output.includes("Authorization"), false);
   assert.equal(output.includes("Cookie"), false);
 });

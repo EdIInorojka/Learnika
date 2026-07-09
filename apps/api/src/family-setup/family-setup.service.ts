@@ -1,13 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
-import type {
-  ChildProfile,
-  ConsentRecord,
-  Family,
-  FamilyMember,
-  TextbookSelection,
-} from "@prisma/client";
+import { ConflictException, Injectable } from "@nestjs/common";
+import type { ChildProfile, ConsentRecord, Family, TextbookSelection } from "@prisma/client";
 
-import type { AuthenticatedUser } from "../auth/auth.types";
+import { AuthorizationService } from "../authorization/authorization.service";
+import type { AuthorizedParentContext } from "../authorization/authorization.types";
 import { PrismaService } from "../database/prisma.service";
 import type {
   ChildProfileInput,
@@ -29,14 +24,15 @@ import type {
   SetupStatusResponse,
 } from "./family-setup.types";
 
-type MembershipWithFamily = FamilyMember & { family: Family };
-
 @Injectable()
 export class FamilySetupService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly authorization: AuthorizationService,
+    private readonly prisma: PrismaService,
+  ) {}
 
-  async getCurrentFamily(user: AuthenticatedUser): Promise<CurrentFamilyResponse> {
-    const membership = await this.findParentMembership(user.id);
+  async getCurrentFamily(context: AuthorizedParentContext): Promise<CurrentFamilyResponse> {
+    const membership = await this.authorization.findParentFamily(context);
 
     return {
       data: {
@@ -46,28 +42,32 @@ export class FamilySetupService {
   }
 
   async createOrGetCurrentFamily(
-    user: AuthenticatedUser,
+    context: AuthorizedParentContext,
     input: FamilyInput,
   ): Promise<CurrentFamilyResponse> {
-    const existing = await this.findParentMembership(user.id);
+    const existing = await this.authorization.findParentFamily(context);
 
     if (existing) {
       return { data: { family: this.toFamilySummary(existing.family) } };
     }
 
+    await this.authorization.assertNoFamilyMembershipForCreation(
+      context,
+      "family_setup.family.create",
+    );
     const family = await this.prisma.family.create({
       data: {
         displayName: input.displayName ?? null,
         members: {
           create: {
             role: "OWNER",
-            userId: user.id,
+            userId: context.user.id,
           },
         },
       },
     });
     await this.recordFamilyEvent(
-      user.id,
+      context.user.id,
       family.id,
       "family_setup.family.create",
       "Family",
@@ -77,8 +77,11 @@ export class FamilySetupService {
     return { data: { family: this.toFamilySummary(family) } };
   }
 
-  async listChildProfiles(user: AuthenticatedUser): Promise<ChildProfilesResponse> {
-    const familyId = await this.requireFamilyId(user.id);
+  async listChildProfiles(context: AuthorizedParentContext): Promise<ChildProfilesResponse> {
+    const { familyId } = await this.authorization.requireParentFamily(
+      context,
+      "family_setup.children.list",
+    );
     const children = await this.prisma.childProfile.findMany({
       orderBy: { createdAt: "asc" },
       where: { familyId },
@@ -92,10 +95,13 @@ export class FamilySetupService {
   }
 
   async createChildProfile(
-    user: AuthenticatedUser,
+    context: AuthorizedParentContext,
     input: ChildProfileInput,
   ): Promise<ChildProfileResponse> {
-    const familyId = await this.requireFamilyId(user.id);
+    const { familyId } = await this.authorization.requireParentFamily(
+      context,
+      "family_setup.child.create",
+    );
     const existingChildren = await this.prisma.childProfile.findMany({
       select: { nickname: true },
       where: { familyId, archivedAt: null },
@@ -120,7 +126,7 @@ export class FamilySetupService {
       },
     });
     await this.recordFamilyEvent(
-      user.id,
+      context.user.id,
       familyId,
       "family_setup.child.create",
       "ChildProfile",
@@ -134,27 +140,32 @@ export class FamilySetupService {
     };
   }
 
-  async createConsent(user: AuthenticatedUser, input: ConsentInput): Promise<ConsentResponse> {
-    const familyId = await this.requireFamilyId(user.id);
-
-    if (input.childProfileId) {
-      await this.requireChildInFamily(familyId, input.childProfileId);
-    }
+  async createConsent(
+    context: AuthorizedParentContext,
+    input: ConsentInput,
+  ): Promise<ConsentResponse> {
+    const familyContext = input.childProfileId
+      ? await this.authorization.requireChildAccess(
+          context,
+          input.childProfileId,
+          "family_setup.consent.child.access",
+        )
+      : await this.authorization.requireParentFamily(context, "family_setup.consent.create");
 
     const consent = await this.prisma.consentRecord.create({
       data: {
         childProfileId: input.childProfileId ?? null,
         documentVersion: input.documentVersion,
-        familyId,
-        grantedByUserId: user.id,
+        familyId: familyContext.familyId,
+        grantedByUserId: context.user.id,
         policyVersion: input.policyVersion,
         purpose: input.purpose,
         subjectType: input.subjectType,
       },
     });
     await this.recordFamilyEvent(
-      user.id,
-      familyId,
+      context.user.id,
+      familyContext.familyId,
       "family_setup.consent.create",
       "ConsentRecord",
       consent.id,
@@ -167,8 +178,11 @@ export class FamilySetupService {
     };
   }
 
-  async getConsentStatus(user: AuthenticatedUser): Promise<ConsentStatusResponse> {
-    const familyId = await this.requireFamilyId(user.id);
+  async getConsentStatus(context: AuthorizedParentContext): Promise<ConsentStatusResponse> {
+    const { familyId } = await this.authorization.requireParentFamily(
+      context,
+      "family_setup.consent_status.read",
+    );
     const consents = await this.prisma.consentRecord.findMany({
       orderBy: { grantedAt: "desc" },
       where: { familyId, revokedAt: null },
@@ -184,12 +198,15 @@ export class FamilySetupService {
   }
 
   async upsertLearningContext(
-    user: AuthenticatedUser,
+    context: AuthorizedParentContext,
     childProfileId: string,
     input: LearningContextInput,
   ): Promise<LearningContextResponse> {
-    const familyId = await this.requireFamilyId(user.id);
-    await this.requireChildInFamily(familyId, childProfileId);
+    const { familyId } = await this.authorization.requireChildAccess(
+      context,
+      childProfileId,
+      "family_setup.learning_context.child.access",
+    );
 
     const existing = await this.prisma.textbookSelection.findFirst({
       orderBy: { selectedAt: "desc" },
@@ -214,7 +231,7 @@ export class FamilySetupService {
           },
         });
     await this.recordFamilyEvent(
-      user.id,
+      context.user.id,
       familyId,
       "family_setup.learning_context.upsert",
       "TextbookSelection",
@@ -228,8 +245,8 @@ export class FamilySetupService {
     };
   }
 
-  async getSetupStatus(user: AuthenticatedUser): Promise<SetupStatusResponse> {
-    const membership = await this.findParentMembership(user.id);
+  async getSetupStatus(context: AuthorizedParentContext): Promise<SetupStatusResponse> {
+    const membership = await this.authorization.findParentFamily(context);
 
     if (!membership) {
       return {
@@ -266,43 +283,6 @@ export class FamilySetupService {
         setupComplete: childProfileCount > 0 && familyConsentGranted && hasLearningContext,
       },
     };
-  }
-
-  private async findParentMembership(userId: string): Promise<MembershipWithFamily | null> {
-    return this.prisma.familyMember.findFirst({
-      include: { family: true },
-      where: {
-        role: { in: ["OWNER", "CAREGIVER"] },
-        userId,
-      },
-    });
-  }
-
-  private async requireFamilyId(userId: string): Promise<string> {
-    const membership = await this.findParentMembership(userId);
-
-    if (!membership) {
-      throw new NotFoundException({
-        code: "FAMILY_SETUP_NOT_FOUND",
-        message: "Family setup has not been created.",
-      });
-    }
-
-    return membership.familyId;
-  }
-
-  private async requireChildInFamily(familyId: string, childProfileId: string): Promise<void> {
-    const child = await this.prisma.childProfile.findFirst({
-      select: { id: true },
-      where: { familyId, id: childProfileId },
-    });
-
-    if (!child) {
-      throw new NotFoundException({
-        code: "FAMILY_SETUP_CHILD_NOT_FOUND",
-        message: "Child profile was not found.",
-      });
-    }
   }
 
   private async recordFamilyEvent(

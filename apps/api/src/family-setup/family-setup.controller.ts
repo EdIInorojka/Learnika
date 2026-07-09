@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Headers, Param, Post, Put } from "@nestjs/common";
 
-import { AuthService } from "../auth/auth.service";
-import { parseBearerToken } from "../auth/auth.validation";
+import { AuthorizationService } from "../authorization/authorization.service";
 import type {
   ChildProfileResponse,
   ChildProfilesResponse,
@@ -23,7 +22,7 @@ import { FamilySetupService } from "./family-setup.service";
 @Controller("family-setup")
 export class FamilySetupController {
   constructor(
-    private readonly authService: AuthService,
+    private readonly authorization: AuthorizationService,
     private readonly familySetupService: FamilySetupService,
   ) {}
 
@@ -31,8 +30,8 @@ export class FamilySetupController {
   async getCurrentFamily(
     @Headers("authorization") authorization: string | undefined,
   ): Promise<CurrentFamilyResponse> {
-    const user = await this.authService.authenticateParent(parseBearerToken(authorization));
-    return this.familySetupService.getCurrentFamily(user);
+    const context = await this.authorization.authorizeParent(authorization);
+    return this.familySetupService.getCurrentFamily(context);
   }
 
   @Post("family")
@@ -40,16 +39,16 @@ export class FamilySetupController {
     @Headers("authorization") authorization: string | undefined,
     @Body() body: unknown,
   ): Promise<CurrentFamilyResponse> {
-    const user = await this.authService.authenticateParent(parseBearerToken(authorization));
-    return this.familySetupService.createOrGetCurrentFamily(user, parseFamilyInput(body));
+    const context = await this.authorization.authorizeParent(authorization);
+    return this.familySetupService.createOrGetCurrentFamily(context, parseFamilyInput(body));
   }
 
   @Get("children")
   async listChildProfiles(
     @Headers("authorization") authorization: string | undefined,
   ): Promise<ChildProfilesResponse> {
-    const user = await this.authService.authenticateParent(parseBearerToken(authorization));
-    return this.familySetupService.listChildProfiles(user);
+    const context = await this.authorization.authorizeParent(authorization);
+    return this.familySetupService.listChildProfiles(context);
   }
 
   @Post("children")
@@ -57,8 +56,8 @@ export class FamilySetupController {
     @Headers("authorization") authorization: string | undefined,
     @Body() body: unknown,
   ): Promise<ChildProfileResponse> {
-    const user = await this.authService.authenticateParent(parseBearerToken(authorization));
-    return this.familySetupService.createChildProfile(user, parseChildProfileInput(body));
+    const context = await this.authorization.authorizeParent(authorization);
+    return this.familySetupService.createChildProfile(context, parseChildProfileInput(body));
   }
 
   @Post("consents")
@@ -66,16 +65,16 @@ export class FamilySetupController {
     @Headers("authorization") authorization: string | undefined,
     @Body() body: unknown,
   ): Promise<ConsentResponse> {
-    const user = await this.authService.authenticateParent(parseBearerToken(authorization));
-    return this.familySetupService.createConsent(user, parseConsentInput(body));
+    const context = await this.authorization.authorizeParent(authorization);
+    return this.familySetupService.createConsent(context, parseConsentInput(body));
   }
 
   @Get("consent-status")
   async getConsentStatus(
     @Headers("authorization") authorization: string | undefined,
   ): Promise<ConsentStatusResponse> {
-    const user = await this.authService.authenticateParent(parseBearerToken(authorization));
-    return this.familySetupService.getConsentStatus(user);
+    const context = await this.authorization.authorizeParent(authorization);
+    return this.familySetupService.getConsentStatus(context);
   }
 
   @Put("children/:childProfileId/learning-context")
@@ -84,9 +83,9 @@ export class FamilySetupController {
     @Param("childProfileId") childProfileId: string | undefined,
     @Body() body: unknown,
   ): Promise<LearningContextResponse> {
-    const user = await this.authService.authenticateParent(parseBearerToken(authorization));
+    const context = await this.authorization.authorizeParent(authorization);
     return this.familySetupService.upsertLearningContext(
-      user,
+      context,
       parseIdParam(childProfileId, "Child profile identifier"),
       parseLearningContextInput(body),
     );
@@ -96,7 +95,7 @@ export class FamilySetupController {
   async getSetupStatus(
     @Headers("authorization") authorization: string | undefined,
   ): Promise<SetupStatusResponse> {
-    const user = await this.authService.authenticateParent(parseBearerToken(authorization));
-    return this.familySetupService.getSetupStatus(user);
+    const context = await this.authorization.authorizeParent(authorization);
+    return this.familySetupService.getSetupStatus(context);
   }
 }
