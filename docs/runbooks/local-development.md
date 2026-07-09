@@ -2,7 +2,7 @@
 
  
 
-This runbook is updated one Wave 1 slice at a time. Slice 10 covers parent-only auth, API-only family setup, tenant authorization, generated OpenAPI contracts, local-safe logging/audit foundations and CI/test foundation; web onboarding, provider mocks and product flows are still deferred.
+This runbook is updated one Wave 1 slice at a time. Slice 11 closes the foundation gate for parent-only auth, API-only family setup, tenant authorization, generated OpenAPI contracts, local-safe logging/audit foundations and CI/test foundation; web onboarding, provider mocks and product flows are still deferred. Wave 1 closure evidence is recorded in `docs/wave-1/closure-gate.md`.
 
  
 
@@ -112,13 +112,23 @@ secrets.
 
 Later slices will add real integration, E2E, contract, AI, voice and retention checks when those surfaces exist.
 
+Wave 1 closure validation also includes:
+
+```powershell
+git diff --check
+```
+
  
 
-## Voice development
+## Future voice and provider development
 
-- use synthetic or adult-created non-identifying recordings;
+- Wave 1 does not implement voice recording, transcription, OCR, Speech-to-Text,
+  LLM provider adapters or provider mocks;
 
-- deterministic transcription mock is the default;
+- when a later approved gate adds these surfaces, use synthetic or
+  adult-created non-identifying recordings;
+
+- deterministic mocks must be introduced and validated before real providers;
 
 - production provider is disabled unless explicitly configured;
 
@@ -146,7 +156,8 @@ Use generated synthetic accounts. Never commit real contacts or child data.
 
 - auth token secrets in `.env.example` are local-only placeholders;
 
-- AI, OCR and Speech-to-Text use deterministic mocks unless explicitly enabled;
+- AI, OCR and Speech-to-Text are not implemented in Wave 1; future mocks remain
+  disabled until an approved gate adds them;
 
 - secrets are never pasted into Codex prompts or issue text.
 

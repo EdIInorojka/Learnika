@@ -16,7 +16,10 @@ The platform does not do the work for the student. It identifies where the stude
 
  
 
-## Current scope
+## Product target scope
+
+The list below describes the intended MVP product boundary. Wave 1 implements
+only the technical and account foundation described under Local development.
 
 - Russia and Russian language;
 
@@ -140,12 +143,15 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 10 provides the monorepo tooling baseline, local infrastructure,
-minimal app/service shells, Prisma database foundation, parent-only auth
+Wave 1 Slice 11 closes the foundation gate for the monorepo tooling baseline,
+local infrastructure, minimal app/service shells, Prisma database foundation, parent-only auth
 foundation, API-only family setup foundation, tenant authorization foundation
 generated OpenAPI contracts, local-safe logging/audit foundations and CI/test
-foundation. Web onboarding screens, homework, voice, billing, mobile and school
-features are still deferred.
+foundation. Product scope documents describe the target MVP; this repository is
+still foundation-only. Web onboarding screens, homework, voice, billing, mobile
+and school features are deferred.
+
+Wave 1 closure evidence is recorded in `docs/wave-1/closure-gate.md`.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
