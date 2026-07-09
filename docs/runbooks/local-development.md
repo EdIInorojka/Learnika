@@ -2,7 +2,7 @@
 
  
 
-This runbook is updated one Wave 1 slice at a time. Slice 5 covers parent-only auth foundation; onboarding, provider mocks and product flows are still deferred.
+This runbook is updated one Wave 1 slice at a time. Slice 6 covers parent-only auth and API-only family setup foundation; web onboarding, provider mocks and product flows are still deferred.
 
  
 
@@ -135,7 +135,7 @@ Use generated synthetic accounts. Never commit real contacts or child data.
 ## Database
 
 Slice 4 adds Prisma schema and migrations for the local PostgreSQL database foundation. The schema currently covers only account, family tenant, child profile, consent, textbook-selection metadata and audit-log foundation.
-Slice 5 adds parent password hashes and revocable auth sessions. It does not grant access to family, child, consent, homework, voice, billing or school resources.
+Slice 5 adds parent password hashes and revocable auth sessions. Slice 6 uses the existing Slice 4 family, child profile, consent, textbook-selection and audit-log models for an authenticated parent family setup API foundation. It does not add a new migration.
 
 Create a new development migration after changing `apps/api/prisma/schema.prisma`:
 
@@ -188,6 +188,29 @@ pnpm.cmd --filter @learnika/api test
 ```
 
 Passwords are hashed with Argon2id. Access and refresh tokens are opaque bearer tokens and are stored only as hashes. Do not paste real passwords, tokens, cookies or auth headers into logs, prompts or issue text.
+
+## Family setup API
+
+Slice 6 exposes API-only family setup foundation routes for an authenticated parent:
+
+```text
+GET /family-setup/family
+POST /family-setup/family
+GET /family-setup/children
+POST /family-setup/children
+POST /family-setup/consents
+GET /family-setup/consent-status
+PUT /family-setup/children/:childProfileId/learning-context
+GET /family-setup/status
+```
+
+The same API test command covers parent auth and Slice 6 family setup:
+
+```powershell
+pnpm.cmd --filter @learnika/api test
+```
+
+Use synthetic local-only parent and child data. Consent document and policy versions in local tests are placeholders and are not legally approved wording. Slice 6 does not add homework, voice, billing, school, mobile or Wave 2 routes.
 
 ## Infrastructure reset
 

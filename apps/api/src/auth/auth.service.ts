@@ -126,6 +126,10 @@ export class AuthService {
   }
 
   async me(accessToken: string): Promise<MeResponse> {
+    return { data: { user: await this.authenticateParent(accessToken) } };
+  }
+
+  async authenticateParent(accessToken: string): Promise<AuthenticatedUser> {
     const session = await this.findValidAccessSession(accessToken);
 
     await this.prisma.authSession.update({
@@ -133,7 +137,7 @@ export class AuthService {
       where: { id: session.id },
     });
 
-    return { data: { user: this.toAuthenticatedUser(session.user) } };
+    return this.toAuthenticatedUser(session.user);
   }
 
   private async createAuthResponse(user: UserRecord): Promise<AuthResponse> {

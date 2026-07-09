@@ -6,6 +6,7 @@ import { DatabaseModule } from "../database/database.module";
 
 @Module({
   controllers: [AuthController],
+  exports: [AuthService],
   imports: [DatabaseModule],
   providers: [AuthService],
 })

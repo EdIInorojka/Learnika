@@ -140,9 +140,9 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 5 provides the monorepo tooling baseline, local infrastructure,
-minimal app/service shells, Prisma database foundation and parent-only auth
-foundation. Onboarding, child profile flows, family setup, consent screens,
+Wave 1 Slice 6 provides the monorepo tooling baseline, local infrastructure,
+minimal app/service shells, Prisma database foundation, parent-only auth
+foundation and API-only family setup foundation. Web onboarding screens,
 homework, voice, billing, mobile and school features are still deferred.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
@@ -211,8 +211,24 @@ GET /auth/me
 
 These routes use synthetic/local data during development, Argon2id password
 hashing and opaque bearer tokens stored only as hashes. Parent auth does not
-grant access to family, child, consent, homework or learning resources in Slice
-5.
+grant access to homework, voice, billing, mobile, school or Wave 2 resources in
+Slice 6.
+
+Authenticated parent family setup API foundation routes:
+
+```text
+GET /family-setup/family
+POST /family-setup/family
+GET /family-setup/children
+POST /family-setup/children
+POST /family-setup/consents
+GET /family-setup/consent-status
+PUT /family-setup/children/:childProfileId/learning-context
+GET /family-setup/status
+```
+
+Consent document and policy values in local tests are placeholders for
+development only and are not legally approved wording.
 
 To delete local infrastructure containers and named volumes, use the explicit
 confirmation flag:
