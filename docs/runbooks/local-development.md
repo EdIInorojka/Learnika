@@ -2,7 +2,7 @@
 
  
 
-This runbook is updated one Wave 1 slice at a time. Slice 9 covers parent-only auth, API-only family setup, tenant authorization, generated OpenAPI contracts and local-safe logging/audit foundations; web onboarding, provider mocks and product flows are still deferred.
+This runbook is updated one Wave 1 slice at a time. Slice 10 covers parent-only auth, API-only family setup, tenant authorization, generated OpenAPI contracts, local-safe logging/audit foundations and CI/test foundation; web onboarding, provider mocks and product flows are still deferred.
 
  
 
@@ -92,6 +92,23 @@ pnpm.cmd run db:generate
 pnpm.cmd run db:validate
 pnpm.cmd run db:migrate:deploy
 ```
+
+GitHub Actions CI runs the same foundation checks on `ubuntu-latest` with
+Node.js 24, pnpm 11.7.0 through Corepack and a local PostgreSQL service
+container:
+
+```powershell
+pnpm.cmd run infra:config
+pnpm.cmd run infra:check:env
+pnpm.cmd run db:validate
+pnpm.cmd run db:migrate:deploy
+pnpm.cmd run validate
+```
+
+The CI workflow creates a runner-local `pnpm.cmd` compatibility shim so the
+repository's Windows-local package commands also run on Linux CI. It uses only
+local-only synthetic database and auth values and does not require production
+secrets.
 
 Later slices will add real integration, E2E, contract, AI, voice and retention checks when those surfaces exist.
 

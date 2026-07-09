@@ -140,12 +140,12 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 9 provides the monorepo tooling baseline, local infrastructure,
+Wave 1 Slice 10 provides the monorepo tooling baseline, local infrastructure,
 minimal app/service shells, Prisma database foundation, parent-only auth
 foundation, API-only family setup foundation, tenant authorization foundation
-generated OpenAPI contracts and local-safe logging/audit foundations. Web
-onboarding screens, homework, voice, billing, mobile and school features are
-still deferred.
+generated OpenAPI contracts, local-safe logging/audit foundations and CI/test
+foundation. Web onboarding screens, homework, voice, billing, mobile and school
+features are still deferred.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
@@ -203,6 +203,19 @@ pnpm.cmd run db:migrate:dev -- --name <migration_name>
 pnpm.cmd run db:migrate:deploy
 pnpm.cmd run db:reset -- --yes
 pnpm.cmd run db:studio
+```
+
+GitHub Actions CI is defined in `.github/workflows/ci.yml`. It uses Node.js
+24, pnpm 11.7.0 through Corepack, frozen-lockfile install, a local PostgreSQL
+service container and local-only synthetic credentials. CI validates the same
+foundation commands used locally:
+
+```powershell
+pnpm.cmd run infra:config
+pnpm.cmd run infra:check:env
+pnpm.cmd run db:validate
+pnpm.cmd run db:migrate:deploy
+pnpm.cmd run validate
 ```
 
 Parent auth API foundation routes:
