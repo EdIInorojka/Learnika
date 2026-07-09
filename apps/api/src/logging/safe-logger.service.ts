@@ -1,6 +1,7 @@
 import type { LoggerService } from "@nestjs/common";
 
 import type { LogLevel } from "../config/app.config";
+import { redactLogValue } from "./redaction";
 
 const levelRank: Record<LogLevel, number> = {
   error: 0,
@@ -9,16 +10,12 @@ const levelRank: Record<LogLevel, number> = {
   debug: 3,
   verbose: 4,
 };
-const sensitiveLogPattern =
-  /authorization|cookie|password|refresh.?token|access.?token|secret|set-cookie/i;
-
-function sanitizeLogValue(value: unknown): string {
-  const message = value instanceof Error ? value.message : String(value);
-  return sensitiveLogPattern.test(message) ? "[redacted-sensitive-log-message]" : message;
-}
 
 export class SafeLogger implements LoggerService {
-  constructor(private readonly level: LogLevel = "log") {}
+  constructor(
+    private readonly level: LogLevel = "log",
+    private readonly service = "api",
+  ) {}
 
   log(message: unknown, context?: string): void {
     this.write("log", message, context);
@@ -48,10 +45,10 @@ export class SafeLogger implements LoggerService {
     const event = {
       context,
       level,
-      message: sanitizeLogValue(message),
-      service: "api",
+      message: redactLogValue(message),
+      service: this.service,
       timestamp: new Date().toISOString(),
-      trace: trace && sensitiveLogPattern.test(trace) ? "[redacted-sensitive-trace]" : trace,
+      trace: trace ? redactLogValue(trace) : undefined,
     };
 
     const line = JSON.stringify(event);

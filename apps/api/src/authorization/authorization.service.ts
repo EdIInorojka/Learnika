@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import type { FamilyMember, FamilyMemberRole } from "@prisma/client";
 
+import { AuditService } from "../audit/audit.service";
 import { AuthService } from "../auth/auth.service";
 import { parseBearerToken } from "../auth/auth.validation";
 import { PrismaService } from "../database/prisma.service";
@@ -17,6 +18,7 @@ const policyVersion = "slice-7-family-tenant-v1";
 @Injectable()
 export class AuthorizationService {
   constructor(
+    private readonly audit: AuditService,
     private readonly authService: AuthService,
     private readonly prisma: PrismaService,
   ) {}
@@ -158,22 +160,15 @@ export class AuthorizationService {
     targetType?: string;
     userId: string;
   }): Promise<void> {
-    try {
-      await this.prisma.auditLog.create({
-        data: {
-          action: input.action,
-          actorType: "USER",
-          actorUserId: input.userId,
-          familyId: input.familyId ?? null,
-          outcome: "DENIED",
-          policyVersion,
-          targetId: input.targetId ?? null,
-          targetType: input.targetType ?? null,
-        },
-      });
-    } catch {
-      // Authorization decisions must not expose audit-storage failures to callers.
-    }
+    await this.audit.record({
+      action: input.action,
+      actorUserId: input.userId,
+      familyId: input.familyId ?? null,
+      outcome: "DENIED",
+      policyVersion,
+      targetId: input.targetId ?? null,
+      targetType: input.targetType ?? null,
+    });
   }
 
   private async findAnyFamilyMembership(userId: string): Promise<FamilyMember | null> {

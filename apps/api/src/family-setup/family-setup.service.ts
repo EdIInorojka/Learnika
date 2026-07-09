@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import type { ChildProfile, ConsentRecord, Family, TextbookSelection } from "@prisma/client";
 
+import { AuditService } from "../audit/audit.service";
 import { AuthorizationService } from "../authorization/authorization.service";
 import type { AuthorizedParentContext } from "../authorization/authorization.types";
 import { PrismaService } from "../database/prisma.service";
@@ -27,6 +28,7 @@ import type {
 @Injectable()
 export class FamilySetupService {
   constructor(
+    private readonly audit: AuditService,
     private readonly authorization: AuthorizationService,
     private readonly prisma: PrismaService,
   ) {}
@@ -292,21 +294,14 @@ export class FamilySetupService {
     targetType: string,
     targetId: string,
   ): Promise<void> {
-    try {
-      await this.prisma.auditLog.create({
-        data: {
-          action,
-          actorType: "USER",
-          actorUserId: userId,
-          familyId,
-          outcome: "SUCCESS",
-          targetId,
-          targetType,
-        },
-      });
-    } catch {
-      // Setup writes should not fail because local audit storage is unavailable.
-    }
+    await this.audit.record({
+      action,
+      actorUserId: userId,
+      familyId,
+      outcome: "SUCCESS",
+      targetId,
+      targetType,
+    });
   }
 
   private toFamilySummary(family: Family): FamilySummary {

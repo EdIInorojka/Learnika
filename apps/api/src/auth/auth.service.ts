@@ -5,6 +5,7 @@ import argon2 from "argon2";
 
 import { getAuthConfig, type AuthConfig } from "./auth.config";
 import type { AuthResponse, AuthenticatedUser, MeResponse } from "./auth.types";
+import { AuditService } from "../audit/audit.service";
 import { PrismaService } from "../database/prisma.service";
 
 interface UserRecord {
@@ -27,7 +28,10 @@ interface TokenPair {
 export class AuthService {
   private readonly config: AuthConfig;
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly audit: AuditService,
+    private readonly prisma: PrismaService,
+  ) {
     this.config = getAuthConfig();
   }
 
@@ -221,20 +225,13 @@ export class AuthService {
     action: string,
     outcome: "DENIED" | "SUCCESS",
   ): Promise<void> {
-    try {
-      await this.prisma.auditLog.create({
-        data: {
-          action,
-          actorType: "USER",
-          actorUserId: userId,
-          outcome,
-          targetType: "User",
-          targetId: userId,
-        },
-      });
-    } catch {
-      // Auth must not fail because an audit write failed in local foundation work.
-    }
+    await this.audit.record({
+      action,
+      actorUserId: userId,
+      outcome,
+      targetId: userId,
+      targetType: "User",
+    });
   }
 
   private toAuthenticatedUser(user: UserRecord): AuthenticatedUser {

@@ -5,6 +5,7 @@ import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fa
 
 import { AppModule } from "./app.module";
 import { getAppConfig } from "./config/app.config";
+import { configureSafeRequestLogging } from "./logging/request-logging";
 import { SafeLogger } from "./logging/safe-logger.service";
 
 async function bootstrap() {
@@ -19,6 +20,7 @@ async function bootstrap() {
       logger,
     },
   );
+  configureSafeRequestLogging(app, logger);
 
   await app.listen(config.port, config.host);
   logger.log(`Listening on http://${config.host}:${config.port}`, "Bootstrap");

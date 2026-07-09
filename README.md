@@ -140,11 +140,12 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 8 provides the monorepo tooling baseline, local infrastructure,
+Wave 1 Slice 9 provides the monorepo tooling baseline, local infrastructure,
 minimal app/service shells, Prisma database foundation, parent-only auth
 foundation, API-only family setup foundation, tenant authorization foundation
-and generated OpenAPI contracts. Web onboarding screens, homework, voice,
-billing, mobile and school features are still deferred.
+generated OpenAPI contracts and local-safe logging/audit foundations. Web
+onboarding screens, homework, voice, billing, mobile and school features are
+still deferred.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
@@ -245,6 +246,19 @@ pnpm.cmd run contracts:validate
 
 The generated OpenAPI artifact is `packages/contracts/openapi.json`. It covers
 only currently implemented health, auth and family-setup routes.
+
+Logging and audit foundation:
+
+- API logs are structured JSON and include request/correlation IDs for HTTP
+  requests.
+- Request and response bodies are not logged by default.
+- Passwords, password hashes, tokens, token hashes, authorization headers,
+  cookies, secrets, emails, names, nicknames and school identifiers are
+  redacted or omitted from ordinary logs.
+- Audit entries currently cover auth, family setup and authorization decisions
+  only, using internal IDs and policy versions.
+- Web local commands keep Next telemetry disabled through
+  `apps/web/scripts/next.mjs`; no external telemetry provider is configured.
 
 To delete local infrastructure containers and named volumes, use the explicit
 confirmation flag:

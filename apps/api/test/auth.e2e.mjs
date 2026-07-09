@@ -107,6 +107,7 @@ async function request(path, init = {}) {
 
   return {
     body: text ? JSON.parse(text) : undefined,
+    headers: response.headers,
     status: response.status,
     text,
   };
@@ -176,6 +177,16 @@ after(async () => {
 test("parent auth and family setup flow keeps tenant boundaries and sensitive data safe", async () => {
   const unauthenticatedMe = await request("/auth/me");
   assert.equal(unauthenticatedMe.status, 401);
+
+  const correlatedHealth = await request("/health/live", {
+    headers: {
+      "x-correlation-id": "slice9-correlation-id",
+      "x-request-id": "slice9-request-id",
+    },
+  });
+  assert.equal(correlatedHealth.status, 200);
+  assert.equal(correlatedHealth.headers.get("x-request-id"), "slice9-request-id");
+  assert.equal(correlatedHealth.headers.get("x-correlation-id"), "slice9-correlation-id");
 
   const unauthenticatedSetup = await request("/family-setup/status");
   assert.equal(unauthenticatedSetup.status, 401);
@@ -557,8 +568,13 @@ test("parent auth and family setup flow keeps tenant boundaries and sensitive da
   assert.equal(output.includes(parentCEmail), false);
   assert.equal(output.includes(childANickname), false);
   assert.equal(output.includes(childBNickname), false);
+  assert.equal(output.includes(user.passwordHash), false);
+  assert.equal(output.includes(sessions[0].accessTokenHash), false);
+  assert.equal(output.includes(sessions[0].refreshTokenHash), false);
   assert.equal(output.includes(authSecret), false);
   assert.equal(output.includes("Bearer"), false);
   assert.equal(output.includes("Authorization"), false);
   assert.equal(output.includes("Cookie"), false);
+  assert.equal(output.includes("slice9-request-id"), true);
+  assert.equal(output.includes("slice9-correlation-id"), true);
 });

@@ -2,7 +2,7 @@
 
  
 
-This runbook is updated one Wave 1 slice at a time. Slice 8 covers parent-only auth, API-only family setup, tenant authorization and generated OpenAPI contracts; web onboarding, provider mocks and product flows are still deferred.
+This runbook is updated one Wave 1 slice at a time. Slice 9 covers parent-only auth, API-only family setup, tenant authorization, generated OpenAPI contracts and local-safe logging/audit foundations; web onboarding, provider mocks and product flows are still deferred.
 
  
 
@@ -236,6 +236,21 @@ pnpm.cmd run contracts:validate
 ```
 
 The generated artifact is `packages/contracts/openapi.json`. It must not document homework, voice, billing, school, teacher/admin or provider-adapter routes as implemented.
+
+## Logging and audit
+
+API HTTP logs are structured JSON and include `x-request-id` and
+`x-correlation-id` response headers. Incoming IDs are accepted only when they
+use simple local-safe characters; otherwise the API generates a new ID.
+
+Ordinary API and math-ai logs do not record request or response bodies by
+default. Do not log passwords, password hashes, tokens, token hashes,
+authorization headers, cookies, secrets, emails, child nicknames, names, school
+identifiers, raw homework text, transcripts, images or audio.
+
+Audit entries currently use the existing `AuditLog` model for auth, family
+setup and authorization decisions only. They store internal IDs, action,
+outcome, target type/id and policy version where safe.
 
 ## Infrastructure reset
 
