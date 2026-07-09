@@ -1,6 +1,34 @@
 import { Body, Controller, Get, Headers, Param, Post, Put } from "@nestjs/common";
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
 
 import { AuthorizationService } from "../authorization/authorization.service";
+import {
+  ApiErrorDto,
+  ChildProfileRequestDto,
+  ChildProfileResponseDto,
+  ChildProfilesResponseDto,
+  ConsentRequestDto,
+  ConsentResponseDto,
+  ConsentStatusResponseDto,
+  CurrentFamilyResponseDto,
+  FamilyRequestDto,
+  LearningContextRequestDto,
+  LearningContextResponseDto,
+  SetupStatusResponseDto,
+} from "../openapi/api-schemas";
 import type {
   ChildProfileResponse,
   ChildProfilesResponse,
@@ -19,6 +47,8 @@ import {
 } from "./family-setup.validation";
 import { FamilySetupService } from "./family-setup.service";
 
+@ApiTags("family setup")
+@ApiBearerAuth("bearerAuth")
 @Controller("family-setup")
 export class FamilySetupController {
   constructor(
@@ -27,6 +57,9 @@ export class FamilySetupController {
   ) {}
 
   @Get("family")
+  @ApiOperation({ summary: "Get the authenticated parent's current family setup." })
+  @ApiOkResponse({ type: CurrentFamilyResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
   async getCurrentFamily(
     @Headers("authorization") authorization: string | undefined,
   ): Promise<CurrentFamilyResponse> {
@@ -35,6 +68,12 @@ export class FamilySetupController {
   }
 
   @Post("family")
+  @ApiOperation({ summary: "Create or return the authenticated parent's family setup." })
+  @ApiBody({ type: FamilyRequestDto })
+  @ApiCreatedResponse({ type: CurrentFamilyResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiForbiddenResponse({ type: ApiErrorDto })
   async createOrGetCurrentFamily(
     @Headers("authorization") authorization: string | undefined,
     @Body() body: unknown,
@@ -44,6 +83,11 @@ export class FamilySetupController {
   }
 
   @Get("children")
+  @ApiOperation({ summary: "List child profiles in the authenticated parent's family." })
+  @ApiOkResponse({ type: ChildProfilesResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiForbiddenResponse({ type: ApiErrorDto })
+  @ApiNotFoundResponse({ type: ApiErrorDto })
   async listChildProfiles(
     @Headers("authorization") authorization: string | undefined,
   ): Promise<ChildProfilesResponse> {
@@ -52,6 +96,14 @@ export class FamilySetupController {
   }
 
   @Post("children")
+  @ApiOperation({ summary: "Create a minimal child profile in the authenticated parent's family." })
+  @ApiBody({ type: ChildProfileRequestDto })
+  @ApiCreatedResponse({ type: ChildProfileResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiForbiddenResponse({ type: ApiErrorDto })
+  @ApiNotFoundResponse({ type: ApiErrorDto })
+  @ApiConflictResponse({ type: ApiErrorDto })
   async createChildProfile(
     @Headers("authorization") authorization: string | undefined,
     @Body() body: unknown,
@@ -61,6 +113,13 @@ export class FamilySetupController {
   }
 
   @Post("consents")
+  @ApiOperation({ summary: "Record versioned family or child consent." })
+  @ApiBody({ type: ConsentRequestDto })
+  @ApiCreatedResponse({ type: ConsentResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiForbiddenResponse({ type: ApiErrorDto })
+  @ApiNotFoundResponse({ type: ApiErrorDto })
   async createConsent(
     @Headers("authorization") authorization: string | undefined,
     @Body() body: unknown,
@@ -70,6 +129,11 @@ export class FamilySetupController {
   }
 
   @Get("consent-status")
+  @ApiOperation({ summary: "Get current versioned consent status for the parent's family." })
+  @ApiOkResponse({ type: ConsentStatusResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiForbiddenResponse({ type: ApiErrorDto })
+  @ApiNotFoundResponse({ type: ApiErrorDto })
   async getConsentStatus(
     @Headers("authorization") authorization: string | undefined,
   ): Promise<ConsentStatusResponse> {
@@ -78,6 +142,14 @@ export class FamilySetupController {
   }
 
   @Put("children/:childProfileId/learning-context")
+  @ApiOperation({ summary: "Create or update child learning context metadata." })
+  @ApiParam({ format: "uuid", name: "childProfileId" })
+  @ApiBody({ type: LearningContextRequestDto })
+  @ApiOkResponse({ type: LearningContextResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
+  @ApiForbiddenResponse({ type: ApiErrorDto })
+  @ApiNotFoundResponse({ type: ApiErrorDto })
   async upsertLearningContext(
     @Headers("authorization") authorization: string | undefined,
     @Param("childProfileId") childProfileId: string | undefined,
@@ -92,6 +164,9 @@ export class FamilySetupController {
   }
 
   @Get("status")
+  @ApiOperation({ summary: "Get authenticated parent onboarding and family setup status." })
+  @ApiOkResponse({ type: SetupStatusResponseDto })
+  @ApiUnauthorizedResponse({ type: ApiErrorDto })
   async getSetupStatus(
     @Headers("authorization") authorization: string | undefined,
   ): Promise<SetupStatusResponse> {

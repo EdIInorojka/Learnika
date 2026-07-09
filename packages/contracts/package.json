@@ -1,0 +1,8 @@
+{
+  "name": "@learnika/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "validate": "node scripts/validate-openapi.mjs"
+  }
+}

@@ -13,6 +13,8 @@
     "db:studio": "node prisma/run-prisma.mjs studio --hostname 127.0.0.1 --port 5555",
     "db:validate": "node prisma/run-prisma.mjs validate && node prisma/validate-data-foundation.mjs",
     "lint": "eslint src --max-warnings=0",
+    "openapi:check": "pnpm.cmd run build && node dist/openapi/generate-openapi.js --check",
+    "openapi:generate": "pnpm.cmd run build && node dist/openapi/generate-openapi.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "pnpm.cmd run db:generate && pnpm.cmd run build && node test/auth.e2e.mjs"
   },
@@ -20,6 +22,7 @@
     "@nestjs/common": "11.1.27",
     "@nestjs/core": "11.1.27",
     "@nestjs/platform-fastify": "11.1.27",
+    "@nestjs/swagger": "11.4.5",
     "@prisma/adapter-pg": "7.8.0",
     "@prisma/client": "7.8.0",
     "argon2": "0.44.0",

@@ -2,7 +2,7 @@
 
  
 
-This runbook is updated one Wave 1 slice at a time. Slice 6 covers parent-only auth and API-only family setup foundation; web onboarding, provider mocks and product flows are still deferred.
+This runbook is updated one Wave 1 slice at a time. Slice 8 covers parent-only auth, API-only family setup, tenant authorization and generated OpenAPI contracts; web onboarding, provider mocks and product flows are still deferred.
 
  
 
@@ -85,6 +85,9 @@ pnpm.cmd run infra:check:env
 pnpm.cmd run infra:validate
 pnpm.cmd run build:web
 pnpm.cmd run build:api
+pnpm.cmd run contracts:generate
+pnpm.cmd run contracts:check
+pnpm.cmd run contracts:validate
 pnpm.cmd run db:generate
 pnpm.cmd run db:validate
 pnpm.cmd run db:migrate:deploy
@@ -211,6 +214,28 @@ pnpm.cmd --filter @learnika/api test
 ```
 
 Use synthetic local-only parent and child data. Consent document and policy versions in local tests are placeholders and are not legally approved wording. Slice 6 does not add homework, voice, billing, school, mobile or Wave 2 routes.
+
+## API contracts
+
+Slice 8 generates the OpenAPI artifact for currently implemented health, auth and family setup routes:
+
+```powershell
+pnpm.cmd run contracts:generate
+```
+
+Check that the generated artifact is current:
+
+```powershell
+pnpm.cmd run contracts:check
+```
+
+Validate required paths, bearer-auth metadata and sensitive-field exclusions:
+
+```powershell
+pnpm.cmd run contracts:validate
+```
+
+The generated artifact is `packages/contracts/openapi.json`. It must not document homework, voice, billing, school, teacher/admin or provider-adapter routes as implemented.
 
 ## Infrastructure reset
 

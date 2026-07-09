@@ -140,10 +140,11 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 ## Local development
 
-Wave 1 Slice 6 provides the monorepo tooling baseline, local infrastructure,
+Wave 1 Slice 8 provides the monorepo tooling baseline, local infrastructure,
 minimal app/service shells, Prisma database foundation, parent-only auth
-foundation and API-only family setup foundation. Web onboarding screens,
-homework, voice, billing, mobile and school features are still deferred.
+foundation, API-only family setup foundation, tenant authorization foundation
+and generated OpenAPI contracts. Web onboarding screens, homework, voice,
+billing, mobile and school features are still deferred.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
@@ -191,6 +192,10 @@ pnpm.cmd run dev:api
 pnpm.cmd run dev:math-ai
 pnpm.cmd run build:web
 pnpm.cmd run build:api
+pnpm.cmd run api:openapi
+pnpm.cmd run contracts:generate
+pnpm.cmd run contracts:check
+pnpm.cmd run contracts:validate
 pnpm.cmd run db:generate
 pnpm.cmd run db:validate
 pnpm.cmd run db:migrate:dev -- --name <migration_name>
@@ -229,6 +234,17 @@ GET /family-setup/status
 
 Consent document and policy values in local tests are placeholders for
 development only and are not legally approved wording.
+
+Generated API contracts:
+
+```powershell
+pnpm.cmd run contracts:generate
+pnpm.cmd run contracts:check
+pnpm.cmd run contracts:validate
+```
+
+The generated OpenAPI artifact is `packages/contracts/openapi.json`. It covers
+only currently implemented health, auth and family-setup routes.
 
 To delete local infrastructure containers and named volumes, use the explicit
 confirmation flag:

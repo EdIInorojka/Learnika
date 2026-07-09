@@ -1,0 +1,816 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health/live": {
+      "get": {
+        "operationId": "live",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/HealthResponseDto" } }
+            }
+          }
+        },
+        "summary": "Check API liveness.",
+        "tags": ["health"]
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "operationId": "ready",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/HealthResponseDto" } }
+            }
+          }
+        },
+        "summary": "Check API readiness.",
+        "tags": ["health"]
+      }
+    },
+    "/auth/register-parent": {
+      "post": {
+        "operationId": "registerParent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CredentialsRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "summary": "Register a local development parent account.",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CredentialsRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "summary": "Log in a local development parent account.",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "refresh",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RefreshTokenRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AuthResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "summary": "Rotate a parent refresh token.",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LogoutResponseDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Revoke the current parent access session.",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/MeResponseDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Read the current authenticated parent context.",
+        "tags": ["auth"]
+      }
+    },
+    "/family-setup/family": {
+      "get": {
+        "operationId": "getCurrentFamily",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CurrentFamilyResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Get the authenticated parent's current family setup.",
+        "tags": ["family setup"]
+      },
+      "post": {
+        "operationId": "createOrGetCurrentFamily",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/FamilyRequestDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CurrentFamilyResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Create or return the authenticated parent's family setup.",
+        "tags": ["family setup"]
+      }
+    },
+    "/family-setup/children": {
+      "get": {
+        "operationId": "listChildProfiles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChildProfilesResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "List child profiles in the authenticated parent's family.",
+        "tags": ["family setup"]
+      },
+      "post": {
+        "operationId": "createChildProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChildProfileRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChildProfileResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Create a minimal child profile in the authenticated parent's family.",
+        "tags": ["family setup"]
+      }
+    },
+    "/family-setup/consents": {
+      "post": {
+        "operationId": "createConsent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ConsentRequestDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ConsentResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Record versioned family or child consent.",
+        "tags": ["family setup"]
+      }
+    },
+    "/family-setup/consent-status": {
+      "get": {
+        "operationId": "getConsentStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ConsentStatusResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Get current versioned consent status for the parent's family.",
+        "tags": ["family setup"]
+      }
+    },
+    "/family-setup/children/{childProfileId}/learning-context": {
+      "put": {
+        "operationId": "upsertLearningContext",
+        "parameters": [
+          {
+            "name": "childProfileId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LearningContextRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LearningContextResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Create or update child learning context metadata.",
+        "tags": ["family setup"]
+      }
+    },
+    "/family-setup/status": {
+      "get": {
+        "operationId": "getSetupStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SetupStatusResponseDto" }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Get authenticated parent onboarding and family setup status.",
+        "tags": ["family setup"]
+      }
+    }
+  },
+  "info": {
+    "title": "Learnika API",
+    "description": "OpenAPI contract for currently implemented Learnika Wave 1 routes.",
+    "version": "0.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "scheme": "bearer", "bearerFormat": "opaque", "type": "http" }
+    },
+    "schemas": {
+      "HealthResponseDto": {
+        "type": "object",
+        "properties": {
+          "service": { "type": "string", "enum": ["api"] },
+          "status": { "type": "string", "enum": ["ok"] }
+        },
+        "required": ["service", "status"]
+      },
+      "CredentialsRequestDto": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "maxLength": 320 },
+          "password": { "type": "string", "maxLength": 128, "minLength": 12, "writeOnly": true },
+          "locale": { "type": "string", "default": "ru", "maxLength": 16 }
+        },
+        "required": ["email", "password"]
+      },
+      "AuthenticatedUserDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "email": { "type": "string", "format": "email" },
+          "accountRole": { "type": "string", "enum": ["PARENT"] },
+          "locale": { "type": "string" }
+        },
+        "required": ["id", "email", "accountRole", "locale"]
+      },
+      "TokenPairDto": {
+        "type": "object",
+        "properties": {
+          "tokenType": { "type": "string", "enum": ["Bearer"] },
+          "accessToken": { "type": "string" },
+          "accessTokenExpiresAt": { "type": "string", "format": "date-time" },
+          "refreshToken": { "type": "string" },
+          "refreshTokenExpiresAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "tokenType",
+          "accessToken",
+          "accessTokenExpiresAt",
+          "refreshToken",
+          "refreshTokenExpiresAt"
+        ]
+      },
+      "AuthResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "user": { "$ref": "#/components/schemas/AuthenticatedUserDto" },
+          "tokens": { "$ref": "#/components/schemas/TokenPairDto" }
+        },
+        "required": ["user", "tokens"]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/AuthResponseDataDto" } },
+        "required": ["data"]
+      },
+      "ApiErrorDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string" }, "message": { "type": "string" } },
+        "required": ["code", "message"]
+      },
+      "RefreshTokenRequestDto": {
+        "type": "object",
+        "properties": { "refreshToken": { "type": "string", "maxLength": 512, "minLength": 32 } },
+        "required": ["refreshToken"]
+      },
+      "LogoutResponseDataDto": {
+        "type": "object",
+        "properties": { "ok": { "type": "boolean", "enum": [true] } },
+        "required": ["ok"]
+      },
+      "LogoutResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/LogoutResponseDataDto" } },
+        "required": ["data"]
+      },
+      "MeResponseDataDto": {
+        "type": "object",
+        "properties": { "user": { "$ref": "#/components/schemas/AuthenticatedUserDto" } },
+        "required": ["user"]
+      },
+      "MeResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/MeResponseDataDto" } },
+        "required": ["data"]
+      },
+      "FamilySummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "displayName": { "type": "string", "maxLength": 120, "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "displayName", "createdAt"]
+      },
+      "CurrentFamilyDataDto": {
+        "type": "object",
+        "properties": {
+          "family": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [{ "$ref": "#/components/schemas/FamilySummaryDto" }]
+          }
+        },
+        "required": ["family"]
+      },
+      "CurrentFamilyResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/CurrentFamilyDataDto" } },
+        "required": ["data"]
+      },
+      "FamilyRequestDto": {
+        "type": "object",
+        "properties": { "displayName": { "type": "string", "maxLength": 120 } }
+      },
+      "ChildProfileSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "nickname": { "type": "string", "maxLength": 120 },
+          "gradeLevel": { "type": "number", "maximum": 9, "minimum": 7, "nullable": true },
+          "locale": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "archivedAt": { "type": "string", "format": "date-time", "nullable": true }
+        },
+        "required": ["id", "nickname", "gradeLevel", "locale", "createdAt", "archivedAt"]
+      },
+      "ChildProfilesResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "children": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ChildProfileSummaryDto" }
+          }
+        },
+        "required": ["children"]
+      },
+      "ChildProfilesResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/ChildProfilesResponseDataDto" } },
+        "required": ["data"]
+      },
+      "ChildProfileRequestDto": {
+        "type": "object",
+        "properties": {
+          "gradeLevel": { "type": "number", "maximum": 9, "minimum": 7 },
+          "locale": { "type": "string", "default": "ru", "maxLength": 16 },
+          "nickname": { "type": "string", "maxLength": 120 }
+        },
+        "required": ["gradeLevel", "nickname"]
+      },
+      "ChildProfileResponseDataDto": {
+        "type": "object",
+        "properties": { "child": { "$ref": "#/components/schemas/ChildProfileSummaryDto" } },
+        "required": ["child"]
+      },
+      "ChildProfileResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/ChildProfileResponseDataDto" } },
+        "required": ["data"]
+      },
+      "ConsentRequestDto": {
+        "type": "object",
+        "properties": {
+          "childProfileId": { "type": "string", "format": "uuid" },
+          "subjectType": { "type": "string", "enum": ["FAMILY", "CHILD"] },
+          "purpose": { "type": "string", "maxLength": 80 },
+          "documentVersion": { "type": "string", "maxLength": 80 },
+          "policyVersion": { "type": "string", "maxLength": 80 }
+        },
+        "required": ["subjectType", "purpose", "documentVersion", "policyVersion"]
+      },
+      "ConsentSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "familyId": { "type": "string", "format": "uuid" },
+          "childProfileId": { "type": "string", "format": "uuid", "nullable": true },
+          "subjectType": { "type": "string", "enum": ["FAMILY", "CHILD"] },
+          "purpose": { "type": "string" },
+          "documentVersion": { "type": "string" },
+          "policyVersion": { "type": "string" },
+          "grantedAt": { "type": "string", "format": "date-time" },
+          "revokedAt": { "type": "string", "format": "date-time", "nullable": true }
+        },
+        "required": [
+          "id",
+          "familyId",
+          "childProfileId",
+          "subjectType",
+          "purpose",
+          "documentVersion",
+          "policyVersion",
+          "grantedAt",
+          "revokedAt"
+        ]
+      },
+      "ConsentResponseDataDto": {
+        "type": "object",
+        "properties": { "consent": { "$ref": "#/components/schemas/ConsentSummaryDto" } },
+        "required": ["consent"]
+      },
+      "ConsentResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/ConsentResponseDataDto" } },
+        "required": ["data"]
+      },
+      "ConsentStatusResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "familyConsentGranted": { "type": "boolean" },
+          "consents": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ConsentSummaryDto" }
+          }
+        },
+        "required": ["familyConsentGranted", "consents"]
+      },
+      "ConsentStatusResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/ConsentStatusResponseDataDto" } },
+        "required": ["data"]
+      },
+      "LearningContextRequestDto": {
+        "type": "object",
+        "properties": {
+          "gradeLevel": { "type": "number", "maximum": 9, "minimum": 7 },
+          "subject": { "type": "string", "enum": ["math"] },
+          "textbookCode": { "type": "string", "maxLength": 120, "pattern": "^[a-zA-Z0-9._:-]+$" }
+        },
+        "required": ["gradeLevel", "subject", "textbookCode"]
+      },
+      "LearningContextSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "childProfileId": { "type": "string", "format": "uuid" },
+          "gradeLevel": { "type": "number", "maximum": 9, "minimum": 7, "nullable": true },
+          "subject": { "type": "string", "enum": ["math"] },
+          "textbookCode": { "type": "string" },
+          "selectedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "childProfileId", "gradeLevel", "subject", "textbookCode", "selectedAt"]
+      },
+      "LearningContextResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "learningContext": { "$ref": "#/components/schemas/LearningContextSummaryDto" }
+        },
+        "required": ["learningContext"]
+      },
+      "LearningContextResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/LearningContextResponseDataDto" } },
+        "required": ["data"]
+      },
+      "SetupStatusResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "family": {
+            "nullable": true,
+            "type": "object",
+            "allOf": [{ "$ref": "#/components/schemas/FamilySummaryDto" }]
+          },
+          "childProfileCount": { "type": "number" },
+          "familyConsentGranted": { "type": "boolean" },
+          "hasLearningContext": { "type": "boolean" },
+          "setupComplete": { "type": "boolean" }
+        },
+        "required": [
+          "family",
+          "childProfileCount",
+          "familyConsentGranted",
+          "hasLearningContext",
+          "setupComplete"
+        ]
+      },
+      "SetupStatusResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/SetupStatusResponseDataDto" } },
+        "required": ["data"]
+      }
+    }
+  }
+}
