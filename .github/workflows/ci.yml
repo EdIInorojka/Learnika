@@ -65,6 +65,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma Client
+        run: pnpm.cmd run db:generate
+
       - name: Validate local infrastructure config
         run: |
           pnpm.cmd run infra:config
