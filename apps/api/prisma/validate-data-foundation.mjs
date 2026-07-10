@@ -13,6 +13,9 @@ const requiredModels = [
   "ChildProfile",
   "ConsentRecord",
   "TextbookSelection",
+  "HomeworkSession",
+  "HomeworkAttempt",
+  "MediaAsset",
   "AuditLog",
 ];
 const requiredEnums = [
@@ -21,6 +24,11 @@ const requiredEnums = [
   "ConsentSubjectType",
   "AuditActorType",
   "AuditOutcome",
+  "HomeworkSessionStatus",
+  "HomeworkSourceType",
+  "HomeworkAttemptStatus",
+  "MediaAssetKind",
+  "MediaRetentionStatus",
 ];
 const forbiddenModels = [
   "Organization",
@@ -33,19 +41,53 @@ const forbiddenModels = [
   "Subscription",
   "ProviderRequest",
 ];
+const forbiddenFieldNames = [
+  "answer",
+  "solution",
+  "hint",
+  "transcript",
+  "ocrResult",
+  "sttResult",
+  "llmPrompt",
+  "llmCompletion",
+  "providerPayload",
+];
+const forbiddenRoutePrefixes = [
+  "/homework",
+  "/voice",
+  "/assets",
+  "/billing",
+  "/school",
+  "/teacher",
+  "/admin",
+];
 const requiredSnippets = [
   "model FamilyMember",
   "model AuthSession",
-  "passwordHash          String?",
-  "accessTokenHash       String",
-  "refreshTokenHash      String",
+  "passwordHash",
+  "accessTokenHash",
+  "refreshTokenHash",
   "@@unique([familyId, userId])",
   "model ChildProfile",
-  "familyId           String",
+  "familyId",
   "model ConsentRecord",
-  "policyVersion   String",
-  "documentVersion String",
+  "policyVersion",
+  "documentVersion",
   "model TextbookSelection",
+  "model HomeworkSession",
+  "childProfileId",
+  "sourceType",
+  "model HomeworkAttempt",
+  "homeworkSessionId",
+  "@@unique([homeworkSessionId, attemptNumber])",
+  "model MediaAsset",
+  "assetKind",
+  "storageKey",
+  "mimeType",
+  "sizeBytes",
+  "retentionStatus",
+  "retentionUntil",
+  "deletedAt",
   "model AuditLog",
 ];
 
@@ -72,9 +114,28 @@ for (const snippet of requiredSnippets) {
   assert(schema.includes(snippet), `Missing tenant or versioning schema snippet: ${snippet}`);
 }
 
+for (const fieldName of forbiddenFieldNames) {
+  const fieldPattern = new RegExp(`^\\s*${fieldName}\\s+`, "im");
+  assert(!fieldPattern.test(schema), `Forbidden homework/media field ${fieldName} exists.`);
+}
+
+const openapiPath = path.resolve(prismaDir, "../../../packages/contracts/openapi.json");
+if (fs.existsSync(openapiPath)) {
+  const openapi = JSON.parse(fs.readFileSync(openapiPath, "utf8"));
+  const paths = Object.keys(openapi.paths ?? {});
+  for (const routePrefix of forbiddenRoutePrefixes) {
+    assert(
+      !paths.some((routePath) => routePath.startsWith(routePrefix)),
+      `Forbidden future API route ${routePrefix} exists in OpenAPI contracts.`,
+    );
+  }
+}
+
 assert(
   !fs.existsSync(path.join(prismaDir, "seed.mjs")),
-  "Seed script exists; Slice 4 uses no seed data.",
+  "Seed script exists; the current foundation uses no seed data.",
 );
 
-console.log("[db] Prisma schema includes family tenant and auth-session constraints.");
+console.log(
+  "[db] Prisma schema includes family tenant, auth-session and homework/media metadata constraints.",
+);

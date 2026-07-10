@@ -37,20 +37,60 @@ enum AuditOutcome {
   ERROR
 }
 
+enum HomeworkSessionStatus {
+  CREATED
+  WAITING_FOR_ATTEMPT
+  PAUSED
+  CANCELLED
+  CLOSED
+}
+
+enum HomeworkSourceType {
+  MANUAL
+  IMAGE
+  SCREENSHOT
+  PDF
+  UNKNOWN
+}
+
+enum HomeworkAttemptStatus {
+  CREATED
+  SUBMITTED
+  CANCELLED
+}
+
+enum MediaAssetKind {
+  HOMEWORK_IMAGE
+  HOMEWORK_SCREENSHOT
+  HOMEWORK_PDF
+  VOICE_AUDIO
+  OTHER
+}
+
+enum MediaRetentionStatus {
+  TEMPORARY
+  RETENTION_EXPIRED
+  DELETION_REQUESTED
+  DELETED
+}
+
 model User {
-  id                    String          @id @default(uuid()) @db.Uuid
-  accountRole           UserRole
-  email                 String?         @unique @db.VarChar(320)
-  passwordHash          String?         @db.VarChar(255)
-  locale                String          @default("ru") @db.VarChar(16)
-  disabledAt            DateTime?
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  auditLogs             AuditLog[]      @relation("AuditActor")
-  authSessions          AuthSession[]
-  childProfile          ChildProfile?
-  consentRecordsGranted ConsentRecord[] @relation("ConsentGrantedBy")
-  familyMemberships     FamilyMember[]
+  id                       String             @id @default(uuid()) @db.Uuid
+  accountRole              UserRole
+  email                    String?            @unique @db.VarChar(320)
+  passwordHash             String?            @db.VarChar(255)
+  locale                   String             @default("ru") @db.VarChar(16)
+  disabledAt               DateTime?
+  createdAt                DateTime           @default(now())
+  updatedAt                DateTime           @updatedAt
+  auditLogs                AuditLog[]         @relation("AuditActor")
+  authSessions             AuthSession[]
+  childProfile             ChildProfile?
+  consentRecordsGranted    ConsentRecord[]    @relation("ConsentGrantedBy")
+  createdHomeworkAttempts  HomeworkAttempt[]  @relation("HomeworkAttemptCreatedBy")
+  createdHomeworkSessions  HomeworkSession[]  @relation("HomeworkSessionCreatedBy")
+  createdMediaAssets       MediaAsset[]       @relation("MediaAssetCreatedBy")
+  familyMemberships        FamilyMember[]
 }
 
 model AuthSession {
@@ -79,6 +119,9 @@ model Family {
   auditLogs          AuditLog[]
   childProfiles      ChildProfile[]
   consentRecords     ConsentRecord[]
+  homeworkAttempts   HomeworkAttempt[]
+  homeworkSessions   HomeworkSession[]
+  mediaAssets        MediaAsset[]
   members            FamilyMember[]
   textbookSelections TextbookSelection[]
 }
@@ -110,6 +153,9 @@ model ChildProfile {
   updatedAt          DateTime            @updatedAt
   consentRecords     ConsentRecord[]
   family             Family              @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  homeworkAttempts   HomeworkAttempt[]
+  homeworkSessions   HomeworkSession[]
+  mediaAssets        MediaAsset[]
   user               User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
   textbookSelections TextbookSelection[]
 
@@ -152,6 +198,78 @@ model TextbookSelection {
 
   @@index([familyId, childProfileId])
   @@index([familyId, subject, gradeLevel])
+}
+
+model HomeworkSession {
+  id             String                @id @default(uuid()) @db.Uuid
+  familyId       String                @db.Uuid
+  childProfileId String                @db.Uuid
+  createdByUserId String?              @db.Uuid
+  subject        String                @default("math") @db.VarChar(40)
+  gradeLevel     Int?
+  sourceType     HomeworkSourceType    @default(UNKNOWN)
+  status         HomeworkSessionStatus @default(CREATED)
+  archivedAt     DateTime?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  attempts       HomeworkAttempt[]
+  childProfile   ChildProfile          @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  createdBy      User?                 @relation("HomeworkSessionCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  family         Family                @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  mediaAssets    MediaAsset[]
+
+  @@index([familyId, childProfileId])
+  @@index([familyId, status])
+  @@index([createdByUserId])
+}
+
+model HomeworkAttempt {
+  id                String                @id @default(uuid()) @db.Uuid
+  familyId          String                @db.Uuid
+  homeworkSessionId String                @db.Uuid
+  childProfileId    String                @db.Uuid
+  createdByUserId   String?               @db.Uuid
+  attemptNumber     Int
+  status            HomeworkAttemptStatus @default(CREATED)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  childProfile      ChildProfile          @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  createdBy         User?                 @relation("HomeworkAttemptCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  family            Family                @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  homeworkSession   HomeworkSession       @relation(fields: [homeworkSessionId], references: [id], onDelete: Cascade)
+
+  @@unique([homeworkSessionId, attemptNumber])
+  @@index([familyId, childProfileId])
+  @@index([familyId, status])
+  @@index([createdByUserId])
+}
+
+model MediaAsset {
+  id                   String               @id @default(uuid()) @db.Uuid
+  familyId             String               @db.Uuid
+  childProfileId       String?              @db.Uuid
+  homeworkSessionId    String?              @db.Uuid
+  createdByUserId      String?              @db.Uuid
+  assetKind            MediaAssetKind
+  storageKey           String?              @db.VarChar(512)
+  mimeType             String               @db.VarChar(120)
+  sizeBytes            BigInt
+  checksumSha256       String?              @db.VarChar(64)
+  retentionStatus      MediaRetentionStatus @default(TEMPORARY)
+  retentionUntil       DateTime
+  deletionRequestedAt  DateTime?
+  deletedAt            DateTime?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  childProfile         ChildProfile?        @relation(fields: [childProfileId], references: [id], onDelete: SetNull)
+  createdBy            User?                @relation("MediaAssetCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  family               Family               @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  homeworkSession      HomeworkSession?     @relation(fields: [homeworkSessionId], references: [id], onDelete: SetNull)
+
+  @@index([familyId, childProfileId])
+  @@index([familyId, retentionStatus, retentionUntil])
+  @@index([homeworkSessionId])
+  @@index([createdByUserId])
 }
 
 model AuditLog {
