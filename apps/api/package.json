@@ -16,7 +16,7 @@
     "openapi:check": "pnpm.cmd run build && node dist/openapi/generate-openapi.js --check",
     "openapi:generate": "pnpm.cmd run build && node dist/openapi/generate-openapi.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm.cmd run db:generate && pnpm.cmd run build && node --test test/logging-audit.test.mjs test/media-storage.test.mjs test/homework-state.test.mjs test/assistance-contract.test.mjs test/ocr-boundary.test.mjs test/auth.e2e.mjs"
+    "test": "pnpm.cmd run db:generate && pnpm.cmd run build && node --test test/logging-audit.test.mjs test/media-storage.test.mjs test/homework-state.test.mjs test/assistance-contract.test.mjs test/ocr-boundary.test.mjs test/stt-boundary.test.mjs test/auth.e2e.mjs"
   },
   "dependencies": {
     "@nestjs/common": "11.1.27",
