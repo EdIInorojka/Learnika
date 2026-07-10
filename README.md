@@ -153,6 +153,10 @@ and school features are deferred.
 
 Wave 1 closure evidence is recorded in `docs/wave-1/closure-gate.md`.
 
+Wave 2 planning gate documents are in `docs/wave-2/`. They define the planned
+homework, media, provider, voice, safety and readiness boundaries only; Wave 2
+product implementation still requires explicit approval.
+
 On Windows PowerShell, use `.cmd` package-tool shims:
 
 ```powershell
