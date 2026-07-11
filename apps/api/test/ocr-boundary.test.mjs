@@ -223,15 +223,7 @@ test("Slice 6 remains internal-only with no persistence public routes or OpenAPI
     fs.readFileSync(path.join(repoRoot, "packages", "contracts", "openapi.json"), "utf8"),
   );
   const routePaths = Object.keys(openapi.paths ?? {});
-  for (const routePrefix of [
-    "/assets",
-    "/assistance",
-    "/hints",
-    "/homework",
-    "/media",
-    "/ocr",
-    "/voice",
-  ]) {
+  for (const routePrefix of ["/assets", "/assistance", "/hints", "/media", "/ocr", "/voice"]) {
     assert.equal(
       routePaths.some((routePath) => routePath.startsWith(routePrefix)),
       false,

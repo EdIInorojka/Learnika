@@ -52,15 +52,12 @@ const forbiddenFieldNames = [
   "llmCompletion",
   "providerPayload",
 ];
-const forbiddenRoutePrefixes = [
-  "/homework",
-  "/voice",
-  "/assets",
-  "/billing",
-  "/school",
-  "/teacher",
-  "/admin",
-];
+const forbiddenRoutePrefixes = ["/voice", "/assets", "/billing", "/school", "/teacher", "/admin"];
+const allowedHomeworkRoutes = new Set([
+  "/homework/sessions",
+  "/homework/sessions/{homeworkSessionId}",
+  "/homework/sessions/{homeworkSessionId}/attempts",
+]);
 const requiredSnippets = [
   "model FamilyMember",
   "model AuthSession",
@@ -123,6 +120,12 @@ const openapiPath = path.resolve(prismaDir, "../../../packages/contracts/openapi
 if (fs.existsSync(openapiPath)) {
   const openapi = JSON.parse(fs.readFileSync(openapiPath, "utf8"));
   const paths = Object.keys(openapi.paths ?? {});
+  for (const routePath of paths) {
+    assert(
+      !routePath.startsWith("/homework") || allowedHomeworkRoutes.has(routePath),
+      `Forbidden future homework API route ${routePath} exists in OpenAPI contracts.`,
+    );
+  }
   for (const routePrefix of forbiddenRoutePrefixes) {
     assert(
       !paths.some((routePath) => routePath.startsWith(routePrefix)),

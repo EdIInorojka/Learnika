@@ -290,7 +290,6 @@ test("Slice 8 remains internal-only with no persistence public routes OpenAPI ch
     "/assets",
     "/assistance",
     "/hints",
-    "/homework",
     "/llm",
     "/media",
     "/ocr",

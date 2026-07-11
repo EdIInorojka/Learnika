@@ -304,3 +304,129 @@ export class SetupStatusResponseDto {
   @ApiProperty({ type: () => SetupStatusResponseDataDto })
   declare data: SetupStatusResponseDataDto;
 }
+
+export class CreateHomeworkSessionRequestDto {
+  @ApiProperty({ format: "uuid" })
+  declare childProfileId: string;
+
+  @ApiPropertyOptional({ maximum: 9, minimum: 7 })
+  declare gradeLevel?: number;
+
+  @ApiPropertyOptional({
+    default: "UNKNOWN",
+    enum: ["IMAGE", "MANUAL", "PDF", "SCREENSHOT", "UNKNOWN"],
+  })
+  declare sourceType?: "IMAGE" | "MANUAL" | "PDF" | "SCREENSHOT" | "UNKNOWN";
+
+  @ApiPropertyOptional({ default: "math", enum: ["math"] })
+  declare subject?: "math";
+}
+
+export class CreateHomeworkAttemptRequestDto {
+  @ApiPropertyOptional({ default: "CREATED", enum: ["CREATED"] })
+  declare status?: "CREATED";
+}
+
+export class HomeworkSessionSummaryDto {
+  @ApiProperty({ format: "uuid" })
+  declare id: string;
+
+  @ApiProperty({ format: "uuid" })
+  declare familyId: string;
+
+  @ApiProperty({ format: "uuid" })
+  declare childProfileId: string;
+
+  @ApiProperty({ format: "uuid", nullable: true, type: String })
+  declare createdByUserId: string | null;
+
+  @ApiProperty({ enum: ["math"] })
+  declare subject: "math";
+
+  @ApiProperty({ maximum: 9, minimum: 7, nullable: true, type: Number })
+  declare gradeLevel: number | null;
+
+  @ApiProperty({ enum: ["IMAGE", "MANUAL", "PDF", "SCREENSHOT", "UNKNOWN"] })
+  declare sourceType: "IMAGE" | "MANUAL" | "PDF" | "SCREENSHOT" | "UNKNOWN";
+
+  @ApiProperty({ enum: ["CANCELLED", "CLOSED", "CREATED", "PAUSED", "WAITING_FOR_ATTEMPT"] })
+  declare status: "CANCELLED" | "CLOSED" | "CREATED" | "PAUSED" | "WAITING_FOR_ATTEMPT";
+
+  @ApiProperty({ format: "date-time", nullable: true, type: String })
+  declare archivedAt: string | null;
+
+  @ApiProperty({ format: "date-time" })
+  declare createdAt: string;
+
+  @ApiProperty({ format: "date-time" })
+  declare updatedAt: string;
+}
+
+export class HomeworkSessionResponseDataDto {
+  @ApiProperty({ type: () => HomeworkSessionSummaryDto })
+  declare session: HomeworkSessionSummaryDto;
+}
+
+export class HomeworkSessionResponseDto {
+  @ApiProperty({ type: () => HomeworkSessionResponseDataDto })
+  declare data: HomeworkSessionResponseDataDto;
+}
+
+export class HomeworkSessionsResponseDataDto {
+  @ApiProperty({ type: () => [HomeworkSessionSummaryDto] })
+  declare sessions: HomeworkSessionSummaryDto[];
+}
+
+export class HomeworkSessionsResponseDto {
+  @ApiProperty({ type: () => HomeworkSessionsResponseDataDto })
+  declare data: HomeworkSessionsResponseDataDto;
+}
+
+export class HomeworkAttemptSummaryDto {
+  @ApiProperty({ format: "uuid" })
+  declare id: string;
+
+  @ApiProperty({ format: "uuid" })
+  declare familyId: string;
+
+  @ApiProperty({ format: "uuid" })
+  declare homeworkSessionId: string;
+
+  @ApiProperty({ format: "uuid" })
+  declare childProfileId: string;
+
+  @ApiProperty({ format: "uuid", nullable: true, type: String })
+  declare createdByUserId: string | null;
+
+  @ApiProperty({ minimum: 1 })
+  declare attemptNumber: number;
+
+  @ApiProperty({ enum: ["CANCELLED", "CREATED", "SUBMITTED"] })
+  declare status: "CANCELLED" | "CREATED" | "SUBMITTED";
+
+  @ApiProperty({ format: "date-time" })
+  declare createdAt: string;
+
+  @ApiProperty({ format: "date-time" })
+  declare updatedAt: string;
+}
+
+export class HomeworkAttemptResponseDataDto {
+  @ApiProperty({ type: () => HomeworkAttemptSummaryDto })
+  declare attempt: HomeworkAttemptSummaryDto;
+}
+
+export class HomeworkAttemptResponseDto {
+  @ApiProperty({ type: () => HomeworkAttemptResponseDataDto })
+  declare data: HomeworkAttemptResponseDataDto;
+}
+
+export class HomeworkAttemptsResponseDataDto {
+  @ApiProperty({ type: () => [HomeworkAttemptSummaryDto] })
+  declare attempts: HomeworkAttemptSummaryDto[];
+}
+
+export class HomeworkAttemptsResponseDto {
+  @ApiProperty({ type: () => HomeworkAttemptsResponseDataDto })
+  declare data: HomeworkAttemptsResponseDataDto;
+}

@@ -16,6 +16,9 @@ const requiredPaths = [
   "/family-setup/consent-status",
   "/family-setup/children/{childProfileId}/learning-context",
   "/family-setup/status",
+  "/homework/sessions",
+  "/homework/sessions/{homeworkSessionId}",
+  "/homework/sessions/{homeworkSessionId}/attempts",
 ];
 const protectedOperations = [
   ["post", "/auth/logout"],
@@ -28,26 +31,53 @@ const protectedOperations = [
   ["get", "/family-setup/consent-status"],
   ["put", "/family-setup/children/{childProfileId}/learning-context"],
   ["get", "/family-setup/status"],
+  ["post", "/homework/sessions"],
+  ["get", "/homework/sessions"],
+  ["get", "/homework/sessions/{homeworkSessionId}"],
+  ["post", "/homework/sessions/{homeworkSessionId}/attempts"],
+  ["get", "/homework/sessions/{homeworkSessionId}/attempts"],
 ];
 const forbiddenPathFragments = [
   "admin",
   "asset",
   "billing",
-  "homework",
+  "hint",
   "llm",
+  "media",
   "ocr",
   "school",
   "stt",
   "teacher",
+  "upload",
   "voice",
 ];
+const allowedHomeworkPaths = new Set([
+  "/homework/sessions",
+  "/homework/sessions/{homeworkSessionId}",
+  "/homework/sessions/{homeworkSessionId}/attempts",
+]);
 const forbiddenContractTerms = [
   "AUTH_TOKEN_SECRET",
   "Cookie",
+  "exactSolution",
+  "finalAnswer",
+  "fullSolution",
+  "generatedHint",
   "learnika_local_password",
+  "llmCompletion",
+  "llmPrompt",
+  "modelOutput",
+  "ocrResult",
   "passwordHash",
+  "providerPayload",
+  "rawMedia",
   "refreshTokenHash",
   "accessTokenHash",
+  "solutionText",
+  "sourceAnswer",
+  "sttResult",
+  "textbookContent",
+  "transcript",
 ];
 
 function fail(message) {
@@ -76,6 +106,10 @@ for (const requiredPath of requiredPaths) {
 
 for (const pathName of Object.keys(spec.paths ?? {})) {
   const normalized = pathName.toLowerCase();
+
+  if (normalized.startsWith("/homework") && !allowedHomeworkPaths.has(pathName)) {
+    fail(`Forbidden future-scope homework path is documented: ${pathName}`);
+  }
 
   if (forbiddenPathFragments.some((fragment) => normalized.includes(fragment))) {
     fail(`Forbidden future-scope path is documented: ${pathName}`);

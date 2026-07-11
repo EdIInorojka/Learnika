@@ -265,13 +265,13 @@ test("diagnostic redaction removes sensitive homework state values", () => {
   assert.equal(redacted.includes("HOMEWORK_ATTEMPT_TRANSITION_INVALID"), true);
 });
 
-test("Slice 4 does not create public homework routes or controllers", () => {
+test("Slice 4 keeps homework state helpers internal and creates no media or voice routes", () => {
   const repoRoot = path.resolve(process.cwd(), "..", "..");
   const openapi = JSON.parse(
     fs.readFileSync(path.join(repoRoot, "packages", "contracts", "openapi.json"), "utf8"),
   );
   const routePaths = Object.keys(openapi.paths ?? {});
-  for (const routePrefix of ["/assets", "/homework", "/media", "/voice"]) {
+  for (const routePrefix of ["/assets", "/media", "/voice"]) {
     assert.equal(
       routePaths.some((routePath) => routePath.startsWith(routePrefix)),
       false,

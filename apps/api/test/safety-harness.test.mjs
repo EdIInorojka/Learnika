@@ -454,17 +454,23 @@ test("media safety keeps original PII filenames out of generated storage metadat
   assert.equal(serialized.includes("originalFilename"), false);
 });
 
-test("Slice 9 harness sees no public routes OpenAPI additions provider SDKs or database persistence", () => {
+test("safety harness sees only approved homework metadata routes and no provider scope", () => {
   const openapi = JSON.parse(
     fs.readFileSync(path.join(repoRoot, "packages", "contracts", "openapi.json"), "utf8"),
   );
   const routePaths = Object.keys(openapi.paths ?? {});
+  const homeworkPaths = routePaths.filter((routePath) => routePath.startsWith("/homework")).sort();
+  assert.deepEqual(homeworkPaths, [
+    "/homework/sessions",
+    "/homework/sessions/{homeworkSessionId}",
+    "/homework/sessions/{homeworkSessionId}/attempts",
+  ]);
+
   for (const routePrefix of [
     "/ai",
     "/assets",
     "/assistance",
     "/hints",
-    "/homework",
     "/llm",
     "/media",
     "/ocr",

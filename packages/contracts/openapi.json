@@ -513,11 +513,266 @@
         "summary": "Get authenticated parent onboarding and family setup status.",
         "tags": ["family setup"]
       }
+    },
+    "/homework/sessions": {
+      "post": {
+        "operationId": "createSession",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateHomeworkSessionRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HomeworkSessionResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Create metadata for a homework session.",
+        "tags": ["homework metadata"]
+      },
+      "get": {
+        "operationId": "listSessions",
+        "parameters": [
+          {
+            "name": "childProfileId",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HomeworkSessionsResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "List homework session metadata for the authenticated family.",
+        "tags": ["homework metadata"]
+      }
+    },
+    "/homework/sessions/{homeworkSessionId}": {
+      "get": {
+        "operationId": "getSession",
+        "parameters": [
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HomeworkSessionResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Get one homework session metadata record.",
+        "tags": ["homework metadata"]
+      }
+    },
+    "/homework/sessions/{homeworkSessionId}/attempts": {
+      "post": {
+        "operationId": "createAttempt",
+        "parameters": [
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateHomeworkAttemptRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HomeworkAttemptResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Create metadata for a homework attempt.",
+        "tags": ["homework metadata"]
+      },
+      "get": {
+        "operationId": "listAttempts",
+        "parameters": [
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HomeworkAttemptsResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "List metadata for homework attempts in one session.",
+        "tags": ["homework metadata"]
+      }
     }
   },
   "info": {
     "title": "Learnika API",
-    "description": "OpenAPI contract for currently implemented Learnika Wave 1 routes.",
+    "description": "OpenAPI contract for currently implemented Learnika routes.",
     "version": "0.0.0",
     "contact": {}
   },
@@ -809,6 +1064,138 @@
       "SetupStatusResponseDto": {
         "type": "object",
         "properties": { "data": { "$ref": "#/components/schemas/SetupStatusResponseDataDto" } },
+        "required": ["data"]
+      },
+      "CreateHomeworkSessionRequestDto": {
+        "type": "object",
+        "properties": {
+          "childProfileId": { "type": "string", "format": "uuid" },
+          "gradeLevel": { "type": "number", "maximum": 9, "minimum": 7 },
+          "sourceType": {
+            "type": "string",
+            "default": "UNKNOWN",
+            "enum": ["IMAGE", "MANUAL", "PDF", "SCREENSHOT", "UNKNOWN"]
+          },
+          "subject": { "type": "string", "default": "math", "enum": ["math"] }
+        },
+        "required": ["childProfileId"]
+      },
+      "HomeworkSessionSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "familyId": { "type": "string", "format": "uuid" },
+          "childProfileId": { "type": "string", "format": "uuid" },
+          "createdByUserId": { "type": "string", "format": "uuid", "nullable": true },
+          "subject": { "type": "string", "enum": ["math"] },
+          "gradeLevel": { "type": "number", "maximum": 9, "minimum": 7, "nullable": true },
+          "sourceType": {
+            "type": "string",
+            "enum": ["IMAGE", "MANUAL", "PDF", "SCREENSHOT", "UNKNOWN"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["CANCELLED", "CLOSED", "CREATED", "PAUSED", "WAITING_FOR_ATTEMPT"]
+          },
+          "archivedAt": { "type": "string", "format": "date-time", "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "id",
+          "familyId",
+          "childProfileId",
+          "createdByUserId",
+          "subject",
+          "gradeLevel",
+          "sourceType",
+          "status",
+          "archivedAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "HomeworkSessionResponseDataDto": {
+        "type": "object",
+        "properties": { "session": { "$ref": "#/components/schemas/HomeworkSessionSummaryDto" } },
+        "required": ["session"]
+      },
+      "HomeworkSessionResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/HomeworkSessionResponseDataDto" } },
+        "required": ["data"]
+      },
+      "HomeworkSessionsResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "sessions": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/HomeworkSessionSummaryDto" }
+          }
+        },
+        "required": ["sessions"]
+      },
+      "HomeworkSessionsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": { "$ref": "#/components/schemas/HomeworkSessionsResponseDataDto" }
+        },
+        "required": ["data"]
+      },
+      "CreateHomeworkAttemptRequestDto": {
+        "type": "object",
+        "properties": { "status": { "type": "string", "default": "CREATED", "enum": ["CREATED"] } }
+      },
+      "HomeworkAttemptSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "familyId": { "type": "string", "format": "uuid" },
+          "homeworkSessionId": { "type": "string", "format": "uuid" },
+          "childProfileId": { "type": "string", "format": "uuid" },
+          "createdByUserId": { "type": "string", "format": "uuid", "nullable": true },
+          "attemptNumber": { "type": "number", "minimum": 1 },
+          "status": { "type": "string", "enum": ["CANCELLED", "CREATED", "SUBMITTED"] },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "id",
+          "familyId",
+          "homeworkSessionId",
+          "childProfileId",
+          "createdByUserId",
+          "attemptNumber",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "HomeworkAttemptResponseDataDto": {
+        "type": "object",
+        "properties": { "attempt": { "$ref": "#/components/schemas/HomeworkAttemptSummaryDto" } },
+        "required": ["attempt"]
+      },
+      "HomeworkAttemptResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/HomeworkAttemptResponseDataDto" } },
+        "required": ["data"]
+      },
+      "HomeworkAttemptsResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "attempts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/HomeworkAttemptSummaryDto" }
+          }
+        },
+        "required": ["attempts"]
+      },
+      "HomeworkAttemptsResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": { "$ref": "#/components/schemas/HomeworkAttemptsResponseDataDto" }
+        },
         "required": ["data"]
       }
     }

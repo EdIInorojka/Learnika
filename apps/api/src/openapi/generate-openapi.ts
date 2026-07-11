@@ -23,7 +23,7 @@ async function createOpenApiJson(): Promise<string> {
   );
   const config = new DocumentBuilder()
     .setTitle("Learnika API")
-    .setDescription("OpenAPI contract for currently implemented Learnika Wave 1 routes.")
+    .setDescription("OpenAPI contract for currently implemented Learnika routes.")
     .setVersion("0.0.0")
     .addBearerAuth(
       {
