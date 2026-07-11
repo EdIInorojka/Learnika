@@ -60,6 +60,7 @@ const allowedHomeworkRoutes = new Set([
   "/homework/sessions/{homeworkSessionId}/media-assets",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload",
 ]);
 const requiredSnippets = [
   "model FamilyMember",

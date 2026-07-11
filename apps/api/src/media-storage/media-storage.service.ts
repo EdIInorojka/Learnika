@@ -128,6 +128,10 @@ export class MediaStorageService {
     return { ...this.config };
   }
 
+  isSupportedMimeType(mimeType: string): boolean {
+    return Object.hasOwn(extensionByMimeType, mimeType);
+  }
+
   validateAsset(input: MediaValidationInput): void {
     if (!this.isSupportedAssetKind(input.assetKind)) {
       throw safeMediaStorageFailure(

@@ -994,6 +994,88 @@
         "summary": "Request deletion for one homework media asset metadata record.",
         "tags": ["media asset metadata"]
       }
+    },
+    "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload": {
+      "post": {
+        "operationId": "uploadMediaAsset",
+        "parameters": [
+          {
+            "name": "mediaAssetId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          },
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": { "$ref": "#/components/schemas/MediaAssetUploadRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MediaAssetResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "413": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "415": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Upload one homework media file to local development storage.",
+        "tags": ["local media upload"]
+      }
     }
   },
   "info": {
@@ -1520,6 +1602,17 @@
         "type": "object",
         "properties": { "retentionStatus": { "type": "string", "enum": ["DELETION_REQUESTED"] } },
         "required": ["retentionStatus"]
+      },
+      "MediaAssetUploadRequestDto": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "One local-development homework file.",
+            "format": "binary"
+          }
+        },
+        "required": ["file"]
       }
     }
   }

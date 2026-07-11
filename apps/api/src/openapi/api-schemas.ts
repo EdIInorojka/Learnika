@@ -453,6 +453,15 @@ export class UpdateMediaAssetRetentionRequestDto {
   declare retentionStatus: "DELETION_REQUESTED";
 }
 
+export class MediaAssetUploadRequestDto {
+  @ApiProperty({
+    description: "One local-development homework file.",
+    format: "binary",
+    type: "string",
+  })
+  declare file: string;
+}
+
 export class MediaAssetSummaryDto {
   @ApiProperty({ format: "uuid" })
   declare id: string;

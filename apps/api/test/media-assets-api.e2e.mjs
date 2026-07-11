@@ -511,12 +511,14 @@ test("media asset metadata API requires auth enforces tenancy and exposes no uns
     "/homework/sessions/{homeworkSessionId}/media-assets",
     "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
     "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
+    "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload",
   ]);
   for (const [method, pathName] of [
     ["post", "/homework/sessions/{homeworkSessionId}/media-assets"],
     ["get", "/homework/sessions/{homeworkSessionId}/media-assets"],
     ["get", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}"],
     ["patch", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention"],
+    ["post", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload"],
   ]) {
     assert.equal(
       openapi.paths[pathName][method].security.some((entry) => Object.hasOwn(entry, "bearerAuth")),
