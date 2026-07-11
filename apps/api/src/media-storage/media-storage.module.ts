@@ -4,6 +4,11 @@ import { MediaStorageService } from "./media-storage.service";
 
 @Module({
   exports: [MediaStorageService],
-  providers: [MediaStorageService],
+  providers: [
+    {
+      provide: MediaStorageService,
+      useFactory: () => new MediaStorageService(),
+    },
+  ],
 })
 export class MediaStorageModule {}

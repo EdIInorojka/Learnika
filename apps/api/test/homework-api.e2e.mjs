@@ -440,6 +440,9 @@ test("homework metadata API requires auth enforces tenancy and exposes no unsafe
     "/homework/sessions",
     "/homework/sessions/{homeworkSessionId}",
     "/homework/sessions/{homeworkSessionId}/attempts",
+    "/homework/sessions/{homeworkSessionId}/media-assets",
+    "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+    "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
   ]);
   for (const [method, pathName] of [
     ["post", "/homework/sessions"],

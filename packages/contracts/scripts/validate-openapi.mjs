@@ -19,6 +19,9 @@ const requiredPaths = [
   "/homework/sessions",
   "/homework/sessions/{homeworkSessionId}",
   "/homework/sessions/{homeworkSessionId}/attempts",
+  "/homework/sessions/{homeworkSessionId}/media-assets",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
 ];
 const protectedOperations = [
   ["post", "/auth/logout"],
@@ -36,6 +39,10 @@ const protectedOperations = [
   ["get", "/homework/sessions/{homeworkSessionId}"],
   ["post", "/homework/sessions/{homeworkSessionId}/attempts"],
   ["get", "/homework/sessions/{homeworkSessionId}/attempts"],
+  ["post", "/homework/sessions/{homeworkSessionId}/media-assets"],
+  ["get", "/homework/sessions/{homeworkSessionId}/media-assets"],
+  ["get", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}"],
+  ["patch", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention"],
 ];
 const forbiddenPathFragments = [
   "admin",
@@ -55,6 +62,14 @@ const allowedHomeworkPaths = new Set([
   "/homework/sessions",
   "/homework/sessions/{homeworkSessionId}",
   "/homework/sessions/{homeworkSessionId}/attempts",
+  "/homework/sessions/{homeworkSessionId}/media-assets",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
+]);
+const allowedMediaMetadataPaths = new Set([
+  "/homework/sessions/{homeworkSessionId}/media-assets",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
 ]);
 const forbiddenContractTerms = [
   "AUTH_TOKEN_SECRET",
@@ -111,7 +126,10 @@ for (const pathName of Object.keys(spec.paths ?? {})) {
     fail(`Forbidden future-scope homework path is documented: ${pathName}`);
   }
 
-  if (forbiddenPathFragments.some((fragment) => normalized.includes(fragment))) {
+  if (
+    !allowedMediaMetadataPaths.has(pathName) &&
+    forbiddenPathFragments.some((fragment) => normalized.includes(fragment))
+  ) {
     fail(`Forbidden future-scope path is documented: ${pathName}`);
   }
 }

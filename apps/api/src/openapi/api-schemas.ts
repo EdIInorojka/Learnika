@@ -430,3 +430,97 @@ export class HomeworkAttemptsResponseDto {
   @ApiProperty({ type: () => HomeworkAttemptsResponseDataDto })
   declare data: HomeworkAttemptsResponseDataDto;
 }
+
+export class CreateMediaAssetRequestDto {
+  @ApiProperty({ enum: ["HOMEWORK_IMAGE", "HOMEWORK_PDF", "HOMEWORK_SCREENSHOT"] })
+  declare assetKind: "HOMEWORK_IMAGE" | "HOMEWORK_PDF" | "HOMEWORK_SCREENSHOT";
+
+  @ApiProperty({
+    enum: ["application/pdf", "image/jpeg", "image/png", "image/webp"],
+    maxLength: 120,
+  })
+  declare mimeType: string;
+
+  @ApiProperty({ maximum: 10485760, minimum: 0 })
+  declare sizeBytes: number;
+
+  @ApiPropertyOptional({ maxLength: 64, minLength: 64, pattern: "^[0-9a-fA-F]{64}$" })
+  declare checksumSha256?: string;
+}
+
+export class UpdateMediaAssetRetentionRequestDto {
+  @ApiProperty({ enum: ["DELETION_REQUESTED"] })
+  declare retentionStatus: "DELETION_REQUESTED";
+}
+
+export class MediaAssetSummaryDto {
+  @ApiProperty({ format: "uuid" })
+  declare id: string;
+
+  @ApiProperty({ format: "uuid" })
+  declare familyId: string;
+
+  @ApiProperty({ format: "uuid", nullable: true, type: String })
+  declare childProfileId: string | null;
+
+  @ApiProperty({ format: "uuid", nullable: true, type: String })
+  declare homeworkSessionId: string | null;
+
+  @ApiProperty({ format: "uuid", nullable: true, type: String })
+  declare createdByUserId: string | null;
+
+  @ApiProperty({ enum: ["HOMEWORK_IMAGE", "HOMEWORK_PDF", "HOMEWORK_SCREENSHOT"] })
+  declare assetKind: "HOMEWORK_IMAGE" | "HOMEWORK_PDF" | "HOMEWORK_SCREENSHOT";
+
+  @ApiProperty({ maxLength: 120 })
+  declare mimeType: string;
+
+  @ApiProperty({ minimum: 0 })
+  declare sizeBytes: number;
+
+  @ApiProperty({ maxLength: 64, nullable: true, type: String })
+  declare checksumSha256: string | null;
+
+  @ApiProperty({ maxLength: 512, nullable: true, type: String })
+  declare storageKey: string | null;
+
+  @ApiProperty({
+    enum: ["DELETED", "DELETION_REQUESTED", "RETENTION_EXPIRED", "TEMPORARY"],
+  })
+  declare retentionStatus: "DELETED" | "DELETION_REQUESTED" | "RETENTION_EXPIRED" | "TEMPORARY";
+
+  @ApiProperty({ format: "date-time" })
+  declare retentionUntil: string;
+
+  @ApiProperty({ format: "date-time", nullable: true, type: String })
+  declare deletionRequestedAt: string | null;
+
+  @ApiProperty({ format: "date-time", nullable: true, type: String })
+  declare deletedAt: string | null;
+
+  @ApiProperty({ format: "date-time" })
+  declare createdAt: string;
+
+  @ApiProperty({ format: "date-time" })
+  declare updatedAt: string;
+}
+
+export class MediaAssetResponseDataDto {
+  @ApiProperty({ type: () => MediaAssetSummaryDto })
+  declare mediaAsset: MediaAssetSummaryDto;
+}
+
+export class MediaAssetResponseDto {
+  @ApiProperty({ type: () => MediaAssetResponseDataDto })
+  declare data: MediaAssetResponseDataDto;
+}
+
+export class MediaAssetsResponseDataDto {
+  @ApiProperty({ type: () => [MediaAssetSummaryDto] })
+  declare mediaAssets: MediaAssetSummaryDto[];
+}
+
+export class MediaAssetsResponseDto {
+  @ApiProperty({ type: () => MediaAssetsResponseDataDto })
+  declare data: MediaAssetsResponseDataDto;
+}

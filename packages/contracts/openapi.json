@@ -768,6 +768,232 @@
         "summary": "List metadata for homework attempts in one session.",
         "tags": ["homework metadata"]
       }
+    },
+    "/homework/sessions/{homeworkSessionId}/media-assets": {
+      "post": {
+        "operationId": "createMediaAsset",
+        "parameters": [
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateMediaAssetRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MediaAssetResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Create metadata for a homework media asset.",
+        "tags": ["media asset metadata"]
+      },
+      "get": {
+        "operationId": "listMediaAssets",
+        "parameters": [
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MediaAssetsResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "List media asset metadata for one homework session.",
+        "tags": ["media asset metadata"]
+      }
+    },
+    "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}": {
+      "get": {
+        "operationId": "getMediaAsset",
+        "parameters": [
+          {
+            "name": "mediaAssetId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          },
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MediaAssetResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Get one homework media asset metadata record.",
+        "tags": ["media asset metadata"]
+      }
+    },
+    "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention": {
+      "patch": {
+        "operationId": "requestDeletion",
+        "parameters": [
+          {
+            "name": "mediaAssetId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          },
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateMediaAssetRetentionRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MediaAssetResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Request deletion for one homework media asset metadata record.",
+        "tags": ["media asset metadata"]
+      }
     }
   },
   "info": {
@@ -1197,6 +1423,103 @@
           "data": { "$ref": "#/components/schemas/HomeworkAttemptsResponseDataDto" }
         },
         "required": ["data"]
+      },
+      "CreateMediaAssetRequestDto": {
+        "type": "object",
+        "properties": {
+          "assetKind": {
+            "type": "string",
+            "enum": ["HOMEWORK_IMAGE", "HOMEWORK_PDF", "HOMEWORK_SCREENSHOT"]
+          },
+          "mimeType": {
+            "type": "string",
+            "enum": ["application/pdf", "image/jpeg", "image/png", "image/webp"],
+            "maxLength": 120
+          },
+          "sizeBytes": { "type": "number", "maximum": 10485760, "minimum": 0 },
+          "checksumSha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[0-9a-fA-F]{64}$"
+          }
+        },
+        "required": ["assetKind", "mimeType", "sizeBytes"]
+      },
+      "MediaAssetSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "familyId": { "type": "string", "format": "uuid" },
+          "childProfileId": { "type": "string", "format": "uuid", "nullable": true },
+          "homeworkSessionId": { "type": "string", "format": "uuid", "nullable": true },
+          "createdByUserId": { "type": "string", "format": "uuid", "nullable": true },
+          "assetKind": {
+            "type": "string",
+            "enum": ["HOMEWORK_IMAGE", "HOMEWORK_PDF", "HOMEWORK_SCREENSHOT"]
+          },
+          "mimeType": { "type": "string", "maxLength": 120 },
+          "sizeBytes": { "type": "number", "minimum": 0 },
+          "checksumSha256": { "type": "string", "maxLength": 64, "nullable": true },
+          "storageKey": { "type": "string", "maxLength": 512, "nullable": true },
+          "retentionStatus": {
+            "type": "string",
+            "enum": ["DELETED", "DELETION_REQUESTED", "RETENTION_EXPIRED", "TEMPORARY"]
+          },
+          "retentionUntil": { "type": "string", "format": "date-time" },
+          "deletionRequestedAt": { "type": "string", "format": "date-time", "nullable": true },
+          "deletedAt": { "type": "string", "format": "date-time", "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "id",
+          "familyId",
+          "childProfileId",
+          "homeworkSessionId",
+          "createdByUserId",
+          "assetKind",
+          "mimeType",
+          "sizeBytes",
+          "checksumSha256",
+          "storageKey",
+          "retentionStatus",
+          "retentionUntil",
+          "deletionRequestedAt",
+          "deletedAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MediaAssetResponseDataDto": {
+        "type": "object",
+        "properties": { "mediaAsset": { "$ref": "#/components/schemas/MediaAssetSummaryDto" } },
+        "required": ["mediaAsset"]
+      },
+      "MediaAssetResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/MediaAssetResponseDataDto" } },
+        "required": ["data"]
+      },
+      "MediaAssetsResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "mediaAssets": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MediaAssetSummaryDto" }
+          }
+        },
+        "required": ["mediaAssets"]
+      },
+      "MediaAssetsResponseDto": {
+        "type": "object",
+        "properties": { "data": { "$ref": "#/components/schemas/MediaAssetsResponseDataDto" } },
+        "required": ["data"]
+      },
+      "UpdateMediaAssetRetentionRequestDto": {
+        "type": "object",
+        "properties": { "retentionStatus": { "type": "string", "enum": ["DELETION_REQUESTED"] } },
+        "required": ["retentionStatus"]
       }
     }
   }
