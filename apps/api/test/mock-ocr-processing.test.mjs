@@ -228,7 +228,7 @@ test("orchestration results contain no raw media storage key or unsafe fields", 
   }
 });
 
-test("Slice 15 creates no persistence object access public route or contract expansion", () => {
+test("Slice 15 creates no persistence object access or provider route expansion", () => {
   const repoRoot = path.resolve(process.cwd(), "..", "..");
   const sourceDir = path.join(process.cwd(), "src", "mock-ocr-processing");
   const files = fs.readdirSync(sourceDir);
@@ -264,11 +264,11 @@ test("Slice 15 creates no persistence object access public route or contract exp
   const openapi = JSON.parse(
     fs.readFileSync(path.join(repoRoot, "packages", "contracts", "openapi.json"), "utf8"),
   );
-  assert.equal(
-    Object.keys(openapi.paths ?? {}).some((routePath) =>
+  assert.deepEqual(
+    Object.keys(openapi.paths ?? {}).filter((routePath) =>
       /ocr|processing|readiness|recognition/i.test(routePath),
     ),
-    false,
+    ["/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate"],
   );
 
   const prismaSchema = fs.readFileSync(path.join(process.cwd(), "prisma", "schema.prisma"), "utf8");

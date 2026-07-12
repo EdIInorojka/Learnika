@@ -59,6 +59,7 @@ const allowedHomeworkRoutes = new Set([
   "/homework/sessions/{homeworkSessionId}/attempts",
   "/homework/sessions/{homeworkSessionId}/media-assets",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload",
 ]);

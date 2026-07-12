@@ -931,6 +931,76 @@
         "tags": ["media asset metadata"]
       }
     },
+    "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate": {
+      "post": {
+        "operationId": "createMockOcrCandidate",
+        "parameters": [
+          {
+            "name": "mediaAssetId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          },
+          {
+            "name": "homeworkSessionId",
+            "required": true,
+            "in": "path",
+            "schema": { "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MockOcrCandidateRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/MockOcrCandidateResponseDto" }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "security": [{ "bearerAuth": [] }],
+        "summary": "Create an untrusted mock OCR candidate for learner review.",
+        "tags": ["media asset metadata"]
+      }
+    },
     "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention": {
       "patch": {
         "operationId": "requestDeletion",
@@ -1596,6 +1666,81 @@
       "MediaAssetsResponseDto": {
         "type": "object",
         "properties": { "data": { "$ref": "#/components/schemas/MediaAssetsResponseDataDto" } },
+        "required": ["data"]
+      },
+      "MockOcrCandidateRequestDto": {
+        "type": "object",
+        "properties": {
+          "mockFixtureId": {
+            "type": "string",
+            "default": "clear-linear-equation",
+            "enum": ["clear-linear-equation", "low-confidence-equation", "provider-failure"]
+          }
+        }
+      },
+      "MockOcrCandidateTextDto": {
+        "type": "object",
+        "properties": {
+          "candidateId": { "type": "string", "maxLength": 120 },
+          "confidence": { "type": "string", "enum": ["HIGH", "LOW", "MEDIUM", "UNKNOWN"] },
+          "source": { "type": "string", "enum": ["MOCK_FIXTURE"] },
+          "text": { "type": "string", "maxLength": 4096 },
+          "trust": { "type": "string", "enum": ["UNTRUSTED_OCR_CANDIDATE"] }
+        },
+        "required": ["candidateId", "confidence", "source", "text", "trust"]
+      },
+      "MockOcrCandidateSummaryDto": {
+        "type": "object",
+        "properties": {
+          "boundaryPolicyVersion": { "type": "string", "maxLength": 120 },
+          "candidates": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MockOcrCandidateTextDto" }
+          },
+          "confidence": { "type": "string", "enum": ["HIGH", "LOW", "MEDIUM", "UNKNOWN"] },
+          "downstreamUseAllowed": { "type": "boolean", "enum": [false] },
+          "learnerConfirmationRequired": { "type": "boolean", "enum": [true] },
+          "mediaAssetId": { "type": "string", "format": "uuid" },
+          "metadataOnly": { "type": "boolean", "enum": [true] },
+          "modelVersion": { "type": "string", "maxLength": 120 },
+          "objectExistence": { "type": "string", "enum": ["UNKNOWN_NOT_VERIFIED"] },
+          "orchestrationPolicyVersion": { "type": "string", "maxLength": 120 },
+          "reason": {
+            "type": "string",
+            "enum": ["BOUNDARY_REJECTED", "LOW_CONFIDENCE", "PROVIDER_FAILURE"]
+          },
+          "schemaVersion": { "type": "string", "maxLength": 120 },
+          "status": {
+            "type": "string",
+            "enum": ["CANDIDATE_REQUIRES_CONFIRMATION", "FAILED", "NEEDS_REVIEW"]
+          }
+        },
+        "required": [
+          "boundaryPolicyVersion",
+          "confidence",
+          "downstreamUseAllowed",
+          "learnerConfirmationRequired",
+          "mediaAssetId",
+          "metadataOnly",
+          "modelVersion",
+          "objectExistence",
+          "orchestrationPolicyVersion",
+          "schemaVersion",
+          "status"
+        ]
+      },
+      "MockOcrCandidateResponseDataDto": {
+        "type": "object",
+        "properties": {
+          "candidate": { "$ref": "#/components/schemas/MockOcrCandidateSummaryDto" }
+        },
+        "required": ["candidate"]
+      },
+      "MockOcrCandidateResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": { "$ref": "#/components/schemas/MockOcrCandidateResponseDataDto" }
+        },
         "required": ["data"]
       },
       "UpdateMediaAssetRetentionRequestDto": {

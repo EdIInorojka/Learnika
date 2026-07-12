@@ -21,6 +21,7 @@ const requiredPaths = [
   "/homework/sessions/{homeworkSessionId}/attempts",
   "/homework/sessions/{homeworkSessionId}/media-assets",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload",
 ];
@@ -43,6 +44,7 @@ const protectedOperations = [
   ["post", "/homework/sessions/{homeworkSessionId}/media-assets"],
   ["get", "/homework/sessions/{homeworkSessionId}/media-assets"],
   ["get", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}"],
+  ["post", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate"],
   ["patch", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention"],
   ["post", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload"],
 ];
@@ -66,12 +68,14 @@ const allowedHomeworkPaths = new Set([
   "/homework/sessions/{homeworkSessionId}/attempts",
   "/homework/sessions/{homeworkSessionId}/media-assets",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload",
 ]);
 const allowedMediaPaths = new Set([
   "/homework/sessions/{homeworkSessionId}/media-assets",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+  "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload",
 ]);

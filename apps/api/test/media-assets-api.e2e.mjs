@@ -510,6 +510,7 @@ test("media asset metadata API requires auth enforces tenancy and exposes no uns
     "/homework/sessions/{homeworkSessionId}/attempts",
     "/homework/sessions/{homeworkSessionId}/media-assets",
     "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}",
+    "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate",
     "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
     "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload",
   ]);
@@ -517,6 +518,10 @@ test("media asset metadata API requires auth enforces tenancy and exposes no uns
     ["post", "/homework/sessions/{homeworkSessionId}/media-assets"],
     ["get", "/homework/sessions/{homeworkSessionId}/media-assets"],
     ["get", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}"],
+    [
+      "post",
+      "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/mock-ocr-candidate",
+    ],
     ["patch", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention"],
     ["post", "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload"],
   ]) {

@@ -533,3 +533,81 @@ export class MediaAssetsResponseDto {
   @ApiProperty({ type: () => MediaAssetsResponseDataDto })
   declare data: MediaAssetsResponseDataDto;
 }
+
+export class MockOcrCandidateRequestDto {
+  @ApiPropertyOptional({
+    default: "clear-linear-equation",
+    enum: ["clear-linear-equation", "low-confidence-equation", "provider-failure"],
+  })
+  declare mockFixtureId?: "clear-linear-equation" | "low-confidence-equation" | "provider-failure";
+}
+
+export class MockOcrCandidateTextDto {
+  @ApiProperty({ maxLength: 120 })
+  declare candidateId: string;
+
+  @ApiProperty({ enum: ["HIGH", "LOW", "MEDIUM", "UNKNOWN"] })
+  declare confidence: "HIGH" | "LOW" | "MEDIUM" | "UNKNOWN";
+
+  @ApiProperty({ enum: ["MOCK_FIXTURE"] })
+  declare source: "MOCK_FIXTURE";
+
+  @ApiProperty({ maxLength: 4096 })
+  declare text: string;
+
+  @ApiProperty({ enum: ["UNTRUSTED_OCR_CANDIDATE"] })
+  declare trust: "UNTRUSTED_OCR_CANDIDATE";
+}
+
+export class MockOcrCandidateSummaryDto {
+  @ApiProperty({ maxLength: 120 })
+  declare boundaryPolicyVersion: string;
+
+  @ApiPropertyOptional({ type: () => [MockOcrCandidateTextDto] })
+  declare candidates?: MockOcrCandidateTextDto[];
+
+  @ApiProperty({ enum: ["HIGH", "LOW", "MEDIUM", "UNKNOWN"] })
+  declare confidence: "HIGH" | "LOW" | "MEDIUM" | "UNKNOWN";
+
+  @ApiProperty({ enum: [false] })
+  declare downstreamUseAllowed: false;
+
+  @ApiProperty({ enum: [true] })
+  declare learnerConfirmationRequired: true;
+
+  @ApiProperty({ format: "uuid" })
+  declare mediaAssetId: string;
+
+  @ApiProperty({ enum: [true] })
+  declare metadataOnly: true;
+
+  @ApiProperty({ maxLength: 120 })
+  declare modelVersion: string;
+
+  @ApiProperty({ enum: ["UNKNOWN_NOT_VERIFIED"] })
+  declare objectExistence: "UNKNOWN_NOT_VERIFIED";
+
+  @ApiProperty({ maxLength: 120 })
+  declare orchestrationPolicyVersion: string;
+
+  @ApiPropertyOptional({ enum: ["BOUNDARY_REJECTED", "LOW_CONFIDENCE", "PROVIDER_FAILURE"] })
+  declare reason?: "BOUNDARY_REJECTED" | "LOW_CONFIDENCE" | "PROVIDER_FAILURE";
+
+  @ApiProperty({ maxLength: 120 })
+  declare schemaVersion: string;
+
+  @ApiProperty({
+    enum: ["CANDIDATE_REQUIRES_CONFIRMATION", "FAILED", "NEEDS_REVIEW"],
+  })
+  declare status: "CANDIDATE_REQUIRES_CONFIRMATION" | "FAILED" | "NEEDS_REVIEW";
+}
+
+export class MockOcrCandidateResponseDataDto {
+  @ApiProperty({ type: () => MockOcrCandidateSummaryDto })
+  declare candidate: MockOcrCandidateSummaryDto;
+}
+
+export class MockOcrCandidateResponseDto {
+  @ApiProperty({ type: () => MockOcrCandidateResponseDataDto })
+  declare data: MockOcrCandidateResponseDataDto;
+}

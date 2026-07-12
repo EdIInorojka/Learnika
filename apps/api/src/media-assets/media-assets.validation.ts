@@ -11,11 +11,21 @@ export interface UpdateMediaAssetRetentionInput {
   retentionStatus: "DELETION_REQUESTED";
 }
 
+export interface MockOcrCandidateInput {
+  mockFixtureId: "clear-linear-equation" | "low-confidence-equation" | "provider-failure";
+}
+
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const checksumPattern = /^[0-9a-f]{64}$/i;
 const supportedAssetKinds = new Set(["HOMEWORK_IMAGE", "HOMEWORK_PDF", "HOMEWORK_SCREENSHOT"]);
 const allowedCreateKeys = new Set(["assetKind", "checksumSha256", "mimeType", "sizeBytes"]);
+const allowedMockOcrCandidateKeys = new Set(["mockFixtureId"]);
 const allowedRetentionKeys = new Set(["retentionStatus"]);
+const allowedMockOcrFixtureIds = new Set([
+  "clear-linear-equation",
+  "low-confidence-equation",
+  "provider-failure",
+]);
 const forbiddenFieldPattern =
   /answer|base64|binary|childhealth|childlocation|completion|content|exactsolution|filename|finalanswer|fullsolution|generatedhint|health|hinttext|llmcompletion|llmprompt|location|modeloutput|ocr|originalfilename|prompt|providerpayload|raw|sensitive|solution|stt|textbookcontent|transcript|upload/i;
 
@@ -125,6 +135,22 @@ export function parseUpdateMediaAssetRetentionInput(
   }
 
   return { retentionStatus: "DELETION_REQUESTED" };
+}
+
+export function parseMockOcrCandidateInput(value: unknown): MockOcrCandidateInput {
+  if (value === undefined || value === null) {
+    return { mockFixtureId: "clear-linear-equation" };
+  }
+
+  const body = asRecord(value);
+  assertAllowedKeys(body, allowedMockOcrCandidateKeys);
+  const mockFixtureId = optionalTrimmedString(body.mockFixtureId) ?? "clear-linear-equation";
+
+  if (!allowedMockOcrFixtureIds.has(mockFixtureId)) {
+    invalid("Mock recognition fixture is invalid.");
+  }
+
+  return { mockFixtureId: mockFixtureId as MockOcrCandidateInput["mockFixtureId"] };
 }
 
 export function parseIdParam(value: unknown, fieldName = "Identifier"): string {
