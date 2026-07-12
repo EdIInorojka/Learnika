@@ -9,6 +9,8 @@ import {
   parseHomeworkSessionId,
 } from "../../../lib/homework-contract";
 import { getHomeworkSession, listHomeworkAttempts } from "../../../lib/homework-service.server";
+import { MediaAssetContractError, type MediaAssetView } from "../../../lib/media-asset-contract";
+import { listMediaAssetMetadata } from "../../../lib/media-asset-service.server";
 import { logoutParentAction } from "../../auth-actions";
 import {
   attemptStatusLabel,
@@ -16,13 +18,24 @@ import {
   sessionStatusLabel,
   sourceLabel,
 } from "../homework-labels";
+import { createMediaAssetMetadataAction } from "./media-asset-actions";
+import { formatByteSize, mediaAssetKindLabel, mediaRetentionLabel } from "./media-asset-labels";
 
 export const dynamic = "force-dynamic";
 
 interface HomeworkSessionPageProps {
   params: Promise<{ homeworkSessionId: string }>;
-  searchParams: Promise<{ created?: string | string[] }>;
+  searchParams: Promise<{
+    created?: string | string[];
+    mediaCreated?: string | string[];
+    mediaError?: string | string[];
+  }>;
 }
+
+const mediaErrorMessages: Record<string, string> = {
+  invalid: "Проверьте метаданные медиафайла.",
+  service: "Метаданные медиафайлов временно недоступны.",
+};
 
 export default async function HomeworkSessionPage({
   params,
@@ -65,7 +78,23 @@ export default async function HomeworkSessionPage({
     );
   }
 
-  const created = (await searchParams).created === "1";
+  let mediaAssets: MediaAssetView[] | null = null;
+  try {
+    mediaAssets = await listMediaAssetMetadata(homeworkSessionId);
+  } catch (error: unknown) {
+    if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) {
+      redirect("/?authError=session");
+    }
+    if (error instanceof ApiClientError && error.status === 404) notFound();
+    if (!(error instanceof MediaAssetContractError || error instanceof ApiClientError)) throw error;
+  }
+
+  const query = await searchParams;
+  const created = query.created === "1";
+  const mediaCreated = query.mediaCreated === "1";
+  const mediaErrorKey = typeof query.mediaError === "string" ? query.mediaError : "";
+  const mediaErrorMessage = mediaErrorMessages[mediaErrorKey];
+  const createMediaAssetForSession = createMediaAssetMetadataAction.bind(null, homeworkSessionId);
 
   return (
     <main className="app-shell">
@@ -146,6 +175,119 @@ export default async function HomeworkSessionPage({
               </li>
             ))}
           </ul>
+        )}
+      </section>
+
+      <section className="media-section" aria-labelledby="media-title">
+        <h2 id="media-title">Метаданные медиафайлов</h2>
+
+        {mediaCreated ? (
+          <p className="success-message" role="status">
+            Метаданные зарегистрированы.
+          </p>
+        ) : null}
+        {mediaErrorMessage ? (
+          <p className="auth-error" role="alert">
+            {mediaErrorMessage}
+          </p>
+        ) : null}
+
+        {mediaAssets === null ? (
+          <p className="auth-error" role="status">
+            Не удалось безопасно загрузить метаданные медиафайлов.
+          </p>
+        ) : (
+          <div className="media-layout">
+            <div className="media-create">
+              <h3>Новая запись</h3>
+              <form action={createMediaAssetForSession}>
+                <div className="field">
+                  <label htmlFor="asset-kind">Вид</label>
+                  <select id="asset-kind" name="assetKind" required>
+                    <option value="HOMEWORK_IMAGE">Изображение задания</option>
+                    <option value="HOMEWORK_SCREENSHOT">Скриншот задания</option>
+                    <option value="HOMEWORK_PDF">PDF задания</option>
+                  </select>
+                </div>
+                <div className="field">
+                  <label htmlFor="mime-type">MIME-тип</label>
+                  <select id="mime-type" name="mimeType" required>
+                    <option value="image/jpeg">image/jpeg</option>
+                    <option value="image/png">image/png</option>
+                    <option value="image/webp">image/webp</option>
+                    <option value="application/pdf">application/pdf</option>
+                  </select>
+                </div>
+                <div className="field">
+                  <label htmlFor="size-bytes">Размер, байт</label>
+                  <input
+                    id="size-bytes"
+                    inputMode="numeric"
+                    max={10_485_760}
+                    min={0}
+                    name="sizeBytes"
+                    required
+                    step={1}
+                    type="number"
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor="checksum-sha256">SHA-256, необязательно</label>
+                  <input
+                    autoComplete="off"
+                    id="checksum-sha256"
+                    maxLength={64}
+                    minLength={64}
+                    name="checksumSha256"
+                    pattern="[0-9a-fA-F]{64}"
+                    spellCheck={false}
+                    type="text"
+                  />
+                </div>
+                <button type="submit">Зарегистрировать</button>
+              </form>
+            </div>
+
+            <div className="media-list-section">
+              <h3>Зарегистрированные файлы</h3>
+              {mediaAssets.length === 0 ? (
+                <p className="empty-state">Метаданных медиафайлов пока нет.</p>
+              ) : (
+                <ul className="media-list">
+                  {mediaAssets.map((mediaAsset) => (
+                    <li key={mediaAsset.id}>
+                      <div className="media-row-heading">
+                        <strong>{mediaAssetKindLabel(mediaAsset.assetKind)}</strong>
+                        <span>{mediaRetentionLabel(mediaAsset.retentionStatus)}</span>
+                      </div>
+                      <dl className="media-metadata-list">
+                        <div>
+                          <dt>MIME-тип</dt>
+                          <dd>{mediaAsset.mimeType}</dd>
+                        </div>
+                        <div>
+                          <dt>Размер</dt>
+                          <dd>{formatByteSize(mediaAsset.sizeBytes)}</dd>
+                        </div>
+                        <div>
+                          <dt>SHA-256</dt>
+                          <dd>{mediaAsset.checksumPresent ? "Указана" : "Не указана"}</dd>
+                        </div>
+                        <div>
+                          <dt>Хранить до</dt>
+                          <dd>
+                            <time dateTime={mediaAsset.retentionUntil}>
+                              {formatMetadataDate(mediaAsset.retentionUntil)}
+                            </time>
+                          </dd>
+                        </div>
+                      </dl>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
         )}
       </section>
     </main>
