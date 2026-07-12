@@ -8,7 +8,7 @@
     "build": "node scripts/next.mjs build",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "node -e \"console.log('No tests configured for @learnika/web shell yet.')\""
+    "test": "node --test test/auth-foundation.test.mjs"
   },
   "dependencies": {
     "next": "16.2.10",
