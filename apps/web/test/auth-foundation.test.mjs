@@ -154,7 +154,7 @@ test("web auth foundation keeps tokens server-side and scope-limited", () => {
   }
 
   const pageSource = fs.readFileSync(path.join(appDir, "page.tsx"), "utf8").toLowerCase();
-  for (const forbiddenScope of ["homework", "media upload", "mock ocr", "voice", "billing"]) {
+  for (const forbiddenScope of ["media upload", "mock ocr", "voice", "billing"]) {
     assert.equal(pageSource.includes(forbiddenScope), false, forbiddenScope);
   }
 });

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   loginParentAction,
   logoutParentAction,
@@ -45,11 +47,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <p>
             Родитель: <strong>{state.user.email}</strong>
           </p>
-          <form action={logoutParentAction} className="session-actions">
-            <button className="secondary" type="submit">
-              Выйти
-            </button>
-          </form>
+          <div className="session-actions">
+            <Link className="button-link" href="/homework">
+              Домашние задания
+            </Link>
+            <form action={logoutParentAction}>
+              <button className="secondary" type="submit">
+                Выйти
+              </button>
+            </form>
+          </div>
         </section>
       ) : (
         <>

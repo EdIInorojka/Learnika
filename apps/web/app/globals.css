@@ -15,7 +15,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -38,7 +39,24 @@ button.secondary {
   color: #0f6655;
 }
 
-input {
+.button-link {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  border: 1px solid #0f6655;
+  border-radius: 6px;
+  background: #0f6655;
+  color: #ffffff;
+  padding: 0 16px;
+  text-decoration: none;
+}
+
+.button-link:hover {
+  background: #0a5245;
+}
+
+input,
+select {
   width: 100%;
   min-height: 42px;
   border: 1px solid #9da8a3;
@@ -49,9 +67,22 @@ input {
 }
 
 input:focus-visible,
+select:focus-visible,
 button:focus-visible {
   outline: 3px solid #d6a72c;
   outline-offset: 2px;
+}
+
+.brand-link {
+  color: #18211e;
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.page-context {
+  color: #58645f;
+  margin: 4px 0 0;
 }
 
 .app-shell {
@@ -131,6 +162,159 @@ button:focus-visible {
   margin-top: 18px;
 }
 
+.page-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 28px 0 10px;
+}
+
+.page-heading h1 {
+  margin: 0 0 8px;
+  font-size: 26px;
+}
+
+.page-heading p {
+  margin: 0;
+}
+
+.homework-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  gap: 32px;
+  padding-top: 24px;
+}
+
+.homework-create,
+.homework-list-section,
+.metadata-section,
+.attempts-section {
+  min-width: 0;
+}
+
+.homework-create h2,
+.homework-list-section h2,
+.metadata-section h2,
+.attempts-section h2 {
+  margin: 0 0 18px;
+  font-size: 20px;
+}
+
+.homework-list-section {
+  border-left: 1px solid #cbd2cf;
+  padding-left: 32px;
+}
+
+.empty-state {
+  color: #58645f;
+  margin: 0;
+}
+
+.session-list,
+.attempt-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.session-list li {
+  border-top: 1px solid #d8dddb;
+}
+
+.session-list li:last-child {
+  border-bottom: 1px solid #d8dddb;
+}
+
+.session-row {
+  display: flex;
+  min-height: 74px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #18211e;
+  padding: 12px 4px;
+  text-decoration: none;
+}
+
+.session-row:hover strong,
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.session-meta {
+  display: block;
+  color: #58645f;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.status-label {
+  flex: 0 0 auto;
+  color: #355c51;
+  font-size: 14px;
+}
+
+.back-link {
+  display: inline-block;
+  color: #0f6655;
+  margin-bottom: 14px;
+  text-decoration: none;
+}
+
+.success-message {
+  border-left: 4px solid #2f7a52;
+  background: #edf8f1;
+  color: #20593b;
+  padding: 12px 14px;
+}
+
+.metadata-section {
+  padding-top: 20px;
+}
+
+.metadata-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid #d8dddb;
+}
+
+.metadata-list div {
+  border-bottom: 1px solid #d8dddb;
+  padding: 14px 8px 14px 0;
+}
+
+.metadata-list dt {
+  color: #58645f;
+  font-size: 13px;
+}
+
+.metadata-list dd {
+  margin: 5px 0 0;
+}
+
+.attempts-section {
+  padding-top: 32px;
+}
+
+.attempt-list li {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) minmax(110px, 1fr) auto;
+  gap: 16px;
+  border-top: 1px solid #d8dddb;
+  padding: 14px 0;
+}
+
+.attempt-list li:last-child {
+  border-bottom: 1px solid #d8dddb;
+}
+
+.attempt-list time,
+.attempt-list span {
+  color: #58645f;
+}
+
 @media (max-width: 680px) {
   .app-header {
     align-items: flex-start;
@@ -146,5 +330,36 @@ button:focus-visible {
     border-top: 1px solid #cbd2cf;
     padding-left: 0;
     padding-top: 24px;
+  }
+
+  .homework-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .homework-list-section {
+    border-left: 0;
+    border-top: 1px solid #cbd2cf;
+    padding-left: 0;
+    padding-top: 24px;
+  }
+
+  .metadata-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .attempt-list li {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 460px) {
+  .session-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .metadata-list {
+    grid-template-columns: 1fr;
   }
 }
