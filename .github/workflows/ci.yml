@@ -15,21 +15,6 @@ jobs:
     name: Validate
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16.4-alpine
-        env:
-          POSTGRES_DB: learnika_local
-          POSTGRES_PASSWORD: learnika_local_password
-          POSTGRES_USER: learnika_local
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U learnika_local -d learnika_local"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     env:
       AUTH_ACCESS_TOKEN_TTL_SECONDS: "900"
       AUTH_REFRESH_TOKEN_TTL_SECONDS: "604800"
@@ -68,10 +53,8 @@ jobs:
       - name: Generate Prisma Client
         run: pnpm.cmd run db:generate
 
-      - name: Validate local infrastructure config
-        run: |
-          pnpm.cmd run infra:config
-          pnpm.cmd run infra:check:env
+      - name: Start and validate local infrastructure
+        run: pnpm.cmd run infra:validate
 
       - name: Validate Prisma schema
         run: pnpm.cmd run db:validate
