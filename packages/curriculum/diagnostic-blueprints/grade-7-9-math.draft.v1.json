@@ -1,0 +1,210 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticBlueprint.v1",
+    "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "status": "draft_static_blueprint",
+    "artifactKind": "diagnostic_blueprint",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "canonicalSkillGraphVersion": "wave-3.slice-2.grade-7-9-math.v1",
+    "coverageReviewState": "open_decision",
+    "safetyPolicyVersion": "wave-3.diagnostic-blueprint-safety.v1",
+    "sourceContract": "docs/wave-3/diagnostic-blueprint-contract.md",
+    "openDecisionRefs": [
+      "W3-OD-LEAF-GRANULARITY",
+      "W3-OD-GRADE-PLACEMENT",
+      "W3-OD-DIAGNOSTIC-CONTENT",
+      "W3-OD-DIAGNOSTIC-SELECTION",
+      "W3-OD-DIAGNOSTIC-RESULT-SEMANTICS"
+    ],
+    "notes": [
+      "Structural coverage slots only; no executable task content is included.",
+      "Exact grade placement, item balance and difficulty calibration remain review items."
+    ]
+  },
+  "evidenceCategories": [
+    {
+      "id": "concept_recognition",
+      "description": "Evidence that a learner identifies a reviewed mathematical concept or relation."
+    },
+    {
+      "id": "procedure_selection",
+      "description": "Evidence that a learner selects an applicable mathematical method."
+    },
+    {
+      "id": "representation_interpretation",
+      "description": "Evidence that a learner interprets symbolic, tabular, graphical or geometric information."
+    },
+    {
+      "id": "reasoning_justification",
+      "description": "Evidence that a learner states a bounded mathematical reason."
+    },
+    {
+      "id": "multi_step_organization",
+      "description": "Evidence that a learner organizes a bounded sequence of mathematical steps."
+    }
+  ],
+  "nonScoringResultSemantics": {
+    "policyVersion": "wave-3.slice-3.non-scoring-results.v1",
+    "claimsMastery": false,
+    "claimsProficiency": false,
+    "numericScore": false,
+    "states": ["not_collected", "observed", "uncertain", "not_reached", "invalidated"],
+    "policyNote": "States record collection quality only and never establish mastery or proficiency."
+  },
+  "items": [
+    {
+      "id": "diag.math.g7-9.number.rational-number-operations.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "number",
+      "primarySkillId": "math.number.rational-number-operations.v1",
+      "supportingSkillIds": ["math.number.integer-operations.v1"],
+      "evidenceCategory": "concept_recognition",
+      "difficultyBand": "foundation",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.number.percent-ratio.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "number",
+      "primarySkillId": "math.number.percent-ratio.v1",
+      "supportingSkillIds": ["math.number.rational-number-operations.v1"],
+      "evidenceCategory": "procedure_selection",
+      "difficultyBand": "core",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.algebra.expression-transformations.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "primarySkillId": "math.algebra.expression-transformations.v1",
+      "supportingSkillIds": ["math.algebra.expression-value.v1"],
+      "evidenceCategory": "multi_step_organization",
+      "difficultyBand": "foundation",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.algebra.linear-equation-one-variable.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "primarySkillId": "math.algebra.linear-equation-one-variable.v1",
+      "supportingSkillIds": [
+        "math.number.rational-number-operations.v1",
+        "math.algebra.expression-transformations.v1"
+      ],
+      "evidenceCategory": "procedure_selection",
+      "difficultyBand": "core",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.algebra.powers-and-roots.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "primarySkillId": "math.algebra.powers-and-roots.v1",
+      "supportingSkillIds": [
+        "math.number.rational-number-operations.v1",
+        "math.algebra.expression-transformations.v1"
+      ],
+      "evidenceCategory": "multi_step_organization",
+      "difficultyBand": "core",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.functions.coordinate-plane-graphs.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "functions",
+      "primarySkillId": "math.functions.coordinate-plane-graphs.v1",
+      "supportingSkillIds": ["math.number.rational-number-operations.v1"],
+      "evidenceCategory": "representation_interpretation",
+      "difficultyBand": "foundation",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.functions.linear-function.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "functions",
+      "primarySkillId": "math.functions.linear-function.v1",
+      "supportingSkillIds": [
+        "math.functions.coordinate-plane-graphs.v1",
+        "math.algebra.linear-equation-one-variable.v1"
+      ],
+      "evidenceCategory": "representation_interpretation",
+      "difficultyBand": "core",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.geometry.basic-objects-angles.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "primarySkillId": "math.geometry.basic-objects-angles.v1",
+      "supportingSkillIds": ["math.number.rational-number-operations.v1"],
+      "evidenceCategory": "concept_recognition",
+      "difficultyBand": "foundation",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.geometry.triangle-properties.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "primarySkillId": "math.geometry.triangle-properties.v1",
+      "supportingSkillIds": ["math.geometry.basic-objects-angles.v1"],
+      "evidenceCategory": "reasoning_justification",
+      "difficultyBand": "core",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.geometry.parallel-lines.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "primarySkillId": "math.geometry.parallel-lines.v1",
+      "supportingSkillIds": ["math.geometry.basic-objects-angles.v1"],
+      "evidenceCategory": "reasoning_justification",
+      "difficultyBand": "core",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    },
+    {
+      "id": "diag.math.g7-9.data.probability-statistics-basic.v1",
+      "status": "draft_slot",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "data",
+      "primarySkillId": "math.data.probability-statistics-basic.v1",
+      "supportingSkillIds": ["math.number.percent-ratio.v1"],
+      "evidenceCategory": "concept_recognition",
+      "difficultyBand": "foundation",
+      "coverageStatus": "open_decision",
+      "sourcePolicy": "original_or_rights_cleared",
+      "safetyNotes": ["Structural slot only; future material requires review before use."]
+    }
+  ]
+}

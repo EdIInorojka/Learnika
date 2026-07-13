@@ -17,7 +17,9 @@ use.
 | Initial supported math whitelist | Wave 0 proposal exists | Reviewed forms, exclusions, validator plan, unsupported handling and gold sets | curriculum-knowledge, ai-vision-math | Deterministic validation slices |
 | Skill prerequisite edge semantics | Conservative rules drafted | Edge review rubric, examples and downgrade rules from prerequisite to related | curriculum-knowledge | Planner prerequisite enforcement |
 | Skill ID deprecation policy | Draft rule exists | Migration examples for renamed, split and merged skills | solution-architect, curriculum-knowledge | Versioned curriculum publication |
-| Diagnostic blueprint | Not created | Original item types, difficulty bands, evidence mapping and answer-leak review | curriculum-knowledge, qa-evaluation | Diagnostic runtime |
+| Diagnostic blueprint | Static contract and structural draft created in Slice 3; no item content or runtime behavior | Original item types, reviewed leaf-skill mapping, difficulty calibration and answer-leak review | curriculum-knowledge, qa-evaluation | Diagnostic runtime |
+| Diagnostic length and selection | Not finalized; Slice 3 defines coverage slots only | Grade-specific length, stop rules, fixed versus adaptive selection, timing and accessibility review | curriculum-knowledge, learning-engine, qa-evaluation | Diagnostic runtime |
+| Diagnostic result semantics | Non-scoring placeholder states drafted only | Runtime transition rules, invalidation policy, repeated-evidence scenarios and contradiction handling | learning-engine, curriculum-knowledge, qa-evaluation | Evidence and mastery implementation |
 | Mastery evidence weighting | Existing principles only | Scenario tests, weights for diagnostic/homework/transfer/review, decay and uncertainty behavior | learning-engine, qa-evaluation | Mastery state implementation |
 | Single-answer guard details | Product rule exists | Formal policy for minimum evidence, contradictions and recency | learning-engine, curriculum-knowledge | Mastery release |
 | Homework skill classification policy | Not finalized | Confirmation states, confidence thresholds and fallback to human review | ai-vision-math, curriculum-knowledge | Homework evidence integration |
@@ -29,13 +31,15 @@ use.
 | Analytics schemas | Deferred | Privacy-reviewed event schemas with allowlisted fields and no raw text/media | data-analytics, security-privacy | Product analytics |
 | Release review owners | Draft owner roles only | Named reviewers and approval checklist for curriculum package publication | product-program | Wave 3 release gate |
 
-## Decisions that block Slice 2
+## Decisions that block runtime diagnostics
 
-Before the first persisted or executable skill graph slice, Wave 3 needs:
+Before any persisted or executable diagnostic slice, Wave 3 needs:
 
-- approval of the Slice 1 contract documents;
-- confirmation of whether Slice 2 is docs-only, static data only or schema work;
-- exact acceptance criteria for the next slice;
+- approval of the Slice 3 contract, static artifact and validation evidence;
+- reviewed leaf-skill granularity for selected diagnostic coverage;
+- original or rights-cleared diagnostic item content and review workflow;
+- approved selection, invalidation and repeated-evidence semantics;
+- exact acceptance criteria and an explicit gate for any runtime slice;
 - clean git and green local validation;
 - explicit approval for any Prisma, package or contract change.
 
