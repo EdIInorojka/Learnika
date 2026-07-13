@@ -34,6 +34,11 @@ const approvedSlice9ChangedPaths = new Set([
   "apps/api/package.json",
   "apps/api/test/diagnostic-session-plan.test.mjs",
 ]);
+const approvedSlice10ChangedPathPrefixes = ["apps/api/src/diagnostic-session-draft/"];
+const approvedSlice10ChangedPaths = new Set([
+  "apps/api/package.json",
+  "apps/api/test/diagnostic-session-draft.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultArtifactPath = path.resolve(
@@ -292,11 +297,15 @@ export function validateChangedPathScope({ cwd = repoRoot } = {}) {
     const isApprovedSlice9Path =
       approvedSlice9ChangedPaths.has(changedPath) ||
       approvedSlice9ChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix));
+    const isApprovedSlice10Path =
+      approvedSlice10ChangedPaths.has(changedPath) ||
+      approvedSlice10ChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix));
     if (
       !isStaticSlicePath &&
       !isApprovedSlice7Path &&
       !isApprovedSlice8Path &&
-      !isApprovedSlice9Path
+      !isApprovedSlice9Path &&
+      !isApprovedSlice10Path
     ) {
       fail(`Runtime or out-of-scope path changed: ${changedPath}.`);
     }
