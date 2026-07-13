@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticSessionLifecycleFixtures.v1",
+    "fixtureSetVersion": "wave-3.slice-6.grade-7-9-math.v1",
+    "status": "draft_synthetic_non_production_fixture_set",
+    "artifactKind": "diagnostic_session_lifecycle_fixture_set",
+    "subject": "math",
+    "locale": "ru-RU",
+    "gradeBand": {
+      "min": 7,
+      "max": 9
+    },
+    "canonicalSkillGraphVersion": "wave-3.slice-2.grade-7-9-math.v1",
+    "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1",
+    "diagnosticResponseEvidenceFixtureSetVersion": "wave-3.slice-5.grade-7-9-math.v1",
+    "syntheticOnly": true,
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false,
+    "sourceContract": "docs/wave-3/diagnostic-session-lifecycle-contract.md",
+    "openDecisionRefs": [
+      "W3-OD-DIAGNOSTIC-SESSION-LIFECYCLE",
+      "W3-OD-DIAGNOSTIC-SELECTION",
+      "W3-OD-DIAGNOSTIC-RESULT-SEMANTICS",
+      "W3-OD-SESSION-RETENTION"
+    ],
+    "notes": [
+      "Static synthetic reference set for lifecycle structure only.",
+      "No evaluation, aggregation, learner records or runtime storage are authorized."
+    ]
+  },
+  "lifecycleStates": [
+    {
+      "id": "drafted",
+      "terminal": false,
+      "policyNote": "Static references are assembled but not cleared for collection."
+    },
+    {
+      "id": "ready",
+      "terminal": false,
+      "policyNote": "Static references passed structural validation."
+    },
+    {
+      "id": "active",
+      "terminal": false,
+      "policyNote": "A future collection context is open without interpretation."
+    },
+    {
+      "id": "paused",
+      "terminal": false,
+      "policyNote": "A future collection context is temporarily inactive."
+    },
+    {
+      "id": "closed",
+      "terminal": false,
+      "policyNote": "Collection ended without an educational outcome claim."
+    },
+    {
+      "id": "abandoned",
+      "terminal": true,
+      "policyNote": "Collection stopped before ordinary closure."
+    },
+    {
+      "id": "invalidated",
+      "terminal": true,
+      "policyNote": "The whole structural fixture is excluded under a future reviewed policy."
+    }
+  ],
+  "stateTransitions": [
+    {
+      "from": "drafted",
+      "to": "ready",
+      "policyNote": "Structural references become ready."
+    },
+    {
+      "from": "drafted",
+      "to": "invalidated",
+      "policyNote": "The draft is excluded before collection."
+    },
+    {
+      "from": "ready",
+      "to": "active",
+      "policyNote": "A future collection context opens."
+    },
+    {
+      "from": "ready",
+      "to": "abandoned",
+      "policyNote": "Collection is stopped before opening."
+    },
+    {
+      "from": "ready",
+      "to": "invalidated",
+      "policyNote": "The ready fixture is excluded under a future reviewed policy."
+    },
+    {
+      "from": "active",
+      "to": "paused",
+      "policyNote": "Collection becomes temporarily inactive."
+    },
+    {
+      "from": "active",
+      "to": "closed",
+      "policyNote": "Collection ends without an outcome claim."
+    },
+    {
+      "from": "active",
+      "to": "abandoned",
+      "policyNote": "Collection stops before ordinary closure."
+    },
+    {
+      "from": "active",
+      "to": "invalidated",
+      "policyNote": "The active fixture is excluded under a future reviewed policy."
+    },
+    {
+      "from": "paused",
+      "to": "active",
+      "policyNote": "Collection resumes in the same structural path."
+    },
+    {
+      "from": "paused",
+      "to": "closed",
+      "policyNote": "Paused collection ends without an outcome claim."
+    },
+    {
+      "from": "paused",
+      "to": "abandoned",
+      "policyNote": "Paused collection stops before ordinary closure."
+    },
+    {
+      "from": "paused",
+      "to": "invalidated",
+      "policyNote": "The paused fixture is excluded under a future reviewed policy."
+    },
+    {
+      "from": "closed",
+      "to": "invalidated",
+      "policyNote": "A closed fixture is later excluded under a future reviewed policy."
+    }
+  ],
+  "sessions": [
+    {
+      "id": "dsession.math.g7-9.fixture-01.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "gradeBand": {
+        "min": 7,
+        "max": 9
+      },
+      "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+      "blueprintSlotIds": ["diag.math.g7-9.number.rational-number-operations.v1"],
+      "selectedDiagnosticItemIds": ["ditem.math.number.rational-number-operations.fixture-01.v1"],
+      "responseIds": ["dresponse.math.number.rational-number-operations.fixture-01.v1"],
+      "evidenceIds": ["devidence.math.number.rational-number-operations.fixture-01.v1"],
+      "lifecycleState": "closed",
+      "statePath": ["drafted", "ready", "active", "closed"],
+      "referenceDisposition": "structural_only",
+      "interpretationMode": "none",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "runtimeUseAllowed": false,
+      "storageAllowed": false,
+      "lifecycleNote": "Collection ended; linked structural records remain without educational interpretation.",
+      "safetyNotes": ["Synthetic structural fixture only; no product use is authorized."]
+    },
+    {
+      "id": "dsession.math.g7-9.fixture-02.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "gradeBand": {
+        "min": 7,
+        "max": 9
+      },
+      "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+      "blueprintSlotIds": ["diag.math.g7-9.geometry.parallel-lines.v1"],
+      "selectedDiagnosticItemIds": ["ditem.math.geometry.parallel-lines.fixture-01.v1"],
+      "responseIds": [],
+      "evidenceIds": [],
+      "lifecycleState": "abandoned",
+      "statePath": ["drafted", "ready", "abandoned"],
+      "referenceDisposition": "no_linked_records",
+      "interpretationMode": "none",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "runtimeUseAllowed": false,
+      "storageAllowed": false,
+      "lifecycleNote": "Collection stopped before ordinary closure; no linked structural records are present.",
+      "safetyNotes": [
+        "Synthetic structural fixture only; abandonment carries no educational interpretation."
+      ]
+    },
+    {
+      "id": "dsession.math.g7-9.fixture-03.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "gradeBand": {
+        "min": 7,
+        "max": 9
+      },
+      "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+      "blueprintSlotIds": ["diag.math.g7-9.data.probability-statistics-basic.v1"],
+      "selectedDiagnosticItemIds": ["ditem.math.data.probability-statistics-basic.fixture-01.v1"],
+      "responseIds": ["dresponse.math.data.probability-statistics-basic.fixture-01.v1"],
+      "evidenceIds": ["devidence.math.data.probability-statistics-basic.fixture-01.v1"],
+      "lifecycleState": "invalidated",
+      "statePath": ["drafted", "ready", "active", "invalidated"],
+      "referenceDisposition": "excluded",
+      "interpretationMode": "none",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "runtimeUseAllowed": false,
+      "storageAllowed": false,
+      "lifecycleNote": "The whole fixture is excluded under a draft policy; linked records remain uninterpreted.",
+      "safetyNotes": [
+        "Synthetic structural fixture only; invalidation does not alter linked records."
+      ]
+    }
+  ]
+}

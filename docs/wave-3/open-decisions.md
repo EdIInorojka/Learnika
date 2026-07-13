@@ -20,6 +20,7 @@ use.
 | Diagnostic blueprint | Static contract and structural draft created in Slice 3; no item content or runtime behavior | Original item types, reviewed leaf-skill mapping, difficulty calibration and answer-leak review | curriculum-knowledge, qa-evaluation | Diagnostic runtime |
 | Diagnostic item contract and fixtures | Static contract and five original non-production stems created in Slice 4 | Curriculum and safety review, production authoring workflow, response forms, deterministic validator plan and rights evidence | curriculum-knowledge, qa-evaluation, content-platform | Reviewed item bank and diagnostic runtime |
 | Diagnostic response and evidence contract | Static contract and three synthetic non-production response/evidence pairs created in Slice 5; no runtime records | Reviewed response representation, confirmation provenance, transition and supersession rules, evidence independence and weighting, and retention/privacy design | learning-engine, curriculum-knowledge, security-privacy, qa-evaluation | Diagnostic evidence runtime and mastery implementation |
+| Diagnostic session lifecycle | Static contract and three synthetic non-production lifecycle fixtures created in Slice 6; no runtime sessions or persistence | Reviewed production identity, authorization, idempotency, transition concurrency, interruption recovery, retention and deletion policy | learning-engine, solution-architect, security-privacy, qa-evaluation | Diagnostic runtime and persistence |
 | Diagnostic length and selection | Not finalized; Slice 3 defines coverage slots only | Grade-specific length, stop rules, fixed versus adaptive selection, timing and accessibility review | curriculum-knowledge, learning-engine, qa-evaluation | Diagnostic runtime |
 | Diagnostic result semantics | Slice 3 states and Slice 5 static transitions drafted; no runtime semantics | Runtime transition rules, invalidation policy, repeated-evidence scenarios and contradiction handling | learning-engine, curriculum-knowledge, qa-evaluation | Evidence and mastery implementation |
 | Mastery evidence weighting | Existing principles only | Scenario tests, weights for diagnostic/homework/transfer/review, decay and uncertainty behavior | learning-engine, qa-evaluation | Mastery state implementation |
@@ -37,12 +38,14 @@ use.
 
 Before any persisted or executable diagnostic slice, Wave 3 needs:
 
-- approval of the Slice 5 contract, static artifact and validation evidence;
+- approval of the Slice 6 contract, static artifact and validation evidence;
 - reviewed leaf-skill granularity for selected diagnostic coverage;
 - reviewed production diagnostic content and review workflow; Slice 4 fixtures do
   not satisfy release content requirements;
 - reviewed runtime selection, invalidation, supersession and repeated-evidence
   semantics;
+- reviewed session identity, authorization, interruption recovery, retention
+  and deletion semantics;
 - exact acceptance criteria and an explicit gate for any runtime slice;
 - clean git and green local validation;
 - explicit approval for any Prisma, package or contract change.
