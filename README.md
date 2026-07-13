@@ -156,6 +156,11 @@ authenticated web foundations. It does not approve real providers, voice capture
 assistance or real-child beta use. Closure evidence and deferred risks are recorded in
 `docs/wave-2/closure-gate.md`.
 
+Wave 3 begins with documentation-only planning for the canonical grade 7-9
+mathematics skill graph contract. See `docs/wave-3/scope-and-non-goals.md` and
+`docs/wave-3/canonical-skill-graph-contract.md`. This does not approve
+diagnostics, mastery updates or learner-facing assistance runtime behavior.
+
 On Windows PowerShell, use `.cmd` package-tool shims:
 
 ```powershell
