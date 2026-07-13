@@ -12,6 +12,7 @@ import { getHomeworkSession, listHomeworkAttempts } from "../../../lib/homework-
 import { MediaAssetContractError, type MediaAssetView } from "../../../lib/media-asset-contract";
 import { listMediaAssetMetadata } from "../../../lib/media-asset-service.server";
 import { isMediaAssetUploadAvailable } from "../../../lib/media-upload-contract";
+import { isMockOcrCandidateAvailable } from "../../../lib/mock-ocr-candidate-contract";
 import { logoutParentAction } from "../../auth-actions";
 import {
   attemptStatusLabel,
@@ -22,6 +23,8 @@ import {
 import { createMediaAssetMetadataAction } from "./media-asset-actions";
 import { formatByteSize, mediaAssetKindLabel, mediaRetentionLabel } from "./media-asset-labels";
 import { uploadMediaAssetAction } from "./media-upload-actions";
+import { requestMockOcrCandidateAction } from "./mock-ocr-candidate-actions";
+import { MockOcrCandidatePanel } from "./mock-ocr-candidate-panel";
 
 export const dynamic = "force-dynamic";
 
@@ -279,6 +282,7 @@ export default async function HomeworkSessionPage({
                 <ul className="media-list">
                   {mediaAssets.map((mediaAsset, index) => {
                     const uploadAvailable = isMediaAssetUploadAvailable(mediaAsset);
+                    const mockOcrAvailable = isMockOcrCandidateAvailable(mediaAsset);
                     const uploadAction = uploadMediaAssetAction.bind(
                       null,
                       homeworkSessionId,
@@ -287,6 +291,12 @@ export default async function HomeworkSessionPage({
                       mediaAsset.sizeBytes,
                     );
                     const inputId = `media-upload-${index}`;
+                    const mockOcrControlId = `mock-ocr-scenario-${index}`;
+                    const mockOcrAction = requestMockOcrCandidateAction.bind(
+                      null,
+                      homeworkSessionId,
+                      mediaAsset.id,
+                    );
 
                     return (
                       <li key={mediaAsset.id}>
@@ -330,6 +340,12 @@ export default async function HomeworkSessionPage({
                               Загрузить
                             </button>
                           </form>
+                        ) : null}
+                        {mockOcrAvailable ? (
+                          <MockOcrCandidatePanel
+                            action={mockOcrAction}
+                            controlId={mockOcrControlId}
+                          />
                         ) : null}
                       </li>
                     );

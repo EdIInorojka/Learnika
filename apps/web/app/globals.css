@@ -405,6 +405,74 @@ button:focus-visible {
   min-width: 0;
 }
 
+.mock-ocr-panel {
+  display: grid;
+  gap: 12px;
+  border-top: 1px dashed #cbd2cf;
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.mock-ocr-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: end;
+}
+
+.mock-ocr-form label {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.mock-ocr-form select {
+  min-width: 0;
+}
+
+.mock-ocr-result {
+  display: grid;
+  gap: 10px;
+}
+
+.mock-ocr-untrusted-label {
+  margin: 0;
+  color: #7c3f18;
+  font-weight: 700;
+}
+
+.mock-ocr-candidates {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mock-ocr-candidates li {
+  border-left: 3px solid #bd6b35;
+  padding-left: 12px;
+}
+
+.mock-ocr-candidates span {
+  color: #7c3f18;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mock-ocr-candidates p {
+  overflow-wrap: anywhere;
+  margin: 5px 0 0;
+  white-space: pre-wrap;
+}
+
+.mock-ocr-guardrails {
+  display: grid;
+  gap: 4px;
+  color: #355c51;
+  font-size: 14px;
+}
+
 @media (max-width: 680px) {
   .app-header {
     align-items: flex-start;
@@ -469,6 +537,10 @@ button:focus-visible {
   }
 
   .media-upload-form {
+    grid-template-columns: 1fr;
+  }
+
+  .mock-ocr-form {
     grid-template-columns: 1fr;
   }
 }

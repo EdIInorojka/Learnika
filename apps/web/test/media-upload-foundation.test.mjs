@@ -148,12 +148,12 @@ test("upload UI uses only the approved route and excludes forbidden scope", () =
     service.includes("`/homework/sessions/${sessionId}/media-assets/${assetId}/upload`"),
     true,
   );
+  assert.equal(`${action}\n${service}`.includes("mock-ocr"), false);
   for (const forbidden of [
     "minio",
     "/download",
     "signedUrl",
     "publicUrl",
-    "mock-ocr",
     "/stt",
     "/llm",
     "/hints",
