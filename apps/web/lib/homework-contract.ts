@@ -12,6 +12,10 @@ export interface CreateHomeworkSessionInput {
   subject: "math";
 }
 
+export interface CreateHomeworkAttemptInput {
+  status: "CREATED";
+}
+
 export interface ChildProfileChoice {
   gradeLevel: number | null;
   id: string;
@@ -55,6 +59,7 @@ const attemptStatusSet = new Set<string>(["CANCELLED", "CREATED", "SUBMITTED"]);
 const forbiddenResponseKeyPattern =
   /answer|completion|hint|llm|media|ocr|prompt|provider|raw|solution|stt|textbook|transcript/i;
 const allowedFormFields = new Set(["childProfileId", "gradeLevel", "sourceType"]);
+const allowedAttemptFormFields = new Set<string>();
 
 function invalid(): never {
   throw new HomeworkContractError();
@@ -161,6 +166,11 @@ export function parseHomeworkAttemptsResponse(value: unknown): HomeworkAttemptVi
   return array(record(record(value).data).attempts).map(parseAttempt);
 }
 
+export function parseHomeworkAttemptResponse(value: unknown): HomeworkAttemptView {
+  assertNoForbiddenResponseFields(value);
+  return parseAttempt(record(record(value).data).attempt);
+}
+
 export function parseChildProfileChoices(value: unknown): ChildProfileChoice[] {
   const children = array(record(record(value).data).children);
   return children.flatMap((childValue) => {
@@ -192,6 +202,14 @@ export function parseCreateHomeworkSessionForm(formData: FormData): CreateHomewo
     sourceType: sourceType as HomeworkSourceType,
     subject: "math",
   };
+}
+
+export function parseCreateHomeworkAttemptForm(formData: FormData): CreateHomeworkAttemptInput {
+  for (const fieldName of formData.keys()) {
+    if (!fieldName.startsWith("$ACTION_") && !allowedAttemptFormFields.has(fieldName)) invalid();
+  }
+
+  return { status: "CREATED" };
 }
 
 export function canViewHomework(status: string): status is "authenticated" {

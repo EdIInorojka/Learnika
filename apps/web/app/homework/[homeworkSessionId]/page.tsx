@@ -20,6 +20,7 @@ import {
   sessionStatusLabel,
   sourceLabel,
 } from "../homework-labels";
+import { createHomeworkAttemptAction } from "./homework-attempt-actions";
 import { createMediaAssetMetadataAction } from "./media-asset-actions";
 import { formatByteSize, mediaAssetKindLabel, mediaRetentionLabel } from "./media-asset-labels";
 import { uploadMediaAssetAction } from "./media-upload-actions";
@@ -31,6 +32,8 @@ export const dynamic = "force-dynamic";
 interface HomeworkSessionPageProps {
   params: Promise<{ homeworkSessionId: string }>;
   searchParams: Promise<{
+    attemptCreated?: string | string[];
+    attemptError?: string | string[];
     created?: string | string[];
     mediaCreated?: string | string[];
     mediaError?: string | string[];
@@ -48,6 +51,11 @@ const uploadErrorMessages: Record<string, string> = {
   invalid: "Выбранный файл не соответствует зарегистрированным метаданным.",
   service: "Загрузка временно недоступна.",
   state: "Текущее состояние медиафайла не разрешает загрузку.",
+};
+
+const attemptErrorMessages: Record<string, string> = {
+  invalid: "Не удалось создать запись попытки: метаданные отклонены.",
+  service: "Метаданные попыток временно недоступны.",
 };
 
 export default async function HomeworkSessionPage({
@@ -103,6 +111,9 @@ export default async function HomeworkSessionPage({
   }
 
   const query = await searchParams;
+  const attemptCreated = query.attemptCreated === "1";
+  const attemptErrorKey = typeof query.attemptError === "string" ? query.attemptError : "";
+  const attemptErrorMessage = attemptErrorMessages[attemptErrorKey];
   const created = query.created === "1";
   const mediaCreated = query.mediaCreated === "1";
   const mediaErrorKey = typeof query.mediaError === "string" ? query.mediaError : "";
@@ -110,6 +121,7 @@ export default async function HomeworkSessionPage({
   const uploadErrorKey = typeof query.uploadError === "string" ? query.uploadError : "";
   const uploadErrorMessage = uploadErrorMessages[uploadErrorKey];
   const uploadSuccess = query.uploadSuccess === "1";
+  const createAttemptForSession = createHomeworkAttemptAction.bind(null, homeworkSessionId);
   const createMediaAssetForSession = createMediaAssetMetadataAction.bind(null, homeworkSessionId);
 
   return (
@@ -178,7 +190,26 @@ export default async function HomeworkSessionPage({
       </section>
 
       <section className="attempts-section" aria-labelledby="attempts-title">
-        <h2 id="attempts-title">Попытки</h2>
+        <div className="attempts-heading">
+          <h2 id="attempts-title">Попытки</h2>
+          <form action={createAttemptForSession} className="attempt-create-form">
+            <button type="submit">Создать попытку</button>
+          </form>
+        </div>
+        <p className="attempt-metadata-note">
+          Сохраняются только номер, статус и время попытки. Ответ ученика и локально подтвержденный
+          текст OCR пока не сохраняются.
+        </p>
+        {attemptCreated ? (
+          <p className="success-message" role="status">
+            Метаданные попытки созданы.
+          </p>
+        ) : null}
+        {attemptErrorMessage ? (
+          <p className="auth-error" role="alert">
+            {attemptErrorMessage}
+          </p>
+        ) : null}
         {attempts.length === 0 ? (
           <p className="empty-state">Метаданных попыток пока нет.</p>
         ) : (
@@ -187,7 +218,14 @@ export default async function HomeworkSessionPage({
               <li key={attempt.attemptNumber}>
                 <strong>Попытка {attempt.attemptNumber}</strong>
                 <span>{attemptStatusLabel(attempt.status)}</span>
-                <time dateTime={attempt.createdAt}>{formatMetadataDate(attempt.createdAt)}</time>
+                <span className="attempt-timestamp">
+                  Создана:{" "}
+                  <time dateTime={attempt.createdAt}>{formatMetadataDate(attempt.createdAt)}</time>
+                </span>
+                <span className="attempt-timestamp">
+                  Обновлена:{" "}
+                  <time dateTime={attempt.updatedAt}>{formatMetadataDate(attempt.updatedAt)}</time>
+                </span>
               </li>
             ))}
           </ul>

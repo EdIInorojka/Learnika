@@ -300,9 +300,29 @@ button:focus-visible {
   padding-top: 32px;
 }
 
+.attempts-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.attempts-heading h2 {
+  margin-bottom: 0;
+}
+
+.attempt-create-form {
+  flex: 0 0 auto;
+}
+
+.attempt-metadata-note {
+  color: #58645f;
+  margin: 12px 0 18px;
+}
+
 .attempt-list li {
   display: grid;
-  grid-template-columns: minmax(130px, 1fr) minmax(110px, 1fr) auto;
+  grid-template-columns: minmax(130px, 1fr) minmax(110px, 0.8fr) repeat(2, minmax(160px, 1fr));
   gap: 16px;
   border-top: 1px solid #d8dddb;
   padding: 14px 0;
@@ -315,6 +335,10 @@ button:focus-visible {
 .attempt-list time,
 .attempt-list span {
   color: #58645f;
+}
+
+.attempt-timestamp {
+  min-width: 0;
 }
 
 .media-section {
@@ -549,6 +573,11 @@ button:focus-visible {
   .attempt-list li {
     grid-template-columns: 1fr;
     gap: 5px;
+  }
+
+  .attempts-heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

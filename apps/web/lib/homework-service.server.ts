@@ -1,15 +1,30 @@
 import { authenticatedApiRequest } from "./auth-service.server";
 import {
   type ChildProfileChoice,
+  type CreateHomeworkAttemptInput,
   type CreateHomeworkSessionInput,
   type HomeworkAttemptView,
   type HomeworkSessionView,
   parseChildProfileChoices,
+  parseHomeworkAttemptResponse,
   parseHomeworkAttemptsResponse,
   parseHomeworkSessionId,
   parseHomeworkSessionResponse,
   parseHomeworkSessionsResponse,
 } from "./homework-contract";
+
+export async function createHomeworkAttempt(
+  homeworkSessionId: string,
+  input: CreateHomeworkAttemptInput,
+): Promise<HomeworkAttemptView> {
+  const id = parseHomeworkSessionId(homeworkSessionId);
+  return parseHomeworkAttemptResponse(
+    await authenticatedApiRequest<unknown>(`/homework/sessions/${id}/attempts`, {
+      body: input,
+      method: "POST",
+    }),
+  );
+}
 
 export async function createHomeworkSession(
   input: CreateHomeworkSessionInput,
