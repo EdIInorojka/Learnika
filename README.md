@@ -145,17 +145,16 @@ Start with `docs/INDEX.md`. The active implementation sequence is in `docs/IMPLE
 
 Wave 1 Slice 11 closes the foundation gate for the monorepo tooling baseline,
 local infrastructure, minimal app/service shells, Prisma database foundation, parent-only auth
-foundation, API-only family setup foundation, tenant authorization foundation
+foundation, API-only family setup foundation, tenant authorization foundation,
 generated OpenAPI contracts, local-safe logging/audit foundations and CI/test
-foundation. Product scope documents describe the target MVP; this repository is
-still foundation-only. Web onboarding screens, homework, voice, billing, mobile
-and school features are deferred.
+foundation.
 
 Wave 1 closure evidence is recorded in `docs/wave-1/closure-gate.md`.
 
-Wave 2 planning gate documents are in `docs/wave-2/`. They define the planned
-homework, media, provider, voice, safety and readiness boundaries only; Wave 2
-product implementation still requires explicit approval.
+Wave 2 closes the approved local homework/media metadata, local upload, mock-provider safety and
+authenticated web foundations. It does not approve real providers, voice capture, generated
+assistance or real-child beta use. Closure evidence and deferred risks are recorded in
+`docs/wave-2/closure-gate.md`.
 
 On Windows PowerShell, use `.cmd` package-tool shims:
 
@@ -216,8 +215,8 @@ pnpm.cmd run db:studio
 ```
 
 GitHub Actions CI is defined in `.github/workflows/ci.yml`. It uses Node.js
-24, pnpm 11.7.0 through Corepack, frozen-lockfile install, a local PostgreSQL
-service container and local-only synthetic credentials. CI validates the same
+24, pnpm 11.7.0 through Corepack, frozen-lockfile install, local Docker Compose
+PostgreSQL, Redis and MinIO services and local-only synthetic credentials. CI validates the same
 foundation commands used locally:
 
 ```powershell
@@ -268,7 +267,8 @@ pnpm.cmd run contracts:validate
 ```
 
 The generated OpenAPI artifact is `packages/contracts/openapi.json`. It covers
-only currently implemented health, auth and family-setup routes.
+the implemented health, auth, family-setup and approved Wave 2 homework/media routes documented in
+the Wave 2 closure gate.
 
 Logging and audit foundation:
 
