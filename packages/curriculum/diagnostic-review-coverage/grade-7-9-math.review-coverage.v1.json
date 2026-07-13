@@ -1,0 +1,746 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticReviewCoverage.v1",
+    "coverageArtifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "status": "draft_non_production_review_coverage",
+    "artifactKind": "diagnostic_review_coverage",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-4/reviewed-diagnostic-content-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "policyVersionPins": {
+    "methodology": "wave-4.slice-1.methodology-review.v1",
+    "safety_no_answer": "wave-4.slice-1.safety-no-answer-review.v1",
+    "rights_copyright": "wave-4.slice-1.rights-copyright-review.v1",
+    "grade_placement": "wave-4.slice-1.grade-placement-review.v1",
+    "accessibility_readability": "wave-4.slice-1.accessibility-readability-review.v1",
+    "production_approval": "wave-4.slice-1.production-approval.v1"
+  },
+  "readiness": {
+    "status": "NOT_READY",
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"],
+    "productionUseAllowed": false
+  },
+  "aggregate": {
+    "blueprintSlotCount": 11,
+    "statusCounts": {
+      "DRAFT_ONLY": 5,
+      "GAP_CONFIRMED": 6,
+      "PRODUCTION_APPROVED": 0
+    }
+  },
+  "slots": [
+    {
+      "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateFixtureIds": ["ditem.math.number.rational-number-operations.fixture-01.v1"],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.number.percent-ratio.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateFixtureIds": [],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.algebra.expression-transformations.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateFixtureIds": ["ditem.math.algebra.expression-transformations.fixture-01.v1"],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.algebra.linear-equation-one-variable.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateFixtureIds": [],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.algebra.powers-and-roots.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateFixtureIds": [],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.functions.coordinate-plane-graphs.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateFixtureIds": ["ditem.math.functions.coordinate-plane-graphs.fixture-01.v1"],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.functions.linear-function.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateFixtureIds": [],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.geometry.basic-objects-angles.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateFixtureIds": [],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.geometry.triangle-properties.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateFixtureIds": [],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateFixtureIds": ["ditem.math.geometry.parallel-lines.fixture-01.v1"],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateFixtureIds": ["ditem.math.data.probability-statistics-basic.fixture-01.v1"],
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "artifactVersionPins": {
+        "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1"
+      },
+      "reviewGates": {
+        "methodology": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "status": "NOT_STARTED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "status": "NOT_ELIGIBLE",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "reviewerRole": null,
+          "evidenceRef": null,
+          "decidedAt": null
+        }
+      }
+    }
+  ]
+}
