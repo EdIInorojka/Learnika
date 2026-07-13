@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticItemFixtures.v1",
+    "fixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1",
+    "status": "draft_non_production_fixture_set",
+    "artifactKind": "diagnostic_item_fixture_set",
+    "subject": "math",
+    "locale": "ru-RU",
+    "canonicalSkillGraphVersion": "wave-3.slice-2.grade-7-9-math.v1",
+    "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "productionUseAllowed": false,
+    "sourceContract": "docs/wave-3/diagnostic-item-contract.md",
+    "openDecisionRefs": [
+      "W3-OD-LEAF-GRANULARITY",
+      "W3-OD-GRADE-PLACEMENT",
+      "W3-OD-DIAGNOSTIC-CONTENT",
+      "W3-OD-ITEM-EVALUATION"
+    ],
+    "notes": [
+      "Small original internal fixture set for structural validation only.",
+      "No production, runtime evaluation or learner use is authorized."
+    ]
+  },
+  "items": [
+    {
+      "id": "ditem.math.number.rational-number-operations.fixture-01.v1",
+      "status": "draft_non_production_fixture",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "number",
+      "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1",
+      "primarySkillId": "math.number.rational-number-operations.v1",
+      "supportingSkillIds": ["math.number.integer-operations.v1"],
+      "evidenceCategory": "concept_recognition",
+      "stem": "Какое математическое действие нужно указать, чтобы записать сумму чисел -4 и 7? Назови только действие.",
+      "contentOrigin": "original_minimal_fixture",
+      "coverageStatus": "open_decision",
+      "productionUseAllowed": false,
+      "evaluationPlaceholder": {
+        "status": "deferred",
+        "mode": "none",
+        "policyNote": "No expected value, evaluator or runtime behavior is defined."
+      },
+      "safetyNotes": [
+        "Internal structural fixture only; curriculum and safety review remain pending."
+      ]
+    },
+    {
+      "id": "ditem.math.algebra.expression-transformations.fixture-01.v1",
+      "status": "draft_non_production_fixture",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "blueprintSlotId": "diag.math.g7-9.algebra.expression-transformations.v1",
+      "primarySkillId": "math.algebra.expression-transformations.v1",
+      "supportingSkillIds": ["math.algebra.expression-value.v1"],
+      "evidenceCategory": "multi_step_organization",
+      "stem": "Опиши порядок первых двух преобразований выражения 3(x + 2) - x, не выполняя вычисления.",
+      "contentOrigin": "original_minimal_fixture",
+      "coverageStatus": "open_decision",
+      "productionUseAllowed": false,
+      "evaluationPlaceholder": {
+        "status": "deferred",
+        "mode": "none",
+        "policyNote": "No expected value, evaluator or runtime behavior is defined."
+      },
+      "safetyNotes": [
+        "Internal structural fixture only; curriculum and safety review remain pending."
+      ]
+    },
+    {
+      "id": "ditem.math.functions.coordinate-plane-graphs.fixture-01.v1",
+      "status": "draft_non_production_fixture",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "functions",
+      "blueprintSlotId": "diag.math.g7-9.functions.coordinate-plane-graphs.v1",
+      "primarySkillId": "math.functions.coordinate-plane-graphs.v1",
+      "supportingSkillIds": ["math.number.rational-number-operations.v1"],
+      "evidenceCategory": "representation_interpretation",
+      "stem": "Точка имеет координаты (-2; 3). Назови сначала горизонтальную, затем вертикальную координату.",
+      "contentOrigin": "original_minimal_fixture",
+      "coverageStatus": "open_decision",
+      "productionUseAllowed": false,
+      "evaluationPlaceholder": {
+        "status": "deferred",
+        "mode": "none",
+        "policyNote": "No expected value, evaluator or runtime behavior is defined."
+      },
+      "safetyNotes": [
+        "Internal structural fixture only; curriculum and safety review remain pending."
+      ]
+    },
+    {
+      "id": "ditem.math.geometry.parallel-lines.fixture-01.v1",
+      "status": "draft_non_production_fixture",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1",
+      "primarySkillId": "math.geometry.parallel-lines.v1",
+      "supportingSkillIds": ["math.geometry.basic-objects-angles.v1"],
+      "evidenceCategory": "reasoning_justification",
+      "stem": "Две прямые пересечены секущей. Назови одно отношение между углами, которое могло бы служить признаком параллельности прямых.",
+      "contentOrigin": "original_minimal_fixture",
+      "coverageStatus": "open_decision",
+      "productionUseAllowed": false,
+      "evaluationPlaceholder": {
+        "status": "deferred",
+        "mode": "none",
+        "policyNote": "No expected value, evaluator or runtime behavior is defined."
+      },
+      "safetyNotes": [
+        "Internal structural fixture only; curriculum and safety review remain pending."
+      ]
+    },
+    {
+      "id": "ditem.math.data.probability-statistics-basic.fixture-01.v1",
+      "status": "draft_non_production_fixture",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "data",
+      "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1",
+      "primarySkillId": "math.data.probability-statistics-basic.v1",
+      "supportingSkillIds": ["math.number.percent-ratio.v1"],
+      "evidenceCategory": "concept_recognition",
+      "stem": "В мешке находятся 3 красных и 7 синих жетонов. Укажи, какую величину нужно сравнить с общим числом жетонов, чтобы описать долю красных.",
+      "contentOrigin": "original_minimal_fixture",
+      "coverageStatus": "open_decision",
+      "productionUseAllowed": false,
+      "evaluationPlaceholder": {
+        "status": "deferred",
+        "mode": "none",
+        "policyNote": "No expected value, evaluator or runtime behavior is defined."
+      },
+      "safetyNotes": [
+        "Internal structural fixture only; curriculum and safety review remain pending."
+      ]
+    }
+  ]
+}

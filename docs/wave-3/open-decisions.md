@@ -18,6 +18,7 @@ use.
 | Skill prerequisite edge semantics | Conservative rules drafted | Edge review rubric, examples and downgrade rules from prerequisite to related | curriculum-knowledge | Planner prerequisite enforcement |
 | Skill ID deprecation policy | Draft rule exists | Migration examples for renamed, split and merged skills | solution-architect, curriculum-knowledge | Versioned curriculum publication |
 | Diagnostic blueprint | Static contract and structural draft created in Slice 3; no item content or runtime behavior | Original item types, reviewed leaf-skill mapping, difficulty calibration and answer-leak review | curriculum-knowledge, qa-evaluation | Diagnostic runtime |
+| Diagnostic item contract and fixtures | Static contract and five original non-production stems created in Slice 4 | Curriculum and safety review, production authoring workflow, response forms, deterministic validator plan and rights evidence | curriculum-knowledge, qa-evaluation, content-platform | Reviewed item bank and diagnostic runtime |
 | Diagnostic length and selection | Not finalized; Slice 3 defines coverage slots only | Grade-specific length, stop rules, fixed versus adaptive selection, timing and accessibility review | curriculum-knowledge, learning-engine, qa-evaluation | Diagnostic runtime |
 | Diagnostic result semantics | Non-scoring placeholder states drafted only | Runtime transition rules, invalidation policy, repeated-evidence scenarios and contradiction handling | learning-engine, curriculum-knowledge, qa-evaluation | Evidence and mastery implementation |
 | Mastery evidence weighting | Existing principles only | Scenario tests, weights for diagnostic/homework/transfer/review, decay and uncertainty behavior | learning-engine, qa-evaluation | Mastery state implementation |
@@ -37,7 +38,8 @@ Before any persisted or executable diagnostic slice, Wave 3 needs:
 
 - approval of the Slice 3 contract, static artifact and validation evidence;
 - reviewed leaf-skill granularity for selected diagnostic coverage;
-- original or rights-cleared diagnostic item content and review workflow;
+- reviewed production diagnostic content and review workflow; Slice 4 fixtures do
+  not satisfy release content requirements;
 - approved selection, invalidation and repeated-evidence semantics;
 - exact acceptance criteria and an explicit gate for any runtime slice;
 - clean git and green local validation;
