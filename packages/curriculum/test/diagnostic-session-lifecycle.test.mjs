@@ -248,6 +248,6 @@ test("slice scope guard rejects API OpenAPI Prisma web and other runtime paths",
   const changedPaths = validateDiagnosticSessionLifecycleWorktreeScope();
 
   for (const changedPath of changedPaths) {
-    assert.match(changedPath, /^(docs\/wave-3\/|packages\/curriculum\/|package\.json$)/);
+    assert.match(changedPath, /^(docs\/wave-(?:3|4)\/|packages\/curriculum\/|package\.json$)/);
   }
 });

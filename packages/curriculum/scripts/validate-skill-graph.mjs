@@ -17,7 +17,7 @@ const forbiddenTerms = [
   "prompt",
   "completion",
 ];
-const allowedChangedPathPrefixes = ["docs/wave-3/", "packages/curriculum/"];
+const allowedChangedPathPrefixes = ["docs/wave-3/", "docs/wave-4/", "packages/curriculum/"];
 const allowedChangedPaths = new Set(["package.json"]);
 const approvedSlice7ChangedPathPrefixes = ["apps/api/src/diagnostic-session-state/"];
 const approvedSlice7ChangedPaths = new Set([

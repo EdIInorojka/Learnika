@@ -132,6 +132,6 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
   const changedPaths = validateDiagnosticWorktreeScope();
 
   for (const changedPath of changedPaths) {
-    assert.match(changedPath, /^(docs\/wave-3\/|packages\/curriculum\/|package\.json$)/);
+    assert.match(changedPath, /^(docs\/wave-(?:3|4)\/|packages\/curriculum\/|package\.json$)/);
   }
 });
