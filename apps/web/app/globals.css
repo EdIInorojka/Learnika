@@ -449,21 +449,51 @@ button:focus-visible {
   list-style: none;
 }
 
-.mock-ocr-candidates li {
+.mock-ocr-candidates > li {
   border-left: 3px solid #bd6b35;
   padding-left: 12px;
 }
 
-.mock-ocr-candidates span {
-  color: #7c3f18;
+.learner-ocr-confirmation {
+  display: grid;
+  gap: 8px;
+}
+
+.learner-ocr-confirmation label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.learner-ocr-confirmation textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 110px;
+  resize: vertical;
+  font: inherit;
+}
+
+.local-confirmation-label {
+  color: #355c51;
   font-size: 13px;
   font-weight: 700;
 }
 
-.mock-ocr-candidates p {
+.local-confirmation-actions {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.local-confirmation-actions span,
+.local-confirmation-note {
+  color: #58645f;
+  font-size: 13px;
+}
+
+.local-confirmation-note {
   overflow-wrap: anywhere;
-  margin: 5px 0 0;
-  white-space: pre-wrap;
+  margin: 0;
 }
 
 .mock-ocr-guardrails {
@@ -541,6 +571,10 @@ button:focus-visible {
   }
 
   .mock-ocr-form {
+    grid-template-columns: 1fr;
+  }
+
+  .local-confirmation-actions {
     grid-template-columns: 1fr;
   }
 }

@@ -232,11 +232,15 @@ test("mock OCR UI is protected ephemeral and limited to the approved route", () 
   const page = fs.readFileSync(path.join(detailDir, "page.tsx"), "utf8");
   const action = fs.readFileSync(path.join(detailDir, "mock-ocr-candidate-actions.ts"), "utf8");
   const panel = fs.readFileSync(path.join(detailDir, "mock-ocr-candidate-panel.tsx"), "utf8");
+  const editor = fs.readFileSync(
+    path.join(detailDir, "learner-ocr-confirmation-editor.tsx"),
+    "utf8",
+  );
   const service = fs.readFileSync(
     path.join(libDir, "mock-ocr-candidate-service.server.ts"),
     "utf8",
   );
-  const source = `${page}\n${action}\n${panel}\n${service}`;
+  const source = `${page}\n${action}\n${panel}\n${editor}\n${service}`;
 
   assert.equal(layout.includes("readAuthShellState()"), true);
   assert.equal(layout.includes("canViewHomework(authState.status)"), true);
@@ -245,7 +249,7 @@ test("mock OCR UI is protected ephemeral and limited to the approved route", () 
   assert.equal(panel.includes("useActionState"), true);
   assert.equal(panel.includes('result.status === "NEEDS_REVIEW"'), true);
   assert.equal(panel.includes('result.status === "FAILED"'), true);
-  assert.equal(panel.includes("Непроверенный OCR-текст"), true);
+  assert.equal(editor.includes("Непроверенный OCR-текст"), true);
   assert.equal(panel.includes("Требуется подтверждение ученика."), true);
   assert.equal(panel.includes("Передача текста дальше отключена."), true);
   assert.equal(

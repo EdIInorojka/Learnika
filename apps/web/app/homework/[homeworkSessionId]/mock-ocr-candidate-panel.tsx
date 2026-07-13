@@ -7,6 +7,7 @@ import {
   type MockOcrCandidateResultView,
   initialMockOcrCandidateActionState,
 } from "../../../lib/mock-ocr-candidate-contract";
+import { LearnerOcrConfirmationEditor } from "./learner-ocr-confirmation-editor";
 
 interface MockOcrCandidatePanelProps {
   action: (
@@ -33,7 +34,13 @@ function ResultGuardrails({ result }: { result: MockOcrCandidateResultView }) {
   );
 }
 
-function MockOcrResult({ result }: { result: MockOcrCandidateResultView }) {
+function MockOcrResult({
+  controlId,
+  result,
+}: {
+  controlId: string;
+  result: MockOcrCandidateResultView;
+}) {
   if (result.status === "NEEDS_REVIEW") {
     return (
       <div className="mock-ocr-result" role="status">
@@ -59,10 +66,11 @@ function MockOcrResult({ result }: { result: MockOcrCandidateResultView }) {
       <p className="mock-ocr-untrusted-label">Непроверенный черновик распознавания</p>
       <ul className="mock-ocr-candidates">
         {result.candidates.map((candidate, index) => (
-          <li key={index}>
-            <span>Непроверенный OCR-текст</span>
-            <p>{candidate.text}</p>
-          </li>
+          <LearnerOcrConfirmationEditor
+            candidate={candidate}
+            controlId={`${controlId}-candidate-${index}`}
+            key={index}
+          />
         ))}
       </ul>
       <ResultGuardrails result={result} />
@@ -88,7 +96,9 @@ export function MockOcrCandidatePanel({ action, controlId }: MockOcrCandidatePan
       </form>
 
       <div aria-live="polite">
-        {state.status === "RESULT" ? <MockOcrResult result={state.result} /> : null}
+        {state.status === "RESULT" ? (
+          <MockOcrResult controlId={controlId} result={state.result} />
+        ) : null}
         {state.status === "NOT_READY" ? (
           <p className="auth-error" role="status">
             Медиафайл пока не готов к безопасному распознаванию.
