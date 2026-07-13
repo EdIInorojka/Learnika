@@ -1,4 +1,9 @@
-import { apiRequest, ApiClientError, type ApiRequestOptions } from "./api-client.server";
+import {
+  apiMultipartRequest,
+  apiRequest,
+  ApiClientError,
+  type ApiRequestOptions,
+} from "./api-client.server";
 import {
   type AuthenticatedParent,
   type AuthResponse,
@@ -60,6 +65,18 @@ export async function authenticatedApiRequest<T>(
   }
 
   return apiRequest<T>(apiPath, { ...options, accessToken });
+}
+
+export async function authenticatedMultipartApiRequest<T>(
+  apiPath: string,
+  multipartBody: FormData,
+): Promise<T> {
+  const accessToken = await readAccessToken();
+  if (!accessToken) {
+    throw new ApiClientError(401, "AUTH_REQUIRED", "Authentication is required.");
+  }
+
+  return apiMultipartRequest<T>(apiPath, multipartBody, accessToken);
 }
 
 export async function readAuthShellState(): Promise<AuthShellState> {

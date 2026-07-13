@@ -385,6 +385,26 @@ button:focus-visible {
   margin: 4px 0 0;
 }
 
+.media-upload-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: end;
+  border-top: 1px dashed #cbd2cf;
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.media-upload-form label {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.media-upload-form input {
+  min-width: 0;
+}
+
 @media (max-width: 680px) {
   .app-header {
     align-items: flex-start;
@@ -445,6 +465,10 @@ button:focus-visible {
   }
 
   .media-metadata-list {
+    grid-template-columns: 1fr;
+  }
+
+  .media-upload-form {
     grid-template-columns: 1fr;
   }
 }

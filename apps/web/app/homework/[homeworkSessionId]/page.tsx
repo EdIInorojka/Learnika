@@ -11,6 +11,7 @@ import {
 import { getHomeworkSession, listHomeworkAttempts } from "../../../lib/homework-service.server";
 import { MediaAssetContractError, type MediaAssetView } from "../../../lib/media-asset-contract";
 import { listMediaAssetMetadata } from "../../../lib/media-asset-service.server";
+import { isMediaAssetUploadAvailable } from "../../../lib/media-upload-contract";
 import { logoutParentAction } from "../../auth-actions";
 import {
   attemptStatusLabel,
@@ -20,6 +21,7 @@ import {
 } from "../homework-labels";
 import { createMediaAssetMetadataAction } from "./media-asset-actions";
 import { formatByteSize, mediaAssetKindLabel, mediaRetentionLabel } from "./media-asset-labels";
+import { uploadMediaAssetAction } from "./media-upload-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -29,12 +31,20 @@ interface HomeworkSessionPageProps {
     created?: string | string[];
     mediaCreated?: string | string[];
     mediaError?: string | string[];
+    uploadError?: string | string[];
+    uploadSuccess?: string | string[];
   }>;
 }
 
 const mediaErrorMessages: Record<string, string> = {
   invalid: "Проверьте метаданные медиафайла.",
   service: "Метаданные медиафайлов временно недоступны.",
+};
+
+const uploadErrorMessages: Record<string, string> = {
+  invalid: "Выбранный файл не соответствует зарегистрированным метаданным.",
+  service: "Загрузка временно недоступна.",
+  state: "Текущее состояние медиафайла не разрешает загрузку.",
 };
 
 export default async function HomeworkSessionPage({
@@ -94,6 +104,9 @@ export default async function HomeworkSessionPage({
   const mediaCreated = query.mediaCreated === "1";
   const mediaErrorKey = typeof query.mediaError === "string" ? query.mediaError : "";
   const mediaErrorMessage = mediaErrorMessages[mediaErrorKey];
+  const uploadErrorKey = typeof query.uploadError === "string" ? query.uploadError : "";
+  const uploadErrorMessage = uploadErrorMessages[uploadErrorKey];
+  const uploadSuccess = query.uploadSuccess === "1";
   const createMediaAssetForSession = createMediaAssetMetadataAction.bind(null, homeworkSessionId);
 
   return (
@@ -191,6 +204,16 @@ export default async function HomeworkSessionPage({
             {mediaErrorMessage}
           </p>
         ) : null}
+        {uploadSuccess ? (
+          <p className="success-message" role="status">
+            Файл загружен.
+          </p>
+        ) : null}
+        {uploadErrorMessage ? (
+          <p className="auth-error" role="alert">
+            {uploadErrorMessage}
+          </p>
+        ) : null}
 
         {mediaAssets === null ? (
           <p className="auth-error" role="status">
@@ -254,36 +277,63 @@ export default async function HomeworkSessionPage({
                 <p className="empty-state">Метаданных медиафайлов пока нет.</p>
               ) : (
                 <ul className="media-list">
-                  {mediaAssets.map((mediaAsset) => (
-                    <li key={mediaAsset.id}>
-                      <div className="media-row-heading">
-                        <strong>{mediaAssetKindLabel(mediaAsset.assetKind)}</strong>
-                        <span>{mediaRetentionLabel(mediaAsset.retentionStatus)}</span>
-                      </div>
-                      <dl className="media-metadata-list">
-                        <div>
-                          <dt>MIME-тип</dt>
-                          <dd>{mediaAsset.mimeType}</dd>
+                  {mediaAssets.map((mediaAsset, index) => {
+                    const uploadAvailable = isMediaAssetUploadAvailable(mediaAsset);
+                    const uploadAction = uploadMediaAssetAction.bind(
+                      null,
+                      homeworkSessionId,
+                      mediaAsset.id,
+                      mediaAsset.mimeType,
+                      mediaAsset.sizeBytes,
+                    );
+                    const inputId = `media-upload-${index}`;
+
+                    return (
+                      <li key={mediaAsset.id}>
+                        <div className="media-row-heading">
+                          <strong>{mediaAssetKindLabel(mediaAsset.assetKind)}</strong>
+                          <span>{mediaRetentionLabel(mediaAsset.retentionStatus)}</span>
                         </div>
-                        <div>
-                          <dt>Размер</dt>
-                          <dd>{formatByteSize(mediaAsset.sizeBytes)}</dd>
-                        </div>
-                        <div>
-                          <dt>SHA-256</dt>
-                          <dd>{mediaAsset.checksumPresent ? "Указана" : "Не указана"}</dd>
-                        </div>
-                        <div>
-                          <dt>Хранить до</dt>
-                          <dd>
-                            <time dateTime={mediaAsset.retentionUntil}>
-                              {formatMetadataDate(mediaAsset.retentionUntil)}
-                            </time>
-                          </dd>
-                        </div>
-                      </dl>
-                    </li>
-                  ))}
+                        <dl className="media-metadata-list">
+                          <div>
+                            <dt>MIME-тип</dt>
+                            <dd>{mediaAsset.mimeType}</dd>
+                          </div>
+                          <div>
+                            <dt>Размер</dt>
+                            <dd>{formatByteSize(mediaAsset.sizeBytes)}</dd>
+                          </div>
+                          <div>
+                            <dt>SHA-256</dt>
+                            <dd>{mediaAsset.checksumPresent ? "Указана" : "Не указана"}</dd>
+                          </div>
+                          <div>
+                            <dt>Хранить до</dt>
+                            <dd>
+                              <time dateTime={mediaAsset.retentionUntil}>
+                                {formatMetadataDate(mediaAsset.retentionUntil)}
+                              </time>
+                            </dd>
+                          </div>
+                        </dl>
+                        {uploadAvailable ? (
+                          <form action={uploadAction} className="media-upload-form">
+                            <label htmlFor={inputId}>Файл</label>
+                            <input
+                              accept={mediaAsset.mimeType}
+                              id={inputId}
+                              name="file"
+                              required
+                              type="file"
+                            />
+                            <button className="secondary" type="submit">
+                              Загрузить
+                            </button>
+                          </form>
+                        ) : null}
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>

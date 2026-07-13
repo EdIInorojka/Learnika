@@ -90,7 +90,7 @@ function assertNoForbiddenResponseFields(value: unknown): void {
   }
 }
 
-function parseMediaAssetId(value: unknown): string {
+export function parseMediaAssetId(value: unknown): string {
   const id = requiredString(value);
   if (!uuidPattern.test(id)) invalid();
   return id;

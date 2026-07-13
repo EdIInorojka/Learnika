@@ -151,7 +151,6 @@ test("media metadata UI remains protected and excludes transfer/provider scope",
     assert.equal(service.includes(forbiddenRoute), false, forbiddenRoute);
   }
   for (const forbiddenMarkup of [
-    'type="file"',
     "multipart/form-data",
     "enctype=",
     "storageKey",

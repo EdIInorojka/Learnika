@@ -98,14 +98,36 @@ export async function apiRequest<T>(apiPath: string, options: ApiRequestOptions 
     headers.set("authorization", `Bearer ${options.accessToken}`);
   }
 
+  return performApiRequest<T>(apiPath, {
+    headers,
+    method: options.method ?? "GET",
+    ...(options.body === undefined ? {} : { body: JSON.stringify(options.body) }),
+  });
+}
+
+export async function apiMultipartRequest<T>(
+  apiPath: string,
+  multipartBody: FormData,
+  accessToken: string,
+): Promise<T> {
+  const headers = new Headers({
+    accept: "application/json",
+    authorization: `Bearer ${accessToken}`,
+  });
+  return performApiRequest<T>(apiPath, {
+    body: multipartBody,
+    headers,
+    method: "POST",
+  });
+}
+
+async function performApiRequest<T>(apiPath: string, init: RequestInit): Promise<T> {
   let response: Response;
   try {
     response = await fetch(resolveApiUrl(apiPath), {
+      ...init,
       cache: "no-store",
-      headers,
-      method: options.method ?? "GET",
       redirect: "error",
-      ...(options.body === undefined ? {} : { body: JSON.stringify(options.body) }),
     });
   } catch {
     throw new ApiClientError(0, "API_UNAVAILABLE", "The API is temporarily unavailable.");

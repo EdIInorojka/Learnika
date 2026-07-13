@@ -8,7 +8,7 @@
     "build": "node scripts/next.mjs build",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "node --test test/auth-foundation.test.mjs test/homework-foundation.test.mjs test/media-asset-foundation.test.mjs"
+    "test": "node --test test/auth-foundation.test.mjs test/homework-foundation.test.mjs test/media-asset-foundation.test.mjs test/media-upload-foundation.test.mjs"
   },
   "dependencies": {
     "next": "16.2.10",
