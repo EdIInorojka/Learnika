@@ -1,0 +1,300 @@
+import { readFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+const skillIdPattern =
+  /^math\.(number|algebra|functions|geometry|data)\.[a-z0-9]+(?:-[a-z0-9]+)*(?:\.[a-z0-9]+(?:-[a-z0-9]+)*)*\.v[1-9][0-9]*$/;
+const requiredStrands = new Set(["number", "algebra", "functions", "geometry", "data"]);
+const forbiddenTerms = [
+  "providerPayload",
+  "textbookContent",
+  "copiedText",
+  "finalAnswer",
+  "answer",
+  "solution",
+  "hint",
+  "prompt",
+  "completion",
+];
+const allowedChangedPathPrefixes = ["docs/wave-3/", "packages/curriculum/"];
+const allowedChangedPaths = new Set(["package.json"]);
+
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+export const defaultArtifactPath = path.resolve(
+  scriptDir,
+  "../skill-graph/grade-7-9-math.seed.v1.json",
+);
+export const repoRoot = path.resolve(scriptDir, "../../..");
+
+export class SkillGraphValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "SkillGraphValidationError";
+  }
+}
+
+function fail(message) {
+  throw new SkillGraphValidationError(message);
+}
+
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function requireString(value, fieldPath) {
+  if (typeof value !== "string" || value.trim() === "") {
+    fail(`${fieldPath} must be a non-empty string.`);
+  }
+}
+
+function normalizeForbiddenTerm(term) {
+  return term.toLowerCase();
+}
+
+function scanForbiddenTerms(value, fieldPath = "$") {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => scanForbiddenTerms(item, `${fieldPath}[${index}]`));
+    return;
+  }
+
+  if (isPlainObject(value)) {
+    for (const [key, nestedValue] of Object.entries(value)) {
+      const normalizedKey = key.toLowerCase();
+      for (const term of forbiddenTerms) {
+        if (normalizedKey.includes(normalizeForbiddenTerm(term))) {
+          fail(`${fieldPath}.${key} uses forbidden field term ${term}.`);
+        }
+      }
+      scanForbiddenTerms(nestedValue, `${fieldPath}.${key}`);
+    }
+    return;
+  }
+
+  if (typeof value === "string") {
+    const normalizedValue = value.toLowerCase();
+    for (const term of forbiddenTerms) {
+      if (normalizedValue.includes(normalizeForbiddenTerm(term))) {
+        fail(`${fieldPath} uses forbidden content term ${term}.`);
+      }
+    }
+  }
+}
+
+function validateGradeBand(skill) {
+  if (!isPlainObject(skill.gradeBand)) {
+    fail(`${skill.id}.gradeBand must be an object.`);
+  }
+
+  const { min, max } = skill.gradeBand;
+  if (!Number.isInteger(min) || !Number.isInteger(max)) {
+    fail(`${skill.id}.gradeBand min and max must be integers.`);
+  }
+  if (min < 7 || max > 9 || min > max) {
+    fail(`${skill.id}.gradeBand must stay within grades 7-9.`);
+  }
+}
+
+function validatePrerequisites(skillsById) {
+  for (const skill of skillsById.values()) {
+    if (!Array.isArray(skill.prerequisites)) {
+      fail(`${skill.id}.prerequisites must be an array.`);
+    }
+
+    const seenPrerequisites = new Set();
+    for (const prerequisiteId of skill.prerequisites) {
+      if (typeof prerequisiteId !== "string") {
+        fail(`${skill.id}.prerequisites must contain only skill IDs.`);
+      }
+      if (!skillsById.has(prerequisiteId)) {
+        fail(`${skill.id} references unknown prerequisite ${prerequisiteId}.`);
+      }
+      if (seenPrerequisites.has(prerequisiteId)) {
+        fail(`${skill.id} repeats prerequisite ${prerequisiteId}.`);
+      }
+      seenPrerequisites.add(prerequisiteId);
+    }
+  }
+}
+
+function detectPrerequisiteCycles(skillsById) {
+  const visiting = new Set();
+  const visited = new Set();
+
+  function visit(skillId, pathStack) {
+    if (visited.has(skillId)) {
+      return;
+    }
+    if (visiting.has(skillId)) {
+      fail(`Prerequisite cycle detected: ${[...pathStack, skillId].join(" -> ")}.`);
+    }
+
+    visiting.add(skillId);
+    const skill = skillsById.get(skillId);
+    for (const prerequisiteId of skill.prerequisites) {
+      visit(prerequisiteId, [...pathStack, skillId]);
+    }
+    visiting.delete(skillId);
+    visited.add(skillId);
+  }
+
+  for (const skillId of skillsById.keys()) {
+    visit(skillId, []);
+  }
+}
+
+function validateCoverage(skills) {
+  const presentStrands = new Set(skills.map((skill) => skill.strand));
+  for (const requiredStrand of requiredStrands) {
+    if (!presentStrands.has(requiredStrand)) {
+      fail(`Missing high-level coverage for strand ${requiredStrand}.`);
+    }
+  }
+
+  const hasProbabilityCoverage = skills.some(
+    (skill) =>
+      skill.strand === "data" &&
+      `${skill.id} ${skill.title} ${skill.shortDescription}`.toLowerCase().includes("probability"),
+  );
+  if (!hasProbabilityCoverage) {
+    fail("Missing data/probability high-level coverage.");
+  }
+}
+
+export function validateSkillGraph(graph) {
+  if (!isPlainObject(graph)) {
+    fail("Skill graph seed must be a JSON object.");
+  }
+  scanForbiddenTerms(graph);
+
+  if (!isPlainObject(graph.metadata)) {
+    fail("metadata must be an object.");
+  }
+  requireString(graph.metadata.schemaVersion, "metadata.schemaVersion");
+  requireString(graph.metadata.graphVersion, "metadata.graphVersion");
+  requireString(graph.metadata.status, "metadata.status");
+  if (graph.metadata.subject !== "math") {
+    fail("metadata.subject must be math.");
+  }
+  if (!Array.isArray(graph.metadata.audienceGrades)) {
+    fail("metadata.audienceGrades must be an array.");
+  }
+  if (
+    graph.metadata.audienceGrades.some(
+      (grade) => !Number.isInteger(grade) || grade < 7 || grade > 9,
+    )
+  ) {
+    fail("metadata.audienceGrades must stay within grades 7-9.");
+  }
+
+  if (!Array.isArray(graph.skills) || graph.skills.length === 0) {
+    fail("skills must be a non-empty array.");
+  }
+
+  const skillsById = new Map();
+  for (const [index, skill] of graph.skills.entries()) {
+    if (!isPlainObject(skill)) {
+      fail(`skills[${index}] must be an object.`);
+    }
+
+    requireString(skill.id, `skills[${index}].id`);
+    if (!skillIdPattern.test(skill.id)) {
+      fail(`${skill.id} does not match the canonical skill ID pattern.`);
+    }
+    if (skillsById.has(skill.id)) {
+      fail(`Duplicate skill ID ${skill.id}.`);
+    }
+
+    requireString(skill.title, `${skill.id}.title`);
+    requireString(skill.shortDescription, `${skill.id}.shortDescription`);
+    requireString(skill.strand, `${skill.id}.strand`);
+
+    const idStrand = skill.id.split(".")[1];
+    if (skill.strand !== idStrand || !requiredStrands.has(skill.strand)) {
+      fail(`${skill.id}.strand must match its ID namespace.`);
+    }
+
+    validateGradeBand(skill);
+
+    if (!Array.isArray(skill.safetyNotes)) {
+      fail(`${skill.id}.safetyNotes must be an array.`);
+    }
+    for (const [noteIndex, note] of skill.safetyNotes.entries()) {
+      requireString(note, `${skill.id}.safetyNotes[${noteIndex}]`);
+    }
+
+    skillsById.set(skill.id, skill);
+  }
+
+  validatePrerequisites(skillsById);
+  detectPrerequisiteCycles(skillsById);
+  validateCoverage(graph.skills);
+
+  return {
+    graphVersion: graph.metadata.graphVersion,
+    skillCount: graph.skills.length,
+    strands: [...new Set(graph.skills.map((skill) => skill.strand))].sort(),
+  };
+}
+
+export async function readSkillGraph(artifactPath = defaultArtifactPath) {
+  const raw = await readFile(artifactPath, "utf8");
+  return JSON.parse(raw);
+}
+
+function normalizeStatusPath(statusLine) {
+  const rawPath = statusLine.slice(3).trim();
+  const normalizedPath = rawPath.includes(" -> ") ? rawPath.split(" -> ").at(-1) : rawPath;
+  return normalizedPath.replaceAll("\\", "/");
+}
+
+export function validateChangedPathScope({ cwd = repoRoot } = {}) {
+  const result = spawnSync("git", ["status", "--short"], {
+    cwd,
+    encoding: "utf8",
+  });
+
+  if (result.status !== 0) {
+    fail(`Unable to inspect git status: ${result.stderr || result.stdout}`);
+  }
+
+  const changedPaths = result.stdout
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .map(normalizeStatusPath);
+
+  for (const changedPath of changedPaths) {
+    const isAllowed =
+      allowedChangedPaths.has(changedPath) ||
+      allowedChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix));
+    if (!isAllowed) {
+      fail(`Runtime or out-of-scope path changed: ${changedPath}.`);
+    }
+  }
+
+  return changedPaths;
+}
+
+async function main() {
+  const checkWorktreeScope = process.argv.includes("--check-worktree-scope");
+  const graph = await readSkillGraph();
+  const summary = validateSkillGraph(graph);
+
+  if (checkWorktreeScope) {
+    validateChangedPathScope();
+  }
+
+  console.log(
+    `[curriculum] Skill graph seed ${summary.graphVersion} validated: ${summary.skillCount} skills across ${summary.strands.join(", ")}.`,
+  );
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try {
+    await main();
+  } catch (error) {
+    console.error(`[curriculum] ${error instanceof Error ? error.message : String(error)}`);
+    process.exitCode = 1;
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.skillGraphSeed.v1",
+    "graphVersion": "wave-3.slice-2.grade-7-9-math.v1",
+    "status": "draft_static_seed",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "sourceContract": "docs/wave-3/canonical-skill-graph-contract.md",
+    "openDecisionRefs": [
+      "W3-OD-LEAF-GRANULARITY",
+      "W3-OD-GRADE-PLACEMENT",
+      "W3-OD-PREREQUISITE-SEMANTICS",
+      "W3-OD-RUSSIAN-DISPLAY-NAMING"
+    ],
+    "notes": [
+      "Static parent-skill seed for structural validation only.",
+      "Exact leaf scope, display naming and placement remain review items."
+    ]
+  },
+  "skills": [
+    {
+      "id": "math.number.integer-operations.v1",
+      "title": "Integer operations",
+      "shortDescription": "Apply integer arithmetic, sign rules and operation order needed by grade 7-9 mathematics.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "number",
+      "prerequisites": [],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.number.rational-number-operations.v1",
+      "title": "Rational number operations",
+      "shortDescription": "Work with fractions, decimals and rational quantities used across algebra and geometry.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "number",
+      "prerequisites": ["math.number.integer-operations.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.number.percent-ratio.v1",
+      "title": "Percent and ratio",
+      "shortDescription": "Use percent, ratio and simple proportional quantities in grade 7-9 contexts.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "number",
+      "prerequisites": ["math.number.rational-number-operations.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.expression-value.v1",
+      "title": "Expression value",
+      "shortDescription": "Read algebraic notation, substitute values and evaluate simple expressions.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": ["math.number.rational-number-operations.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.expression-transformations.v1",
+      "title": "Expression transformations",
+      "shortDescription": "Use brackets, like terms and equivalent algebraic transformations.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": ["math.algebra.expression-value.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.linear-equation-one-variable.v1",
+      "title": "One-variable linear equations",
+      "shortDescription": "Transform and work with one-variable linear equations in supported grade 7-9 forms.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": [
+        "math.number.rational-number-operations.v1",
+        "math.algebra.expression-transformations.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.linear-equation-systems.v1",
+      "title": "Systems of two linear equations",
+      "shortDescription": "Represent and transform systems of two linear equations at a high level.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": ["math.algebra.linear-equation-one-variable.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.powers-and-roots.v1",
+      "title": "Powers and roots",
+      "shortDescription": "Use grade-appropriate exponent rules, roots and numeric forms.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": [
+        "math.number.rational-number-operations.v1",
+        "math.algebra.expression-transformations.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.polynomials-and-factorization.v1",
+      "title": "Polynomials and factorization",
+      "shortDescription": "Work with polynomial structure, basic operations and factorization patterns.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": [
+        "math.algebra.expression-transformations.v1",
+        "math.algebra.powers-and-roots.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.algebraic-fractions.v1",
+      "title": "Algebraic fractions",
+      "shortDescription": "Use rational algebraic expressions and transformations at the reviewed parent-skill level.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": [
+        "math.number.rational-number-operations.v1",
+        "math.algebra.polynomials-and-factorization.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.quadratic-equation-basic.v1",
+      "title": "Basic quadratic equations",
+      "shortDescription": "Recognize and transform introductory quadratic equations and related forms.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": [
+        "math.algebra.linear-equation-one-variable.v1",
+        "math.algebra.polynomials-and-factorization.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.algebra.inequalities-basic.v1",
+      "title": "Basic inequalities",
+      "shortDescription": "Use basic inequality transformations and interval reasoning.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "algebra",
+      "prerequisites": ["math.algebra.linear-equation-one-variable.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.functions.coordinate-plane-graphs.v1",
+      "title": "Coordinate plane and graphs",
+      "shortDescription": "Read and plot points, tables and graphs on the coordinate plane.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "functions",
+      "prerequisites": ["math.number.rational-number-operations.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.functions.linear-function.v1",
+      "title": "Linear function",
+      "shortDescription": "Connect linear expressions, equations, tables and graphs.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "functions",
+      "prerequisites": [
+        "math.functions.coordinate-plane-graphs.v1",
+        "math.algebra.linear-equation-one-variable.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.functions.inverse-proportion.v1",
+      "title": "Inverse proportion",
+      "shortDescription": "Work with inverse proportion as a table, formula and graph family.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "functions",
+      "prerequisites": [
+        "math.number.rational-number-operations.v1",
+        "math.functions.coordinate-plane-graphs.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.functions.quadratic-function.v1",
+      "title": "Quadratic function",
+      "shortDescription": "Recognize introductory quadratic function structure, tables and graphs.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "functions",
+      "prerequisites": [
+        "math.functions.coordinate-plane-graphs.v1",
+        "math.algebra.quadratic-equation-basic.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.basic-objects-angles.v1",
+      "title": "Basic geometric objects and angles",
+      "shortDescription": "Use points, lines, rays, segments, angle types and measurement relationships.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": ["math.number.rational-number-operations.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.triangle-properties.v1",
+      "title": "Triangle properties",
+      "shortDescription": "Use triangle angle relationships, sides and triangle inequality at a parent-skill level.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": ["math.geometry.basic-objects-angles.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.triangle-congruence.v1",
+      "title": "Triangle congruence",
+      "shortDescription": "Recognize reviewed triangle congruence criteria and proof scaffolds.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": ["math.geometry.triangle-properties.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.parallel-lines.v1",
+      "title": "Parallel lines",
+      "shortDescription": "Use parallel lines, transversals and related angle relationships.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": ["math.geometry.basic-objects-angles.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.quadrilaterals.v1",
+      "title": "Quadrilaterals",
+      "shortDescription": "Use basic properties of parallelograms, rectangles, rhombi, squares and trapezoids.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": ["math.geometry.parallel-lines.v1", "math.geometry.triangle-properties.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.area-pythagorean.v1",
+      "title": "Area and Pythagorean theorem",
+      "shortDescription": "Use area relationships and the Pythagorean theorem in reviewed calculation contexts.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": [
+        "math.number.rational-number-operations.v1",
+        "math.geometry.triangle-properties.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.similarity-ratios.v1",
+      "title": "Similarity and ratios",
+      "shortDescription": "Use similarity, proportional segments and scale relationships.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": ["math.number.percent-ratio.v1", "math.geometry.triangle-properties.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.circle-relations.v1",
+      "title": "Circle relationships",
+      "shortDescription": "Use basic circle, arc, chord and angle relationships at a parent-skill level.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": [
+        "math.geometry.basic-objects-angles.v1",
+        "math.geometry.triangle-properties.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.vectors-coordinates.v1",
+      "title": "Vectors and coordinate geometry",
+      "shortDescription": "Use vector and coordinate ideas in introductory geometric contexts.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": [
+        "math.functions.coordinate-plane-graphs.v1",
+        "math.geometry.basic-objects-angles.v1"
+      ],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.geometry.right-triangle-trigonometry.v1",
+      "title": "Right-triangle trigonometry",
+      "shortDescription": "Use introductory sine, cosine and tangent relationships in right triangles.",
+      "gradeBand": { "min": 8, "max": 9 },
+      "strand": "geometry",
+      "prerequisites": ["math.geometry.area-pythagorean.v1", "math.geometry.similarity-ratios.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    },
+    {
+      "id": "math.data.probability-statistics-basic.v1",
+      "title": "Basic probability and statistics",
+      "shortDescription": "Use simple descriptive statistics, probability and counting ideas for grade 7-9 work.",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "data",
+      "prerequisites": ["math.number.percent-ratio.v1"],
+      "safetyNotes": ["Draft parent skill; use only as reviewed structural metadata."]
+    }
+  ]
+}
