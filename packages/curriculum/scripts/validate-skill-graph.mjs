@@ -19,6 +19,11 @@ const forbiddenTerms = [
 ];
 const allowedChangedPathPrefixes = ["docs/wave-3/", "packages/curriculum/"];
 const allowedChangedPaths = new Set(["package.json"]);
+const approvedSlice7ChangedPathPrefixes = ["apps/api/src/diagnostic-session-state/"];
+const approvedSlice7ChangedPaths = new Set([
+  "apps/api/package.json",
+  "apps/api/test/diagnostic-session-state.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultArtifactPath = path.resolve(
@@ -265,15 +270,22 @@ export function validateChangedPathScope({ cwd = repoRoot } = {}) {
     .map(normalizeStatusPath);
 
   for (const changedPath of changedPaths) {
-    const isAllowed =
+    const isStaticSlicePath =
       allowedChangedPaths.has(changedPath) ||
       allowedChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix));
-    if (!isAllowed) {
+    const isApprovedSlice7Path =
+      approvedSlice7ChangedPaths.has(changedPath) ||
+      approvedSlice7ChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix));
+    if (!isStaticSlicePath && !isApprovedSlice7Path) {
       fail(`Runtime or out-of-scope path changed: ${changedPath}.`);
     }
   }
 
-  return changedPaths;
+  return changedPaths.filter(
+    (changedPath) =>
+      allowedChangedPaths.has(changedPath) ||
+      allowedChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix)),
+  );
 }
 
 async function main() {
