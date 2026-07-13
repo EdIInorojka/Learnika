@@ -1,0 +1,177 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticResponseEvidenceFixtures.v1",
+    "fixtureSetVersion": "wave-3.slice-5.grade-7-9-math.v1",
+    "status": "draft_synthetic_non_production_fixture_set",
+    "artifactKind": "diagnostic_response_evidence_fixture_set",
+    "subject": "math",
+    "locale": "ru-RU",
+    "canonicalSkillGraphVersion": "wave-3.slice-2.grade-7-9-math.v1",
+    "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "diagnosticItemFixtureSetVersion": "wave-3.slice-4.grade-7-9-math.v1",
+    "syntheticOnly": true,
+    "productionUseAllowed": false,
+    "sourceContract": "docs/wave-3/diagnostic-response-evidence-contract.md",
+    "openDecisionRefs": [
+      "W3-OD-DIAGNOSTIC-RESULT-SEMANTICS",
+      "W3-OD-RESPONSE-REPRESENTATION",
+      "W3-OD-EVIDENCE-INTERPRETATION"
+    ],
+    "notes": [
+      "Small synthetic internal fixture set for structural validation only.",
+      "No checking, evaluation, aggregation or runtime behavior is authorized."
+    ]
+  },
+  "stateTransitions": [
+    {
+      "from": "not_collected",
+      "to": "observed",
+      "policyNote": "A usable synthetic observation becomes available."
+    },
+    {
+      "from": "not_collected",
+      "to": "uncertain",
+      "policyNote": "Interpretation remains unresolved."
+    },
+    {
+      "from": "not_collected",
+      "to": "not_reached",
+      "policyNote": "Selection leaves the fixture untouched."
+    },
+    {
+      "from": "observed",
+      "to": "uncertain",
+      "policyNote": "A prior observation becomes uncertain."
+    },
+    {
+      "from": "observed",
+      "to": "invalidated",
+      "policyNote": "A prior observation is excluded from use."
+    },
+    {
+      "from": "uncertain",
+      "to": "observed",
+      "policyNote": "Uncertainty is resolved into a structural observation."
+    },
+    {
+      "from": "uncertain",
+      "to": "invalidated",
+      "policyNote": "Uncertain material is excluded from use."
+    }
+  ],
+  "responses": [
+    {
+      "id": "dresponse.math.number.rational-number-operations.fixture-01.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "number",
+      "diagnosticItemId": "ditem.math.number.rational-number-operations.fixture-01.v1",
+      "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1",
+      "primarySkillId": "math.number.rational-number-operations.v1",
+      "evidenceCategory": "concept_recognition",
+      "observationState": "observed",
+      "contentMode": "placeholder_only",
+      "content": "Синтетический заполнитель без учебного содержания.",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "evaluationMode": "none",
+      "safetyNotes": [
+        "Synthetic structural fixture only; no educational interpretation is authorized."
+      ]
+    },
+    {
+      "id": "dresponse.math.geometry.parallel-lines.fixture-01.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "diagnosticItemId": "ditem.math.geometry.parallel-lines.fixture-01.v1",
+      "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1",
+      "primarySkillId": "math.geometry.parallel-lines.v1",
+      "evidenceCategory": "reasoning_justification",
+      "observationState": "uncertain",
+      "contentMode": "placeholder_only",
+      "content": "Синтетический заполнитель с неопределённой интерпретацией.",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "evaluationMode": "none",
+      "safetyNotes": [
+        "Synthetic structural fixture only; no educational interpretation is authorized."
+      ]
+    },
+    {
+      "id": "dresponse.math.data.probability-statistics-basic.fixture-01.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "data",
+      "diagnosticItemId": "ditem.math.data.probability-statistics-basic.fixture-01.v1",
+      "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1",
+      "primarySkillId": "math.data.probability-statistics-basic.v1",
+      "evidenceCategory": "concept_recognition",
+      "observationState": "invalidated",
+      "contentMode": "placeholder_only",
+      "content": "Синтетический заполнитель, исключённый из дальнейшего использования.",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "evaluationMode": "none",
+      "safetyNotes": [
+        "Synthetic structural fixture only; no educational interpretation is authorized."
+      ]
+    }
+  ],
+  "evidenceRecords": [
+    {
+      "id": "devidence.math.number.rational-number-operations.fixture-01.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "responseId": "dresponse.math.number.rational-number-operations.fixture-01.v1",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "number",
+      "diagnosticItemId": "ditem.math.number.rational-number-operations.fixture-01.v1",
+      "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1",
+      "canonicalSkillId": "math.number.rational-number-operations.v1",
+      "evidenceCategory": "concept_recognition",
+      "observationState": "observed",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "aggregationMode": "none",
+      "safetyNotes": [
+        "Synthetic structural fixture only; no educational interpretation is authorized."
+      ]
+    },
+    {
+      "id": "devidence.math.geometry.parallel-lines.fixture-01.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "responseId": "dresponse.math.geometry.parallel-lines.fixture-01.v1",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "geometry",
+      "diagnosticItemId": "ditem.math.geometry.parallel-lines.fixture-01.v1",
+      "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1",
+      "canonicalSkillId": "math.geometry.parallel-lines.v1",
+      "evidenceCategory": "reasoning_justification",
+      "observationState": "uncertain",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "aggregationMode": "none",
+      "safetyNotes": [
+        "Synthetic structural fixture only; no educational interpretation is authorized."
+      ]
+    },
+    {
+      "id": "devidence.math.data.probability-statistics-basic.fixture-01.v1",
+      "status": "draft_synthetic_non_production_fixture",
+      "responseId": "dresponse.math.data.probability-statistics-basic.fixture-01.v1",
+      "gradeBand": { "min": 7, "max": 9 },
+      "strand": "data",
+      "diagnosticItemId": "ditem.math.data.probability-statistics-basic.fixture-01.v1",
+      "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1",
+      "canonicalSkillId": "math.data.probability-statistics-basic.v1",
+      "evidenceCategory": "concept_recognition",
+      "observationState": "invalidated",
+      "syntheticOnly": true,
+      "productionUseAllowed": false,
+      "aggregationMode": "none",
+      "safetyNotes": [
+        "Synthetic structural fixture only; no educational interpretation is authorized."
+      ]
+    }
+  ]
+}
