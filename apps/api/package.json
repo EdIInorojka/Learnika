@@ -16,7 +16,7 @@
     "openapi:check": "pnpm.cmd run build && node dist/openapi/generate-openapi.js --check",
     "openapi:generate": "pnpm.cmd run build && node dist/openapi/generate-openapi.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm.cmd run db:generate && pnpm.cmd run build && node --test test/logging-audit.test.mjs test/media-storage.test.mjs test/local-media-object-storage.test.mjs test/media-lifecycle.test.mjs test/media-processing-readiness.test.mjs test/mock-ocr-processing.test.mjs test/homework-state.test.mjs test/diagnostic-session-state.test.mjs test/diagnostic-catalog.test.mjs test/assistance-contract.test.mjs test/ocr-boundary.test.mjs test/stt-boundary.test.mjs test/llm-boundary.test.mjs test/safety-harness.test.mjs test/homework-api.e2e.mjs test/media-assets-api.e2e.mjs test/media-upload-api.e2e.mjs test/mock-ocr-candidate-api.e2e.mjs test/auth.e2e.mjs"
+    "test": "pnpm.cmd run db:generate && pnpm.cmd run build && node --test test/logging-audit.test.mjs test/media-storage.test.mjs test/local-media-object-storage.test.mjs test/media-lifecycle.test.mjs test/media-processing-readiness.test.mjs test/mock-ocr-processing.test.mjs test/homework-state.test.mjs test/diagnostic-session-state.test.mjs test/diagnostic-catalog.test.mjs test/diagnostic-session-plan.test.mjs test/assistance-contract.test.mjs test/ocr-boundary.test.mjs test/stt-boundary.test.mjs test/llm-boundary.test.mjs test/safety-harness.test.mjs test/homework-api.e2e.mjs test/media-assets-api.e2e.mjs test/media-upload-api.e2e.mjs test/mock-ocr-candidate-api.e2e.mjs test/auth.e2e.mjs"
   },
   "dependencies": {
     "@fastify/multipart": "10.1.0",
