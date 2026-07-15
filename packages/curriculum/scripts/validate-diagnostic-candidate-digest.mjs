@@ -152,17 +152,22 @@ const digestPlaceholderFields = new Set([
 const approvedSlice5ChangedPaths = new Set([
   "docs/wave-4/diagnostic-candidate-canonicalization-contract.md",
   "docs/wave-4/diagnostic-candidate-digest-contract.md",
+  "docs/wave-4/diagnostic-review-workflow-state-contract.md",
   "docs/wave-4/slice-5-implementation-note.md",
   "docs/wave-4/slice-6-implementation-note.md",
+  "docs/wave-4/slice-7-implementation-note.md",
   "packages/curriculum/diagnostic-candidate-canonicalization/grade-7-9-math.canonicalization-placeholder.v1.json",
   "packages/curriculum/diagnostic-candidate-digest/grade-7-9-math.candidate-digest-placeholder.v1.json",
+  "packages/curriculum/diagnostic-review-workflow-state/grade-7-9-math.review-workflow-state-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
   "packages/curriculum/test/diagnostic-candidate-canonicalization.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-digest.test.mjs",
+  "packages/curriculum/test/diagnostic-review-workflow-state.test.mjs",
   "package.json",
 ]);
 
