@@ -1,0 +1,497 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticCandidateDigestPlaceholderRegistry.v1",
+    "registryArtifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+    "status": "placeholder_only_non_production",
+    "artifactKind": "diagnostic_candidate_digest_placeholder_registry",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "reviewCoverageArtifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "reviewEvidenceArtifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+    "reviewGateRubricArtifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+    "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-4/diagnostic-candidate-digest-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "policies": {
+    "candidateIdentityFormat": {
+      "state": "FORMAT_DEFINED_ASSIGNMENT_DEFERRED",
+      "policyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1",
+      "formatTemplate": "dcandidate.math.g7-9.{strand}.{candidate-key}.v{integer}",
+      "assignedIdentityCount": 0
+    },
+    "digestAlgorithm": {
+      "state": "DEFERRED",
+      "policyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+      "algorithmId": null,
+      "valueEncoding": null
+    },
+    "canonicalization": {
+      "state": "DEFERRED",
+      "policyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+      "rulesetVersion": null
+    },
+    "allowedPlaceholderDigestStates": ["PENDING_IMMUTABLE_CANDIDATE", "DIGEST_DEFERRED"]
+  },
+  "recordBoundary": {
+    "candidateIdentitiesAssigned": false,
+    "digestValuesRecorded": false,
+    "reviewEvidenceRecorded": false,
+    "reviewDecisionsRecorded": false,
+    "productionApprovalsRecorded": false,
+    "candidateContentEmbedded": false
+  },
+  "readiness": {
+    "status": "NOT_READY",
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"],
+    "productionUseAllowed": false
+  },
+  "aggregate": {
+    "blueprintSlotReferenceCount": 11,
+    "candidatePlaceholderCount": 11,
+    "assignedCandidateIdentityCount": 0,
+    "digestValueCount": 0,
+    "reviewEvidenceRecordCount": 0,
+    "reviewDecisionCount": 0,
+    "productionApprovedCandidateCount": 0
+  },
+  "candidatePlaceholders": [
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.number.rational-number-operations.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1",
+        "coverageStatus": "DRAFT_ONLY"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.number.percent-ratio.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.number.percent-ratio.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.number.percent-ratio.v1",
+        "coverageStatus": "GAP_CONFIRMED"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.number.percent-ratio.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.algebra.expression-transformations.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.expression-transformations.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.expression-transformations.v1",
+        "coverageStatus": "DRAFT_ONLY"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.expression-transformations.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.algebra.linear-equation-one-variable.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.linear-equation-one-variable.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.linear-equation-one-variable.v1",
+        "coverageStatus": "GAP_CONFIRMED"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.linear-equation-one-variable.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.algebra.powers-and-roots.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.powers-and-roots.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.powers-and-roots.v1",
+        "coverageStatus": "GAP_CONFIRMED"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.algebra.powers-and-roots.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.functions.coordinate-plane-graphs.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.functions.coordinate-plane-graphs.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.functions.coordinate-plane-graphs.v1",
+        "coverageStatus": "DRAFT_ONLY"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.functions.coordinate-plane-graphs.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.functions.linear-function.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.functions.linear-function.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.functions.linear-function.v1",
+        "coverageStatus": "GAP_CONFIRMED"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.functions.linear-function.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.geometry.basic-objects-angles.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.basic-objects-angles.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.basic-objects-angles.v1",
+        "coverageStatus": "GAP_CONFIRMED"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.basic-objects-angles.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.geometry.triangle-properties.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.triangle-properties.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.triangle-properties.v1",
+        "coverageStatus": "GAP_CONFIRMED"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.triangle-properties.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.geometry.parallel-lines.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1",
+        "coverageStatus": "DRAFT_ONLY"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    },
+    {
+      "registryEntryId": "digest-placeholder.math.g7-9.data.probability-statistics-basic.v1",
+      "recordState": "PLACEHOLDER_ONLY",
+      "candidateIdentity": {
+        "state": "UNASSIGNED",
+        "candidateId": null,
+        "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1"
+      },
+      "blueprintReference": {
+        "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1"
+      },
+      "reviewCoverageReference": {
+        "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1",
+        "coverageStatus": "DRAFT_ONLY"
+      },
+      "reviewEvidenceReference": {
+        "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+        "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1",
+        "recordState": "NOT_RECORDED",
+        "recordId": null
+      },
+      "reviewGateRubricReference": {
+        "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+        "gateCount": 6
+      },
+      "digestPlaceholder": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+        "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+        "algorithmId": null,
+        "value": null
+      },
+      "reviewDecisionState": "NO_DECISION",
+      "productionApprovalState": "NOT_ELIGIBLE",
+      "candidateContentEmbedded": false,
+      "productionUseAllowed": false
+    }
+  ],
+  "reviewEvidenceRecords": [],
+  "reviewDecisionRecords": [],
+  "productionApprovalRecords": []
+}

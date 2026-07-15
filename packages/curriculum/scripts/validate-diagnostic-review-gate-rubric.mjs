@@ -130,12 +130,17 @@ const criterionFields = new Set([
   "blockingIssueCategory",
 ]);
 const approvedSlice4ChangedPaths = new Set([
+  "docs/wave-4/diagnostic-candidate-digest-contract.md",
   "docs/wave-4/diagnostic-review-gate-rubric-contract.md",
   "docs/wave-4/slice-4-implementation-note.md",
+  "docs/wave-4/slice-5-implementation-note.md",
+  "packages/curriculum/diagnostic-candidate-digest/grade-7-9-math.candidate-digest-placeholder.v1.json",
   "packages/curriculum/diagnostic-review-gate-rubric/grade-7-9-math.review-gate-rubric.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+  "packages/curriculum/test/diagnostic-candidate-digest.test.mjs",
   "packages/curriculum/test/diagnostic-review-gate-rubric.test.mjs",
   "package.json",
 ]);
