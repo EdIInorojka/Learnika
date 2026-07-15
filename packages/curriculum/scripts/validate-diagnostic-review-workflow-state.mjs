@@ -228,6 +228,7 @@ const canonicalizationReferenceFields = new Set([
   "policyState",
 ]);
 const approvedSlice7ChangedPaths = new Set([
+  "docs/wave-4/closure-gate.md",
   "docs/wave-4/diagnostic-review-authority-contract.md",
   "docs/wave-4/diagnostic-review-workflow-state-contract.md",
   "docs/wave-4/slice-7-implementation-note.md",

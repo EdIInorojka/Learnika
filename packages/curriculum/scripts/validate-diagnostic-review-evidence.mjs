@@ -102,6 +102,7 @@ const gatePlaceholderFields = new Set([
   "decidedAt",
 ]);
 const approvedSlice3ChangedPaths = new Set([
+  "docs/wave-4/closure-gate.md",
   "docs/wave-4/diagnostic-candidate-canonicalization-contract.md",
   "docs/wave-4/diagnostic-candidate-digest-contract.md",
   "docs/wave-4/diagnostic-review-authority-contract.md",

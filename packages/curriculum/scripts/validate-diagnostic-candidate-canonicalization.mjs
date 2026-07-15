@@ -169,6 +169,7 @@ const aggregateFields = new Set([
   "productionApprovedCandidateCount",
 ]);
 const approvedSlice6ChangedPaths = new Set([
+  "docs/wave-4/closure-gate.md",
   "docs/wave-4/diagnostic-candidate-canonicalization-contract.md",
   "docs/wave-4/diagnostic-review-authority-contract.md",
   "docs/wave-4/diagnostic-review-workflow-state-contract.md",

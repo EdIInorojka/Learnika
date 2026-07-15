@@ -278,6 +278,7 @@ const aggregateFields = new Set([
   "productionApprovalCount",
 ]);
 const approvedSlice8ChangedPaths = new Set([
+  "docs/wave-4/closure-gate.md",
   "docs/wave-4/diagnostic-review-authority-contract.md",
   "docs/wave-4/slice-8-implementation-note.md",
   "packages/curriculum/diagnostic-review-authority/grade-7-9-math.review-authority-placeholder.v1.json",
