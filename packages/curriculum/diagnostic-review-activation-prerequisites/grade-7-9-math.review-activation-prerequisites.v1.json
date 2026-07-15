@@ -1,0 +1,232 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticReviewActivationPrerequisites.v1",
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "status": "blocked_prerequisites_only_non_production",
+    "artifactKind": "diagnostic_review_activation_prerequisites",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "reviewCoverageArtifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "reviewEvidenceArtifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+    "reviewGateRubricArtifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+    "candidateDigestRegistryArtifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+    "candidateCanonicalizationArtifactVersion": "wave-4.slice-6.grade-7-9-math.v1",
+    "reviewWorkflowStateArtifactVersion": "wave-4.slice-7.grade-7-9-math.v1",
+    "reviewAuthorityArtifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "wave4ClosureDocument": "docs/wave-4/closure-gate.md",
+    "sourceContract": "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "activationBoundary": {
+    "status": "BLOCKED",
+    "reviewWorkflowStatus": "INACTIVE",
+    "activationAllowed": false,
+    "reviewWorkflowActivationAllowed": false,
+    "readinessTransitionAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "dependencyReferences": {
+    "reviewCoverage": {
+      "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+      "blueprintSlotCount": 11,
+      "draftOnlySlotCount": 5,
+      "gapConfirmedSlotCount": 6,
+      "productionApprovedSlotCount": 0
+    },
+    "reviewEvidence": {
+      "artifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+      "gatePlaceholderCount": 66,
+      "evidenceRecordCount": 0,
+      "approvedDecisionCount": 0,
+      "productionApprovalCount": 0
+    },
+    "reviewGateRubric": {
+      "artifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+      "gateCount": 6,
+      "criterionCount": 23,
+      "recordedDecisionCount": 0,
+      "recordedEvidenceCount": 0,
+      "productionApprovalCount": 0
+    },
+    "candidateDigestRegistry": {
+      "artifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+      "candidatePlaceholderCount": 11,
+      "assignedCandidateIdentityCount": 0,
+      "digestValueCount": 0,
+      "reviewEvidenceRecordCount": 0,
+      "reviewDecisionCount": 0,
+      "productionApprovedCandidateCount": 0
+    },
+    "candidateCanonicalization": {
+      "artifactVersion": "wave-4.slice-6.grade-7-9-math.v1",
+      "policyVersion": "wave-4.slice-6.diagnostic-candidate-canonicalization.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "activeRuleCount": 0,
+      "transformedCandidateRecordCount": 0,
+      "digestValueCount": 0,
+      "reviewDecisionCount": 0,
+      "productionApprovedCandidateCount": 0
+    },
+    "reviewWorkflowState": {
+      "artifactVersion": "wave-4.slice-7.grade-7-9-math.v1",
+      "workflowVersion": "wave-4.slice-7.diagnostic-review-workflow-state.placeholder.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "workflowEntryCount": 11,
+      "submittedCandidateCount": 0,
+      "activeReviewCount": 0,
+      "reviewEvidenceRecordCount": 0,
+      "approvedDecisionCount": 0,
+      "productionApprovalCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0
+    },
+    "reviewAuthority": {
+      "artifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+      "policyVersion": "wave-4.slice-8.diagnostic-review-authority.placeholder.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "rolePlaceholderCount": 7,
+      "gateAuthorityPlaceholderCount": 6,
+      "separationOfDutiesRuleCount": 3,
+      "realReviewerRoleCount": 0,
+      "reviewerAssignmentCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0,
+      "conflictRecordCount": 0,
+      "reviewDecisionCount": 0,
+      "approvedDecisionCount": 0,
+      "productionApprovalCount": 0
+    }
+  },
+  "prerequisites": [
+    {
+      "prerequisiteId": "candidate_identity_policy",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future versioned policy for identity allocation, uniqueness, non-reuse, revision, invalidation and synthetic negative validation.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "canonicalization_and_digest_policy",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future approved field inventory, deterministic byte serialization, algorithm and encoding policy, and synthetic reproducibility vectors.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "reviewer_role_ownership",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future versioned policy for accountable ownership, eligibility, appointment, revocation, scope, minimum counts and quorum.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "separation_of_duties_enforcement",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future fail-closed assignment-time and decision-time independence policy with positive and negative authorization tests.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "conflict_of_interest_policy",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future versioned disclosure, evaluation, recusal, reassignment, escalation and late-disclosure handling policy.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "audit_identity_policy",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future opaque identity binding, authorization, revocation, controlled lookup, access and privacy policy with synthetic validation.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "evidence_storage_and_retention_policy",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future evidence schema, integrity pins, access controls, retention and deletion matrix, recovery and orphan-reference tests.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "production_approval_authority",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future independent approval eligibility, quorum, explicit decision, withdrawal and re-approval policy with authorization tests.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "coverage_gap_closure_plan",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future per-slot rights-safe authoring and fixture-disposition plan with explicit coverage thresholds and no-silent-waiver checks.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "readiness_integration_plan",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future fail-closed readiness reconciliation design with stale-reference, invalidation and withdrawal tests.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "rollback_and_withdrawal_policy",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future trigger, containment, propagation, history-preservation, restoration and partial-failure test matrix.",
+      "evidenceRecordRefs": []
+    },
+    {
+      "prerequisiteId": "ci_and_deterministic_validation",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRequirementDescription": "Future deterministic schema, version-pin, negative-fixture, exact-scope and provenance checks in CI.",
+      "evidenceRecordRefs": []
+    }
+  ],
+  "recordBoundary": {
+    "realCandidatesRecorded": false,
+    "digestValuesRecorded": false,
+    "reviewEvidenceRecorded": false,
+    "reviewDecisionsRecorded": false,
+    "reviewerIdentitiesRecorded": false,
+    "auditIdentitiesRecorded": false,
+    "reviewerAssignmentsRecorded": false,
+    "ownerAssignmentsRecorded": false,
+    "productionApprovalsRecorded": false,
+    "activationRecorded": false,
+    "reviewWorkflowActivated": false,
+    "runtimeWorkflowEnabled": false
+  },
+  "readiness": {
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "status": "NOT_READY",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+  },
+  "aggregate": {
+    "prerequisiteCount": 12,
+    "unsatisfiedPrerequisiteCount": 12,
+    "satisfiedPrerequisiteCount": 0,
+    "realCandidateCount": 0,
+    "digestValueCount": 0,
+    "reviewEvidenceRecordCount": 0,
+    "reviewDecisionCount": 0,
+    "reviewerIdentityCount": 0,
+    "auditIdentityCount": 0,
+    "reviewerAssignmentCount": 0,
+    "ownerAssignmentCount": 0,
+    "productionApprovalCount": 0
+  },
+  "realCandidateRecords": [],
+  "digestValueRecords": [],
+  "reviewEvidenceRecords": [],
+  "reviewDecisionRecords": [],
+  "reviewerIdentityRecords": [],
+  "auditIdentityRecords": [],
+  "reviewerAssignmentRecords": [],
+  "ownerAssignmentRecords": [],
+  "productionApprovalRecords": []
+}

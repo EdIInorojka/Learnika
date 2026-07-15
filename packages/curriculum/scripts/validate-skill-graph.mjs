@@ -23,6 +23,7 @@ const allowedChangedPaths = new Set([
   "docs/wave-5/open-decisions.md",
   "docs/wave-5/scope-and-non-goals.md",
   "docs/wave-5/slice-1-implementation-note.md",
+  "docs/wave-5/slice-2-implementation-note.md",
   "package.json",
 ]);
 const approvedSlice7ChangedPathPrefixes = ["apps/api/src/diagnostic-session-state/"];

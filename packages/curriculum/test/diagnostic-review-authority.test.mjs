@@ -460,7 +460,7 @@ test("all Wave 4 scope guards permit only the exact Wave 5 Slice 1 documentation
   }
 
   const forbiddenPaths = [
-    "docs/wave-5/slice-2-implementation-note.md",
+    "docs/wave-5/slice-3-implementation-note.md",
     "docs/wave-5/nested/scope-and-non-goals.md",
     "docs/wave-5/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-review/controller.ts",
@@ -482,7 +482,54 @@ test("all Wave 4 scope guards permit only the exact Wave 5 Slice 1 documentation
   }
 });
 
-test("Wave 5 Slice 1 scope unblock contains no broad documentation prefix", async () => {
+test("all Wave 4 scope guards permit only the exact Wave 5 Slice 2 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/slice-2-implementation-note.md",
+    "packages/curriculum/diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+    "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
+  ];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+  }
+
+  const forbiddenPaths = [
+    "docs/wave-5/nested/slice-2-implementation-note.md",
+    "docs/wave-5/slice-2-implementation-note.md.bak",
+    "packages/curriculum/diagnostic-review-activation-prerequisites/extra.v1.json",
+    "packages/curriculum/diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json.bak",
+    "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs.bak",
+    "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs.bak",
+    "apps/api/src/diagnostic-review/controller.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-review-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("Wave 5 scope unblocks through Slice 2 contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",
@@ -492,6 +539,7 @@ test("Wave 5 Slice 1 scope unblock contains no broad documentation prefix", asyn
     "validate-diagnostic-candidate-canonicalization.mjs",
     "validate-diagnostic-review-workflow-state.mjs",
     "validate-diagnostic-review-authority.mjs",
+    "validate-diagnostic-review-activation-prerequisites.mjs",
   ];
   const sources = await Promise.all(
     validatorFiles.map((fileName) =>

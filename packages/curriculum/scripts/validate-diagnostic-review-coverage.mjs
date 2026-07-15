@@ -152,6 +152,12 @@ const wave5Slice1ScopeUnblockPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+const wave5Slice2ScopeUnblockPaths = new Set([
+  "docs/wave-5/slice-2-implementation-note.md",
+  "packages/curriculum/diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+  "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultReviewCoveragePath = path.resolve(
@@ -523,7 +529,8 @@ export function validateReviewCoverageChangedPaths(changedPaths) {
     requireString(changedPath, "changedPath");
     if (
       !approvedSlice2ChangedPaths.has(changedPath) &&
-      !wave5Slice1ScopeUnblockPaths.has(changedPath)
+      !wave5Slice1ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice2ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 4 Slice 2 out-of-scope path changed: ${changedPath}.`);
     }
