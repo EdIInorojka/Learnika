@@ -11,12 +11,14 @@ import {
 } from "../scripts/validate-diagnostic-session-lifecycle.mjs";
 import { readSkillGraph } from "../scripts/validate-skill-graph.mjs";
 
-const wave5DocumentationPathsThroughSlice2 = new Set([
+const wave5DocumentationPathsThroughSlice3 = new Set([
+  "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
   "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
   "docs/wave-5/open-decisions.md",
   "docs/wave-5/scope-and-non-goals.md",
   "docs/wave-5/slice-1-implementation-note.md",
   "docs/wave-5/slice-2-implementation-note.md",
+  "docs/wave-5/slice-3-implementation-note.md",
 ]);
 
 const forbiddenFields = [
@@ -260,7 +262,7 @@ test("slice scope guard rejects API OpenAPI Prisma web and other runtime paths",
       changedPath,
     );
     assert.equal(
-      isLegacyStaticPath || wave5DocumentationPathsThroughSlice2.has(changedPath),
+      isLegacyStaticPath || wave5DocumentationPathsThroughSlice3.has(changedPath),
       true,
       changedPath,
     );

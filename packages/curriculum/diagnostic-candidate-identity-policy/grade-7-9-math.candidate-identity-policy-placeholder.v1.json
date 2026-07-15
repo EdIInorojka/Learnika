@@ -1,0 +1,250 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticCandidateIdentityPolicyPlaceholder.v1",
+    "policyArtifactVersion": "wave-5.slice-3.grade-7-9-math.v1",
+    "status": "placeholder_only_unsatisfied_non_production",
+    "artifactKind": "diagnostic_candidate_identity_policy_placeholder",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "candidateDigestRegistryArtifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+    "reviewCoverageArtifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "activationBoundary": {
+    "status": "BLOCKED",
+    "reviewWorkflowStatus": "INACTIVE",
+    "activationAllowed": false,
+    "reviewWorkflowActivationAllowed": false,
+    "readinessTransitionAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "dependencyReferences": {
+    "activationPrerequisites": {
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "artifactStatus": "blocked_prerequisites_only_non_production",
+      "prerequisiteId": "candidate_identity_policy",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activationStatus": "BLOCKED",
+      "reviewWorkflowStatus": "INACTIVE",
+      "prerequisiteCount": 12,
+      "unsatisfiedPrerequisiteCount": 12,
+      "productionApprovalCount": 0
+    },
+    "candidateDigestRegistry": {
+      "artifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+      "candidateIdentityFormatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1",
+      "candidateIdentityFormatState": "FORMAT_DEFINED_ASSIGNMENT_DEFERRED",
+      "candidatePlaceholderCount": 11,
+      "assignedCandidateIdentityCount": 0,
+      "digestValueCount": 0,
+      "productionApprovedCandidateCount": 0
+    },
+    "reviewCoverage": {
+      "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+      "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+      "coverageSlotIds": [
+        "diag.math.g7-9.number.rational-number-operations.v1",
+        "diag.math.g7-9.number.percent-ratio.v1",
+        "diag.math.g7-9.algebra.expression-transformations.v1",
+        "diag.math.g7-9.algebra.linear-equation-one-variable.v1",
+        "diag.math.g7-9.algebra.powers-and-roots.v1",
+        "diag.math.g7-9.functions.coordinate-plane-graphs.v1",
+        "diag.math.g7-9.functions.linear-function.v1",
+        "diag.math.g7-9.geometry.basic-objects-angles.v1",
+        "diag.math.g7-9.geometry.triangle-properties.v1",
+        "diag.math.g7-9.geometry.parallel-lines.v1",
+        "diag.math.g7-9.data.probability-statistics-basic.v1"
+      ],
+      "blueprintSlotCount": 11,
+      "draftOnlySlotCount": 5,
+      "gapConfirmedSlotCount": 6,
+      "productionApprovedSlotCount": 0
+    }
+  },
+  "prerequisiteReference": {
+    "prerequisiteId": "candidate_identity_policy",
+    "status": "UNSATISFIED_DEFERRED",
+    "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+    "evidenceRequirementDescription": "Future versioned policy for identity allocation, uniqueness, non-reuse, revision, invalidation and synthetic negative validation.",
+    "evidenceRecordRefs": []
+  },
+  "policyIdentity": {
+    "policyId": "diagnostic-candidate-identity",
+    "policyVersion": "wave-5.slice-3.diagnostic-candidate-identity.placeholder.v1",
+    "policyState": "UNRESOLVED_DEFERRED",
+    "activeRulesetVersion": null,
+    "policyApprovalAllowed": false,
+    "candidateIdentityAssignmentAllowed": false,
+    "candidateSubmissionAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "candidateIdPatternPlaceholder": {
+    "state": "REFERENCE_ONLY_NOT_APPROVED",
+    "sourcePolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1",
+    "sourcePolicyState": "FORMAT_DEFINED_ASSIGNMENT_DEFERRED",
+    "patternTemplate": "dcandidate.math.g7-9.{strand}.{candidate-key}.v{integer}",
+    "activePatternVersion": null,
+    "patternApproved": false,
+    "instantiationAllowed": false,
+    "validationAllowed": false
+  },
+  "namespaceOwnershipPlaceholder": {
+    "requirementId": "namespace_and_allocation_ownership",
+    "state": "TO_BE_DECIDED",
+    "ownerPlaceholderId": "UNASSIGNED_NAMESPACE_OWNER_PLACEHOLDER",
+    "ownerReference": null,
+    "assignmentReference": null,
+    "allocationAuthorityAllowed": false
+  },
+  "collisionPreventionPlaceholder": {
+    "requirementId": "uniqueness_reservation_collision_and_non_reuse",
+    "state": "TO_BE_DECIDED",
+    "reservationPolicyReference": null,
+    "collisionPreventionPolicyReference": null,
+    "nonReusePolicyReference": null,
+    "enforcementAllowed": false
+  },
+  "versioningPolicyPlaceholder": {
+    "requirementId": "version_and_revision_semantics",
+    "state": "TO_BE_DECIDED",
+    "versioningPolicyReference": null,
+    "revisionRulesReference": null,
+    "invalidationRulesReference": null,
+    "enforcementAllowed": false
+  },
+  "withdrawalSupersessionPlaceholder": {
+    "requirementId": "retirement_and_tombstone_semantics",
+    "state": "TO_BE_DECIDED",
+    "withdrawalReferenceFormat": null,
+    "supersessionReferenceFormat": null,
+    "withdrawalPolicyReference": null,
+    "supersessionPolicyReference": null,
+    "recordingAllowed": false
+  },
+  "decisionRequirements": [
+    {
+      "requirementId": "namespace_and_allocation_ownership",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "identity_format_and_validation_grammar",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "uniqueness_reservation_collision_and_non_reuse",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "version_and_revision_semantics",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "candidate_artifact_blueprint_and_skill_linkage",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "new_version_and_invalidation_triggers",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "retirement_and_tombstone_semantics",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "identifier_data_exclusions",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    }
+  ],
+  "recordBoundary": {
+    "policyDecisionsRecorded": false,
+    "candidateIdentitiesAssigned": false,
+    "identityReservationsRecorded": false,
+    "identityAllocationsRecorded": false,
+    "candidateSubmissionsRecorded": false,
+    "candidateApprovalsRecorded": false,
+    "digestValuesRecorded": false,
+    "reviewEvidenceRecorded": false,
+    "reviewDecisionsRecorded": false,
+    "ownerAssignmentsRecorded": false,
+    "withdrawalsRecorded": false,
+    "supersessionsRecorded": false,
+    "productionApprovalsRecorded": false,
+    "runtimeIdentityEnabled": false
+  },
+  "readiness": {
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "status": "NOT_READY",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+  },
+  "aggregate": {
+    "decisionRequirementCount": 8,
+    "undecidedRequirementCount": 8,
+    "activeRuleCount": 0,
+    "coverageSlotReferenceCount": 11,
+    "policyDecisionCount": 0,
+    "realCandidateIdCount": 0,
+    "identityReservationCount": 0,
+    "identityAllocationCount": 0,
+    "submittedCandidateCount": 0,
+    "approvedCandidateCount": 0,
+    "digestValueCount": 0,
+    "reviewEvidenceRecordCount": 0,
+    "reviewDecisionCount": 0,
+    "ownerAssignmentCount": 0,
+    "withdrawalRecordCount": 0,
+    "supersessionRecordCount": 0,
+    "productionApprovalCount": 0
+  },
+  "policyDecisionRecords": [],
+  "candidateIdentityRecords": [],
+  "identityReservationRecords": [],
+  "identityAllocationRecords": [],
+  "candidateSubmissionRecords": [],
+  "candidateApprovalRecords": [],
+  "digestValueRecords": [],
+  "reviewEvidenceRecords": [],
+  "reviewDecisionRecords": [],
+  "ownerAssignmentRecords": [],
+  "withdrawalRecords": [],
+  "supersessionRecords": [],
+  "productionApprovalRecords": []
+}

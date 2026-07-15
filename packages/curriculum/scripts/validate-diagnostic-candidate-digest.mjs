@@ -194,6 +194,13 @@ const wave5Slice2ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
   "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
 ]);
+const wave5Slice3ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
+  "docs/wave-5/slice-3-implementation-note.md",
+  "packages/curriculum/diagnostic-candidate-identity-policy/grade-7-9-math.candidate-identity-policy-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultCandidateDigestRegistryPath = path.resolve(
@@ -697,7 +704,8 @@ export function validateCandidateDigestChangedPaths(changedPaths) {
     if (
       !approvedSlice5ChangedPaths.has(changedPath) &&
       !wave5Slice1ScopeUnblockPaths.has(changedPath) &&
-      !wave5Slice2ScopeUnblockPaths.has(changedPath)
+      !wave5Slice2ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice3ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 4 Slice 5 out-of-scope path changed: ${changedPath}.`);
     }

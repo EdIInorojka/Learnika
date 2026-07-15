@@ -289,7 +289,7 @@ test("Slice 2 worktree guard permits only the exact 19 implementation paths", ()
 
   const forbiddenPaths = [
     "README.md",
-    "docs/wave-5/slice-3-implementation-note.md",
+    "docs/wave-5/slice-4-implementation-note.md",
     "docs/wave-5/nested/slice-2-implementation-note.md",
     "docs/wave-5/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-review-activation-prerequisites/extra.v1.json",
@@ -303,6 +303,37 @@ test("Slice 2 worktree guard permits only the exact 19 implementation paths", ()
     "pnpm-lock.yaml",
   ];
   for (const forbiddenPath of forbiddenPaths) {
+    assert.throws(
+      () => validateActivationPrerequisitesChangedPaths([forbiddenPath]),
+      /Wave 5 Slice 2 out-of-scope path changed/,
+      forbiddenPath,
+    );
+  }
+});
+
+test("Slice 2 guard admits only the exact five Slice 3 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
+    "docs/wave-5/slice-3-implementation-note.md",
+    "packages/curriculum/diagnostic-candidate-identity-policy/grade-7-9-math.candidate-identity-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+    "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
+  ];
+  assert.deepEqual(validateActivationPrerequisitesChangedPaths(approvedPaths), approvedPaths);
+
+  for (const forbiddenPath of [
+    "docs/wave-5/diagnostic-candidate-identity-policy-contract.md.bak",
+    "docs/wave-5/nested/slice-3-implementation-note.md",
+    "packages/curriculum/diagnostic-candidate-identity-policy/extra.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/controller.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-review-runtime.ts",
+    "pnpm-lock.yaml",
+  ]) {
     assert.throws(
       () => validateActivationPrerequisitesChangedPaths([forbiddenPath]),
       /Wave 5 Slice 2 out-of-scope path changed/,

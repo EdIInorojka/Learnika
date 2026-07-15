@@ -11,6 +11,7 @@ import {
   readDiagnosticCandidateDigestRegistry,
   validateCandidateDigestChangedPaths,
 } from "../scripts/validate-diagnostic-candidate-digest.mjs";
+import { validateActivationPrerequisitesChangedPaths } from "../scripts/validate-diagnostic-review-activation-prerequisites.mjs";
 import {
   readDiagnosticReviewAuthority,
   validateDiagnosticReviewAuthority,
@@ -460,7 +461,7 @@ test("all Wave 4 scope guards permit only the exact Wave 5 Slice 1 documentation
   }
 
   const forbiddenPaths = [
-    "docs/wave-5/slice-3-implementation-note.md",
+    "docs/wave-5/slice-4-implementation-note.md",
     "docs/wave-5/nested/scope-and-non-goals.md",
     "docs/wave-5/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-review/controller.ts",
@@ -529,7 +530,57 @@ test("all Wave 4 scope guards permit only the exact Wave 5 Slice 2 static files"
   }
 });
 
-test("Wave 5 scope unblocks through Slice 2 contain no broad documentation prefix", async () => {
+test("all governance scope guards permit only the exact Wave 5 Slice 3 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
+    "docs/wave-5/slice-3-implementation-note.md",
+    "packages/curriculum/diagnostic-candidate-identity-policy/grade-7-9-math.candidate-identity-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+    "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
+  ];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+    validateActivationPrerequisitesChangedPaths,
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+  }
+
+  const forbiddenPaths = [
+    "docs/wave-5/nested/diagnostic-candidate-identity-policy-contract.md",
+    "docs/wave-5/diagnostic-candidate-identity-policy-contract.md.bak",
+    "docs/wave-5/slice-3-implementation-note.md.bak",
+    "packages/curriculum/diagnostic-candidate-identity-policy/extra.v1.json",
+    "packages/curriculum/diagnostic-candidate-identity-policy/grade-7-9-math.candidate-identity-policy-placeholder.v1.json.bak",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/controller.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-review-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("Wave 5 scope unblocks through Slice 3 contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",
@@ -540,6 +591,7 @@ test("Wave 5 scope unblocks through Slice 2 contain no broad documentation prefi
     "validate-diagnostic-review-workflow-state.mjs",
     "validate-diagnostic-review-authority.mjs",
     "validate-diagnostic-review-activation-prerequisites.mjs",
+    "validate-diagnostic-candidate-identity-policy.mjs",
   ];
   const sources = await Promise.all(
     validatorFiles.map((fileName) =>
@@ -576,6 +628,10 @@ test("review scope guards contain no broad API allowlist", async () => {
     ),
     readFile(
       new URL("../scripts/validate-diagnostic-review-evidence.mjs", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL("../scripts/validate-diagnostic-candidate-identity-policy.mjs", import.meta.url),
       "utf8",
     ),
     readFile(
