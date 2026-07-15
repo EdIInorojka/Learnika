@@ -3,18 +3,19 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import {
-  readDiagnosticCandidateCanonicalization,
-  validateDiagnosticCandidateCanonicalization,
-} from "./validate-diagnostic-candidate-canonicalization.mjs";
+import { readDiagnosticCandidateCanonicalization } from "./validate-diagnostic-candidate-canonicalization.mjs";
 import { readDiagnosticCandidateDigestRegistry } from "./validate-diagnostic-candidate-digest.mjs";
 import { readDiagnosticReviewCoverage } from "./validate-diagnostic-review-coverage.mjs";
 import { readDiagnosticReviewEvidence } from "./validate-diagnostic-review-evidence.mjs";
 import { readDiagnosticReviewGateRubric } from "./validate-diagnostic-review-gate-rubric.mjs";
+import {
+  readDiagnosticReviewWorkflowState,
+  validateDiagnosticReviewWorkflowState,
+} from "./validate-diagnostic-review-workflow-state.mjs";
 
-const expectedWorkflowArtifactVersion = "wave-4.slice-7.grade-7-9-math.v1";
-const expectedWorkflowPolicyId = "diagnostic-review-workflow-state";
-const expectedWorkflowVersion = "wave-4.slice-7.diagnostic-review-workflow-state.placeholder.v1";
+const expectedAuthorityArtifactVersion = "wave-4.slice-8.grade-7-9-math.v1";
+const expectedAuthorityPolicyId = "diagnostic-review-authority-separation-of-duties";
+const expectedAuthorityPolicyVersion = "wave-4.slice-8.diagnostic-review-authority.placeholder.v1";
 const expectedCoverageArtifactVersion = "wave-4.slice-2.grade-7-9-math.v1";
 const expectedEvidenceArtifactVersion = "wave-4.slice-3.grade-7-9-math.v1";
 const expectedRubricArtifactVersion = "wave-4.slice-4.grade-7-9-math.v1";
@@ -22,24 +23,41 @@ const expectedRegistryArtifactVersion = "wave-4.slice-5.grade-7-9-math.v1";
 const expectedCanonicalizationArtifactVersion = "wave-4.slice-6.grade-7-9-math.v1";
 const expectedCanonicalizationPolicyVersion =
   "wave-4.slice-6.diagnostic-candidate-canonicalization.placeholder.v1";
+const expectedWorkflowArtifactVersion = "wave-4.slice-7.grade-7-9-math.v1";
+const expectedWorkflowVersion = "wave-4.slice-7.diagnostic-review-workflow-state.placeholder.v1";
 const expectedReadinessPolicyVersion = "wave-3-slice-11-diagnostic-readiness-policy-v1";
-const expectedPlaceholderStates = [
-  "NOT_SUBMITTED",
-  "CANDIDATE_DEFERRED",
-  "REVIEW_NOT_STARTED",
-  "REVIEW_BLOCKED",
-  "CHANGES_REQUIRED_DEFERRED",
-  "REJECTED_DEFERRED",
-  "APPROVED_DEFERRED_PLACEHOLDER",
+const expectedRoleScopes = new Map([
+  ["METHODOLOGY_REVIEWER_PLACEHOLDER", "methodology"],
+  ["SAFETY_REVIEWER_PLACEHOLDER", "safety_no_answer"],
+  ["RIGHTS_REVIEWER_PLACEHOLDER", "rights_copyright"],
+  ["GRADE_PLACEMENT_REVIEWER_PLACEHOLDER", "grade_placement"],
+  ["ACCESSIBILITY_REVIEWER_PLACEHOLDER", "accessibility_readability"],
+  ["PRODUCTION_APPROVER_PLACEHOLDER", "production_approval"],
+  ["AUDIT_OBSERVER_PLACEHOLDER", "audit_observation"],
+]);
+const expectedGateRoles = new Map([
+  ["methodology", "METHODOLOGY_REVIEWER_PLACEHOLDER"],
+  ["safety_no_answer", "SAFETY_REVIEWER_PLACEHOLDER"],
+  ["rights_copyright", "RIGHTS_REVIEWER_PLACEHOLDER"],
+  ["grade_placement", "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER"],
+  ["accessibility_readability", "ACCESSIBILITY_REVIEWER_PLACEHOLDER"],
+  ["production_approval", "PRODUCTION_APPROVER_PLACEHOLDER"],
+]);
+const substantiveRoleIds = [
+  "METHODOLOGY_REVIEWER_PLACEHOLDER",
+  "SAFETY_REVIEWER_PLACEHOLDER",
+  "RIGHTS_REVIEWER_PLACEHOLDER",
+  "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+  "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
 ];
-const expectedTransitions = new Map([
-  ["NOT_SUBMITTED", ["CANDIDATE_DEFERRED"]],
-  ["CANDIDATE_DEFERRED", ["REVIEW_NOT_STARTED"]],
-  ["REVIEW_NOT_STARTED", ["REVIEW_BLOCKED"]],
-  ["REVIEW_BLOCKED", ["CHANGES_REQUIRED_DEFERRED", "REJECTED_DEFERRED"]],
-  ["CHANGES_REQUIRED_DEFERRED", ["CANDIDATE_DEFERRED", "REJECTED_DEFERRED"]],
-  ["REJECTED_DEFERRED", ["CANDIDATE_DEFERRED"]],
-  ["APPROVED_DEFERRED_PLACEHOLDER", []],
+const decisionRoleIds = [...substantiveRoleIds, "PRODUCTION_APPROVER_PLACEHOLDER"];
+const expectedSeparationRules = new Map([
+  ["SUBSTANTIVE_REVIEWER_SEPARATE_FROM_PRODUCTION_APPROVER", decisionRoleIds],
+  [
+    "AUDIT_OBSERVER_SEPARATE_FROM_DECISION_ROLES",
+    [...decisionRoleIds, "AUDIT_OBSERVER_PLACEHOLDER"],
+  ],
+  ["NO_SELF_REVIEW_OR_SELF_APPROVAL", decisionRoleIds],
 ]);
 const requiredBlockingReasons = new Set(["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]);
 const forbiddenTerms = [
@@ -63,6 +81,8 @@ const forbiddenTerms = [
   "email",
   "reviewerEmail",
   "reviewerName",
+  "userId",
+  "accountId",
   "immutableDigest",
   "sha256",
   "contentHash",
@@ -72,24 +92,27 @@ const forbiddenTerms = [
 
 const topLevelFields = new Set([
   "metadata",
-  "workflowPolicy",
+  "authorityPolicy",
   "dependencyReferences",
+  "roleTaxonomyPlaceholders",
+  "gateAuthorityPlaceholders",
+  "separationOfDutiesRules",
   "identityPolicyDeferrals",
+  "conflictOfInterestPolicy",
+  "productionApprovalAuthority",
   "recordBoundary",
   "readiness",
   "aggregate",
-  "workflowEntries",
-  "candidateSubmissionRecords",
-  "activeReviewRecords",
-  "reviewEvidenceRecords",
-  "reviewDecisionRecords",
-  "productionApprovalRecords",
+  "reviewerAssignmentRecords",
   "reviewerIdentityRecords",
   "auditIdentityRecords",
+  "conflictOfInterestRecords",
+  "reviewDecisionRecords",
+  "productionApprovalRecords",
 ]);
 const metadataFields = new Set([
   "schemaVersion",
-  "workflowArtifactVersion",
+  "authorityArtifactVersion",
   "status",
   "artifactKind",
   "subject",
@@ -100,27 +123,22 @@ const metadataFields = new Set([
   "reviewGateRubricArtifactVersion",
   "candidateDigestRegistryArtifactVersion",
   "candidateCanonicalizationArtifactVersion",
+  "reviewWorkflowStateArtifactVersion",
   "diagnosticReadinessPolicyVersion",
   "sourceContract",
   "productionUseAllowed",
   "runtimeUseAllowed",
   "storageAllowed",
 ]);
-const workflowPolicyFields = new Set([
+const authorityPolicyFields = new Set([
   "policyId",
-  "workflowVersion",
+  "policyVersion",
   "policyState",
-  "runtimeActivationAllowed",
-  "productionReadinessTransitionAllowed",
-  "allowedPlaceholderStates",
-  "transitionTable",
-]);
-const transitionFields = new Set([
-  "fromState",
-  "allowedToStates",
-  "definitionState",
-  "authorizationPolicyRef",
-  "productionReadinessAllowed",
+  "activationAllowed",
+  "runtimeAuthorityAllowed",
+  "reviewerAssignmentAllowed",
+  "reviewDecisionAuthorityAllowed",
+  "productionApprovalAuthorityAllowed",
 ]);
 const dependencyReferenceFields = new Set([
   "reviewCoverage",
@@ -128,6 +146,7 @@ const dependencyReferenceFields = new Set([
   "reviewGateRubric",
   "candidateDigestRegistry",
   "candidateCanonicalization",
+  "reviewWorkflowState",
 ]);
 const coverageDependencyFields = new Set([
   "artifactVersion",
@@ -165,17 +184,79 @@ const canonicalizationDependencyFields = new Set([
   "reviewDecisionCount",
   "productionApprovedCandidateCount",
 ]);
+const workflowDependencyFields = new Set([
+  "artifactVersion",
+  "workflowVersion",
+  "policyState",
+  "workflowEntryCount",
+  "submittedCandidateCount",
+  "activeReviewCount",
+  "approvedDecisionCount",
+  "productionApprovalCount",
+]);
+const rolePlaceholderFields = new Set([
+  "rolePlaceholderId",
+  "recordState",
+  "scopeRef",
+  "identityPolicyRef",
+  "assignmentPolicyRef",
+  "reviewDecisionAuthorityAllowed",
+  "productionApprovalAuthorityAllowed",
+]);
+const gateAuthorityFields = new Set([
+  "gateId",
+  "gatePolicyVersion",
+  "rolePlaceholderId",
+  "authorityState",
+  "minimumReviewerCountState",
+  "minimumReviewerCount",
+  "authorityPolicyRef",
+  "assignmentAllowed",
+  "reviewDecisionAuthorityAllowed",
+  "productionApprovalAllowed",
+]);
+const separationRuleFields = new Set([
+  "ruleId",
+  "ruleState",
+  "participantRolePlaceholderIds",
+  "enforcementPolicyRef",
+  "runtimeEnforcementAllowed",
+  "decisionAuthorizationGranted",
+]);
 const identityPolicyFields = new Set(["reviewerIdentity", "auditIdentity"]);
-const identityDeferralFields = new Set(["status", "policyVersion", "referenceFormat"]);
+const identityDeferralFields = new Set([
+  "status",
+  "policyVersion",
+  "referenceFormat",
+  "identityRecordsAllowed",
+]);
+const conflictPolicyFields = new Set([
+  "status",
+  "policyVersion",
+  "declarationReferenceFormat",
+  "evaluationRulesActive",
+  "conflictRecordsAllowed",
+  "runtimeAssignmentBlockingAllowed",
+]);
+const productionAuthorityFields = new Set([
+  "status",
+  "policyVersion",
+  "rolePlaceholderId",
+  "minimumApproverCountState",
+  "minimumApproverCount",
+  "reviewDecisionAuthorityAllowed",
+  "productionApprovalAllowed",
+]);
 const recordBoundaryFields = new Set([
-  "candidateSubmissionsRecorded",
-  "activeReviewsRecorded",
-  "reviewEvidenceRecorded",
-  "reviewDecisionsRecorded",
-  "productionApprovalsRecorded",
+  "authorityPolicyActivated",
+  "realReviewerRolesCreated",
+  "reviewerAssignmentsRecorded",
   "reviewerIdentitiesRecorded",
   "auditIdentitiesRecorded",
-  "runtimeWorkflowEnabled",
+  "conflictRecordsRecorded",
+  "reviewDecisionsRecorded",
+  "productionApprovalsRecorded",
+  "runtimeAuthorityEnabled",
 ]);
 const readinessFields = new Set([
   "status",
@@ -184,56 +265,22 @@ const readinessFields = new Set([
   "productionUseAllowed",
 ]);
 const aggregateFields = new Set([
-  "blueprintSlotCount",
-  "workflowEntryCount",
-  "transitionDefinitionCount",
-  "submittedCandidateCount",
-  "activeReviewCount",
-  "reviewEvidenceRecordCount",
-  "approvedDecisionCount",
-  "productionApprovalCount",
+  "rolePlaceholderCount",
+  "gateAuthorityPlaceholderCount",
+  "separationOfDutiesRuleCount",
+  "realReviewerRoleCount",
+  "reviewerAssignmentCount",
   "reviewerIdentityCount",
   "auditIdentityCount",
+  "conflictRecordCount",
+  "reviewDecisionCount",
+  "approvedDecisionCount",
+  "productionApprovalCount",
 ]);
-const workflowEntryFields = new Set([
-  "workflowEntryId",
-  "recordState",
-  "blueprintSlotId",
-  "coverageReference",
-  "evidenceReference",
-  "rubricReference",
-  "candidateRegistryReference",
-  "canonicalizationReference",
-  "workflowState",
-  "candidateSubmitted",
-  "activeReview",
-  "reviewDecisionState",
-  "productionApprovalState",
-  "reviewerIdentityRef",
-  "auditIdentityRef",
-  "productionUseAllowed",
-]);
-const coverageReferenceFields = new Set(["artifactVersion", "blueprintSlotId", "coverageStatus"]);
-const evidenceReferenceFields = new Set(["artifactVersion", "blueprintSlotId", "recordState"]);
-const rubricReferenceFields = new Set(["artifactVersion", "gateCount"]);
-const registryReferenceFields = new Set([
-  "artifactVersion",
-  "registryEntryId",
-  "candidateIdentityState",
-  "digestState",
-]);
-const canonicalizationReferenceFields = new Set([
-  "artifactVersion",
-  "policyVersion",
-  "policyState",
-]);
-const approvedSlice7ChangedPaths = new Set([
+const approvedSlice8ChangedPaths = new Set([
   "docs/wave-4/diagnostic-review-authority-contract.md",
-  "docs/wave-4/diagnostic-review-workflow-state-contract.md",
-  "docs/wave-4/slice-7-implementation-note.md",
   "docs/wave-4/slice-8-implementation-note.md",
   "packages/curriculum/diagnostic-review-authority/grade-7-9-math.review-authority-placeholder.v1.json",
-  "packages/curriculum/diagnostic-review-workflow-state/grade-7-9-math.review-workflow-state-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
@@ -241,27 +288,26 @@ const approvedSlice7ChangedPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
-  "packages/curriculum/test/diagnostic-review-workflow-state.test.mjs",
   "packages/curriculum/test/diagnostic-review-authority.test.mjs",
   "package.json",
 ]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-export const defaultReviewWorkflowStatePath = path.resolve(
+export const defaultReviewAuthorityPath = path.resolve(
   scriptDir,
-  "../diagnostic-review-workflow-state/grade-7-9-math.review-workflow-state-placeholder.v1.json",
+  "../diagnostic-review-authority/grade-7-9-math.review-authority-placeholder.v1.json",
 );
 export const repoRoot = path.resolve(scriptDir, "../../..");
 
-export class DiagnosticReviewWorkflowStateValidationError extends Error {
+export class DiagnosticReviewAuthorityValidationError extends Error {
   constructor(message) {
     super(message);
-    this.name = "DiagnosticReviewWorkflowStateValidationError";
+    this.name = "DiagnosticReviewAuthorityValidationError";
   }
 }
 
 function fail(message) {
-  throw new DiagnosticReviewWorkflowStateValidationError(message);
+  throw new DiagnosticReviewAuthorityValidationError(message);
 }
 
 function isPlainObject(value) {
@@ -330,18 +376,26 @@ function scanForbiddenTermsAndHashLikeValues(value, fieldPath = "$") {
       }
     }
     if (/\b[a-f0-9]{32,}\b/i.test(value)) {
-      fail(`${fieldPath} contains a hash-like value, which is forbidden in Slice 7.`);
+      fail(`${fieldPath} contains a hash-like value, which is forbidden in Slice 8.`);
     }
   }
 }
 
-function validateUpstreamArtifacts(coverage, evidence, rubric, registry, canonicalization) {
-  const canonicalizationSummary = validateDiagnosticCandidateCanonicalization(
-    canonicalization,
-    registry,
+function validateUpstreamArtifacts(
+  coverage,
+  evidence,
+  rubric,
+  registry,
+  canonicalization,
+  workflow,
+) {
+  const workflowSummary = validateDiagnosticReviewWorkflowState(
+    workflow,
     coverage,
     evidence,
     rubric,
+    registry,
+    canonicalization,
   );
   if (
     coverage.metadata.coverageArtifactVersion !== expectedCoverageArtifactVersion ||
@@ -378,27 +432,39 @@ function validateUpstreamArtifacts(coverage, evidence, rubric, registry, canonic
     fail("Referenced candidate registry must remain the empty Slice 5 placeholder.");
   }
   if (
-    canonicalizationSummary.policyArtifactVersion !== expectedCanonicalizationArtifactVersion ||
-    canonicalizationSummary.policyVersion !== expectedCanonicalizationPolicyVersion ||
-    canonicalizationSummary.policyStatus !== "UNRESOLVED_DEFERRED" ||
-    canonicalizationSummary.activeRuleCount !== 0 ||
-    canonicalizationSummary.transformedCandidateRecordCount !== 0 ||
-    canonicalizationSummary.digestValueCount !== 0 ||
-    canonicalizationSummary.reviewDecisionCount !== 0 ||
-    canonicalizationSummary.productionApprovedCandidateCount !== 0
+    canonicalization.metadata.policyArtifactVersion !== expectedCanonicalizationArtifactVersion ||
+    canonicalization.policyIdentity.policyVersion !== expectedCanonicalizationPolicyVersion ||
+    canonicalization.policyIdentity.status !== "UNRESOLVED_DEFERRED" ||
+    canonicalization.aggregate.activeRuleCount !== 0 ||
+    canonicalization.aggregate.transformedCandidateRecordCount !== 0 ||
+    canonicalization.aggregate.digestValueCount !== 0 ||
+    canonicalization.aggregate.reviewDecisionCount !== 0 ||
+    canonicalization.aggregate.productionApprovedCandidateCount !== 0
   ) {
     fail("Referenced canonicalization policy must remain the unresolved Slice 6 placeholder.");
   }
-  return canonicalizationSummary;
+  if (
+    workflowSummary.workflowArtifactVersion !== expectedWorkflowArtifactVersion ||
+    workflowSummary.workflowVersion !== expectedWorkflowVersion ||
+    workflowSummary.workflowPolicyState !== "DEFERRED_NON_PRODUCTION" ||
+    workflowSummary.workflowEntryCount !== 11 ||
+    workflowSummary.submittedCandidateCount !== 0 ||
+    workflowSummary.activeReviewCount !== 0 ||
+    workflowSummary.approvedDecisionCount !== 0 ||
+    workflowSummary.productionApprovalCount !== 0
+  ) {
+    fail("Referenced review workflow must remain the inactive Slice 7 placeholder.");
+  }
+  return workflowSummary;
 }
 
 function validateMetadata(metadata, upstream) {
   requireExactFields(metadata, metadataFields, "metadata");
   const expectedValues = new Map([
-    ["schemaVersion", "learnika.diagnosticReviewWorkflowStatePlaceholder.v1"],
-    ["workflowArtifactVersion", expectedWorkflowArtifactVersion],
+    ["schemaVersion", "learnika.diagnosticReviewAuthorityPlaceholder.v1"],
+    ["authorityArtifactVersion", expectedAuthorityArtifactVersion],
     ["status", "placeholder_only_non_production"],
-    ["artifactKind", "diagnostic_review_workflow_state_placeholder"],
+    ["artifactKind", "diagnostic_review_authority_placeholder"],
     ["subject", "math"],
     ["locale", "ru-RU"],
     ["reviewCoverageArtifactVersion", expectedCoverageArtifactVersion],
@@ -406,8 +472,9 @@ function validateMetadata(metadata, upstream) {
     ["reviewGateRubricArtifactVersion", expectedRubricArtifactVersion],
     ["candidateDigestRegistryArtifactVersion", expectedRegistryArtifactVersion],
     ["candidateCanonicalizationArtifactVersion", expectedCanonicalizationArtifactVersion],
+    ["reviewWorkflowStateArtifactVersion", expectedWorkflowArtifactVersion],
     ["diagnosticReadinessPolicyVersion", expectedReadinessPolicyVersion],
-    ["sourceContract", "docs/wave-4/diagnostic-review-workflow-state-contract.md"],
+    ["sourceContract", "docs/wave-4/diagnostic-review-authority-contract.md"],
   ]);
   for (const [field, expectedValue] of expectedValues) {
     if (metadata[field] !== expectedValue) {
@@ -437,6 +504,7 @@ function validateMetadata(metadata, upstream) {
       "candidateCanonicalizationArtifactVersion",
       upstream.canonicalization.metadata.policyArtifactVersion,
     ],
+    ["reviewWorkflowStateArtifactVersion", upstream.workflow.metadata.workflowArtifactVersion],
   ];
   for (const [field, upstreamVersion] of upstreamVersions) {
     if (metadata[field] !== upstreamVersion) {
@@ -445,73 +513,24 @@ function validateMetadata(metadata, upstream) {
   }
 }
 
-function validateWorkflowPolicy(workflowPolicy) {
-  requireExactFields(workflowPolicy, workflowPolicyFields, "workflowPolicy");
+function validateAuthorityPolicy(authorityPolicy) {
+  requireExactFields(authorityPolicy, authorityPolicyFields, "authorityPolicy");
   if (
-    workflowPolicy.policyId !== expectedWorkflowPolicyId ||
-    workflowPolicy.workflowVersion !== expectedWorkflowVersion ||
-    workflowPolicy.policyState !== "DEFERRED_NON_PRODUCTION" ||
-    workflowPolicy.runtimeActivationAllowed !== false ||
-    workflowPolicy.productionReadinessTransitionAllowed !== false
+    authorityPolicy.policyId !== expectedAuthorityPolicyId ||
+    authorityPolicy.policyVersion !== expectedAuthorityPolicyVersion ||
+    authorityPolicy.policyState !== "DEFERRED_NON_PRODUCTION" ||
+    authorityPolicy.activationAllowed !== false ||
+    authorityPolicy.runtimeAuthorityAllowed !== false ||
+    authorityPolicy.reviewerAssignmentAllowed !== false ||
+    authorityPolicy.reviewDecisionAuthorityAllowed !== false ||
+    authorityPolicy.productionApprovalAuthorityAllowed !== false
   ) {
-    fail("workflowPolicy must remain the inactive non-production Slice 7 placeholder.");
+    fail("authorityPolicy must remain the inactive non-authorizing Slice 8 placeholder.");
   }
-  requireExactArrayMembers(
-    workflowPolicy.allowedPlaceholderStates,
-    expectedPlaceholderStates,
-    "workflowPolicy.allowedPlaceholderStates",
-  );
-  if (
-    !Array.isArray(workflowPolicy.transitionTable) ||
-    workflowPolicy.transitionTable.length !== expectedTransitions.size
-  ) {
-    fail("workflowPolicy.transitionTable must define exactly seven state rows.");
-  }
-  const allowedStates = new Set(expectedPlaceholderStates);
-  const seenStates = new Set();
-  for (const [index, transition] of workflowPolicy.transitionTable.entries()) {
-    const fieldPath = `workflowPolicy.transitionTable[${index}]`;
-    requireExactFields(transition, transitionFields, fieldPath);
-    if (!allowedStates.has(transition.fromState)) {
-      fail(`${fieldPath}.fromState uses an unknown placeholder state.`);
-    }
-    if (seenStates.has(transition.fromState)) {
-      fail(`Duplicate transition row for ${transition.fromState}.`);
-    }
-    seenStates.add(transition.fromState);
-    const expectedTargets = expectedTransitions.get(transition.fromState);
-    requireExactArrayMembers(
-      transition.allowedToStates,
-      expectedTargets,
-      `${fieldPath}.allowedToStates`,
-    );
-    if (transition.allowedToStates.some((state) => !allowedStates.has(state))) {
-      fail(`${fieldPath}.allowedToStates contains an unknown placeholder state.`);
-    }
-    if (
-      transition.definitionState !== "FUTURE_ONLY_DEFERRED" ||
-      transition.authorizationPolicyRef !== null ||
-      transition.productionReadinessAllowed !== false
-    ) {
-      fail(`${fieldPath} must remain deferred and prohibit production readiness.`);
-    }
-  }
-  if (
-    workflowPolicy.transitionTable.some((transition) =>
-      transition.allowedToStates.includes("APPROVED_DEFERRED_PLACEHOLDER"),
-    )
-  ) {
-    fail("The reserved approved placeholder must have no inbound transition.");
-  }
-  return {
-    stateCount: allowedStates.size,
-    transitionCount: seenStates.size,
-  };
 }
 
 function validateDependencyReferences(dependencies, upstream) {
   requireExactFields(dependencies, dependencyReferenceFields, "dependencyReferences");
-
   requireExactFields(
     dependencies.reviewCoverage,
     coverageDependencyFields,
@@ -609,28 +628,28 @@ function validateDependencyReferences(dependencies, upstream) {
     canonicalizationDependencyFields,
     "dependencyReferences.candidateCanonicalization",
   );
-  const canonicalizationSummary = upstream.canonicalizationSummary;
+  const canonicalization = upstream.canonicalization;
   if (
     dependencies.candidateCanonicalization.artifactVersion !==
       expectedCanonicalizationArtifactVersion ||
     dependencies.candidateCanonicalization.artifactVersion !==
-      canonicalizationSummary.policyArtifactVersion ||
+      canonicalization.metadata.policyArtifactVersion ||
     dependencies.candidateCanonicalization.policyVersion !==
       expectedCanonicalizationPolicyVersion ||
     dependencies.candidateCanonicalization.policyVersion !==
-      canonicalizationSummary.policyVersion ||
+      canonicalization.policyIdentity.policyVersion ||
     dependencies.candidateCanonicalization.policyState !== "UNRESOLVED_DEFERRED" ||
-    dependencies.candidateCanonicalization.policyState !== canonicalizationSummary.policyStatus ||
+    dependencies.candidateCanonicalization.policyState !== canonicalization.policyIdentity.status ||
     dependencies.candidateCanonicalization.activeRuleCount !==
-      canonicalizationSummary.activeRuleCount ||
+      canonicalization.aggregate.activeRuleCount ||
     dependencies.candidateCanonicalization.transformedCandidateRecordCount !==
-      canonicalizationSummary.transformedCandidateRecordCount ||
+      canonicalization.aggregate.transformedCandidateRecordCount ||
     dependencies.candidateCanonicalization.digestValueCount !==
-      canonicalizationSummary.digestValueCount ||
+      canonicalization.aggregate.digestValueCount ||
     dependencies.candidateCanonicalization.reviewDecisionCount !==
-      canonicalizationSummary.reviewDecisionCount ||
+      canonicalization.aggregate.reviewDecisionCount ||
     dependencies.candidateCanonicalization.productionApprovedCandidateCount !==
-      canonicalizationSummary.productionApprovedCandidateCount ||
+      canonicalization.aggregate.productionApprovedCandidateCount ||
     dependencies.candidateCanonicalization.activeRuleCount !== 0 ||
     dependencies.candidateCanonicalization.transformedCandidateRecordCount !== 0 ||
     dependencies.candidateCanonicalization.digestValueCount !== 0 ||
@@ -641,6 +660,145 @@ function validateDependencyReferences(dependencies, upstream) {
       "dependencyReferences.candidateCanonicalization must match the unresolved Slice 6 policy.",
     );
   }
+
+  requireExactFields(
+    dependencies.reviewWorkflowState,
+    workflowDependencyFields,
+    "dependencyReferences.reviewWorkflowState",
+  );
+  const workflowSummary = upstream.workflowSummary;
+  if (
+    dependencies.reviewWorkflowState.artifactVersion !== expectedWorkflowArtifactVersion ||
+    dependencies.reviewWorkflowState.artifactVersion !== workflowSummary.workflowArtifactVersion ||
+    dependencies.reviewWorkflowState.workflowVersion !== expectedWorkflowVersion ||
+    dependencies.reviewWorkflowState.workflowVersion !== workflowSummary.workflowVersion ||
+    dependencies.reviewWorkflowState.policyState !== "DEFERRED_NON_PRODUCTION" ||
+    dependencies.reviewWorkflowState.policyState !== workflowSummary.workflowPolicyState ||
+    dependencies.reviewWorkflowState.workflowEntryCount !== workflowSummary.workflowEntryCount ||
+    dependencies.reviewWorkflowState.workflowEntryCount !== 11 ||
+    dependencies.reviewWorkflowState.submittedCandidateCount !==
+      workflowSummary.submittedCandidateCount ||
+    dependencies.reviewWorkflowState.activeReviewCount !== workflowSummary.activeReviewCount ||
+    dependencies.reviewWorkflowState.approvedDecisionCount !==
+      workflowSummary.approvedDecisionCount ||
+    dependencies.reviewWorkflowState.productionApprovalCount !==
+      workflowSummary.productionApprovalCount ||
+    dependencies.reviewWorkflowState.submittedCandidateCount !== 0 ||
+    dependencies.reviewWorkflowState.activeReviewCount !== 0 ||
+    dependencies.reviewWorkflowState.approvedDecisionCount !== 0 ||
+    dependencies.reviewWorkflowState.productionApprovalCount !== 0
+  ) {
+    fail("dependencyReferences.reviewWorkflowState must match the inactive Slice 7 workflow.");
+  }
+}
+
+function validateRoleTaxonomy(rolePlaceholders) {
+  if (!Array.isArray(rolePlaceholders) || rolePlaceholders.length !== expectedRoleScopes.size) {
+    fail("roleTaxonomyPlaceholders must contain exactly seven role placeholders.");
+  }
+  const seenRoles = new Set();
+  for (const [index, role] of rolePlaceholders.entries()) {
+    const fieldPath = `roleTaxonomyPlaceholders[${index}]`;
+    requireExactFields(role, rolePlaceholderFields, fieldPath);
+    requireString(role.rolePlaceholderId, `${fieldPath}.rolePlaceholderId`);
+    if (!expectedRoleScopes.has(role.rolePlaceholderId)) {
+      fail(`${fieldPath} uses unknown role placeholder ${role.rolePlaceholderId}.`);
+    }
+    if (seenRoles.has(role.rolePlaceholderId)) {
+      fail(`Duplicate role placeholder ${role.rolePlaceholderId}.`);
+    }
+    seenRoles.add(role.rolePlaceholderId);
+    if (
+      role.recordState !== "PLACEHOLDER_ONLY" ||
+      role.scopeRef !== expectedRoleScopes.get(role.rolePlaceholderId) ||
+      role.identityPolicyRef !== null ||
+      role.assignmentPolicyRef !== null ||
+      role.reviewDecisionAuthorityAllowed !== false ||
+      role.productionApprovalAuthorityAllowed !== false
+    ) {
+      fail(`${fieldPath} must remain a non-authorizing role placeholder without identity data.`);
+    }
+  }
+  for (const roleId of expectedRoleScopes.keys()) {
+    if (!seenRoles.has(roleId)) {
+      fail(`Missing role placeholder ${roleId}.`);
+    }
+  }
+  return seenRoles;
+}
+
+function validateGateAuthorityPlaceholders(gatePlaceholders, rubric, knownRoles) {
+  if (!Array.isArray(gatePlaceholders) || gatePlaceholders.length !== expectedGateRoles.size) {
+    fail("gateAuthorityPlaceholders must contain exactly six gate placeholders.");
+  }
+  const rubricByGate = new Map(rubric.gates.map((gate) => [gate.gateId, gate]));
+  const seenGates = new Set();
+  for (const [index, gate] of gatePlaceholders.entries()) {
+    const fieldPath = `gateAuthorityPlaceholders[${index}]`;
+    requireExactFields(gate, gateAuthorityFields, fieldPath);
+    if (!expectedGateRoles.has(gate.gateId)) {
+      fail(`${fieldPath} uses unknown gate ${gate.gateId}.`);
+    }
+    if (seenGates.has(gate.gateId)) {
+      fail(`Duplicate gate authority placeholder ${gate.gateId}.`);
+    }
+    seenGates.add(gate.gateId);
+    const rubricGate = rubricByGate.get(gate.gateId);
+    if (
+      gate.gatePolicyVersion !== rubricGate.policyVersion ||
+      gate.rolePlaceholderId !== expectedGateRoles.get(gate.gateId) ||
+      !knownRoles.has(gate.rolePlaceholderId)
+    ) {
+      fail(`${fieldPath} must match its Slice 4 gate and role placeholder.`);
+    }
+    if (
+      gate.authorityState !== "DEFERRED" ||
+      gate.minimumReviewerCountState !== "TO_BE_DECIDED" ||
+      gate.minimumReviewerCount !== null ||
+      gate.authorityPolicyRef !== null ||
+      gate.assignmentAllowed !== false ||
+      gate.reviewDecisionAuthorityAllowed !== false ||
+      gate.productionApprovalAllowed !== false
+    ) {
+      fail(`${fieldPath} must remain deferred without reviewer counts or decision authority.`);
+    }
+  }
+  return seenGates.size;
+}
+
+function validateSeparationOfDutiesRules(rules, knownRoles) {
+  if (!Array.isArray(rules) || rules.length !== expectedSeparationRules.size) {
+    fail("separationOfDutiesRules must contain exactly three placeholder rules.");
+  }
+  const seenRules = new Set();
+  for (const [index, rule] of rules.entries()) {
+    const fieldPath = `separationOfDutiesRules[${index}]`;
+    requireExactFields(rule, separationRuleFields, fieldPath);
+    if (!expectedSeparationRules.has(rule.ruleId)) {
+      fail(`${fieldPath} uses unknown separation rule ${rule.ruleId}.`);
+    }
+    if (seenRules.has(rule.ruleId)) {
+      fail(`Duplicate separation-of-duties rule ${rule.ruleId}.`);
+    }
+    seenRules.add(rule.ruleId);
+    requireExactArrayMembers(
+      rule.participantRolePlaceholderIds,
+      expectedSeparationRules.get(rule.ruleId),
+      `${fieldPath}.participantRolePlaceholderIds`,
+    );
+    if (rule.participantRolePlaceholderIds.some((roleId) => !knownRoles.has(roleId))) {
+      fail(`${fieldPath} references an unknown role placeholder.`);
+    }
+    if (
+      rule.ruleState !== "NON_AUTHORIZING_PLACEHOLDER" ||
+      rule.enforcementPolicyRef !== null ||
+      rule.runtimeEnforcementAllowed !== false ||
+      rule.decisionAuthorizationGranted !== false
+    ) {
+      fail(`${fieldPath} must remain non-authorizing and runtime-disabled.`);
+    }
+  }
+  return seenRules.size;
 }
 
 function validateIdentityPolicyDeferrals(identityPolicies) {
@@ -652,10 +810,41 @@ function validateIdentityPolicyDeferrals(identityPolicies) {
     if (
       deferral.status !== "DEFERRED" ||
       deferral.policyVersion !== null ||
-      deferral.referenceFormat !== null
+      deferral.referenceFormat !== null ||
+      deferral.identityRecordsAllowed !== false
     ) {
-      fail(`${fieldPath} must remain deferred without identity policy data.`);
+      fail(`${fieldPath} must remain deferred without identity records.`);
     }
+  }
+}
+
+function validateConflictOfInterestPolicy(policy) {
+  requireExactFields(policy, conflictPolicyFields, "conflictOfInterestPolicy");
+  if (
+    policy.status !== "DEFERRED_PLACEHOLDER_ONLY" ||
+    policy.policyVersion !== null ||
+    policy.declarationReferenceFormat !== null ||
+    policy.evaluationRulesActive !== false ||
+    policy.conflictRecordsAllowed !== false ||
+    policy.runtimeAssignmentBlockingAllowed !== false
+  ) {
+    fail("conflictOfInterestPolicy must remain deferred and placeholder-only.");
+  }
+}
+
+function validateProductionApprovalAuthority(authority, knownRoles) {
+  requireExactFields(authority, productionAuthorityFields, "productionApprovalAuthority");
+  if (
+    authority.status !== "DEFERRED" ||
+    authority.policyVersion !== null ||
+    authority.rolePlaceholderId !== "PRODUCTION_APPROVER_PLACEHOLDER" ||
+    !knownRoles.has(authority.rolePlaceholderId) ||
+    authority.minimumApproverCountState !== "TO_BE_DECIDED" ||
+    authority.minimumApproverCount !== null ||
+    authority.reviewDecisionAuthorityAllowed !== false ||
+    authority.productionApprovalAllowed !== false
+  ) {
+    fail("productionApprovalAuthority must remain deferred and non-authorizing.");
   }
 }
 
@@ -676,7 +865,7 @@ function validateReadiness(readiness, upstream) {
   if (
     readiness.policyVersion !== expectedReadinessPolicyVersion ||
     readiness.policyVersion !== upstream.coverage.readiness.policyVersion ||
-    readiness.policyVersion !== upstream.canonicalization.readiness.policyVersion
+    readiness.policyVersion !== upstream.workflow.readiness.policyVersion
   ) {
     fail("readiness.policyVersion must remain pinned to the Wave 3 policy.");
   }
@@ -695,213 +884,67 @@ function validateReadiness(readiness, upstream) {
   }
 }
 
-function validateWorkflowEntries(entries, upstream, allowedStates) {
-  if (!Array.isArray(entries) || entries.length !== 11) {
-    fail("workflowEntries must contain exactly 11 blueprint-slot placeholders.");
-  }
-  const coverageBySlot = new Map(
-    upstream.coverage.slots.map((slot) => [slot.blueprintSlotId, slot]),
-  );
-  const evidenceBySlot = new Map(
-    upstream.evidence.slots.map((slot) => [slot.blueprintSlotId, slot]),
-  );
-  const registryBySlot = new Map(
-    upstream.registry.candidatePlaceholders.map((entry) => [
-      entry.blueprintReference.blueprintSlotId,
-      entry,
-    ]),
-  );
-  const seenSlots = new Set();
-  const seenEntryIds = new Set();
-
-  for (const [index, entry] of entries.entries()) {
-    const fieldPath = `workflowEntries[${index}]`;
-    requireExactFields(entry, workflowEntryFields, fieldPath);
-    requireString(entry.workflowEntryId, `${fieldPath}.workflowEntryId`);
-    requireString(entry.blueprintSlotId, `${fieldPath}.blueprintSlotId`);
-    if (!coverageBySlot.has(entry.blueprintSlotId)) {
-      fail(`${fieldPath}.blueprintSlotId references an unknown coverage slot.`);
-    }
-    if (seenSlots.has(entry.blueprintSlotId)) {
-      fail(`Duplicate workflow entry for blueprint slot ${entry.blueprintSlotId}.`);
-    }
-    if (seenEntryIds.has(entry.workflowEntryId)) {
-      fail(`Duplicate workflowEntryId ${entry.workflowEntryId}.`);
-    }
-    seenSlots.add(entry.blueprintSlotId);
-    seenEntryIds.add(entry.workflowEntryId);
-
-    const coverageSlot = coverageBySlot.get(entry.blueprintSlotId);
-    const evidenceSlot = evidenceBySlot.get(entry.blueprintSlotId);
-    const registryEntry = registryBySlot.get(entry.blueprintSlotId);
-    const expectedEntryId = registryEntry.registryEntryId.replace(
-      "digest-placeholder",
-      "workflow-placeholder",
-    );
-    if (entry.workflowEntryId !== expectedEntryId || entry.recordState !== "PLACEHOLDER_ONLY") {
-      fail(`${fieldPath} must remain the exact structural workflow placeholder.`);
-    }
-
-    requireExactFields(
-      entry.coverageReference,
-      coverageReferenceFields,
-      `${fieldPath}.coverageReference`,
-    );
-    if (
-      entry.coverageReference.artifactVersion !== expectedCoverageArtifactVersion ||
-      entry.coverageReference.blueprintSlotId !== entry.blueprintSlotId ||
-      entry.coverageReference.coverageStatus !== coverageSlot.coverageStatus
-    ) {
-      fail(`${fieldPath}.coverageReference must match the Slice 2 coverage slot.`);
-    }
-
-    requireExactFields(
-      entry.evidenceReference,
-      evidenceReferenceFields,
-      `${fieldPath}.evidenceReference`,
-    );
-    if (
-      entry.evidenceReference.artifactVersion !== expectedEvidenceArtifactVersion ||
-      entry.evidenceReference.blueprintSlotId !== entry.blueprintSlotId ||
-      entry.evidenceReference.recordState !== "NOT_RECORDED" ||
-      evidenceSlot.gateEvidencePlaceholders.methodology.recordState !== "NOT_RECORDED"
-    ) {
-      fail(`${fieldPath}.evidenceReference must match the unrecorded Slice 3 placeholder.`);
-    }
-
-    requireExactFields(
-      entry.rubricReference,
-      rubricReferenceFields,
-      `${fieldPath}.rubricReference`,
-    );
-    if (
-      entry.rubricReference.artifactVersion !== expectedRubricArtifactVersion ||
-      entry.rubricReference.gateCount !== upstream.rubric.gates.length ||
-      entry.rubricReference.gateCount !== 6
-    ) {
-      fail(`${fieldPath}.rubricReference must match the six-gate Slice 4 rubric.`);
-    }
-
-    requireExactFields(
-      entry.candidateRegistryReference,
-      registryReferenceFields,
-      `${fieldPath}.candidateRegistryReference`,
-    );
-    if (
-      entry.candidateRegistryReference.artifactVersion !== expectedRegistryArtifactVersion ||
-      entry.candidateRegistryReference.registryEntryId !== registryEntry.registryEntryId ||
-      entry.candidateRegistryReference.candidateIdentityState !==
-        registryEntry.candidateIdentity.state ||
-      entry.candidateRegistryReference.candidateIdentityState !== "UNASSIGNED" ||
-      entry.candidateRegistryReference.digestState !== registryEntry.digestPlaceholder.state ||
-      entry.candidateRegistryReference.digestState !== "PENDING_IMMUTABLE_CANDIDATE"
-    ) {
-      fail(`${fieldPath}.candidateRegistryReference must match the unresolved Slice 5 entry.`);
-    }
-
-    requireExactFields(
-      entry.canonicalizationReference,
-      canonicalizationReferenceFields,
-      `${fieldPath}.canonicalizationReference`,
-    );
-    if (
-      entry.canonicalizationReference.artifactVersion !== expectedCanonicalizationArtifactVersion ||
-      entry.canonicalizationReference.policyVersion !== expectedCanonicalizationPolicyVersion ||
-      entry.canonicalizationReference.policyState !== "UNRESOLVED_DEFERRED" ||
-      entry.canonicalizationReference.policyVersion !==
-        upstream.canonicalization.policyIdentity.policyVersion ||
-      entry.canonicalizationReference.policyState !==
-        upstream.canonicalization.policyIdentity.status
-    ) {
-      fail(`${fieldPath}.canonicalizationReference must match the unresolved Slice 6 policy.`);
-    }
-
-    if (!allowedStates.has(entry.workflowState)) {
-      fail(`${fieldPath}.workflowState uses a state outside the approved placeholder enum.`);
-    }
-    if (entry.workflowState !== "NOT_SUBMITTED") {
-      fail(`${fieldPath}.workflowState must remain NOT_SUBMITTED in Slice 7.`);
-    }
-    if (
-      entry.candidateSubmitted !== false ||
-      entry.activeReview !== false ||
-      entry.reviewDecisionState !== "NO_DECISION" ||
-      entry.productionApprovalState !== "NOT_ELIGIBLE" ||
-      entry.reviewerIdentityRef !== null ||
-      entry.auditIdentityRef !== null ||
-      entry.productionUseAllowed !== false
-    ) {
-      fail(`${fieldPath} must contain no submission, review, decision, identity or approval.`);
-    }
-  }
-
-  for (const slotId of coverageBySlot.keys()) {
-    if (!seenSlots.has(slotId)) {
-      fail(`Missing workflow entry for blueprint slot ${slotId}.`);
-    }
-  }
-  return seenSlots.size;
-}
-
 function validateEmptyRecordArrays(artifact) {
   const arrays = [
-    ["candidateSubmissionRecords", artifact.candidateSubmissionRecords],
-    ["activeReviewRecords", artifact.activeReviewRecords],
-    ["reviewEvidenceRecords", artifact.reviewEvidenceRecords],
-    ["reviewDecisionRecords", artifact.reviewDecisionRecords],
-    ["productionApprovalRecords", artifact.productionApprovalRecords],
+    ["reviewerAssignmentRecords", artifact.reviewerAssignmentRecords],
     ["reviewerIdentityRecords", artifact.reviewerIdentityRecords],
     ["auditIdentityRecords", artifact.auditIdentityRecords],
+    ["conflictOfInterestRecords", artifact.conflictOfInterestRecords],
+    ["reviewDecisionRecords", artifact.reviewDecisionRecords],
+    ["productionApprovalRecords", artifact.productionApprovalRecords],
   ];
   for (const [field, records] of arrays) {
     if (!Array.isArray(records) || records.length !== 0) {
-      fail(`${field} must remain empty in Slice 7.`);
+      fail(`${field} must remain empty in Slice 8.`);
     }
   }
 }
 
-function validateAggregate(aggregate, entryCount, transitionCount) {
+function validateAggregate(aggregate, roleCount, gateCount, separationRuleCount) {
   requireExactFields(aggregate, aggregateFields, "aggregate");
   if (
-    aggregate.blueprintSlotCount !== entryCount ||
-    aggregate.blueprintSlotCount !== 11 ||
-    aggregate.workflowEntryCount !== entryCount ||
-    aggregate.workflowEntryCount !== 11 ||
-    aggregate.transitionDefinitionCount !== transitionCount ||
-    aggregate.transitionDefinitionCount !== 7
+    aggregate.rolePlaceholderCount !== roleCount ||
+    aggregate.rolePlaceholderCount !== 7 ||
+    aggregate.gateAuthorityPlaceholderCount !== gateCount ||
+    aggregate.gateAuthorityPlaceholderCount !== 6 ||
+    aggregate.separationOfDutiesRuleCount !== separationRuleCount ||
+    aggregate.separationOfDutiesRuleCount !== 3
   ) {
-    fail("aggregate structural counts must match the workflow definitions.");
+    fail("aggregate structural counts must match the authority definitions.");
   }
   if (
-    aggregate.submittedCandidateCount !== 0 ||
-    aggregate.activeReviewCount !== 0 ||
-    aggregate.reviewEvidenceRecordCount !== 0 ||
-    aggregate.approvedDecisionCount !== 0 ||
-    aggregate.productionApprovalCount !== 0 ||
+    aggregate.realReviewerRoleCount !== 0 ||
+    aggregate.reviewerAssignmentCount !== 0 ||
     aggregate.reviewerIdentityCount !== 0 ||
-    aggregate.auditIdentityCount !== 0
+    aggregate.auditIdentityCount !== 0 ||
+    aggregate.conflictRecordCount !== 0 ||
+    aggregate.reviewDecisionCount !== 0 ||
+    aggregate.approvedDecisionCount !== 0 ||
+    aggregate.productionApprovalCount !== 0
   ) {
-    fail("aggregate activity, decision, approval and identity counts must remain zero.");
+    fail("aggregate role, assignment, identity, decision and approval counts must remain zero.");
   }
 }
 
-export function validateDiagnosticReviewWorkflowState(
+export function validateDiagnosticReviewAuthority(
   artifact,
   coverage,
   evidence,
   rubric,
   registry,
   canonicalization,
+  workflow,
 ) {
   if (!isPlainObject(artifact)) {
-    fail("Diagnostic review workflow state artifact must be a JSON object.");
+    fail("Diagnostic review authority artifact must be a JSON object.");
   }
-  const canonicalizationSummary = validateUpstreamArtifacts(
+  const workflowSummary = validateUpstreamArtifacts(
     coverage,
     evidence,
     rubric,
     registry,
     canonicalization,
+    workflow,
   );
   scanForbiddenTermsAndHashLikeValues(artifact);
   requireExactFields(artifact, topLevelFields, "$");
@@ -911,41 +954,48 @@ export function validateDiagnosticReviewWorkflowState(
     rubric,
     registry,
     canonicalization,
-    canonicalizationSummary,
+    workflow,
+    workflowSummary,
   };
   validateMetadata(artifact.metadata, upstream);
-  const policySummary = validateWorkflowPolicy(artifact.workflowPolicy);
+  validateAuthorityPolicy(artifact.authorityPolicy);
   validateDependencyReferences(artifact.dependencyReferences, upstream);
+  const knownRoles = validateRoleTaxonomy(artifact.roleTaxonomyPlaceholders);
+  const gateCount = validateGateAuthorityPlaceholders(
+    artifact.gateAuthorityPlaceholders,
+    rubric,
+    knownRoles,
+  );
+  const separationRuleCount = validateSeparationOfDutiesRules(
+    artifact.separationOfDutiesRules,
+    knownRoles,
+  );
   validateIdentityPolicyDeferrals(artifact.identityPolicyDeferrals);
+  validateConflictOfInterestPolicy(artifact.conflictOfInterestPolicy);
+  validateProductionApprovalAuthority(artifact.productionApprovalAuthority, knownRoles);
   validateRecordBoundary(artifact.recordBoundary);
   validateReadiness(artifact.readiness, upstream);
-  const entryCount = validateWorkflowEntries(
-    artifact.workflowEntries,
-    upstream,
-    new Set(expectedPlaceholderStates),
-  );
   validateEmptyRecordArrays(artifact);
-  validateAggregate(artifact.aggregate, entryCount, policySummary.transitionCount);
+  validateAggregate(artifact.aggregate, knownRoles.size, gateCount, separationRuleCount);
 
   return {
-    workflowArtifactVersion: artifact.metadata.workflowArtifactVersion,
-    workflowPolicyId: artifact.workflowPolicy.policyId,
-    workflowVersion: artifact.workflowPolicy.workflowVersion,
-    workflowPolicyState: artifact.workflowPolicy.policyState,
-    allowedPlaceholderStateCount: policySummary.stateCount,
-    transitionDefinitionCount: policySummary.transitionCount,
-    workflowEntryCount: entryCount,
-    submittedCandidateCount: artifact.aggregate.submittedCandidateCount,
-    activeReviewCount: artifact.aggregate.activeReviewCount,
+    authorityArtifactVersion: artifact.metadata.authorityArtifactVersion,
+    authorityPolicyId: artifact.authorityPolicy.policyId,
+    authorityPolicyVersion: artifact.authorityPolicy.policyVersion,
+    authorityPolicyState: artifact.authorityPolicy.policyState,
+    rolePlaceholderCount: knownRoles.size,
+    gateAuthorityPlaceholderCount: gateCount,
+    separationOfDutiesRuleCount: separationRuleCount,
+    reviewerAssignmentCount: artifact.reviewerAssignmentRecords.length,
+    reviewerIdentityCount: artifact.reviewerIdentityRecords.length,
+    auditIdentityCount: artifact.auditIdentityRecords.length,
     approvedDecisionCount: artifact.aggregate.approvedDecisionCount,
-    productionApprovalCount: artifact.aggregate.productionApprovalCount,
+    productionApprovalCount: artifact.productionApprovalRecords.length,
     readiness: artifact.readiness.status,
   };
 }
 
-export async function readDiagnosticReviewWorkflowState(
-  artifactPath = defaultReviewWorkflowStatePath,
-) {
+export async function readDiagnosticReviewAuthority(artifactPath = defaultReviewAuthorityPath) {
   const raw = await readFile(artifactPath, "utf8");
   return JSON.parse(raw);
 }
@@ -956,20 +1006,20 @@ function normalizeStatusPath(statusLine) {
   return normalizedPath.replaceAll("\\", "/");
 }
 
-export function validateReviewWorkflowStateChangedPaths(changedPaths) {
+export function validateReviewAuthorityChangedPaths(changedPaths) {
   if (!Array.isArray(changedPaths)) {
     fail("Changed paths must be an array.");
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice7ChangedPaths.has(changedPath)) {
-      fail(`Wave 4 Slice 7 out-of-scope path changed: ${changedPath}.`);
+    if (!approvedSlice8ChangedPaths.has(changedPath)) {
+      fail(`Wave 4 Slice 8 out-of-scope path changed: ${changedPath}.`);
     }
   }
   return [...changedPaths];
 }
 
-export function validateReviewWorkflowStateWorktreeScope({ cwd = repoRoot } = {}) {
+export function validateReviewAuthorityWorktreeScope({ cwd = repoRoot } = {}) {
   const result = spawnSync("git", ["status", "--short", "--untracked-files=all"], {
     cwd,
     encoding: "utf8",
@@ -982,34 +1032,37 @@ export function validateReviewWorkflowStateWorktreeScope({ cwd = repoRoot } = {}
     .map((line) => line.trimEnd())
     .filter(Boolean)
     .map(normalizeStatusPath);
-  return validateReviewWorkflowStateChangedPaths(changedPaths);
+  return validateReviewAuthorityChangedPaths(changedPaths);
 }
 
 async function main() {
   const checkWorktreeScope = process.argv.includes("--check-worktree-scope");
-  const [artifact, coverage, evidence, rubric, registry, canonicalization] = await Promise.all([
-    readDiagnosticReviewWorkflowState(),
-    readDiagnosticReviewCoverage(),
-    readDiagnosticReviewEvidence(),
-    readDiagnosticReviewGateRubric(),
-    readDiagnosticCandidateDigestRegistry(),
-    readDiagnosticCandidateCanonicalization(),
-  ]);
-  const summary = validateDiagnosticReviewWorkflowState(
+  const [artifact, coverage, evidence, rubric, registry, canonicalization, workflow] =
+    await Promise.all([
+      readDiagnosticReviewAuthority(),
+      readDiagnosticReviewCoverage(),
+      readDiagnosticReviewEvidence(),
+      readDiagnosticReviewGateRubric(),
+      readDiagnosticCandidateDigestRegistry(),
+      readDiagnosticCandidateCanonicalization(),
+      readDiagnosticReviewWorkflowState(),
+    ]);
+  const summary = validateDiagnosticReviewAuthority(
     artifact,
     coverage,
     evidence,
     rubric,
     registry,
     canonicalization,
+    workflow,
   );
 
   if (checkWorktreeScope) {
-    validateReviewWorkflowStateWorktreeScope();
+    validateReviewAuthorityWorktreeScope();
   }
 
   console.log(
-    `[curriculum] Review workflow state ${summary.workflowArtifactVersion} validated: ${summary.allowedPlaceholderStateCount} placeholder states, ${summary.transitionDefinitionCount} deferred transition rows, ${summary.workflowEntryCount} slot entries, ${summary.submittedCandidateCount} submitted candidates, ${summary.activeReviewCount} active reviews, ${summary.approvedDecisionCount} approved decisions, ${summary.productionApprovalCount} production approvals; policy ${summary.workflowPolicyState}, readiness ${summary.readiness}.`,
+    `[curriculum] Review authority ${summary.authorityArtifactVersion} validated: ${summary.rolePlaceholderCount} role placeholders, ${summary.gateAuthorityPlaceholderCount} gate authority placeholders, ${summary.separationOfDutiesRuleCount} separation rules, ${summary.reviewerAssignmentCount} reviewer assignments, ${summary.reviewerIdentityCount} reviewer identities, ${summary.auditIdentityCount} audit identities, ${summary.approvedDecisionCount} approved decisions, ${summary.productionApprovalCount} production approvals; policy ${summary.authorityPolicyState}, readiness ${summary.readiness}.`,
   );
 }
 
