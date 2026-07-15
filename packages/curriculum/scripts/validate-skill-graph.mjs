@@ -18,7 +18,13 @@ const forbiddenTerms = [
   "completion",
 ];
 const allowedChangedPathPrefixes = ["docs/wave-3/", "docs/wave-4/", "packages/curriculum/"];
-const allowedChangedPaths = new Set(["package.json"]);
+const allowedChangedPaths = new Set([
+  "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
+  "docs/wave-5/open-decisions.md",
+  "docs/wave-5/scope-and-non-goals.md",
+  "docs/wave-5/slice-1-implementation-note.md",
+  "package.json",
+]);
 const approvedSlice7ChangedPathPrefixes = ["apps/api/src/diagnostic-session-state/"];
 const approvedSlice7ChangedPaths = new Set([
   "apps/api/package.json",
@@ -273,23 +279,12 @@ function normalizeStatusPath(statusLine) {
   return normalizedPath.replaceAll("\\", "/");
 }
 
-export function validateChangedPathScope({ cwd = repoRoot } = {}) {
-  const result = spawnSync("git", ["status", "--short"], {
-    cwd,
-    encoding: "utf8",
-  });
-
-  if (result.status !== 0) {
-    fail(`Unable to inspect git status: ${result.stderr || result.stdout}`);
+export function validateSkillGraphChangedPaths(changedPaths) {
+  if (!Array.isArray(changedPaths)) {
+    fail("Changed paths must be an array.");
   }
-
-  const changedPaths = result.stdout
-    .split(/\r?\n/)
-    .map((line) => line.trimEnd())
-    .filter(Boolean)
-    .map(normalizeStatusPath);
-
   for (const changedPath of changedPaths) {
+    requireString(changedPath, "changedPath");
     const isStaticSlicePath =
       allowedChangedPaths.has(changedPath) ||
       allowedChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix));
@@ -325,6 +320,25 @@ export function validateChangedPathScope({ cwd = repoRoot } = {}) {
       allowedChangedPaths.has(changedPath) ||
       allowedChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix)),
   );
+}
+
+export function validateChangedPathScope({ cwd = repoRoot } = {}) {
+  const result = spawnSync("git", ["status", "--short", "--untracked-files=all"], {
+    cwd,
+    encoding: "utf8",
+  });
+
+  if (result.status !== 0) {
+    fail(`Unable to inspect git status: ${result.stderr || result.stdout}`);
+  }
+
+  const changedPaths = result.stdout
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .map(normalizeStatusPath);
+
+  return validateSkillGraphChangedPaths(changedPaths);
 }
 
 async function main() {

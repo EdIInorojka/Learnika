@@ -8,6 +8,13 @@ import {
 } from "../scripts/validate-diagnostic-blueprint.mjs";
 import { readSkillGraph } from "../scripts/validate-skill-graph.mjs";
 
+const wave5Slice1DocumentationPaths = new Set([
+  "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
+  "docs/wave-5/open-decisions.md",
+  "docs/wave-5/scope-and-non-goals.md",
+  "docs/wave-5/slice-1-implementation-note.md",
+]);
+
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
@@ -132,6 +139,13 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
   const changedPaths = validateDiagnosticWorktreeScope();
 
   for (const changedPath of changedPaths) {
-    assert.match(changedPath, /^(docs\/wave-(?:3|4)\/|packages\/curriculum\/|package\.json$)/);
+    const isLegacyStaticPath = /^(docs\/wave-(?:3|4)\/|packages\/curriculum\/|package\.json$)/.test(
+      changedPath,
+    );
+    assert.equal(
+      isLegacyStaticPath || wave5Slice1DocumentationPaths.has(changedPath),
+      true,
+      changedPath,
+    );
   }
 });

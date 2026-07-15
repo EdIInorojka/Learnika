@@ -160,6 +160,18 @@ const approvedSlice4ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-review-workflow-state.test.mjs",
   "package.json",
 ]);
+const wave5Slice1ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
+  "docs/wave-5/open-decisions.md",
+  "docs/wave-5/scope-and-non-goals.md",
+  "docs/wave-5/slice-1-implementation-note.md",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultReviewGateRubricPath = path.resolve(
@@ -582,7 +594,10 @@ export function validateReviewGateRubricChangedPaths(changedPaths) {
 
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice4ChangedPaths.has(changedPath)) {
+    if (
+      !approvedSlice4ChangedPaths.has(changedPath) &&
+      !wave5Slice1ScopeUnblockPaths.has(changedPath)
+    ) {
       fail(`Wave 4 Slice 4 out-of-scope path changed: ${changedPath}.`);
     }
   }

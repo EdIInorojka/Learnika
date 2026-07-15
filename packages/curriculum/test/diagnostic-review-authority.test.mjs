@@ -3,17 +3,35 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { URL } from "node:url";
 
-import { readDiagnosticCandidateCanonicalization } from "../scripts/validate-diagnostic-candidate-canonicalization.mjs";
-import { readDiagnosticCandidateDigestRegistry } from "../scripts/validate-diagnostic-candidate-digest.mjs";
+import {
+  readDiagnosticCandidateCanonicalization,
+  validateCandidateCanonicalizationChangedPaths,
+} from "../scripts/validate-diagnostic-candidate-canonicalization.mjs";
+import {
+  readDiagnosticCandidateDigestRegistry,
+  validateCandidateDigestChangedPaths,
+} from "../scripts/validate-diagnostic-candidate-digest.mjs";
 import {
   readDiagnosticReviewAuthority,
   validateDiagnosticReviewAuthority,
   validateReviewAuthorityChangedPaths,
 } from "../scripts/validate-diagnostic-review-authority.mjs";
-import { readDiagnosticReviewCoverage } from "../scripts/validate-diagnostic-review-coverage.mjs";
-import { readDiagnosticReviewEvidence } from "../scripts/validate-diagnostic-review-evidence.mjs";
-import { readDiagnosticReviewGateRubric } from "../scripts/validate-diagnostic-review-gate-rubric.mjs";
-import { readDiagnosticReviewWorkflowState } from "../scripts/validate-diagnostic-review-workflow-state.mjs";
+import {
+  readDiagnosticReviewCoverage,
+  validateReviewCoverageChangedPaths,
+} from "../scripts/validate-diagnostic-review-coverage.mjs";
+import {
+  readDiagnosticReviewEvidence,
+  validateReviewEvidenceChangedPaths,
+} from "../scripts/validate-diagnostic-review-evidence.mjs";
+import {
+  readDiagnosticReviewGateRubric,
+  validateReviewGateRubricChangedPaths,
+} from "../scripts/validate-diagnostic-review-gate-rubric.mjs";
+import {
+  readDiagnosticReviewWorkflowState,
+  validateReviewWorkflowStateChangedPaths,
+} from "../scripts/validate-diagnostic-review-workflow-state.mjs";
 
 const forbiddenFields = [
   "finalAnswer",
@@ -408,6 +426,81 @@ test("Slice 8 worktree scope permits only the twelve exact static paths", () => 
       /Wave 4 Slice 8 out-of-scope path changed/,
       forbiddenPath,
     );
+  }
+});
+
+test("all Wave 4 scope guards permit only the exact Wave 5 Slice 1 documentation paths", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
+    "docs/wave-5/open-decisions.md",
+    "docs/wave-5/scope-and-non-goals.md",
+    "docs/wave-5/slice-1-implementation-note.md",
+  ];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+  ];
+  const unblockImplementationPaths = [
+    "packages/curriculum/scripts/validate-skill-graph.mjs",
+    "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+    "packages/curriculum/test/diagnostic-items.test.mjs",
+    "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+    "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+    "packages/curriculum/test/skill-graph-seed.test.mjs",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+    assert.deepEqual(validateChangedPaths(unblockImplementationPaths), unblockImplementationPaths);
+  }
+
+  const forbiddenPaths = [
+    "docs/wave-5/slice-2-implementation-note.md",
+    "docs/wave-5/nested/scope-and-non-goals.md",
+    "docs/wave-5/scope-and-non-goals.md.bak",
+    "apps/api/src/diagnostic-review/controller.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-review-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("Wave 5 Slice 1 scope unblock contains no broad documentation prefix", async () => {
+  const validatorFiles = [
+    "validate-skill-graph.mjs",
+    "validate-diagnostic-review-coverage.mjs",
+    "validate-diagnostic-review-evidence.mjs",
+    "validate-diagnostic-review-gate-rubric.mjs",
+    "validate-diagnostic-candidate-digest.mjs",
+    "validate-diagnostic-candidate-canonicalization.mjs",
+    "validate-diagnostic-review-workflow-state.mjs",
+    "validate-diagnostic-review-authority.mjs",
+  ];
+  const sources = await Promise.all(
+    validatorFiles.map((fileName) =>
+      readFile(new URL(`../scripts/${fileName}`, import.meta.url), "utf8"),
+    ),
+  );
+
+  for (const source of sources) {
+    assert.doesNotMatch(source, /["']docs\/wave-5\/["']/);
   }
 });
 
