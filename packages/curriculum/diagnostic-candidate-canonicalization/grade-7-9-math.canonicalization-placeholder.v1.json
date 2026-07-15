@@ -1,0 +1,167 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticCandidateCanonicalizationPlaceholder.v1",
+    "policyArtifactVersion": "wave-4.slice-6.grade-7-9-math.v1",
+    "status": "unresolved_placeholder_only_non_production",
+    "artifactKind": "diagnostic_candidate_canonicalization_placeholder",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "candidateDigestRegistryArtifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-4/diagnostic-candidate-canonicalization-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "policyIdentity": {
+    "policyId": "diagnostic-candidate-canonicalization",
+    "policyVersion": "wave-4.slice-6.diagnostic-candidate-canonicalization.placeholder.v1",
+    "status": "UNRESOLVED_DEFERRED",
+    "activeRulesetVersion": null,
+    "activationAllowed": false
+  },
+  "dependencyReferences": {
+    "candidateDigestRegistry": {
+      "artifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+      "artifactStatus": "placeholder_only_non_production",
+      "candidatePlaceholderCount": 11,
+      "digestValueCount": 0
+    },
+    "candidateIdentityPolicy": {
+      "policyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1",
+      "state": "FORMAT_DEFINED_ASSIGNMENT_DEFERRED"
+    },
+    "digestAlgorithmPolicy": {
+      "policyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+      "state": "DEFERRED"
+    },
+    "priorCanonicalizationPolicy": {
+      "policyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+      "state": "DEFERRED"
+    }
+  },
+  "normalizationCategoryPlaceholders": [
+    {
+      "categoryId": "LOCALE_LANGUAGE_HANDLING",
+      "state": "TO_BE_DECIDED",
+      "policyRef": null,
+      "activeRuleRefs": []
+    },
+    {
+      "categoryId": "MATH_NOTATION_HANDLING",
+      "state": "TO_BE_DECIDED",
+      "policyRef": null,
+      "activeRuleRefs": []
+    },
+    {
+      "categoryId": "WHITESPACE_HANDLING",
+      "state": "TO_BE_DECIDED",
+      "policyRef": null,
+      "activeRuleRefs": []
+    },
+    {
+      "categoryId": "PUNCTUATION_HANDLING",
+      "state": "TO_BE_DECIDED",
+      "policyRef": null,
+      "activeRuleRefs": []
+    },
+    {
+      "categoryId": "FIELD_ORDERING_HANDLING",
+      "state": "TO_BE_DECIDED",
+      "policyRef": null,
+      "activeRuleRefs": []
+    }
+  ],
+  "contentFieldCategoryPlaceholders": {
+    "inclusionCategoryPlaceholders": [
+      {
+        "categoryId": "CANDIDATE_IDENTITY_METADATA_FIELD_CLASS",
+        "state": "TO_BE_DECIDED",
+        "fieldRefs": []
+      },
+      {
+        "categoryId": "CURRICULUM_REFERENCE_METADATA_FIELD_CLASS",
+        "state": "TO_BE_DECIDED",
+        "fieldRefs": []
+      },
+      {
+        "categoryId": "DIAGNOSTIC_PAYLOAD_FIELD_CLASS",
+        "state": "TO_BE_DECIDED",
+        "fieldRefs": []
+      },
+      {
+        "categoryId": "ACCESSIBILITY_METADATA_FIELD_CLASS",
+        "state": "TO_BE_DECIDED",
+        "fieldRefs": []
+      }
+    ],
+    "exclusionCategoryPlaceholders": [
+      {
+        "categoryId": "REVIEW_WORKFLOW_METADATA_FIELD_CLASS",
+        "state": "TO_BE_DECIDED",
+        "fieldRefs": []
+      },
+      {
+        "categoryId": "RUNTIME_DELIVERY_METADATA_FIELD_CLASS",
+        "state": "TO_BE_DECIDED",
+        "fieldRefs": []
+      },
+      {
+        "categoryId": "PERSONAL_DATA_FIELD_CLASS",
+        "state": "TO_BE_DECIDED",
+        "fieldRefs": []
+      },
+      {
+        "categoryId": "PROVIDER_DATA_FIELD_CLASS",
+        "state": "TO_BE_DECIDED",
+        "fieldRefs": []
+      }
+    ]
+  },
+  "localeLanguageHandling": {
+    "state": "UNRESOLVED",
+    "targetLocale": "ru-RU",
+    "policyRef": null,
+    "activeRuleRefs": []
+  },
+  "mathNotationHandling": {
+    "state": "UNRESOLVED",
+    "policyRef": null,
+    "activeRuleRefs": []
+  },
+  "whitespacePunctuationHandling": {
+    "state": "UNRESOLVED",
+    "whitespacePolicyRef": null,
+    "punctuationPolicyRef": null,
+    "activeRuleRefs": []
+  },
+  "recordBoundary": {
+    "canonicalizationPolicyActivated": false,
+    "canonicalizationRulesRecorded": false,
+    "transformedCandidateRecordsRecorded": false,
+    "digestValuesRecorded": false,
+    "reviewDecisionsRecorded": false,
+    "productionApprovalsRecorded": false
+  },
+  "readiness": {
+    "status": "NOT_READY",
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"],
+    "productionUseAllowed": false
+  },
+  "aggregate": {
+    "normalizationCategoryPlaceholderCount": 5,
+    "inclusionCategoryPlaceholderCount": 4,
+    "exclusionCategoryPlaceholderCount": 4,
+    "activeRuleCount": 0,
+    "transformedCandidateRecordCount": 0,
+    "digestValueCount": 0,
+    "reviewDecisionCount": 0,
+    "productionApprovedCandidateCount": 0
+  },
+  "activeCanonicalizationRuleRecords": [],
+  "transformedCandidateRecords": [],
+  "reviewDecisionRecords": [],
+  "productionApprovalRecords": []
+}
