@@ -103,10 +103,15 @@ const gateFields = new Set([
   "decidedAt",
 ]);
 const approvedSlice2ChangedPaths = new Set([
+  "docs/wave-4/diagnostic-review-evidence-contract.md",
   "docs/wave-4/slice-2-implementation-note.md",
+  "docs/wave-4/slice-3-implementation-note.md",
   "packages/curriculum/diagnostic-review-coverage/grade-7-9-math.review-coverage.v1.json",
+  "packages/curriculum/diagnostic-review-evidence/grade-7-9-math.review-evidence.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
   "packages/curriculum/test/diagnostic-review-coverage.test.mjs",
+  "packages/curriculum/test/diagnostic-review-evidence.test.mjs",
   "package.json",
 ]);
 

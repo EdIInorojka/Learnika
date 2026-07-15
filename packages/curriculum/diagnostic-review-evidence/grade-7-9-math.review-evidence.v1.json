@@ -1,0 +1,827 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticReviewEvidencePlaceholder.v1",
+    "evidenceArtifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+    "status": "placeholder_only_non_production",
+    "artifactKind": "diagnostic_review_evidence_placeholder",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "reviewCoverageArtifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-4/diagnostic-review-evidence-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "identityPolicyDeferrals": {
+    "reviewerIdentity": {
+      "status": "DEFERRED",
+      "policyVersion": null,
+      "referenceFormat": null
+    },
+    "auditIdentity": {
+      "status": "DEFERRED",
+      "policyVersion": null,
+      "referenceFormat": null
+    }
+  },
+  "readiness": {
+    "status": "NOT_READY",
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"],
+    "productionUseAllowed": false
+  },
+  "aggregate": {
+    "blueprintSlotCount": 11,
+    "gatePlaceholderCount": 66,
+    "evidenceRecordCount": 0,
+    "approvedDecisionCount": 0,
+    "productionApprovalCount": 0
+  },
+  "slots": [
+    {
+      "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.number.percent-ratio.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.algebra.expression-transformations.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.algebra.linear-equation-one-variable.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.algebra.powers-and-roots.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.functions.coordinate-plane-graphs.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.functions.linear-function.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.geometry.basic-objects-angles.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.geometry.triangle-properties.v1",
+      "coverageStatus": "GAP_CONFIRMED",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    },
+    {
+      "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1",
+      "coverageStatus": "DRAFT_ONLY",
+      "candidateDigest": {
+        "state": "PENDING_IMMUTABLE_CANDIDATE",
+        "algorithm": "sha256",
+        "value": null
+      },
+      "gateEvidencePlaceholders": {
+        "methodology": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.methodology-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "safety_no_answer": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "rights_copyright": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "grade_placement": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "accessibility_readability": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        },
+        "production_approval": {
+          "recordState": "NOT_RECORDED",
+          "policyVersion": "wave-4.slice-1.production-approval.v1",
+          "candidateDigest": "PENDING_IMMUTABLE_CANDIDATE",
+          "decisionStatus": "NO_DECISION",
+          "evidenceRef": null,
+          "reviewerIdentityRef": null,
+          "auditIdentityRef": null,
+          "decidedAt": null
+        }
+      }
+    }
+  ],
+  "evidenceRecords": []
+}
