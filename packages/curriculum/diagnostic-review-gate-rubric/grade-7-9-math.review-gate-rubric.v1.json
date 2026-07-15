@@ -1,0 +1,366 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticReviewGateRubric.v1",
+    "rubricArtifactVersion": "wave-4.slice-4.grade-7-9-math.v1",
+    "status": "rubric_definition_non_decision",
+    "artifactKind": "diagnostic_review_gate_rubric",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "reviewCoverageArtifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "reviewEvidenceArtifactVersion": "wave-4.slice-3.grade-7-9-math.v1",
+    "diagnosticBlueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-4/diagnostic-review-gate-rubric-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "readiness": {
+    "status": "NOT_READY",
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"],
+    "productionUseAllowed": false
+  },
+  "decisionBoundary": {
+    "reviewDecisionsRecorded": false,
+    "reviewEvidenceRecorded": false,
+    "productionApprovalsRecorded": false,
+    "reviewerRoleAssignmentsRecorded": false
+  },
+  "aggregate": {
+    "gateCount": 6,
+    "criterionCount": 23,
+    "requiredEvidenceCategoryCount": 23,
+    "blockingIssueCategoryCount": 23,
+    "recordedDecisionCount": 0,
+    "recordedEvidenceCount": 0,
+    "productionApprovalCount": 0
+  },
+  "gates": [
+    {
+      "gateId": "methodology",
+      "policyVersion": "wave-4.slice-1.methodology-review.v1",
+      "rubricState": "NON_DECISION_DEFINITION",
+      "reviewerRolePlaceholder": {
+        "state": "DEFERRED",
+        "roleId": null,
+        "assignmentRef": null,
+        "identityRef": null
+      },
+      "requiredEvidenceCategories": [
+        "SKILL_ALIGNMENT_REVIEW",
+        "EVIDENCE_CATEGORY_ALIGNMENT_REVIEW",
+        "LEARNER_ACTION_BOUNDARY_REVIEW",
+        "PREREQUISITE_BOUNDARY_REVIEW",
+        "EVALUATION_BOUNDARY_REVIEW"
+      ],
+      "blockingIssueCategories": [
+        "SKILL_ALIGNMENT_UNRESOLVED",
+        "EVIDENCE_CATEGORY_MISMATCH",
+        "LEARNER_ACTION_AMBIGUOUS",
+        "PREREQUISITE_UNDECLARED",
+        "EVALUATION_BOUNDARY_UNSAFE"
+      ],
+      "allowedFutureDecisionStates": [
+        "NOT_STARTED",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "APPROVED",
+        "INVALIDATED"
+      ],
+      "criteria": [
+        {
+          "criterionId": "rubric.methodology.skill-alignment.v1",
+          "requirement": "CANDIDATE_SKILLS_ALIGN_WITH_SLOT",
+          "requiredEvidenceCategory": "SKILL_ALIGNMENT_REVIEW",
+          "blockingIssueCategory": "SKILL_ALIGNMENT_UNRESOLVED"
+        },
+        {
+          "criterionId": "rubric.methodology.evidence-category-alignment.v1",
+          "requirement": "CANDIDATE_EVIDENCE_CATEGORY_MATCHES_SLOT",
+          "requiredEvidenceCategory": "EVIDENCE_CATEGORY_ALIGNMENT_REVIEW",
+          "blockingIssueCategory": "EVIDENCE_CATEGORY_MISMATCH"
+        },
+        {
+          "criterionId": "rubric.methodology.learner-action-boundary.v1",
+          "requirement": "LEARNER_ACTION_IS_BOUNDED_AND_CLEAR",
+          "requiredEvidenceCategory": "LEARNER_ACTION_BOUNDARY_REVIEW",
+          "blockingIssueCategory": "LEARNER_ACTION_AMBIGUOUS"
+        },
+        {
+          "criterionId": "rubric.methodology.prerequisite-boundary.v1",
+          "requirement": "PREREQUISITES_ARE_EXPLICIT",
+          "requiredEvidenceCategory": "PREREQUISITE_BOUNDARY_REVIEW",
+          "blockingIssueCategory": "PREREQUISITE_UNDECLARED"
+        },
+        {
+          "criterionId": "rubric.methodology.evaluation-boundary.v1",
+          "requirement": "EVALUATION_BOUNDARY_IS_DETERMINISTICALLY_REVIEWABLE",
+          "requiredEvidenceCategory": "EVALUATION_BOUNDARY_REVIEW",
+          "blockingIssueCategory": "EVALUATION_BOUNDARY_UNSAFE"
+        }
+      ]
+    },
+    {
+      "gateId": "safety_no_answer",
+      "policyVersion": "wave-4.slice-1.safety-no-answer-review.v1",
+      "rubricState": "NON_DECISION_DEFINITION",
+      "reviewerRolePlaceholder": {
+        "state": "DEFERRED",
+        "roleId": null,
+        "assignmentRef": null,
+        "identityRef": null
+      },
+      "requiredEvidenceCategories": [
+        "SOURCE_RESULT_EXPOSURE_REVIEW",
+        "HIDDEN_EVALUATION_DATA_REVIEW",
+        "LEARNER_DATA_MINIMIZATION_REVIEW",
+        "ACTIVE_SCOPE_SAFETY_REVIEW"
+      ],
+      "blockingIssueCategories": [
+        "SOURCE_RESULT_EXPOSURE_RISK",
+        "HIDDEN_EVALUATION_DATA_EXPOSURE",
+        "UNNECESSARY_LEARNER_DATA",
+        "OUT_OF_SCOPE_CONTENT"
+      ],
+      "allowedFutureDecisionStates": [
+        "NOT_STARTED",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "APPROVED",
+        "INVALIDATED"
+      ],
+      "criteria": [
+        {
+          "criterionId": "rubric.safety_no_answer.source-result-exposure.v1",
+          "requirement": "SOURCE_RESULT_IS_NOT_EXPOSED",
+          "requiredEvidenceCategory": "SOURCE_RESULT_EXPOSURE_REVIEW",
+          "blockingIssueCategory": "SOURCE_RESULT_EXPOSURE_RISK"
+        },
+        {
+          "criterionId": "rubric.safety_no_answer.hidden-evaluation-data.v1",
+          "requirement": "HIDDEN_EVALUATION_DATA_IS_NOT_EXPOSED",
+          "requiredEvidenceCategory": "HIDDEN_EVALUATION_DATA_REVIEW",
+          "blockingIssueCategory": "HIDDEN_EVALUATION_DATA_EXPOSURE"
+        },
+        {
+          "criterionId": "rubric.safety_no_answer.learner-data-minimization.v1",
+          "requirement": "ONLY_MINIMUM_LEARNER_DATA_IS_REQUESTED",
+          "requiredEvidenceCategory": "LEARNER_DATA_MINIMIZATION_REVIEW",
+          "blockingIssueCategory": "UNNECESSARY_LEARNER_DATA"
+        },
+        {
+          "criterionId": "rubric.safety_no_answer.active-scope-safety.v1",
+          "requirement": "CONTENT_STAYS_WITHIN_ACTIVE_SCOPE",
+          "requiredEvidenceCategory": "ACTIVE_SCOPE_SAFETY_REVIEW",
+          "blockingIssueCategory": "OUT_OF_SCOPE_CONTENT"
+        }
+      ]
+    },
+    {
+      "gateId": "rights_copyright",
+      "policyVersion": "wave-4.slice-1.rights-copyright-review.v1",
+      "rubricState": "NON_DECISION_DEFINITION",
+      "reviewerRolePlaceholder": {
+        "state": "DEFERRED",
+        "roleId": null,
+        "assignmentRef": null,
+        "identityRef": null
+      },
+      "requiredEvidenceCategories": [
+        "PROVENANCE_CLASSIFICATION_REVIEW",
+        "USAGE_RIGHTS_BASIS_REVIEW",
+        "SOURCE_MATERIAL_BOUNDARY_REVIEW"
+      ],
+      "blockingIssueCategories": [
+        "PROVENANCE_UNVERIFIED",
+        "USAGE_RIGHTS_UNVERIFIED",
+        "PROTECTED_SOURCE_MATERIAL_PRESENT"
+      ],
+      "allowedFutureDecisionStates": [
+        "NOT_STARTED",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "APPROVED",
+        "INVALIDATED"
+      ],
+      "criteria": [
+        {
+          "criterionId": "rubric.rights_copyright.provenance-classification.v1",
+          "requirement": "PROVENANCE_CLASSIFICATION_IS_DOCUMENTABLE",
+          "requiredEvidenceCategory": "PROVENANCE_CLASSIFICATION_REVIEW",
+          "blockingIssueCategory": "PROVENANCE_UNVERIFIED"
+        },
+        {
+          "criterionId": "rubric.rights_copyright.usage-rights-basis.v1",
+          "requirement": "USAGE_RIGHTS_BASIS_IS_DOCUMENTABLE",
+          "requiredEvidenceCategory": "USAGE_RIGHTS_BASIS_REVIEW",
+          "blockingIssueCategory": "USAGE_RIGHTS_UNVERIFIED"
+        },
+        {
+          "criterionId": "rubric.rights_copyright.source-material-boundary.v1",
+          "requirement": "SOURCE_MATERIAL_BOUNDARY_IS_CLEAR",
+          "requiredEvidenceCategory": "SOURCE_MATERIAL_BOUNDARY_REVIEW",
+          "blockingIssueCategory": "PROTECTED_SOURCE_MATERIAL_PRESENT"
+        }
+      ]
+    },
+    {
+      "gateId": "grade_placement",
+      "policyVersion": "wave-4.slice-1.grade-placement-review.v1",
+      "rubricState": "NON_DECISION_DEFINITION",
+      "reviewerRolePlaceholder": {
+        "state": "DEFERRED",
+        "roleId": null,
+        "assignmentRef": null,
+        "identityRef": null
+      },
+      "requiredEvidenceCategories": [
+        "GRADE_BAND_ALIGNMENT_REVIEW",
+        "RUSSIAN_PROGRAM_CONTEXT_REVIEW",
+        "PREREQUISITE_ALIGNMENT_REVIEW"
+      ],
+      "blockingIssueCategories": [
+        "GRADE_PLACEMENT_UNRESOLVED",
+        "PROGRAM_CONTEXT_UNRESOLVED",
+        "PREREQUISITE_ALIGNMENT_MISMATCH"
+      ],
+      "allowedFutureDecisionStates": [
+        "NOT_STARTED",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "APPROVED",
+        "INVALIDATED"
+      ],
+      "criteria": [
+        {
+          "criterionId": "rubric.grade_placement.grade-band-alignment.v1",
+          "requirement": "GRADE_BAND_IS_WITHIN_SEVEN_TO_NINE",
+          "requiredEvidenceCategory": "GRADE_BAND_ALIGNMENT_REVIEW",
+          "blockingIssueCategory": "GRADE_PLACEMENT_UNRESOLVED"
+        },
+        {
+          "criterionId": "rubric.grade_placement.program-context.v1",
+          "requirement": "PROGRAM_CONTEXT_IS_DOCUMENTABLE",
+          "requiredEvidenceCategory": "RUSSIAN_PROGRAM_CONTEXT_REVIEW",
+          "blockingIssueCategory": "PROGRAM_CONTEXT_UNRESOLVED"
+        },
+        {
+          "criterionId": "rubric.grade_placement.prerequisite-alignment.v1",
+          "requirement": "PREREQUISITES_ALIGN_WITH_SKILL_GRAPH",
+          "requiredEvidenceCategory": "PREREQUISITE_ALIGNMENT_REVIEW",
+          "blockingIssueCategory": "PREREQUISITE_ALIGNMENT_MISMATCH"
+        }
+      ]
+    },
+    {
+      "gateId": "accessibility_readability",
+      "policyVersion": "wave-4.slice-1.accessibility-readability-review.v1",
+      "rubricState": "NON_DECISION_DEFINITION",
+      "reviewerRolePlaceholder": {
+        "state": "DEFERRED",
+        "roleId": null,
+        "assignmentRef": null,
+        "identityRef": null
+      },
+      "requiredEvidenceCategories": [
+        "RUSSIAN_LANGUAGE_READABILITY_REVIEW",
+        "NOTATION_CONSISTENCY_REVIEW",
+        "ALTERNATIVE_REPRESENTATION_REVIEW",
+        "READING_LOAD_REVIEW"
+      ],
+      "blockingIssueCategories": [
+        "WORDING_AMBIGUOUS",
+        "NOTATION_INCONSISTENT",
+        "ESSENTIAL_MEANING_VISUAL_ONLY",
+        "READING_LOAD_EXCESSIVE"
+      ],
+      "allowedFutureDecisionStates": [
+        "NOT_STARTED",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "APPROVED",
+        "INVALIDATED"
+      ],
+      "criteria": [
+        {
+          "criterionId": "rubric.accessibility_readability.russian-language-readability.v1",
+          "requirement": "RUSSIAN_WORDING_IS_CLEAR",
+          "requiredEvidenceCategory": "RUSSIAN_LANGUAGE_READABILITY_REVIEW",
+          "blockingIssueCategory": "WORDING_AMBIGUOUS"
+        },
+        {
+          "criterionId": "rubric.accessibility_readability.notation-consistency.v1",
+          "requirement": "NOTATION_IS_CONSISTENT",
+          "requiredEvidenceCategory": "NOTATION_CONSISTENCY_REVIEW",
+          "blockingIssueCategory": "NOTATION_INCONSISTENT"
+        },
+        {
+          "criterionId": "rubric.accessibility_readability.alternative-representation.v1",
+          "requirement": "ESSENTIAL_MEANING_HAS_NON_VISUAL_PATH",
+          "requiredEvidenceCategory": "ALTERNATIVE_REPRESENTATION_REVIEW",
+          "blockingIssueCategory": "ESSENTIAL_MEANING_VISUAL_ONLY"
+        },
+        {
+          "criterionId": "rubric.accessibility_readability.reading-load.v1",
+          "requirement": "READING_LOAD_IS_AGE_APPROPRIATE",
+          "requiredEvidenceCategory": "READING_LOAD_REVIEW",
+          "blockingIssueCategory": "READING_LOAD_EXCESSIVE"
+        }
+      ]
+    },
+    {
+      "gateId": "production_approval",
+      "policyVersion": "wave-4.slice-1.production-approval.v1",
+      "rubricState": "NON_DECISION_DEFINITION",
+      "reviewerRolePlaceholder": {
+        "state": "DEFERRED",
+        "roleId": null,
+        "assignmentRef": null,
+        "identityRef": null
+      },
+      "requiredEvidenceCategories": [
+        "UPSTREAM_GATE_STATUS_REVIEW",
+        "CANDIDATE_PIN_CONSISTENCY_REVIEW",
+        "RELEASE_AUTHORITY_POLICY_REVIEW",
+        "AUDIT_IDENTITY_POLICY_REVIEW"
+      ],
+      "blockingIssueCategories": [
+        "UPSTREAM_GATE_INCOMPLETE",
+        "CANDIDATE_PIN_MISMATCH",
+        "RELEASE_AUTHORITY_POLICY_UNRESOLVED",
+        "AUDIT_IDENTITY_POLICY_UNRESOLVED"
+      ],
+      "allowedFutureDecisionStates": ["NOT_ELIGIBLE", "PENDING", "APPROVED", "WITHDRAWN"],
+      "criteria": [
+        {
+          "criterionId": "rubric.production_approval.upstream-gate-status.v1",
+          "requirement": "ALL_SUBSTANTIVE_GATES_ARE_CURRENT",
+          "requiredEvidenceCategory": "UPSTREAM_GATE_STATUS_REVIEW",
+          "blockingIssueCategory": "UPSTREAM_GATE_INCOMPLETE"
+        },
+        {
+          "criterionId": "rubric.production_approval.candidate-pin-consistency.v1",
+          "requirement": "ALL_GATE_PINS_REFERENCE_ONE_CANDIDATE",
+          "requiredEvidenceCategory": "CANDIDATE_PIN_CONSISTENCY_REVIEW",
+          "blockingIssueCategory": "CANDIDATE_PIN_MISMATCH"
+        },
+        {
+          "criterionId": "rubric.production_approval.release-authority-policy.v1",
+          "requirement": "RELEASE_AUTHORITY_POLICY_IS_DEFINED",
+          "requiredEvidenceCategory": "RELEASE_AUTHORITY_POLICY_REVIEW",
+          "blockingIssueCategory": "RELEASE_AUTHORITY_POLICY_UNRESOLVED"
+        },
+        {
+          "criterionId": "rubric.production_approval.audit-identity-policy.v1",
+          "requirement": "AUDIT_IDENTITY_POLICY_IS_DEFINED",
+          "requiredEvidenceCategory": "AUDIT_IDENTITY_POLICY_REVIEW",
+          "blockingIssueCategory": "AUDIT_IDENTITY_POLICY_UNRESOLVED"
+        }
+      ]
+    }
+  ],
+  "reviewDecisionRecords": [],
+  "reviewEvidenceRecords": []
+}

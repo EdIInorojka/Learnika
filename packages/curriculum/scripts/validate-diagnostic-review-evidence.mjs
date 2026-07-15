@@ -103,11 +103,16 @@ const gatePlaceholderFields = new Set([
 ]);
 const approvedSlice3ChangedPaths = new Set([
   "docs/wave-4/diagnostic-review-evidence-contract.md",
+  "docs/wave-4/diagnostic-review-gate-rubric-contract.md",
   "docs/wave-4/slice-3-implementation-note.md",
+  "docs/wave-4/slice-4-implementation-note.md",
   "packages/curriculum/diagnostic-review-evidence/grade-7-9-math.review-evidence.v1.json",
+  "packages/curriculum/diagnostic-review-gate-rubric/grade-7-9-math.review-gate-rubric.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
   "packages/curriculum/test/diagnostic-review-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-review-gate-rubric.test.mjs",
   "package.json",
 ]);
 
