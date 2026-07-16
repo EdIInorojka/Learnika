@@ -136,17 +136,18 @@ const protectedRecordFields = [
   "approvedDecisionRecords",
   "productionApprovalRecords",
 ];
-const approvedSlice8ChangedPaths = new Set([
-  "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
-  "docs/wave-5/slice-8-implementation-note.md",
+const approvedSlice9ChangedPaths = new Set([
+  "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",
+  "docs/wave-5/slice-9-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-audit-identity-policy/grade-7-9-math.audit-identity-policy-placeholder.v1.json",
+  "packages/curriculum/diagnostic-evidence-storage-retention-policy/grade-7-9-math.evidence-storage-retention-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
@@ -161,6 +162,7 @@ const approvedSlice8ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-candidate-canonicalization-digest-policy.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
   "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
+  "packages/curriculum/test/diagnostic-evidence-storage-retention-policy.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
   "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
@@ -796,8 +798,8 @@ export function validateConflictOfInterestPolicyChangedPaths(changedPaths) {
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice8ChangedPaths.has(changedPath)) {
-      fail(`Wave 5 Slice 8 out-of-scope path changed: ${changedPath}.`);
+    if (!approvedSlice9ChangedPaths.has(changedPath)) {
+      fail(`Wave 5 Slice 9 out-of-scope path changed: ${changedPath}.`);
     }
   }
   return [...changedPaths];

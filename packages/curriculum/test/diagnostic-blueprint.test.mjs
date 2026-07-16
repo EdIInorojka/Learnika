@@ -8,10 +8,11 @@ import {
 } from "../scripts/validate-diagnostic-blueprint.mjs";
 import { readSkillGraph } from "../scripts/validate-skill-graph.mjs";
 
-const wave5DocumentationPathsThroughSlice8 = new Set([
+const wave5DocumentationPathsThroughSlice9 = new Set([
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
   "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",
+  "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",
   "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
   "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
   "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
@@ -26,6 +27,7 @@ const wave5DocumentationPathsThroughSlice8 = new Set([
   "docs/wave-5/slice-6-implementation-note.md",
   "docs/wave-5/slice-7-implementation-note.md",
   "docs/wave-5/slice-8-implementation-note.md",
+  "docs/wave-5/slice-9-implementation-note.md",
 ]);
 
 function clone(value) {
@@ -156,7 +158,7 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
       changedPath,
     );
     assert.equal(
-      isLegacyStaticPath || wave5DocumentationPathsThroughSlice8.has(changedPath),
+      isLegacyStaticPath || wave5DocumentationPathsThroughSlice9.has(changedPath),
       true,
       changedPath,
     );

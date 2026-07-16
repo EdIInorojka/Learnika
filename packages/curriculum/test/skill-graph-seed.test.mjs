@@ -8,10 +8,11 @@ import {
   validateSkillGraph,
 } from "../scripts/validate-skill-graph.mjs";
 
-const wave5DocumentationPathsThroughSlice8 = [
+const wave5DocumentationPathsThroughSlice9 = [
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
   "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",
+  "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",
   "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
   "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
   "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
@@ -26,6 +27,7 @@ const wave5DocumentationPathsThroughSlice8 = [
   "docs/wave-5/slice-6-implementation-note.md",
   "docs/wave-5/slice-7-implementation-note.md",
   "docs/wave-5/slice-8-implementation-note.md",
+  "docs/wave-5/slice-9-implementation-note.md",
 ];
 
 function cloneGraph(graph) {
@@ -122,21 +124,22 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
       changedPath,
     );
     assert.equal(
-      isLegacyStaticPath || wave5DocumentationPathsThroughSlice8.includes(changedPath),
+      isLegacyStaticPath || wave5DocumentationPathsThroughSlice9.includes(changedPath),
       true,
       changedPath,
     );
   }
 });
 
-test("Wave 5 scope guard permits only seventeen exact documentation paths through Slice 8", () => {
+test("Wave 5 scope guard permits only nineteen exact documentation paths through Slice 9", () => {
   assert.deepEqual(
-    validateSkillGraphChangedPaths(wave5DocumentationPathsThroughSlice8),
-    wave5DocumentationPathsThroughSlice8,
+    validateSkillGraphChangedPaths(wave5DocumentationPathsThroughSlice9),
+    wave5DocumentationPathsThroughSlice9,
   );
+  assert.equal(wave5DocumentationPathsThroughSlice9.length, 19);
 
   const forbiddenPaths = [
-    "docs/wave-5/slice-9-implementation-note.md",
+    "docs/wave-5/slice-10-implementation-note.md",
     "docs/wave-5/nested/scope-and-non-goals.md",
     "docs/wave-5/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-review/controller.ts",
