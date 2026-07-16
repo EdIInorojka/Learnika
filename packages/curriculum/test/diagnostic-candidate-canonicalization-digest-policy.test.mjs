@@ -441,7 +441,7 @@ test("Slice 4 worktree guard permits only the exact 24 implementation paths", ()
 
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-11-implementation-note.md",
+    "docs/wave-5/slice-12-implementation-note.md",
     "docs/wave-5/nested/diagnostic-canonicalization-digest-policy-contract.md",
     "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md.bak",
     "packages/curriculum/diagnostic-candidate-canonicalization-digest-policy/extra.v1.json",
@@ -660,4 +660,31 @@ test("Slice 4 validator contains no broad documentation curriculum or API allowl
   assert.doesNotMatch(source, /["']docs\/wave-5\/["']/);
   assert.doesNotMatch(source, /["']packages\/curriculum\/["']/);
   assert.doesNotMatch(source, /["']apps\/api\/["']/);
+});
+
+test("Slice 4 guard admits only the exact five Slice 11 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md",
+    "docs/wave-5/slice-11-implementation-note.md",
+    "packages/curriculum/diagnostic-coverage-gap-closure-plan/grade-7-9-math.coverage-gap-closure-plan-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+    "packages/curriculum/test/diagnostic-coverage-gap-closure-plan.test.mjs",
+  ];
+  assert.deepEqual(
+    validateCandidateCanonicalizationDigestPolicyChangedPaths(approvedPaths),
+    approvedPaths,
+  );
+  for (const forbiddenPath of [
+    "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md.bak",
+    "docs/wave-5/nested/slice-11-implementation-note.md",
+    "packages/curriculum/diagnostic-coverage-gap-closure-plan/extra.v1.json",
+    "apps/api/src/diagnostic-review/coverage.ts",
+    "pnpm-lock.yaml",
+  ]) {
+    assert.throws(
+      () => validateCandidateCanonicalizationDigestPolicyChangedPaths([forbiddenPath]),
+      /Wave 5 Slice 4 out-of-scope path changed/,
+      forbiddenPath,
+    );
+  }
 });

@@ -265,6 +265,13 @@ const wave5Slice10ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
   "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs",
 ]);
+const wave5Slice11ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md",
+  "docs/wave-5/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-coverage-gap-closure-plan/grade-7-9-math.coverage-gap-closure-plan-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+  "packages/curriculum/test/diagnostic-coverage-gap-closure-plan.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultCanonicalizationPolicyPath = path.resolve(
@@ -743,7 +750,8 @@ export function validateCandidateCanonicalizationChangedPaths(changedPaths) {
       !wave5Slice7ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice8ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice9ScopeUnblockPaths.has(changedPath) &&
-      !wave5Slice10ScopeUnblockPaths.has(changedPath)
+      !wave5Slice10ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice11ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 4 Slice 6 out-of-scope path changed: ${changedPath}.`);
     }

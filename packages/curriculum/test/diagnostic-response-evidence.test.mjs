@@ -16,6 +16,7 @@ const wave5DocumentationPathsThroughSlice10 = new Set([
   "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",
   "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",
   "docs/wave-5/diagnostic-production-approval-authority-policy-contract.md",
+  "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md",
   "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
   "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
   "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
@@ -32,6 +33,7 @@ const wave5DocumentationPathsThroughSlice10 = new Set([
   "docs/wave-5/slice-8-implementation-note.md",
   "docs/wave-5/slice-9-implementation-note.md",
   "docs/wave-5/slice-10-implementation-note.md",
+  "docs/wave-5/slice-11-implementation-note.md",
 ]);
 
 const forbiddenFields = [

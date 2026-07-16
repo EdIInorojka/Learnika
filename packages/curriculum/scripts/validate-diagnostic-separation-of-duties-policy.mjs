@@ -111,17 +111,18 @@ const protectedRecordFields = [
   "approvedDecisionRecords",
   "productionApprovalRecords",
 ];
-const approvedSlice10ChangedPaths = new Set([
-  "docs/wave-5/diagnostic-production-approval-authority-policy-contract.md",
-  "docs/wave-5/slice-10-implementation-note.md",
+const approvedSlice11ChangedPaths = new Set([
+  "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md",
+  "docs/wave-5/slice-11-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-production-approval-authority-policy/grade-7-9-math.production-approval-authority-policy-placeholder.v1.json",
+  "packages/curriculum/diagnostic-coverage-gap-closure-plan/grade-7-9-math.coverage-gap-closure-plan-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
@@ -138,6 +139,7 @@ const approvedSlice10ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-candidate-canonicalization-digest-policy.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
   "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
+  "packages/curriculum/test/diagnostic-coverage-gap-closure-plan.test.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy.test.mjs",
   "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
@@ -685,8 +687,8 @@ export function validateSeparationOfDutiesPolicyChangedPaths(changedPaths) {
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice10ChangedPaths.has(changedPath)) {
-      fail(`Wave 5 Slice 10 out-of-scope path changed: ${changedPath}.`);
+    if (!approvedSlice11ChangedPaths.has(changedPath)) {
+      fail(`Wave 5 Slice 11 out-of-scope path changed: ${changedPath}.`);
     }
   }
   return [...changedPaths];

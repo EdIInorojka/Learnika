@@ -289,7 +289,7 @@ test("Slice 2 worktree guard permits only the exact 19 implementation paths", ()
 
   const forbiddenPaths = [
     "README.md",
-    "docs/wave-5/slice-11-implementation-note.md",
+    "docs/wave-5/slice-12-implementation-note.md",
     "docs/wave-5/nested/slice-2-implementation-note.md",
     "docs/wave-5/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-review-activation-prerequisites/extra.v1.json",
@@ -550,4 +550,28 @@ test("Slice 2 validator contains no broad documentation, curriculum or API allow
   assert.doesNotMatch(source, /["']docs\/wave-5\/["']/);
   assert.doesNotMatch(source, /["']packages\/curriculum\/["']/);
   assert.doesNotMatch(source, /["']apps\/api\/["']/);
+});
+
+test("Slice 2 guard admits only the exact five Slice 11 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md",
+    "docs/wave-5/slice-11-implementation-note.md",
+    "packages/curriculum/diagnostic-coverage-gap-closure-plan/grade-7-9-math.coverage-gap-closure-plan-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+    "packages/curriculum/test/diagnostic-coverage-gap-closure-plan.test.mjs",
+  ];
+  assert.deepEqual(validateActivationPrerequisitesChangedPaths(approvedPaths), approvedPaths);
+  for (const forbiddenPath of [
+    "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md.bak",
+    "docs/wave-5/nested/slice-11-implementation-note.md",
+    "packages/curriculum/diagnostic-coverage-gap-closure-plan/extra.v1.json",
+    "apps/api/src/diagnostic-review/coverage.ts",
+    "pnpm-lock.yaml",
+  ]) {
+    assert.throws(
+      () => validateActivationPrerequisitesChangedPaths([forbiddenPath]),
+      /Wave 5 Slice 2 out-of-scope path changed/,
+      forbiddenPath,
+    );
+  }
 });
