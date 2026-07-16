@@ -1,0 +1,373 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticCandidateCanonicalizationDigestPolicyPlaceholder.v1",
+    "policyArtifactVersion": "wave-5.slice-4.grade-7-9-math.v1",
+    "status": "placeholder_only_unsatisfied_non_production",
+    "artifactKind": "diagnostic_candidate_canonicalization_digest_policy_placeholder",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "candidateIdentityPolicyArtifactVersion": "wave-5.slice-3.grade-7-9-math.v1",
+    "candidateDigestRegistryArtifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+    "candidateCanonicalizationArtifactVersion": "wave-4.slice-6.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "activationBoundary": {
+    "status": "BLOCKED",
+    "reviewWorkflowStatus": "INACTIVE",
+    "activationAllowed": false,
+    "reviewWorkflowActivationAllowed": false,
+    "readinessTransitionAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "dependencyReferences": {
+    "activationPrerequisites": {
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "artifactStatus": "blocked_prerequisites_only_non_production",
+      "prerequisiteId": "canonicalization_and_digest_policy",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activationStatus": "BLOCKED",
+      "reviewWorkflowStatus": "INACTIVE",
+      "prerequisiteCount": 12,
+      "unsatisfiedPrerequisiteCount": 12,
+      "productionApprovalCount": 0
+    },
+    "candidateIdentityPolicy": {
+      "artifactVersion": "wave-5.slice-3.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-3.diagnostic-candidate-identity.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "realCandidateIdCount": 0,
+      "submittedCandidateCount": 0,
+      "approvedCandidateCount": 0,
+      "productionApprovalCount": 0
+    },
+    "candidateDigestRegistry": {
+      "artifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+      "digestAlgorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+      "digestAlgorithmState": "DEFERRED",
+      "algorithmId": null,
+      "valueEncoding": null,
+      "canonicalizationPolicyVersion": "wave-4.slice-5.candidate-canonicalization.placeholder.v1",
+      "canonicalizationState": "DEFERRED",
+      "rulesetVersion": null,
+      "assignedCandidateIdentityCount": 0,
+      "digestValueCount": 0,
+      "productionApprovedCandidateCount": 0
+    },
+    "candidateCanonicalization": {
+      "artifactVersion": "wave-4.slice-6.grade-7-9-math.v1",
+      "policyVersion": "wave-4.slice-6.diagnostic-candidate-canonicalization.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "activeRulesetVersion": null,
+      "activeRuleCount": 0,
+      "transformedCandidateRecordCount": 0,
+      "digestValueCount": 0,
+      "productionApprovedCandidateCount": 0
+    }
+  },
+  "prerequisiteReference": {
+    "prerequisiteId": "canonicalization_and_digest_policy",
+    "status": "UNSATISFIED_DEFERRED",
+    "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+    "evidenceRequirementDescription": "Future approved field inventory, deterministic byte serialization, algorithm and encoding policy, and synthetic reproducibility vectors.",
+    "evidenceRecordRefs": []
+  },
+  "policyIdentity": {
+    "policyId": "diagnostic-candidate-canonicalization-and-digest",
+    "policyVersion": "wave-5.slice-4.diagnostic-candidate-canonicalization-and-digest.placeholder.v1",
+    "policyState": "UNRESOLVED_DEFERRED",
+    "fieldInventoryVersion": null,
+    "activeRulesetVersion": null,
+    "serializationFormatId": null,
+    "selectedDigestAlgorithmId": null,
+    "selectedDigestEncodingId": null,
+    "policyApprovalAllowed": false,
+    "candidateProcessingAllowed": false,
+    "canonicalizationAllowed": false,
+    "digestGenerationAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "policyOwnerPlaceholder": {
+    "state": "TO_BE_DECIDED",
+    "ownerPlaceholderId": "UNASSIGNED_POLICY_OWNER_PLACEHOLDER",
+    "ownerReference": null,
+    "assignmentReference": null,
+    "authorityAllowed": false
+  },
+  "candidateFieldInventoryPlaceholder": {
+    "requirementId": "candidate_field_inventory",
+    "state": "TO_BE_DECIDED",
+    "inventoryVersion": null,
+    "inventoryPolicyReference": null,
+    "selectedFieldReferences": [],
+    "inventoryApproved": false,
+    "applicationAllowed": false
+  },
+  "fieldInclusionExclusionPlaceholder": {
+    "requirementId": "field_inclusion_and_exclusion",
+    "state": "TO_BE_DECIDED",
+    "inclusionPolicyReference": null,
+    "exclusionPolicyReference": null,
+    "includedFieldReferences": [],
+    "excludedFieldReferences": [],
+    "policyApproved": false,
+    "applicationAllowed": false
+  },
+  "canonicalizationRulesetPlaceholder": {
+    "requirementId": "canonicalization_versioning_migration_and_invalidation",
+    "state": "TO_BE_DECIDED",
+    "rulesetVersion": null,
+    "rulesetPolicyReference": null,
+    "migrationPolicyReference": null,
+    "invalidationPolicyReference": null,
+    "activeRuleReferences": [],
+    "rulesetApproved": false,
+    "rulesetActive": false,
+    "canonicalizationAllowed": false
+  },
+  "localeLanguageNormalizationPlaceholder": {
+    "requirementId": "locale_unicode_language_and_line_endings",
+    "state": "TO_BE_DECIDED",
+    "targetLocale": "ru-RU",
+    "unicodePolicyReference": null,
+    "russianLanguagePolicyReference": null,
+    "lineEndingPolicyReference": null,
+    "activeRuleReferences": [],
+    "normalizationAllowed": false
+  },
+  "mathNotationNormalizationPlaceholder": {
+    "requirementId": "mathematical_notation_symbol_unit_and_expression_serialization",
+    "state": "TO_BE_DECIDED",
+    "notationPolicyReference": null,
+    "symbolPolicyReference": null,
+    "unitPolicyReference": null,
+    "expressionSerializationPolicyReference": null,
+    "activeRuleReferences": [],
+    "normalizationAllowed": false
+  },
+  "whitespacePunctuationNormalizationPlaceholder": {
+    "requirementId": "whitespace_and_punctuation_handling",
+    "state": "TO_BE_DECIDED",
+    "whitespacePolicyReference": null,
+    "punctuationPolicyReference": null,
+    "activeRuleReferences": [],
+    "normalizationAllowed": false
+  },
+  "deterministicSerializationPlaceholder": {
+    "requirementId": "deterministic_ordering_and_byte_serialization",
+    "state": "TO_BE_DECIDED",
+    "orderingPolicyReference": null,
+    "byteSerializationPolicyReference": null,
+    "serializationFormatId": null,
+    "testVectorReferences": [],
+    "serializationAllowed": false
+  },
+  "digestAlgorithmDecisionPlaceholder": {
+    "requirementId": "digest_algorithm_encoding_and_domain_separation",
+    "state": "TO_BE_DECIDED",
+    "algorithmDecisionReference": null,
+    "algorithmPolicyReference": null,
+    "algorithmId": null,
+    "domainSeparationPolicyReference": null,
+    "algorithmApproved": false,
+    "algorithmActive": false
+  },
+  "digestEncodingPlaceholder": {
+    "requirementId": "digest_algorithm_encoding_and_domain_separation",
+    "state": "TO_BE_DECIDED",
+    "encodingDecisionReference": null,
+    "encodingPolicyReference": null,
+    "encodingId": null,
+    "encodingApproved": false,
+    "encodingActive": false
+  },
+  "digestInvalidationRegenerationPlaceholder": {
+    "requirementId": "digest_collision_incident_and_algorithm_migration",
+    "state": "TO_BE_DECIDED",
+    "collisionResponsePolicyReference": null,
+    "incidentPolicyReference": null,
+    "algorithmMigrationPolicyReference": null,
+    "regenerationPolicyReference": null,
+    "triggerDefinitions": [],
+    "invalidationAllowed": false,
+    "regenerationAllowed": false
+  },
+  "reproducibilityPlaceholder": {
+    "requirementId": "independent_reproducibility_and_synthetic_vectors",
+    "state": "TO_BE_DECIDED",
+    "reproducibilityPolicyReference": null,
+    "syntheticVectorPolicyReference": null,
+    "testVectorReferences": [],
+    "reproducibilityClaimAllowed": false,
+    "vectorGenerationAllowed": false
+  },
+  "decisionRequirements": [
+    {
+      "requirementId": "candidate_field_inventory",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "field_inclusion_and_exclusion",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "deterministic_ordering_and_byte_serialization",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "locale_unicode_language_and_line_endings",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "mathematical_notation_symbol_unit_and_expression_serialization",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "whitespace_and_punctuation_handling",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "canonicalization_versioning_migration_and_invalidation",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "digest_algorithm_encoding_and_domain_separation",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "digest_collision_incident_and_algorithm_migration",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "independent_reproducibility_and_synthetic_vectors",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "testVectorReferences": [],
+      "decisionRecorded": false
+    }
+  ],
+  "recordBoundary": {
+    "policyDecisionsRecorded": false,
+    "policyOwnerAssigned": false,
+    "contentFieldsSelected": false,
+    "canonicalizationRulesRecorded": false,
+    "canonicalizationRulesetActivated": false,
+    "digestAlgorithmSelected": false,
+    "digestEncodingSelected": false,
+    "deterministicSerializationEnabled": false,
+    "reproducibilityVectorsRecorded": false,
+    "transformedCandidateRecordsRecorded": false,
+    "candidateIdentitiesRecorded": false,
+    "candidateSubmissionsRecorded": false,
+    "candidateApprovalsRecorded": false,
+    "generatedHashesRecorded": false,
+    "digestValuesRecorded": false,
+    "reviewEvidenceRecorded": false,
+    "reviewDecisionsRecorded": false,
+    "reviewerIdentitiesRecorded": false,
+    "auditIdentitiesRecorded": false,
+    "ownerAssignmentsRecorded": false,
+    "productionApprovalsRecorded": false,
+    "runtimeCanonicalizationEnabled": false,
+    "runtimeDigestGenerationEnabled": false
+  },
+  "readiness": {
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "status": "NOT_READY",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+  },
+  "aggregate": {
+    "decisionRequirementCount": 10,
+    "undecidedRequirementCount": 10,
+    "selectedContentFieldCount": 0,
+    "activeCanonicalizationRuleCount": 0,
+    "activeCanonicalizationRulesetCount": 0,
+    "selectedDigestAlgorithmCount": 0,
+    "selectedDigestEncodingCount": 0,
+    "reproducibilityVectorCount": 0,
+    "transformedCandidateRecordCount": 0,
+    "realCandidateIdCount": 0,
+    "submittedCandidateCount": 0,
+    "approvedCandidateCount": 0,
+    "generatedHashCount": 0,
+    "digestValueCount": 0,
+    "policyDecisionCount": 0,
+    "reviewEvidenceRecordCount": 0,
+    "reviewDecisionCount": 0,
+    "reviewerIdentityCount": 0,
+    "auditIdentityCount": 0,
+    "ownerAssignmentCount": 0,
+    "productionApprovalCount": 0
+  },
+  "selectedContentFieldRecords": [],
+  "activeCanonicalizationRuleRecords": [],
+  "selectedDigestAlgorithmRecords": [],
+  "selectedDigestEncodingRecords": [],
+  "reproducibilityVectorRecords": [],
+  "transformedCandidateRecords": [],
+  "candidateIdentityRecords": [],
+  "candidateSubmissionRecords": [],
+  "candidateApprovalRecords": [],
+  "generatedHashRecords": [],
+  "digestValueRecords": [],
+  "policyDecisionRecords": [],
+  "reviewEvidenceRecords": [],
+  "reviewDecisionRecords": [],
+  "reviewerIdentityRecords": [],
+  "auditIdentityRecords": [],
+  "ownerAssignmentRecords": [],
+  "productionApprovalRecords": []
+}

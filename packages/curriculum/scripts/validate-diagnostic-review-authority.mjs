@@ -317,6 +317,13 @@ const wave5Slice3ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
   "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
 ]);
+const wave5Slice4ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
+  "docs/wave-5/slice-4-implementation-note.md",
+  "packages/curriculum/diagnostic-candidate-canonicalization-digest-policy/grade-7-9-math.candidate-canonicalization-digest-policy-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+  "packages/curriculum/test/diagnostic-candidate-canonicalization-digest-policy.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultReviewAuthorityPath = path.resolve(
@@ -1042,7 +1049,8 @@ export function validateReviewAuthorityChangedPaths(changedPaths) {
       !approvedSlice8ChangedPaths.has(changedPath) &&
       !wave5Slice1ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice2ScopeUnblockPaths.has(changedPath) &&
-      !wave5Slice3ScopeUnblockPaths.has(changedPath)
+      !wave5Slice3ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice4ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 4 Slice 8 out-of-scope path changed: ${changedPath}.`);
     }

@@ -6,31 +6,36 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { readDiagnosticCandidateCanonicalization } from "./validate-diagnostic-candidate-canonicalization.mjs";
 import { readDiagnosticCandidateDigestRegistry } from "./validate-diagnostic-candidate-digest.mjs";
 import {
-  readDiagnosticReviewActivationPrerequisites,
-  validateDiagnosticReviewActivationPrerequisites,
-} from "./validate-diagnostic-review-activation-prerequisites.mjs";
+  readDiagnosticCandidateIdentityPolicy,
+  validateDiagnosticCandidateIdentityPolicy,
+} from "./validate-diagnostic-candidate-identity-policy.mjs";
+import { readDiagnosticReviewActivationPrerequisites } from "./validate-diagnostic-review-activation-prerequisites.mjs";
 import { readDiagnosticReviewAuthority } from "./validate-diagnostic-review-authority.mjs";
 import { readDiagnosticReviewCoverage } from "./validate-diagnostic-review-coverage.mjs";
 import { readDiagnosticReviewEvidence } from "./validate-diagnostic-review-evidence.mjs";
 import { readDiagnosticReviewGateRubric } from "./validate-diagnostic-review-gate-rubric.mjs";
 import { readDiagnosticReviewWorkflowState } from "./validate-diagnostic-review-workflow-state.mjs";
 
-const expectedArtifactVersion = "wave-5.slice-3.grade-7-9-math.v1";
-const expectedPolicyVersion = "wave-5.slice-3.diagnostic-candidate-identity.placeholder.v1";
+const expectedArtifactVersion = "wave-5.slice-4.grade-7-9-math.v1";
+const expectedPolicyVersion =
+  "wave-5.slice-4.diagnostic-candidate-canonicalization-and-digest.placeholder.v1";
 const expectedActivationArtifactVersion = "wave-5.slice-2.grade-7-9-math.v1";
+const expectedIdentityArtifactVersion = "wave-5.slice-3.grade-7-9-math.v1";
 const expectedDigestRegistryVersion = "wave-4.slice-5.grade-7-9-math.v1";
-const expectedCoverageVersion = "wave-4.slice-2.grade-7-9-math.v1";
+const expectedCanonicalizationArtifactVersion = "wave-4.slice-6.grade-7-9-math.v1";
 const expectedReadinessPolicyVersion = "wave-3-slice-11-diagnostic-readiness-policy-v1";
 const requiredBlockingReasons = new Set(["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]);
 const expectedDecisionRequirementIds = new Set([
-  "namespace_and_allocation_ownership",
-  "identity_format_and_validation_grammar",
-  "uniqueness_reservation_collision_and_non_reuse",
-  "version_and_revision_semantics",
-  "candidate_artifact_blueprint_and_skill_linkage",
-  "new_version_and_invalidation_triggers",
-  "retirement_and_tombstone_semantics",
-  "identifier_data_exclusions",
+  "candidate_field_inventory",
+  "field_inclusion_and_exclusion",
+  "deterministic_ordering_and_byte_serialization",
+  "locale_unicode_language_and_line_endings",
+  "mathematical_notation_symbol_unit_and_expression_serialization",
+  "whitespace_and_punctuation_handling",
+  "canonicalization_versioning_migration_and_invalidation",
+  "digest_algorithm_encoding_and_domain_separation",
+  "digest_collision_incident_and_algorithm_migration",
+  "independent_reproducibility_and_synthetic_vectors",
 ]);
 const forbiddenTerms = [
   "finalAnswer",
@@ -61,14 +66,15 @@ const forbiddenTerms = [
   "canonicalizedContent",
   "normalizedStem",
 ];
-const approvedSlice3ChangedPaths = new Set([
-  "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
-  "docs/wave-5/slice-3-implementation-note.md",
+const approvedSlice4ChangedPaths = new Set([
+  "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
+  "docs/wave-5/slice-4-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-candidate-identity-policy/grade-7-9-math.candidate-identity-policy-placeholder.v1.json",
+  "packages/curriculum/diagnostic-candidate-canonicalization-digest-policy/grade-7-9-math.candidate-canonicalization-digest-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
@@ -77,6 +83,7 @@ const approvedSlice3ChangedPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
   "packages/curriculum/scripts/validate-skill-graph.mjs",
   "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-candidate-canonicalization-digest-policy.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
@@ -85,25 +92,18 @@ const approvedSlice3ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
-const wave5Slice4ScopeUnblockPaths = new Set([
-  "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
-  "docs/wave-5/slice-4-implementation-note.md",
-  "packages/curriculum/diagnostic-candidate-canonicalization-digest-policy/grade-7-9-math.candidate-canonicalization-digest-policy-placeholder.v1.json",
-  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
-  "packages/curriculum/test/diagnostic-candidate-canonicalization-digest-policy.test.mjs",
-]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
-export const defaultCandidateIdentityPolicyPath = path.resolve(
+export const defaultCandidateCanonicalizationDigestPolicyPath = path.resolve(
   scriptDir,
-  "../diagnostic-candidate-identity-policy/grade-7-9-math.candidate-identity-policy-placeholder.v1.json",
+  "../diagnostic-candidate-canonicalization-digest-policy/grade-7-9-math.candidate-canonicalization-digest-policy-placeholder.v1.json",
 );
 
-export class DiagnosticCandidateIdentityPolicyValidationError extends Error {}
+export class DiagnosticCandidateCanonicalizationDigestPolicyValidationError extends Error {}
 
 function fail(message) {
-  throw new DiagnosticCandidateIdentityPolicyValidationError(message);
+  throw new DiagnosticCandidateCanonicalizationDigestPolicyValidationError(message);
 }
 
 function isPlainObject(value) {
@@ -175,19 +175,20 @@ function scanForbiddenTermsAndPrivateValues(value, fieldPath = "$") {
       }
     }
     if (/\b[a-f0-9]{32,}\b/i.test(value)) {
-      fail(`${fieldPath} contains a hash-like value, which is forbidden in Slice 3.`);
+      fail(`${fieldPath} contains a hash-like value, which is forbidden in Slice 4.`);
     }
     if (/\b[^\s@]+@[^\s@]+\.[^\s@]+\b/.test(value)) {
-      fail(`${fieldPath} contains an email-like value, which is forbidden in Slice 3.`);
+      fail(`${fieldPath} contains an email-like value, which is forbidden in Slice 4.`);
     }
     if (/^dcandidate\.[a-z0-9.-]+\.v[1-9][0-9]*$/i.test(value)) {
-      fail(`${fieldPath} contains a concrete candidate ID, which is forbidden in Slice 3.`);
+      fail(`${fieldPath} contains a concrete candidate ID, which is forbidden in Slice 4.`);
     }
   }
 }
 
 function validateUpstreamArtifacts(upstream) {
-  const activationSummary = validateDiagnosticReviewActivationPrerequisites(
+  const identitySummary = validateDiagnosticCandidateIdentityPolicy(
+    upstream.identityPolicy,
     upstream.activationPrerequisites,
     upstream.coverage,
     upstream.evidence,
@@ -198,83 +199,109 @@ function validateUpstreamArtifacts(upstream) {
     upstream.authority,
   );
   if (
-    activationSummary.activationPrerequisitesArtifactVersion !==
+    identitySummary.policyArtifactVersion !== expectedIdentityArtifactVersion ||
+    identitySummary.policyState !== "UNRESOLVED_DEFERRED" ||
+    identitySummary.prerequisiteStatus !== "UNSATISFIED_DEFERRED" ||
+    identitySummary.realCandidateIdCount !== 0 ||
+    identitySummary.submittedCandidateCount !== 0 ||
+    identitySummary.approvedCandidateCount !== 0 ||
+    identitySummary.productionApprovalCount !== 0 ||
+    identitySummary.activationStatus !== "BLOCKED" ||
+    identitySummary.reviewWorkflowStatus !== "INACTIVE" ||
+    identitySummary.readiness !== "NOT_READY" ||
+    upstream.activationPrerequisites.metadata.activationPrerequisitesArtifactVersion !==
       expectedActivationArtifactVersion ||
-    activationSummary.activationStatus !== "BLOCKED" ||
-    activationSummary.reviewWorkflowStatus !== "INACTIVE" ||
-    activationSummary.readiness !== "NOT_READY" ||
     upstream.registry.metadata.registryArtifactVersion !== expectedDigestRegistryVersion ||
-    upstream.coverage.metadata.coverageArtifactVersion !== expectedCoverageVersion
+    upstream.canonicalization.metadata.policyArtifactVersion !==
+      expectedCanonicalizationArtifactVersion
   ) {
-    fail("Upstream artifacts must remain pinned to the blocked Slice 2 and Wave 4 baseline.");
+    fail("Upstream artifacts must remain pinned to the blocked Slice 3 and Wave 4 baseline.");
   }
-  const candidatePrerequisite = upstream.activationPrerequisites.prerequisites.find(
-    ({ prerequisiteId }) => prerequisiteId === "candidate_identity_policy",
+  const prerequisite = upstream.activationPrerequisites.prerequisites.find(
+    ({ prerequisiteId }) => prerequisiteId === "canonicalization_and_digest_policy",
   );
   if (
-    !candidatePrerequisite ||
-    candidatePrerequisite.status !== "UNSATISFIED_DEFERRED" ||
-    candidatePrerequisite.ownerPlaceholderId !== "UNASSIGNED_OWNER_PLACEHOLDER" ||
-    candidatePrerequisite.evidenceRecordRefs.length !== 0
+    !prerequisite ||
+    prerequisite.status !== "UNSATISFIED_DEFERRED" ||
+    prerequisite.ownerPlaceholderId !== "UNASSIGNED_OWNER_PLACEHOLDER" ||
+    prerequisite.evidenceRecordRefs.length !== 0
   ) {
-    fail("candidate_identity_policy must remain the exact unsatisfied Slice 2 prerequisite.");
+    fail(
+      "canonicalization_and_digest_policy must remain the exact unsatisfied Slice 2 prerequisite.",
+    );
   }
-  return { activationSummary, candidatePrerequisite };
+  return { identitySummary, prerequisite };
 }
 
 function expectedMetadata(upstream) {
   return {
-    schemaVersion: "learnika.diagnosticCandidateIdentityPolicyPlaceholder.v1",
+    schemaVersion: "learnika.diagnosticCandidateCanonicalizationDigestPolicyPlaceholder.v1",
     policyArtifactVersion: expectedArtifactVersion,
     status: "placeholder_only_unsatisfied_non_production",
-    artifactKind: "diagnostic_candidate_identity_policy_placeholder",
+    artifactKind: "diagnostic_candidate_canonicalization_digest_policy_placeholder",
     subject: "math",
     locale: "ru-RU",
     audienceGrades: [7, 8, 9],
     activationPrerequisitesArtifactVersion:
       upstream.activationPrerequisites.metadata.activationPrerequisitesArtifactVersion,
+    candidateIdentityPolicyArtifactVersion: upstream.identityPolicy.metadata.policyArtifactVersion,
     candidateDigestRegistryArtifactVersion: upstream.registry.metadata.registryArtifactVersion,
-    reviewCoverageArtifactVersion: upstream.coverage.metadata.coverageArtifactVersion,
-    diagnosticBlueprintVersion: upstream.coverage.metadata.diagnosticBlueprintVersion,
+    candidateCanonicalizationArtifactVersion:
+      upstream.canonicalization.metadata.policyArtifactVersion,
     diagnosticReadinessPolicyVersion: expectedReadinessPolicyVersion,
-    sourceContract: "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
+    sourceContract: "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
     productionUseAllowed: false,
     runtimeUseAllowed: false,
     storageAllowed: false,
   };
 }
 
-function expectedDependencies(upstream, candidatePrerequisite) {
-  const { activationPrerequisites, registry, coverage } = upstream;
+function expectedDependencies(upstream, identitySummary, prerequisite) {
+  const { activationPrerequisites, identityPolicy, registry, canonicalization } = upstream;
   return {
     activationPrerequisites: {
       artifactVersion: activationPrerequisites.metadata.activationPrerequisitesArtifactVersion,
       artifactStatus: activationPrerequisites.metadata.status,
-      prerequisiteId: candidatePrerequisite.prerequisiteId,
-      prerequisiteStatus: candidatePrerequisite.status,
+      prerequisiteId: prerequisite.prerequisiteId,
+      prerequisiteStatus: prerequisite.status,
       activationStatus: activationPrerequisites.activationBoundary.status,
       reviewWorkflowStatus: activationPrerequisites.activationBoundary.reviewWorkflowStatus,
       prerequisiteCount: activationPrerequisites.aggregate.prerequisiteCount,
       unsatisfiedPrerequisiteCount: activationPrerequisites.aggregate.unsatisfiedPrerequisiteCount,
       productionApprovalCount: activationPrerequisites.aggregate.productionApprovalCount,
     },
+    candidateIdentityPolicy: {
+      artifactVersion: identityPolicy.metadata.policyArtifactVersion,
+      policyVersion: identityPolicy.policyIdentity.policyVersion,
+      policyState: identitySummary.policyState,
+      prerequisiteStatus: identitySummary.prerequisiteStatus,
+      realCandidateIdCount: identitySummary.realCandidateIdCount,
+      submittedCandidateCount: identitySummary.submittedCandidateCount,
+      approvedCandidateCount: identitySummary.approvedCandidateCount,
+      productionApprovalCount: identitySummary.productionApprovalCount,
+    },
     candidateDigestRegistry: {
       artifactVersion: registry.metadata.registryArtifactVersion,
-      candidateIdentityFormatPolicyVersion: registry.policies.candidateIdentityFormat.policyVersion,
-      candidateIdentityFormatState: registry.policies.candidateIdentityFormat.state,
-      candidatePlaceholderCount: registry.aggregate.candidatePlaceholderCount,
+      digestAlgorithmPolicyVersion: registry.policies.digestAlgorithm.policyVersion,
+      digestAlgorithmState: registry.policies.digestAlgorithm.state,
+      algorithmId: registry.policies.digestAlgorithm.algorithmId,
+      valueEncoding: registry.policies.digestAlgorithm.valueEncoding,
+      canonicalizationPolicyVersion: registry.policies.canonicalization.policyVersion,
+      canonicalizationState: registry.policies.canonicalization.state,
+      rulesetVersion: registry.policies.canonicalization.rulesetVersion,
       assignedCandidateIdentityCount: registry.aggregate.assignedCandidateIdentityCount,
       digestValueCount: registry.aggregate.digestValueCount,
       productionApprovedCandidateCount: registry.aggregate.productionApprovedCandidateCount,
     },
-    reviewCoverage: {
-      artifactVersion: coverage.metadata.coverageArtifactVersion,
-      blueprintVersion: coverage.metadata.diagnosticBlueprintVersion,
-      coverageSlotIds: coverage.slots.map(({ blueprintSlotId }) => blueprintSlotId),
-      blueprintSlotCount: coverage.aggregate.blueprintSlotCount,
-      draftOnlySlotCount: coverage.aggregate.statusCounts.DRAFT_ONLY,
-      gapConfirmedSlotCount: coverage.aggregate.statusCounts.GAP_CONFIRMED,
-      productionApprovedSlotCount: coverage.aggregate.statusCounts.PRODUCTION_APPROVED,
+    candidateCanonicalization: {
+      artifactVersion: canonicalization.metadata.policyArtifactVersion,
+      policyVersion: canonicalization.policyIdentity.policyVersion,
+      policyState: canonicalization.policyIdentity.status,
+      activeRulesetVersion: canonicalization.policyIdentity.activeRulesetVersion,
+      activeRuleCount: canonicalization.aggregate.activeRuleCount,
+      transformedCandidateRecordCount: canonicalization.aggregate.transformedCandidateRecordCount,
+      digestValueCount: canonicalization.aggregate.digestValueCount,
+      productionApprovedCandidateCount: canonicalization.aggregate.productionApprovedCandidateCount,
     },
   };
 }
@@ -308,6 +335,7 @@ function validateDecisionRequirements(requirements) {
         decisionReference: null,
         policyReference: null,
         activeRuleReferences: [],
+        testVectorReferences: [],
         decisionRecorded: false,
       },
       fieldPath,
@@ -339,7 +367,8 @@ function validateReadiness(readiness, upstream) {
   if (
     readiness.policyVersion !== expectedReadinessPolicyVersion ||
     readiness.policyVersion !== upstream.activationPrerequisites.readiness.policyVersion ||
-    readiness.policyVersion !== upstream.coverage.readiness.policyVersion
+    readiness.policyVersion !== upstream.identityPolicy.readiness.policyVersion ||
+    readiness.policyVersion !== upstream.canonicalization.readiness.policyVersion
   ) {
     fail("readiness.policyVersion must remain pinned to the Wave 3 policy.");
   }
@@ -356,44 +385,58 @@ function validateReadiness(readiness, upstream) {
   }
 }
 
-function validateEmptyRecordsAndAggregate(artifact, requirementCount, coverageSlotCount) {
+function validateEmptyRecordsAndAggregate(artifact, requirementCount) {
   const recordFields = [
-    "policyDecisionRecords",
+    "selectedContentFieldRecords",
+    "activeCanonicalizationRuleRecords",
+    "selectedDigestAlgorithmRecords",
+    "selectedDigestEncodingRecords",
+    "reproducibilityVectorRecords",
+    "transformedCandidateRecords",
     "candidateIdentityRecords",
-    "identityReservationRecords",
-    "identityAllocationRecords",
     "candidateSubmissionRecords",
     "candidateApprovalRecords",
+    "generatedHashRecords",
     "digestValueRecords",
+    "policyDecisionRecords",
     "reviewEvidenceRecords",
     "reviewDecisionRecords",
+    "reviewerIdentityRecords",
+    "auditIdentityRecords",
     "ownerAssignmentRecords",
-    "withdrawalRecords",
-    "supersessionRecords",
     "productionApprovalRecords",
   ];
   for (const field of recordFields) {
     if (!Array.isArray(artifact[field]) || artifact[field].length !== 0) {
-      fail(`${field} must remain empty in Slice 3.`);
+      fail(`${field} must remain empty in Slice 4.`);
     }
   }
   requireExactValue(
     artifact.recordBoundary,
     {
       policyDecisionsRecorded: false,
-      candidateIdentitiesAssigned: false,
-      identityReservationsRecorded: false,
-      identityAllocationsRecorded: false,
+      policyOwnerAssigned: false,
+      contentFieldsSelected: false,
+      canonicalizationRulesRecorded: false,
+      canonicalizationRulesetActivated: false,
+      digestAlgorithmSelected: false,
+      digestEncodingSelected: false,
+      deterministicSerializationEnabled: false,
+      reproducibilityVectorsRecorded: false,
+      transformedCandidateRecordsRecorded: false,
+      candidateIdentitiesRecorded: false,
       candidateSubmissionsRecorded: false,
       candidateApprovalsRecorded: false,
+      generatedHashesRecorded: false,
       digestValuesRecorded: false,
       reviewEvidenceRecorded: false,
       reviewDecisionsRecorded: false,
+      reviewerIdentitiesRecorded: false,
+      auditIdentitiesRecorded: false,
       ownerAssignmentsRecorded: false,
-      withdrawalsRecorded: false,
-      supersessionsRecorded: false,
       productionApprovalsRecorded: false,
-      runtimeIdentityEnabled: false,
+      runtimeCanonicalizationEnabled: false,
+      runtimeDigestGenerationEnabled: false,
     },
     "recordBoundary",
   );
@@ -402,28 +445,33 @@ function validateEmptyRecordsAndAggregate(artifact, requirementCount, coverageSl
     {
       decisionRequirementCount: requirementCount,
       undecidedRequirementCount: requirementCount,
-      activeRuleCount: 0,
-      coverageSlotReferenceCount: coverageSlotCount,
-      policyDecisionCount: artifact.policyDecisionRecords.length,
+      selectedContentFieldCount: artifact.selectedContentFieldRecords.length,
+      activeCanonicalizationRuleCount: artifact.activeCanonicalizationRuleRecords.length,
+      activeCanonicalizationRulesetCount: 0,
+      selectedDigestAlgorithmCount: artifact.selectedDigestAlgorithmRecords.length,
+      selectedDigestEncodingCount: artifact.selectedDigestEncodingRecords.length,
+      reproducibilityVectorCount: artifact.reproducibilityVectorRecords.length,
+      transformedCandidateRecordCount: artifact.transformedCandidateRecords.length,
       realCandidateIdCount: artifact.candidateIdentityRecords.length,
-      identityReservationCount: artifact.identityReservationRecords.length,
-      identityAllocationCount: artifact.identityAllocationRecords.length,
       submittedCandidateCount: artifact.candidateSubmissionRecords.length,
       approvedCandidateCount: artifact.candidateApprovalRecords.length,
+      generatedHashCount: artifact.generatedHashRecords.length,
       digestValueCount: artifact.digestValueRecords.length,
+      policyDecisionCount: artifact.policyDecisionRecords.length,
       reviewEvidenceRecordCount: artifact.reviewEvidenceRecords.length,
       reviewDecisionCount: artifact.reviewDecisionRecords.length,
+      reviewerIdentityCount: artifact.reviewerIdentityRecords.length,
+      auditIdentityCount: artifact.auditIdentityRecords.length,
       ownerAssignmentCount: artifact.ownerAssignmentRecords.length,
-      withdrawalRecordCount: artifact.withdrawalRecords.length,
-      supersessionRecordCount: artifact.supersessionRecords.length,
       productionApprovalCount: artifact.productionApprovalRecords.length,
     },
     "aggregate",
   );
 }
 
-export function validateDiagnosticCandidateIdentityPolicy(
+export function validateDiagnosticCandidateCanonicalizationDigestPolicy(
   artifact,
+  identityPolicy,
   activationPrerequisites,
   coverage,
   evidence,
@@ -434,9 +482,10 @@ export function validateDiagnosticCandidateIdentityPolicy(
   authority,
 ) {
   if (!isPlainObject(artifact)) {
-    fail("Diagnostic candidate identity policy placeholder must be a JSON object.");
+    fail("Diagnostic candidate canonicalization and digest policy placeholder must be an object.");
   }
   const upstream = {
+    identityPolicy,
     activationPrerequisites,
     coverage,
     evidence,
@@ -446,7 +495,7 @@ export function validateDiagnosticCandidateIdentityPolicy(
     workflow,
     authority,
   };
-  const { candidatePrerequisite } = validateUpstreamArtifacts(upstream);
+  const { identitySummary, prerequisite } = validateUpstreamArtifacts(upstream);
   scanForbiddenTermsAndPrivateValues(artifact);
   const topLevelFields = new Set([
     "metadata",
@@ -454,27 +503,39 @@ export function validateDiagnosticCandidateIdentityPolicy(
     "dependencyReferences",
     "prerequisiteReference",
     "policyIdentity",
-    "candidateIdPatternPlaceholder",
-    "namespaceOwnershipPlaceholder",
-    "collisionPreventionPlaceholder",
-    "versioningPolicyPlaceholder",
-    "withdrawalSupersessionPlaceholder",
+    "policyOwnerPlaceholder",
+    "candidateFieldInventoryPlaceholder",
+    "fieldInclusionExclusionPlaceholder",
+    "canonicalizationRulesetPlaceholder",
+    "localeLanguageNormalizationPlaceholder",
+    "mathNotationNormalizationPlaceholder",
+    "whitespacePunctuationNormalizationPlaceholder",
+    "deterministicSerializationPlaceholder",
+    "digestAlgorithmDecisionPlaceholder",
+    "digestEncodingPlaceholder",
+    "digestInvalidationRegenerationPlaceholder",
+    "reproducibilityPlaceholder",
     "decisionRequirements",
     "recordBoundary",
     "readiness",
     "aggregate",
-    "policyDecisionRecords",
+    "selectedContentFieldRecords",
+    "activeCanonicalizationRuleRecords",
+    "selectedDigestAlgorithmRecords",
+    "selectedDigestEncodingRecords",
+    "reproducibilityVectorRecords",
+    "transformedCandidateRecords",
     "candidateIdentityRecords",
-    "identityReservationRecords",
-    "identityAllocationRecords",
     "candidateSubmissionRecords",
     "candidateApprovalRecords",
+    "generatedHashRecords",
     "digestValueRecords",
+    "policyDecisionRecords",
     "reviewEvidenceRecords",
     "reviewDecisionRecords",
+    "reviewerIdentityRecords",
+    "auditIdentityRecords",
     "ownerAssignmentRecords",
-    "withdrawalRecords",
-    "supersessionRecords",
     "productionApprovalRecords",
   ]);
   for (const key of Object.keys(artifact)) {
@@ -502,91 +563,194 @@ export function validateDiagnosticCandidateIdentityPolicy(
   );
   requireExactValue(
     artifact.dependencyReferences,
-    expectedDependencies(upstream, candidatePrerequisite),
+    expectedDependencies(upstream, identitySummary, prerequisite),
     "dependencyReferences",
   );
-  requireExactValue(artifact.prerequisiteReference, candidatePrerequisite, "prerequisiteReference");
+  requireExactValue(artifact.prerequisiteReference, prerequisite, "prerequisiteReference");
   requireExactValue(
     artifact.policyIdentity,
     {
-      policyId: "diagnostic-candidate-identity",
+      policyId: "diagnostic-candidate-canonicalization-and-digest",
       policyVersion: expectedPolicyVersion,
       policyState: "UNRESOLVED_DEFERRED",
+      fieldInventoryVersion: null,
       activeRulesetVersion: null,
+      serializationFormatId: null,
+      selectedDigestAlgorithmId: null,
+      selectedDigestEncodingId: null,
       policyApprovalAllowed: false,
-      candidateIdentityAssignmentAllowed: false,
-      candidateSubmissionAllowed: false,
+      candidateProcessingAllowed: false,
+      canonicalizationAllowed: false,
+      digestGenerationAllowed: false,
       productionApprovalAllowed: false,
     },
     "policyIdentity",
   );
   requireExactValue(
-    artifact.candidateIdPatternPlaceholder,
+    artifact.policyOwnerPlaceholder,
     {
-      state: "REFERENCE_ONLY_NOT_APPROVED",
-      sourcePolicyVersion: upstream.registry.policies.candidateIdentityFormat.policyVersion,
-      sourcePolicyState: upstream.registry.policies.candidateIdentityFormat.state,
-      patternTemplate: upstream.registry.policies.candidateIdentityFormat.formatTemplate,
-      activePatternVersion: null,
-      patternApproved: false,
-      instantiationAllowed: false,
-      validationAllowed: false,
-    },
-    "candidateIdPatternPlaceholder",
-  );
-  requireExactValue(
-    artifact.namespaceOwnershipPlaceholder,
-    {
-      requirementId: "namespace_and_allocation_ownership",
       state: "TO_BE_DECIDED",
-      ownerPlaceholderId: "UNASSIGNED_NAMESPACE_OWNER_PLACEHOLDER",
+      ownerPlaceholderId: "UNASSIGNED_POLICY_OWNER_PLACEHOLDER",
       ownerReference: null,
       assignmentReference: null,
-      allocationAuthorityAllowed: false,
+      authorityAllowed: false,
     },
-    "namespaceOwnershipPlaceholder",
+    "policyOwnerPlaceholder",
   );
   requireExactValue(
-    artifact.collisionPreventionPlaceholder,
+    artifact.candidateFieldInventoryPlaceholder,
     {
-      requirementId: "uniqueness_reservation_collision_and_non_reuse",
+      requirementId: "candidate_field_inventory",
       state: "TO_BE_DECIDED",
-      reservationPolicyReference: null,
-      collisionPreventionPolicyReference: null,
-      nonReusePolicyReference: null,
-      enforcementAllowed: false,
+      inventoryVersion: null,
+      inventoryPolicyReference: null,
+      selectedFieldReferences: [],
+      inventoryApproved: false,
+      applicationAllowed: false,
     },
-    "collisionPreventionPlaceholder",
+    "candidateFieldInventoryPlaceholder",
   );
   requireExactValue(
-    artifact.versioningPolicyPlaceholder,
+    artifact.fieldInclusionExclusionPlaceholder,
     {
-      requirementId: "version_and_revision_semantics",
+      requirementId: "field_inclusion_and_exclusion",
       state: "TO_BE_DECIDED",
-      versioningPolicyReference: null,
-      revisionRulesReference: null,
-      invalidationRulesReference: null,
-      enforcementAllowed: false,
+      inclusionPolicyReference: null,
+      exclusionPolicyReference: null,
+      includedFieldReferences: [],
+      excludedFieldReferences: [],
+      policyApproved: false,
+      applicationAllowed: false,
     },
-    "versioningPolicyPlaceholder",
+    "fieldInclusionExclusionPlaceholder",
   );
   requireExactValue(
-    artifact.withdrawalSupersessionPlaceholder,
+    artifact.canonicalizationRulesetPlaceholder,
     {
-      requirementId: "retirement_and_tombstone_semantics",
+      requirementId: "canonicalization_versioning_migration_and_invalidation",
       state: "TO_BE_DECIDED",
-      withdrawalReferenceFormat: null,
-      supersessionReferenceFormat: null,
-      withdrawalPolicyReference: null,
-      supersessionPolicyReference: null,
-      recordingAllowed: false,
+      rulesetVersion: null,
+      rulesetPolicyReference: null,
+      migrationPolicyReference: null,
+      invalidationPolicyReference: null,
+      activeRuleReferences: [],
+      rulesetApproved: false,
+      rulesetActive: false,
+      canonicalizationAllowed: false,
     },
-    "withdrawalSupersessionPlaceholder",
+    "canonicalizationRulesetPlaceholder",
+  );
+  requireExactValue(
+    artifact.localeLanguageNormalizationPlaceholder,
+    {
+      requirementId: "locale_unicode_language_and_line_endings",
+      state: "TO_BE_DECIDED",
+      targetLocale: "ru-RU",
+      unicodePolicyReference: null,
+      russianLanguagePolicyReference: null,
+      lineEndingPolicyReference: null,
+      activeRuleReferences: [],
+      normalizationAllowed: false,
+    },
+    "localeLanguageNormalizationPlaceholder",
+  );
+  requireExactValue(
+    artifact.mathNotationNormalizationPlaceholder,
+    {
+      requirementId: "mathematical_notation_symbol_unit_and_expression_serialization",
+      state: "TO_BE_DECIDED",
+      notationPolicyReference: null,
+      symbolPolicyReference: null,
+      unitPolicyReference: null,
+      expressionSerializationPolicyReference: null,
+      activeRuleReferences: [],
+      normalizationAllowed: false,
+    },
+    "mathNotationNormalizationPlaceholder",
+  );
+  requireExactValue(
+    artifact.whitespacePunctuationNormalizationPlaceholder,
+    {
+      requirementId: "whitespace_and_punctuation_handling",
+      state: "TO_BE_DECIDED",
+      whitespacePolicyReference: null,
+      punctuationPolicyReference: null,
+      activeRuleReferences: [],
+      normalizationAllowed: false,
+    },
+    "whitespacePunctuationNormalizationPlaceholder",
+  );
+  requireExactValue(
+    artifact.deterministicSerializationPlaceholder,
+    {
+      requirementId: "deterministic_ordering_and_byte_serialization",
+      state: "TO_BE_DECIDED",
+      orderingPolicyReference: null,
+      byteSerializationPolicyReference: null,
+      serializationFormatId: null,
+      testVectorReferences: [],
+      serializationAllowed: false,
+    },
+    "deterministicSerializationPlaceholder",
+  );
+  requireExactValue(
+    artifact.digestAlgorithmDecisionPlaceholder,
+    {
+      requirementId: "digest_algorithm_encoding_and_domain_separation",
+      state: "TO_BE_DECIDED",
+      algorithmDecisionReference: null,
+      algorithmPolicyReference: null,
+      algorithmId: null,
+      domainSeparationPolicyReference: null,
+      algorithmApproved: false,
+      algorithmActive: false,
+    },
+    "digestAlgorithmDecisionPlaceholder",
+  );
+  requireExactValue(
+    artifact.digestEncodingPlaceholder,
+    {
+      requirementId: "digest_algorithm_encoding_and_domain_separation",
+      state: "TO_BE_DECIDED",
+      encodingDecisionReference: null,
+      encodingPolicyReference: null,
+      encodingId: null,
+      encodingApproved: false,
+      encodingActive: false,
+    },
+    "digestEncodingPlaceholder",
+  );
+  requireExactValue(
+    artifact.digestInvalidationRegenerationPlaceholder,
+    {
+      requirementId: "digest_collision_incident_and_algorithm_migration",
+      state: "TO_BE_DECIDED",
+      collisionResponsePolicyReference: null,
+      incidentPolicyReference: null,
+      algorithmMigrationPolicyReference: null,
+      regenerationPolicyReference: null,
+      triggerDefinitions: [],
+      invalidationAllowed: false,
+      regenerationAllowed: false,
+    },
+    "digestInvalidationRegenerationPlaceholder",
+  );
+  requireExactValue(
+    artifact.reproducibilityPlaceholder,
+    {
+      requirementId: "independent_reproducibility_and_synthetic_vectors",
+      state: "TO_BE_DECIDED",
+      reproducibilityPolicyReference: null,
+      syntheticVectorPolicyReference: null,
+      testVectorReferences: [],
+      reproducibilityClaimAllowed: false,
+      vectorGenerationAllowed: false,
+    },
+    "reproducibilityPlaceholder",
   );
   const requirementCount = validateDecisionRequirements(artifact.decisionRequirements);
   validateReadiness(artifact.readiness, upstream);
-  const coverageSlotCount = artifact.dependencyReferences.reviewCoverage.coverageSlotIds.length;
-  validateEmptyRecordsAndAggregate(artifact, requirementCount, coverageSlotCount);
+  validateEmptyRecordsAndAggregate(artifact, requirementCount);
 
   return {
     policyArtifactVersion: artifact.metadata.policyArtifactVersion,
@@ -594,9 +758,10 @@ export function validateDiagnosticCandidateIdentityPolicy(
     policyState: artifact.policyIdentity.policyState,
     prerequisiteStatus: artifact.prerequisiteReference.status,
     decisionRequirementCount: requirementCount,
-    coverageSlotReferenceCount: coverageSlotCount,
-    realCandidateIdCount: artifact.aggregate.realCandidateIdCount,
-    submittedCandidateCount: artifact.aggregate.submittedCandidateCount,
+    activeCanonicalizationRuleCount: artifact.aggregate.activeCanonicalizationRuleCount,
+    selectedDigestAlgorithmCount: artifact.aggregate.selectedDigestAlgorithmCount,
+    generatedHashCount: artifact.aggregate.generatedHashCount,
+    digestValueCount: artifact.aggregate.digestValueCount,
     approvedCandidateCount: artifact.aggregate.approvedCandidateCount,
     productionApprovalCount: artifact.aggregate.productionApprovalCount,
     activationStatus: artifact.activationBoundary.status,
@@ -605,8 +770,8 @@ export function validateDiagnosticCandidateIdentityPolicy(
   };
 }
 
-export async function readDiagnosticCandidateIdentityPolicy(
-  artifactPath = defaultCandidateIdentityPolicyPath,
+export async function readDiagnosticCandidateCanonicalizationDigestPolicy(
+  artifactPath = defaultCandidateCanonicalizationDigestPolicyPath,
 ) {
   return JSON.parse(await readFile(artifactPath, "utf8"));
 }
@@ -617,23 +782,22 @@ function normalizeStatusPath(statusLine) {
   return normalizedPath.replaceAll("\\", "/");
 }
 
-export function validateCandidateIdentityPolicyChangedPaths(changedPaths) {
+export function validateCandidateCanonicalizationDigestPolicyChangedPaths(changedPaths) {
   if (!Array.isArray(changedPaths)) {
     fail("Changed paths must be an array.");
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (
-      !approvedSlice3ChangedPaths.has(changedPath) &&
-      !wave5Slice4ScopeUnblockPaths.has(changedPath)
-    ) {
-      fail(`Wave 5 Slice 3 out-of-scope path changed: ${changedPath}.`);
+    if (!approvedSlice4ChangedPaths.has(changedPath)) {
+      fail(`Wave 5 Slice 4 out-of-scope path changed: ${changedPath}.`);
     }
   }
   return [...changedPaths];
 }
 
-export function validateCandidateIdentityPolicyWorktreeScope({ cwd = repoRoot } = {}) {
+export function validateCandidateCanonicalizationDigestPolicyWorktreeScope({
+  cwd = repoRoot,
+} = {}) {
   const result = spawnSync("git", ["status", "--short", "--untracked-files=all"], {
     cwd,
     encoding: "utf8",
@@ -646,13 +810,14 @@ export function validateCandidateIdentityPolicyWorktreeScope({ cwd = repoRoot } 
     .map((line) => line.trimEnd())
     .filter(Boolean)
     .map(normalizeStatusPath);
-  return validateCandidateIdentityPolicyChangedPaths(changedPaths);
+  return validateCandidateCanonicalizationDigestPolicyChangedPaths(changedPaths);
 }
 
 async function main() {
   const checkWorktreeScope = process.argv.includes("--check-worktree-scope");
   const [
     artifact,
+    identityPolicy,
     activationPrerequisites,
     coverage,
     evidence,
@@ -662,6 +827,7 @@ async function main() {
     workflow,
     authority,
   ] = await Promise.all([
+    readDiagnosticCandidateCanonicalizationDigestPolicy(),
     readDiagnosticCandidateIdentityPolicy(),
     readDiagnosticReviewActivationPrerequisites(),
     readDiagnosticReviewCoverage(),
@@ -672,8 +838,9 @@ async function main() {
     readDiagnosticReviewWorkflowState(),
     readDiagnosticReviewAuthority(),
   ]);
-  const summary = validateDiagnosticCandidateIdentityPolicy(
+  const summary = validateDiagnosticCandidateCanonicalizationDigestPolicy(
     artifact,
+    identityPolicy,
     activationPrerequisites,
     coverage,
     evidence,
@@ -684,10 +851,10 @@ async function main() {
     authority,
   );
   if (checkWorktreeScope) {
-    validateCandidateIdentityPolicyWorktreeScope();
+    validateCandidateCanonicalizationDigestPolicyWorktreeScope();
   }
   console.log(
-    `[curriculum] Candidate identity policy ${summary.policyArtifactVersion} validated: ${summary.decisionRequirementCount} undecided requirements, ${summary.coverageSlotReferenceCount} coverage slot references, ${summary.realCandidateIdCount} real candidate IDs, ${summary.submittedCandidateCount} submitted candidates, ${summary.approvedCandidateCount} approved candidates, ${summary.productionApprovalCount} production approvals; policy ${summary.policyState}, prerequisite ${summary.prerequisiteStatus}, activation ${summary.activationStatus}, workflow ${summary.reviewWorkflowStatus}, readiness ${summary.readiness}.`,
+    `[curriculum] Candidate canonicalization and digest policy ${summary.policyArtifactVersion} validated: ${summary.decisionRequirementCount} undecided requirements, ${summary.activeCanonicalizationRuleCount} active canonicalization rules, ${summary.selectedDigestAlgorithmCount} selected digest algorithms, ${summary.generatedHashCount} generated hashes, ${summary.digestValueCount} digest values, ${summary.approvedCandidateCount} approved candidates, ${summary.productionApprovalCount} production approvals; policy ${summary.policyState}, prerequisite ${summary.prerequisiteStatus}, activation ${summary.activationStatus}, workflow ${summary.reviewWorkflowStatus}, readiness ${summary.readiness}.`,
   );
 }
 
