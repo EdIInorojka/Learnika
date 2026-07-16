@@ -8,9 +8,10 @@ import {
   validateSkillGraph,
 } from "../scripts/validate-skill-graph.mjs";
 
-const wave5DocumentationPathsThroughSlice5 = [
+const wave5DocumentationPathsThroughSlice6 = [
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
   "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
+  "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
   "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
   "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
   "docs/wave-5/open-decisions.md",
@@ -20,6 +21,7 @@ const wave5DocumentationPathsThroughSlice5 = [
   "docs/wave-5/slice-3-implementation-note.md",
   "docs/wave-5/slice-4-implementation-note.md",
   "docs/wave-5/slice-5-implementation-note.md",
+  "docs/wave-5/slice-6-implementation-note.md",
 ];
 
 function cloneGraph(graph) {
@@ -116,21 +118,21 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
       changedPath,
     );
     assert.equal(
-      isLegacyStaticPath || wave5DocumentationPathsThroughSlice5.includes(changedPath),
+      isLegacyStaticPath || wave5DocumentationPathsThroughSlice6.includes(changedPath),
       true,
       changedPath,
     );
   }
 });
 
-test("Wave 5 scope guard permits only eleven exact documentation paths through Slice 5", () => {
+test("Wave 5 scope guard permits only thirteen exact documentation paths through Slice 6", () => {
   assert.deepEqual(
-    validateSkillGraphChangedPaths(wave5DocumentationPathsThroughSlice5),
-    wave5DocumentationPathsThroughSlice5,
+    validateSkillGraphChangedPaths(wave5DocumentationPathsThroughSlice6),
+    wave5DocumentationPathsThroughSlice6,
   );
 
   const forbiddenPaths = [
-    "docs/wave-5/slice-6-implementation-note.md",
+    "docs/wave-5/slice-7-implementation-note.md",
     "docs/wave-5/nested/scope-and-non-goals.md",
     "docs/wave-5/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-review/controller.ts",

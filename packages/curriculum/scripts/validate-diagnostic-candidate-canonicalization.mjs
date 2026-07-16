@@ -230,6 +230,13 @@ const wave5Slice5ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
   "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy.test.mjs",
 ]);
+const wave5Slice6ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
+  "docs/wave-5/slice-6-implementation-note.md",
+  "packages/curriculum/diagnostic-separation-of-duties-policy/grade-7-9-math.separation-of-duties-policy-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
+  "packages/curriculum/test/diagnostic-separation-of-duties-policy.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultCanonicalizationPolicyPath = path.resolve(
@@ -703,7 +710,8 @@ export function validateCandidateCanonicalizationChangedPaths(changedPaths) {
       !wave5Slice2ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice3ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice4ScopeUnblockPaths.has(changedPath) &&
-      !wave5Slice5ScopeUnblockPaths.has(changedPath)
+      !wave5Slice5ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice6ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 4 Slice 6 out-of-scope path changed: ${changedPath}.`);
     }

@@ -67,11 +67,11 @@ const forbiddenTerms = [
   "canonicalizedContent",
   "normalizedStem",
 ];
-const approvedSlice5ChangedPaths = [
-  "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
-  "docs/wave-5/slice-5-implementation-note.md",
+const approvedSlice6ChangedPaths = [
+  "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
+  "docs/wave-5/slice-6-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-reviewer-role-ownership-policy/grade-7-9-math.reviewer-role-ownership-policy-placeholder.v1.json",
+  "packages/curriculum/diagnostic-separation-of-duties-policy/grade-7-9-math.separation-of-duties-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
@@ -83,6 +83,7 @@ const approvedSlice5ChangedPaths = [
   "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
   "packages/curriculum/scripts/validate-skill-graph.mjs",
   "packages/curriculum/test/diagnostic-blueprint.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-canonicalization-digest-policy.test.mjs",
@@ -92,6 +93,7 @@ const approvedSlice5ChangedPaths = [
   "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
   "packages/curriculum/test/diagnostic-review-authority.test.mjs",
   "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy.test.mjs",
+  "packages/curriculum/test/diagnostic-separation-of-duties-policy.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];
@@ -454,14 +456,14 @@ test("unknown fields forbidden terms and private identifier patterns fail closed
   }
 });
 
-test("Slice 5 worktree guard permits only the exact 26 implementation paths", () => {
+test("Slice 5 worktree guard permits only the exact 28 Slice 6 implementation paths", () => {
   assert.deepEqual(
-    validateReviewerRoleOwnershipPolicyChangedPaths(approvedSlice5ChangedPaths),
-    approvedSlice5ChangedPaths,
+    validateReviewerRoleOwnershipPolicyChangedPaths(approvedSlice6ChangedPaths),
+    approvedSlice6ChangedPaths,
   );
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-6-implementation-note.md",
+    "docs/wave-5/slice-7-implementation-note.md",
     "docs/wave-5/nested/diagnostic-reviewer-role-ownership-policy-contract.md",
     "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md.bak",
     "packages/curriculum/diagnostic-reviewer-role-ownership-policy/extra.v1.json",
@@ -478,7 +480,7 @@ test("Slice 5 worktree guard permits only the exact 26 implementation paths", ()
   ]) {
     assert.throws(
       () => validateReviewerRoleOwnershipPolicyChangedPaths([forbiddenPath]),
-      /Wave 5 Slice 5 out-of-scope path changed/,
+      /Wave 5 Slice 6 out-of-scope path changed/,
       forbiddenPath,
     );
   }

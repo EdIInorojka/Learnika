@@ -74,11 +74,11 @@ const forbiddenTerms = [
   "canonicalizedContent",
   "normalizedStem",
 ];
-const approvedSlice5ChangedPaths = new Set([
-  "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
-  "docs/wave-5/slice-5-implementation-note.md",
+const approvedSlice6ChangedPaths = new Set([
+  "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
+  "docs/wave-5/slice-6-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-reviewer-role-ownership-policy/grade-7-9-math.reviewer-role-ownership-policy-placeholder.v1.json",
+  "packages/curriculum/diagnostic-separation-of-duties-policy/grade-7-9-math.separation-of-duties-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
@@ -90,6 +90,7 @@ const approvedSlice5ChangedPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
   "packages/curriculum/scripts/validate-skill-graph.mjs",
   "packages/curriculum/test/diagnostic-blueprint.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-canonicalization-digest-policy.test.mjs",
@@ -99,6 +100,7 @@ const approvedSlice5ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
   "packages/curriculum/test/diagnostic-review-authority.test.mjs",
   "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy.test.mjs",
+  "packages/curriculum/test/diagnostic-separation-of-duties-policy.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
@@ -748,8 +750,8 @@ export function validateReviewerRoleOwnershipPolicyChangedPaths(changedPaths) {
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice5ChangedPaths.has(changedPath)) {
-      fail(`Wave 5 Slice 5 out-of-scope path changed: ${changedPath}.`);
+    if (!approvedSlice6ChangedPaths.has(changedPath)) {
+      fail(`Wave 5 Slice 6 out-of-scope path changed: ${changedPath}.`);
     }
   }
   return [...changedPaths];

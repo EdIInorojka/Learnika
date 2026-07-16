@@ -1,0 +1,479 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticSeparationOfDutiesPolicyPlaceholder.v1",
+    "policyArtifactVersion": "wave-5.slice-6.grade-7-9-math.v1",
+    "status": "placeholder_only_unsatisfied_non_production",
+    "artifactKind": "diagnostic_separation_of_duties_policy_placeholder",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "reviewerRoleOwnershipPolicyArtifactVersion": "wave-5.slice-5.grade-7-9-math.v1",
+    "reviewAuthorityArtifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+    "reviewWorkflowStateArtifactVersion": "wave-4.slice-7.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "activationBoundary": {
+    "status": "BLOCKED",
+    "reviewWorkflowStatus": "INACTIVE",
+    "activationAllowed": false,
+    "reviewWorkflowActivationAllowed": false,
+    "readinessTransitionAllowed": false,
+    "reviewDecisionAuthorizationAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "dependencyReferences": {
+    "activationPrerequisites": {
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "artifactStatus": "blocked_prerequisites_only_non_production",
+      "prerequisiteId": "separation_of_duties_enforcement",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activationStatus": "BLOCKED",
+      "reviewWorkflowStatus": "INACTIVE",
+      "prerequisiteCount": 12,
+      "unsatisfiedPrerequisiteCount": 12,
+      "productionApprovalCount": 0
+    },
+    "reviewerRoleOwnershipPolicy": {
+      "artifactVersion": "wave-5.slice-5.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-5.diagnostic-reviewer-role-ownership.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "rolePlaceholderCount": 7,
+      "roleOwnerCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0,
+      "reviewerAssignmentCount": 0,
+      "activeRoleGrantCount": 0,
+      "approvedDecisionCount": 0,
+      "productionApprovalCount": 0
+    },
+    "reviewAuthority": {
+      "artifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+      "policyVersion": "wave-4.slice-8.diagnostic-review-authority.placeholder.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "rolePlaceholderCount": 7,
+      "separationOfDutiesRuleCount": 3,
+      "realReviewerRoleCount": 0,
+      "reviewerAssignmentCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0,
+      "conflictRecordCount": 0,
+      "approvedDecisionCount": 0,
+      "productionApprovalCount": 0
+    },
+    "reviewWorkflowState": {
+      "artifactVersion": "wave-4.slice-7.grade-7-9-math.v1",
+      "workflowVersion": "wave-4.slice-7.diagnostic-review-workflow-state.placeholder.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "runtimeActivationAllowed": false,
+      "reviewDecisionCount": 0,
+      "productionApprovalCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0
+    }
+  },
+  "prerequisiteReference": {
+    "prerequisiteId": "separation_of_duties_enforcement",
+    "status": "UNSATISFIED_DEFERRED",
+    "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+    "evidenceRequirementDescription": "Future fail-closed assignment-time and decision-time independence policy with positive and negative authorization tests.",
+    "evidenceRecordRefs": []
+  },
+  "policyIdentity": {
+    "policyId": "diagnostic-separation-of-duties-enforcement",
+    "policyVersion": "wave-5.slice-6.diagnostic-separation-of-duties-enforcement.placeholder.v1",
+    "policyState": "UNRESOLVED_DEFERRED",
+    "activeRulesetVersion": null,
+    "policyApprovalAllowed": false,
+    "runtimeEnforcementAllowed": false,
+    "assignmentTimeEnforcementAllowed": false,
+    "decisionTimeEnforcementAllowed": false,
+    "reviewDecisionAuthorizationAllowed": false,
+    "productionApprovalAuthorizationAllowed": false
+  },
+  "roleTaxonomyPlaceholders": [
+    {
+      "rolePlaceholderId": "METHODOLOGY_REVIEWER_PLACEHOLDER",
+      "scopeRef": "methodology",
+      "recordState": "PLACEHOLDER_ONLY",
+      "identityPolicyReference": null,
+      "assignmentPolicyReference": null,
+      "separationEnforcementAllowed": false
+    },
+    {
+      "rolePlaceholderId": "SAFETY_REVIEWER_PLACEHOLDER",
+      "scopeRef": "safety_no_answer",
+      "recordState": "PLACEHOLDER_ONLY",
+      "identityPolicyReference": null,
+      "assignmentPolicyReference": null,
+      "separationEnforcementAllowed": false
+    },
+    {
+      "rolePlaceholderId": "RIGHTS_REVIEWER_PLACEHOLDER",
+      "scopeRef": "rights_copyright",
+      "recordState": "PLACEHOLDER_ONLY",
+      "identityPolicyReference": null,
+      "assignmentPolicyReference": null,
+      "separationEnforcementAllowed": false
+    },
+    {
+      "rolePlaceholderId": "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+      "scopeRef": "grade_placement",
+      "recordState": "PLACEHOLDER_ONLY",
+      "identityPolicyReference": null,
+      "assignmentPolicyReference": null,
+      "separationEnforcementAllowed": false
+    },
+    {
+      "rolePlaceholderId": "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
+      "scopeRef": "accessibility_readability",
+      "recordState": "PLACEHOLDER_ONLY",
+      "identityPolicyReference": null,
+      "assignmentPolicyReference": null,
+      "separationEnforcementAllowed": false
+    },
+    {
+      "rolePlaceholderId": "PRODUCTION_APPROVER_PLACEHOLDER",
+      "scopeRef": "production_approval",
+      "recordState": "PLACEHOLDER_ONLY",
+      "identityPolicyReference": null,
+      "assignmentPolicyReference": null,
+      "separationEnforcementAllowed": false
+    },
+    {
+      "rolePlaceholderId": "AUDIT_OBSERVER_PLACEHOLDER",
+      "scopeRef": "audit_observation",
+      "recordState": "PLACEHOLDER_ONLY",
+      "identityPolicyReference": null,
+      "assignmentPolicyReference": null,
+      "separationEnforcementAllowed": false
+    }
+  ],
+  "incompatibleRoleCombinationsPlaceholders": [
+    {
+      "ruleId": "SUBSTANTIVE_REVIEWER_SEPARATE_FROM_PRODUCTION_APPROVER",
+      "ruleState": "REFERENCE_ONLY_NOT_ENFORCED",
+      "participantRolePlaceholderIds": [
+        "METHODOLOGY_REVIEWER_PLACEHOLDER",
+        "SAFETY_REVIEWER_PLACEHOLDER",
+        "RIGHTS_REVIEWER_PLACEHOLDER",
+        "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+        "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
+        "PRODUCTION_APPROVER_PLACEHOLDER"
+      ],
+      "upstreamRuleState": "NON_AUTHORIZING_PLACEHOLDER",
+      "enforcementPolicyReference": null,
+      "runtimeEvaluationAllowed": false,
+      "decisionAuthorizationAllowed": false
+    },
+    {
+      "ruleId": "AUDIT_OBSERVER_SEPARATE_FROM_DECISION_ROLES",
+      "ruleState": "REFERENCE_ONLY_NOT_ENFORCED",
+      "participantRolePlaceholderIds": [
+        "METHODOLOGY_REVIEWER_PLACEHOLDER",
+        "SAFETY_REVIEWER_PLACEHOLDER",
+        "RIGHTS_REVIEWER_PLACEHOLDER",
+        "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+        "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
+        "PRODUCTION_APPROVER_PLACEHOLDER",
+        "AUDIT_OBSERVER_PLACEHOLDER"
+      ],
+      "upstreamRuleState": "NON_AUTHORIZING_PLACEHOLDER",
+      "enforcementPolicyReference": null,
+      "runtimeEvaluationAllowed": false,
+      "decisionAuthorizationAllowed": false
+    },
+    {
+      "ruleId": "NO_SELF_REVIEW_OR_SELF_APPROVAL",
+      "ruleState": "REFERENCE_ONLY_NOT_ENFORCED",
+      "participantRolePlaceholderIds": [
+        "METHODOLOGY_REVIEWER_PLACEHOLDER",
+        "SAFETY_REVIEWER_PLACEHOLDER",
+        "RIGHTS_REVIEWER_PLACEHOLDER",
+        "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+        "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
+        "PRODUCTION_APPROVER_PLACEHOLDER"
+      ],
+      "upstreamRuleState": "NON_AUTHORIZING_PLACEHOLDER",
+      "enforcementPolicyReference": null,
+      "runtimeEvaluationAllowed": false,
+      "decisionAuthorizationAllowed": false
+    }
+  ],
+  "makerCheckerSeparationPlaceholder": {
+    "requirementId": "maker_checker_separation",
+    "state": "TO_BE_DECIDED",
+    "makerActorClassPlaceholder": "CANDIDATE_AUTHOR_ACTOR_PLACEHOLDER",
+    "checkerActorClassPlaceholder": "SUBSTANTIVE_REVIEWER_ACTOR_PLACEHOLDER",
+    "identityComparisonPolicyReference": null,
+    "assignmentEvaluationPolicyReference": null,
+    "decisionEvaluationPolicyReference": null,
+    "separationRuleReferences": [],
+    "assignmentTimeEvaluationAllowed": false,
+    "decisionTimeEvaluationAllowed": false,
+    "quorumDeduplicationAllowed": false,
+    "enforcementAllowed": false
+  },
+  "productionApproverSeparationPlaceholder": {
+    "requirementId": "production_approver_separation",
+    "state": "TO_BE_DECIDED",
+    "substantiveReviewerRolePlaceholderIds": [
+      "METHODOLOGY_REVIEWER_PLACEHOLDER",
+      "SAFETY_REVIEWER_PLACEHOLDER",
+      "RIGHTS_REVIEWER_PLACEHOLDER",
+      "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+      "ACCESSIBILITY_REVIEWER_PLACEHOLDER"
+    ],
+    "productionApproverRolePlaceholderId": "PRODUCTION_APPROVER_PLACEHOLDER",
+    "identityComparisonPolicyReference": null,
+    "separationRuleReferences": [],
+    "missingGateSubstitutionAllowed": false,
+    "reviewerProductionApprovalAllowed": false,
+    "enforcementAllowed": false
+  },
+  "reviewerSelfApprovalProhibitionPlaceholder": {
+    "requirementId": "reviewer_self_approval_prohibition",
+    "state": "TO_BE_DECIDED",
+    "participantRolePlaceholderIds": [
+      "METHODOLOGY_REVIEWER_PLACEHOLDER",
+      "SAFETY_REVIEWER_PLACEHOLDER",
+      "RIGHTS_REVIEWER_PLACEHOLDER",
+      "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+      "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
+      "PRODUCTION_APPROVER_PLACEHOLDER"
+    ],
+    "identityComparisonPolicyReference": null,
+    "prohibitionRuleReferences": [],
+    "selfReviewAllowed": false,
+    "selfApprovalAllowed": false,
+    "enforcementAllowed": false
+  },
+  "candidateAuthorReviewerSeparationPlaceholder": {
+    "requirementId": "candidate_author_and_reviewer_separation",
+    "state": "TO_BE_DECIDED",
+    "candidateAuthorActorClassPlaceholder": "CANDIDATE_AUTHOR_ACTOR_PLACEHOLDER",
+    "reviewerActorClassPlaceholder": "SUBSTANTIVE_REVIEWER_ACTOR_PLACEHOLDER",
+    "authorshipPolicyReference": null,
+    "identityComparisonPolicyReference": null,
+    "separationRuleReferences": [],
+    "candidateAuthorshipRecordingAllowed": false,
+    "identityComparisonAllowed": false,
+    "enforcementAllowed": false
+  },
+  "auditObserverSeparationPlaceholder": {
+    "requirementId": "audit_observer_separation",
+    "state": "TO_BE_DECIDED",
+    "auditObserverRolePlaceholderId": "AUDIT_OBSERVER_PLACEHOLDER",
+    "decisionRolePlaceholderIds": [
+      "METHODOLOGY_REVIEWER_PLACEHOLDER",
+      "SAFETY_REVIEWER_PLACEHOLDER",
+      "RIGHTS_REVIEWER_PLACEHOLDER",
+      "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+      "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
+      "PRODUCTION_APPROVER_PLACEHOLDER"
+    ],
+    "auditIdentityPolicyReference": null,
+    "identityComparisonPolicyReference": null,
+    "separationRuleReferences": [],
+    "auditDecisionAuthorityAllowed": false,
+    "auditProductionApprovalAllowed": false,
+    "enforcementAllowed": false
+  },
+  "enforcementAuthorityPlaceholder": {
+    "requirementId": "separation_enforcement_authority",
+    "state": "TO_BE_DECIDED",
+    "authorityPlaceholderId": "UNASSIGNED_ENFORCEMENT_AUTHORITY_PLACEHOLDER",
+    "authorityOwnerReference": null,
+    "authorityAssignmentReference": null,
+    "enforcementPolicyReference": null,
+    "activeRuleReferences": [],
+    "policyApprovalAllowed": false,
+    "runtimeEnforcementAllowed": false,
+    "assignmentTimeEvaluationAllowed": false,
+    "decisionTimeEvaluationAllowed": false,
+    "decisionAuthorizationAllowed": false,
+    "productionApprovalAuthorizationAllowed": false
+  },
+  "violationHandlingPlaceholder": {
+    "requirementId": "separation_violation_handling",
+    "state": "TO_BE_DECIDED",
+    "detectionPolicyReference": null,
+    "containmentPolicyReference": null,
+    "invalidationPolicyReference": null,
+    "remediationPolicyReference": null,
+    "escalationPolicyReference": null,
+    "handlingRuleReferences": [],
+    "violationDetectionAllowed": false,
+    "violationRecordingAllowed": false,
+    "containmentAllowed": false,
+    "decisionInvalidationAllowed": false,
+    "remediationAllowed": false
+  },
+  "waiverExceptionPolicyPlaceholder": {
+    "requirementId": "separation_waiver_and_exception_policy",
+    "state": "TO_BE_DECIDED",
+    "waiverPolicyReference": null,
+    "exceptionPolicyReference": null,
+    "authorityPolicyReference": null,
+    "waiverRuleReferences": [],
+    "exceptionRuleReferences": [],
+    "waiverRecordingAllowed": false,
+    "exceptionRecordingAllowed": false,
+    "separationOverrideAllowed": false,
+    "missingGateSatisfactionAllowed": false,
+    "reviewDecisionAuthorizationAllowed": false,
+    "productionApprovalAuthorizationAllowed": false,
+    "readinessTransitionAllowed": false
+  },
+  "decisionRequirements": [
+    {
+      "requirementId": "incompatible_role_combinations",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "maker_checker_separation",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "production_approver_separation",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "reviewer_self_approval_prohibition",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "candidate_author_and_reviewer_separation",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "audit_observer_separation",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "separation_enforcement_authority",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "separation_violation_handling",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "requirementId": "separation_waiver_and_exception_policy",
+      "state": "TO_BE_DECIDED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    }
+  ],
+  "recordBoundary": {
+    "policyDecisionsRecorded": false,
+    "realCandidatesRecorded": false,
+    "candidateAuthorshipRecorded": false,
+    "digestValuesRecorded": false,
+    "reviewEvidenceRecorded": false,
+    "candidateAuthorIdentitiesRecorded": false,
+    "reviewerIdentitiesRecorded": false,
+    "auditIdentitiesRecorded": false,
+    "roleAssignmentsRecorded": false,
+    "reviewerAssignmentsRecorded": false,
+    "conflictsRecorded": false,
+    "violationsRecorded": false,
+    "waiversRecorded": false,
+    "exceptionsRecorded": false,
+    "enforcementAuthorityAssignmentsRecorded": false,
+    "activeEnforcementRulesRecorded": false,
+    "reviewDecisionsRecorded": false,
+    "approvedDecisionsRecorded": false,
+    "productionApprovalsRecorded": false,
+    "runtimeSeparationEnforcementEnabled": false
+  },
+  "readiness": {
+    "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "status": "NOT_READY",
+    "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+  },
+  "aggregate": {
+    "rolePlaceholderCount": 7,
+    "incompatibleRulePlaceholderCount": 3,
+    "decisionRequirementCount": 9,
+    "undecidedRequirementCount": 9,
+    "activeIncompatibleRuleCount": 0,
+    "activeEnforcementRuleCount": 0,
+    "policyDecisionCount": 0,
+    "realCandidateCount": 0,
+    "candidateAuthorshipRecordCount": 0,
+    "digestValueCount": 0,
+    "reviewEvidenceRecordCount": 0,
+    "candidateAuthorIdentityCount": 0,
+    "reviewerIdentityCount": 0,
+    "auditIdentityCount": 0,
+    "roleAssignmentCount": 0,
+    "reviewerAssignmentCount": 0,
+    "conflictRecordCount": 0,
+    "violationRecordCount": 0,
+    "waiverRecordCount": 0,
+    "exceptionRecordCount": 0,
+    "enforcementAuthorityAssignmentCount": 0,
+    "reviewDecisionCount": 0,
+    "approvedDecisionCount": 0,
+    "productionApprovalCount": 0
+  },
+  "policyDecisionRecords": [],
+  "realCandidateRecords": [],
+  "candidateAuthorshipRecords": [],
+  "digestValueRecords": [],
+  "reviewEvidenceRecords": [],
+  "candidateAuthorIdentityRecords": [],
+  "reviewerIdentityRecords": [],
+  "auditIdentityRecords": [],
+  "roleAssignmentRecords": [],
+  "reviewerAssignmentRecords": [],
+  "conflictRecords": [],
+  "violationRecords": [],
+  "waiverRecords": [],
+  "exceptionRecords": [],
+  "enforcementAuthorityAssignmentRecords": [],
+  "activeEnforcementRuleRecords": [],
+  "reviewDecisionRecords": [],
+  "approvedDecisionRecords": [],
+  "productionApprovalRecords": []
+}
