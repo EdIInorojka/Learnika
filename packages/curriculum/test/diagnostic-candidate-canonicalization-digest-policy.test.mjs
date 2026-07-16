@@ -441,7 +441,7 @@ test("Slice 4 worktree guard permits only the exact 24 implementation paths", ()
 
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-5-implementation-note.md",
+    "docs/wave-5/slice-6-implementation-note.md",
     "docs/wave-5/nested/diagnostic-canonicalization-digest-policy-contract.md",
     "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md.bak",
     "packages/curriculum/diagnostic-candidate-canonicalization-digest-policy/extra.v1.json",
@@ -456,6 +456,40 @@ test("Slice 4 worktree guard permits only the exact 24 implementation paths", ()
     "packages/curriculum/src/diagnostic-review-runtime.ts",
     "pnpm-lock.yaml",
     "pnpm-workspace.yaml",
+  ]) {
+    assert.throws(
+      () => validateCandidateCanonicalizationDigestPolicyChangedPaths([forbiddenPath]),
+      /Wave 5 Slice 4 out-of-scope path changed/,
+      forbiddenPath,
+    );
+  }
+});
+
+test("Slice 4 guard admits only the exact five Slice 5 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
+    "docs/wave-5/slice-5-implementation-note.md",
+    "packages/curriculum/diagnostic-reviewer-role-ownership-policy/grade-7-9-math.reviewer-role-ownership-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+    "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy.test.mjs",
+  ];
+  assert.deepEqual(
+    validateCandidateCanonicalizationDigestPolicyChangedPaths(approvedPaths),
+    approvedPaths,
+  );
+
+  for (const forbiddenPath of [
+    "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md.bak",
+    "docs/wave-5/nested/slice-5-implementation-note.md",
+    "packages/curriculum/diagnostic-reviewer-role-ownership-policy/extra.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/controller.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-review-runtime.ts",
+    "pnpm-lock.yaml",
   ]) {
     assert.throws(
       () => validateCandidateCanonicalizationDigestPolicyChangedPaths([forbiddenPath]),

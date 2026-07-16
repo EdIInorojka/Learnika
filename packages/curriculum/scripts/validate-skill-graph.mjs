@@ -20,6 +20,7 @@ const forbiddenTerms = [
 const allowedChangedPathPrefixes = ["docs/wave-3/", "docs/wave-4/", "packages/curriculum/"];
 const allowedChangedPaths = new Set([
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
+  "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
   "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
   "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
   "docs/wave-5/open-decisions.md",
@@ -28,6 +29,7 @@ const allowedChangedPaths = new Set([
   "docs/wave-5/slice-2-implementation-note.md",
   "docs/wave-5/slice-3-implementation-note.md",
   "docs/wave-5/slice-4-implementation-note.md",
+  "docs/wave-5/slice-5-implementation-note.md",
   "package.json",
 ]);
 const approvedSlice7ChangedPathPrefixes = ["apps/api/src/diagnostic-session-state/"];

@@ -7,6 +7,7 @@ import {
   readDiagnosticCandidateCanonicalization,
   validateCandidateCanonicalizationChangedPaths,
 } from "../scripts/validate-diagnostic-candidate-canonicalization.mjs";
+import { validateCandidateCanonicalizationDigestPolicyChangedPaths } from "../scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs";
 import {
   readDiagnosticCandidateDigestRegistry,
   validateCandidateDigestChangedPaths,
@@ -462,7 +463,7 @@ test("all Wave 4 scope guards permit only the exact Wave 5 Slice 1 documentation
   }
 
   const forbiddenPaths = [
-    "docs/wave-5/slice-5-implementation-note.md",
+    "docs/wave-5/slice-6-implementation-note.md",
     "docs/wave-5/nested/scope-and-non-goals.md",
     "docs/wave-5/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-review/controller.ts",
@@ -632,7 +633,59 @@ test("all governance scope guards permit only the exact Wave 5 Slice 4 static fi
   }
 });
 
-test("Wave 5 scope unblocks through Slice 4 contain no broad documentation prefix", async () => {
+test("all governance scope guards permit only the exact Wave 5 Slice 5 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
+    "docs/wave-5/slice-5-implementation-note.md",
+    "packages/curriculum/diagnostic-reviewer-role-ownership-policy/grade-7-9-math.reviewer-role-ownership-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+    "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy.test.mjs",
+  ];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+    validateActivationPrerequisitesChangedPaths,
+    validateCandidateIdentityPolicyChangedPaths,
+    validateCandidateCanonicalizationDigestPolicyChangedPaths,
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+  }
+
+  const forbiddenPaths = [
+    "docs/wave-5/nested/diagnostic-reviewer-role-ownership-policy-contract.md",
+    "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md.bak",
+    "docs/wave-5/slice-5-implementation-note.md.bak",
+    "packages/curriculum/diagnostic-reviewer-role-ownership-policy/extra.v1.json",
+    "packages/curriculum/diagnostic-reviewer-role-ownership-policy/grade-7-9-math.reviewer-role-ownership-policy-placeholder.v1.json.bak",
+    "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/controller.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-review-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("Wave 5 scope unblocks through Slice 5 contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",
@@ -645,6 +698,7 @@ test("Wave 5 scope unblocks through Slice 4 contain no broad documentation prefi
     "validate-diagnostic-review-activation-prerequisites.mjs",
     "validate-diagnostic-candidate-identity-policy.mjs",
     "validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+    "validate-diagnostic-reviewer-role-ownership-policy.mjs",
   ];
   const sources = await Promise.all(
     validatorFiles.map((fileName) =>
@@ -699,6 +753,10 @@ test("review scope guards contain no broad API allowlist", async () => {
         "../scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
         import.meta.url,
       ),
+      "utf8",
+    ),
+    readFile(
+      new URL("../scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs", import.meta.url),
       "utf8",
     ),
     readFile(

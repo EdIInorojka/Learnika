@@ -92,6 +92,13 @@ const approvedSlice4ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+const wave5Slice5ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
+  "docs/wave-5/slice-5-implementation-note.md",
+  "packages/curriculum/diagnostic-reviewer-role-ownership-policy/grade-7-9-math.reviewer-role-ownership-policy-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -788,7 +795,10 @@ export function validateCandidateCanonicalizationDigestPolicyChangedPaths(change
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice4ChangedPaths.has(changedPath)) {
+    if (
+      !approvedSlice4ChangedPaths.has(changedPath) &&
+      !wave5Slice5ScopeUnblockPaths.has(changedPath)
+    ) {
       fail(`Wave 5 Slice 4 out-of-scope path changed: ${changedPath}.`);
     }
   }
