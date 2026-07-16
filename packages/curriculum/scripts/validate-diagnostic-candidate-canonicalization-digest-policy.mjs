@@ -113,6 +113,13 @@ const wave5Slice7ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
   "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
 ]);
+const wave5Slice8ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
+  "docs/wave-5/slice-8-implementation-note.md",
+  "packages/curriculum/diagnostic-audit-identity-policy/grade-7-9-math.audit-identity-policy-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+  "packages/curriculum/test/diagnostic-audit-identity-policy.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -813,7 +820,8 @@ export function validateCandidateCanonicalizationDigestPolicyChangedPaths(change
       !approvedSlice4ChangedPaths.has(changedPath) &&
       !wave5Slice5ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice6ScopeUnblockPaths.has(changedPath) &&
-      !wave5Slice7ScopeUnblockPaths.has(changedPath)
+      !wave5Slice7ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice8ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 5 Slice 4 out-of-scope path changed: ${changedPath}.`);
     }

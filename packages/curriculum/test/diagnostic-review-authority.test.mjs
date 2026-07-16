@@ -13,6 +13,7 @@ import {
   validateCandidateDigestChangedPaths,
 } from "../scripts/validate-diagnostic-candidate-digest.mjs";
 import { validateCandidateIdentityPolicyChangedPaths } from "../scripts/validate-diagnostic-candidate-identity-policy.mjs";
+import { validateConflictOfInterestPolicyChangedPaths } from "../scripts/validate-diagnostic-conflict-of-interest-policy.mjs";
 import { validateReviewerRoleOwnershipPolicyChangedPaths } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs";
 import { validateSeparationOfDutiesPolicyChangedPaths } from "../scripts/validate-diagnostic-separation-of-duties-policy.mjs";
 import { validateActivationPrerequisitesChangedPaths } from "../scripts/validate-diagnostic-review-activation-prerequisites.mjs";
@@ -465,7 +466,7 @@ test("all Wave 4 scope guards permit only the exact Wave 5 Slice 1 documentation
   }
 
   const forbiddenPaths = [
-    "docs/wave-5/slice-8-implementation-note.md",
+    "docs/wave-5/slice-9-implementation-note.md",
     "docs/wave-5/nested/scope-and-non-goals.md",
     "docs/wave-5/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-review/controller.ts",
@@ -758,8 +759,6 @@ test("all governance scope guards permit only the exact Wave 5 Slice 7 static fi
     validateActivationPrerequisitesChangedPaths,
     validateCandidateIdentityPolicyChangedPaths,
     validateCandidateCanonicalizationDigestPolicyChangedPaths,
-    validateReviewerRoleOwnershipPolicyChangedPaths,
-    validateSeparationOfDutiesPolicyChangedPaths,
   ];
 
   for (const validateChangedPaths of validators) {
@@ -793,7 +792,62 @@ test("all governance scope guards permit only the exact Wave 5 Slice 7 static fi
   }
 });
 
-test("Wave 5 scope unblocks through Slice 7 contain no broad documentation prefix", async () => {
+test("all governance scope guards permit only the exact Wave 5 Slice 8 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
+    "docs/wave-5/slice-8-implementation-note.md",
+    "packages/curriculum/diagnostic-audit-identity-policy/grade-7-9-math.audit-identity-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+    "packages/curriculum/test/diagnostic-audit-identity-policy.test.mjs",
+  ];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+    validateActivationPrerequisitesChangedPaths,
+    validateCandidateIdentityPolicyChangedPaths,
+    validateCandidateCanonicalizationDigestPolicyChangedPaths,
+    validateReviewerRoleOwnershipPolicyChangedPaths,
+    validateSeparationOfDutiesPolicyChangedPaths,
+    validateConflictOfInterestPolicyChangedPaths,
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+  }
+
+  const forbiddenPaths = [
+    "docs/wave-5/nested/diagnostic-audit-identity-policy-contract.md",
+    "docs/wave-5/diagnostic-audit-identity-policy-contract.md.bak",
+    "docs/wave-5/slice-8-implementation-note.md.bak",
+    "packages/curriculum/diagnostic-audit-identity-policy/extra.v1.json",
+    "packages/curriculum/diagnostic-audit-identity-policy/grade-7-9-math.audit-identity-policy-placeholder.v1.json.bak",
+    "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-audit-identity-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/audit-identity.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-audit-identity-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("Wave 5 scope unblocks through Slice 8 contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",
@@ -809,6 +863,7 @@ test("Wave 5 scope unblocks through Slice 7 contain no broad documentation prefi
     "validate-diagnostic-reviewer-role-ownership-policy.mjs",
     "validate-diagnostic-separation-of-duties-policy.mjs",
     "validate-diagnostic-conflict-of-interest-policy.mjs",
+    "validate-diagnostic-audit-identity-policy.mjs",
   ];
   const sources = await Promise.all(
     validatorFiles.map((fileName) =>
@@ -875,6 +930,10 @@ test("review scope guards contain no broad API allowlist", async () => {
     ),
     readFile(
       new URL("../scripts/validate-diagnostic-conflict-of-interest-policy.mjs", import.meta.url),
+      "utf8",
+    ),
+    readFile(
+      new URL("../scripts/validate-diagnostic-audit-identity-policy.mjs", import.meta.url),
       "utf8",
     ),
     readFile(

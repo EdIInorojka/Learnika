@@ -390,7 +390,7 @@ test("Slice 3 worktree guard permits only the exact 22 implementation paths", ()
 
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-8-implementation-note.md",
+    "docs/wave-5/slice-9-implementation-note.md",
     "docs/wave-5/nested/diagnostic-candidate-identity-policy-contract.md",
     "docs/wave-5/diagnostic-candidate-identity-policy-contract.md.bak",
     "packages/curriculum/diagnostic-candidate-identity-policy/extra.v1.json",
@@ -525,6 +525,37 @@ test("Slice 3 guard admits only the exact five Slice 7 static files", () => {
     "apps/api/prisma/schema.prisma",
     "apps/web/app/diagnostic/review/page.tsx",
     "packages/curriculum/src/diagnostic-conflict-of-interest-runtime.ts",
+    "pnpm-lock.yaml",
+  ]) {
+    assert.throws(
+      () => validateCandidateIdentityPolicyChangedPaths([forbiddenPath]),
+      /Wave 5 Slice 3 out-of-scope path changed/,
+      forbiddenPath,
+    );
+  }
+});
+
+test("Slice 3 guard admits only the exact five Slice 8 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
+    "docs/wave-5/slice-8-implementation-note.md",
+    "packages/curriculum/diagnostic-audit-identity-policy/grade-7-9-math.audit-identity-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+    "packages/curriculum/test/diagnostic-audit-identity-policy.test.mjs",
+  ];
+  assert.deepEqual(validateCandidateIdentityPolicyChangedPaths(approvedPaths), approvedPaths);
+
+  for (const forbiddenPath of [
+    "docs/wave-5/diagnostic-audit-identity-policy-contract.md.bak",
+    "docs/wave-5/nested/slice-8-implementation-note.md",
+    "packages/curriculum/diagnostic-audit-identity-policy/extra.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-audit-identity-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/audit-identity.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-audit-identity-runtime.ts",
     "pnpm-lock.yaml",
   ]) {
     assert.throws(
