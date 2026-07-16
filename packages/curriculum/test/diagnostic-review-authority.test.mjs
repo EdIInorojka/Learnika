@@ -15,6 +15,8 @@ import {
 } from "../scripts/validate-diagnostic-candidate-digest.mjs";
 import { validateCandidateIdentityPolicyChangedPaths } from "../scripts/validate-diagnostic-candidate-identity-policy.mjs";
 import { validateConflictOfInterestPolicyChangedPaths } from "../scripts/validate-diagnostic-conflict-of-interest-policy.mjs";
+import { validateEvidenceStorageRetentionPolicyChangedPaths } from "../scripts/validate-diagnostic-evidence-storage-retention-policy.mjs";
+import { validateProductionApprovalAuthorityPolicyChangedPaths } from "../scripts/validate-diagnostic-production-approval-authority-policy.mjs";
 import { validateReviewerRoleOwnershipPolicyChangedPaths } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs";
 import { validateSeparationOfDutiesPolicyChangedPaths } from "../scripts/validate-diagnostic-separation-of-duties-policy.mjs";
 import { validateActivationPrerequisitesChangedPaths } from "../scripts/validate-diagnostic-review-activation-prerequisites.mjs";
@@ -467,7 +469,7 @@ test("all Wave 4 scope guards permit only the exact Wave 5 Slice 1 documentation
   }
 
   const forbiddenPaths = [
-    "docs/wave-5/slice-10-implementation-note.md",
+    "docs/wave-5/slice-11-implementation-note.md",
     "docs/wave-5/nested/scope-and-non-goals.md",
     "docs/wave-5/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-review/controller.ts",
@@ -845,13 +847,13 @@ test("all governance scope guards permit only the exact Wave 5 Slice 8 static fi
   }
 });
 
-test("all governance scope guards permit only the exact Wave 5 Slice 9 static files", () => {
+test("all governance scope guards permit only the exact Wave 5 Slice 10 static files", () => {
   const approvedPaths = [
-    "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",
-    "docs/wave-5/slice-9-implementation-note.md",
-    "packages/curriculum/diagnostic-evidence-storage-retention-policy/grade-7-9-math.evidence-storage-retention-policy-placeholder.v1.json",
-    "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
-    "packages/curriculum/test/diagnostic-evidence-storage-retention-policy.test.mjs",
+    "docs/wave-5/diagnostic-production-approval-authority-policy-contract.md",
+    "docs/wave-5/slice-10-implementation-note.md",
+    "packages/curriculum/diagnostic-production-approval-authority-policy/grade-7-9-math.production-approval-authority-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+    "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs",
   ];
   const validators = [
     validateReviewCoverageChangedPaths,
@@ -868,6 +870,8 @@ test("all governance scope guards permit only the exact Wave 5 Slice 9 static fi
     validateSeparationOfDutiesPolicyChangedPaths,
     validateConflictOfInterestPolicyChangedPaths,
     validateAuditIdentityPolicyChangedPaths,
+    validateEvidenceStorageRetentionPolicyChangedPaths,
+    validateProductionApprovalAuthorityPolicyChangedPaths,
   ];
 
   for (const validateChangedPaths of validators) {
@@ -875,18 +879,18 @@ test("all governance scope guards permit only the exact Wave 5 Slice 9 static fi
   }
 
   const forbiddenPaths = [
-    "docs/wave-5/nested/diagnostic-evidence-storage-retention-policy-contract.md",
-    "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md.bak",
-    "docs/wave-5/slice-9-implementation-note.md.bak",
-    "packages/curriculum/diagnostic-evidence-storage-retention-policy/extra.v1.json",
-    "packages/curriculum/diagnostic-evidence-storage-retention-policy/grade-7-9-math.evidence-storage-retention-policy-placeholder.v1.json.bak",
-    "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs.bak",
-    "packages/curriculum/test/diagnostic-evidence-storage-retention-policy.test.mjs.bak",
-    "apps/api/src/diagnostic-review/evidence-storage.ts",
+    "docs/wave-5/nested/diagnostic-production-approval-authority-policy-contract.md",
+    "docs/wave-5/diagnostic-production-approval-authority-policy-contract.md.bak",
+    "docs/wave-5/slice-10-implementation-note.md.bak",
+    "packages/curriculum/diagnostic-production-approval-authority-policy/extra.v1.json",
+    "packages/curriculum/diagnostic-production-approval-authority-policy/grade-7-9-math.production-approval-authority-policy-placeholder.v1.json.bak",
+    "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/production-approval.ts",
     "packages/contracts/openapi.json",
     "apps/api/prisma/schema.prisma",
     "apps/web/app/diagnostic/review/page.tsx",
-    "packages/curriculum/src/diagnostic-evidence-storage-runtime.ts",
+    "packages/curriculum/src/diagnostic-production-approval-runtime.ts",
     "pnpm-lock.yaml",
   ];
 
@@ -901,7 +905,7 @@ test("all governance scope guards permit only the exact Wave 5 Slice 9 static fi
   }
 });
 
-test("Wave 5 scope unblocks through Slice 9 contain no broad documentation prefix", async () => {
+test("Wave 5 scope unblocks through Slice 10 contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",
@@ -919,6 +923,7 @@ test("Wave 5 scope unblocks through Slice 9 contain no broad documentation prefi
     "validate-diagnostic-conflict-of-interest-policy.mjs",
     "validate-diagnostic-audit-identity-policy.mjs",
     "validate-diagnostic-evidence-storage-retention-policy.mjs",
+    "validate-diagnostic-production-approval-authority-policy.mjs",
   ];
   const sources = await Promise.all(
     validatorFiles.map((fileName) =>

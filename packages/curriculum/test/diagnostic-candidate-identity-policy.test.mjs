@@ -390,7 +390,7 @@ test("Slice 3 worktree guard permits only the exact 22 implementation paths", ()
 
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-10-implementation-note.md",
+    "docs/wave-5/slice-11-implementation-note.md",
     "docs/wave-5/nested/diagnostic-candidate-identity-policy-contract.md",
     "docs/wave-5/diagnostic-candidate-identity-policy-contract.md.bak",
     "packages/curriculum/diagnostic-candidate-identity-policy/extra.v1.json",
@@ -566,13 +566,13 @@ test("Slice 3 guard admits only the exact five Slice 8 static files", () => {
   }
 });
 
-test("Slice 3 guard admits only the exact five Slice 9 static files", () => {
+test("Slice 3 guard admits only the exact five Slice 10 static files", () => {
   const approvedPaths = [
-    "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",
-    "docs/wave-5/slice-9-implementation-note.md",
-    "packages/curriculum/diagnostic-evidence-storage-retention-policy/grade-7-9-math.evidence-storage-retention-policy-placeholder.v1.json",
-    "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
-    "packages/curriculum/test/diagnostic-evidence-storage-retention-policy.test.mjs",
+    "docs/wave-5/diagnostic-production-approval-authority-policy-contract.md",
+    "docs/wave-5/slice-10-implementation-note.md",
+    "packages/curriculum/diagnostic-production-approval-authority-policy/grade-7-9-math.production-approval-authority-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+    "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs",
   ];
   assert.deepEqual(validateCandidateIdentityPolicyChangedPaths(approvedPaths), approvedPaths);
   for (const forbiddenPath of [

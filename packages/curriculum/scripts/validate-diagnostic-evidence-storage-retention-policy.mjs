@@ -205,11 +205,11 @@ const zeroAggregateFields = [
   "approvedDecisionCount",
   "productionApprovalCount",
 ];
-const approvedSlice9ChangedPaths = new Set([
-  "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",
-  "docs/wave-5/slice-9-implementation-note.md",
+const approvedSlice10ChangedPaths = new Set([
+  "docs/wave-5/diagnostic-production-approval-authority-policy-contract.md",
+  "docs/wave-5/slice-10-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-evidence-storage-retention-policy/grade-7-9-math.evidence-storage-retention-policy-placeholder.v1.json",
+  "packages/curriculum/diagnostic-production-approval-authority-policy/grade-7-9-math.production-approval-authority-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
@@ -217,6 +217,7 @@ const approvedSlice9ChangedPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
@@ -232,6 +233,7 @@ const approvedSlice9ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
   "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy.test.mjs",
+  "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
   "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
@@ -882,8 +884,8 @@ export function validateEvidenceStorageRetentionPolicyChangedPaths(changedPaths)
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice9ChangedPaths.has(changedPath)) {
-      fail(`Wave 5 Slice 9 out-of-scope path changed: ${changedPath}.`);
+    if (!approvedSlice10ChangedPaths.has(changedPath)) {
+      fail(`Wave 5 Slice 10 out-of-scope path changed: ${changedPath}.`);
     }
   }
   return [...changedPaths];
