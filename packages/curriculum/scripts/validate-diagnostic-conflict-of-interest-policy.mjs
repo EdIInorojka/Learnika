@@ -13,34 +13,26 @@ import { readDiagnosticReviewCoverage } from "./validate-diagnostic-review-cover
 import { readDiagnosticReviewEvidence } from "./validate-diagnostic-review-evidence.mjs";
 import { readDiagnosticReviewGateRubric } from "./validate-diagnostic-review-gate-rubric.mjs";
 import { readDiagnosticReviewWorkflowState } from "./validate-diagnostic-review-workflow-state.mjs";
+import { readDiagnosticReviewerRoleOwnershipPolicy } from "./validate-diagnostic-reviewer-role-ownership-policy.mjs";
 import {
-  readDiagnosticReviewerRoleOwnershipPolicy,
-  validateDiagnosticReviewerRoleOwnershipPolicy,
-} from "./validate-diagnostic-reviewer-role-ownership-policy.mjs";
+  readDiagnosticSeparationOfDutiesPolicy,
+  validateDiagnosticSeparationOfDutiesPolicy,
+} from "./validate-diagnostic-separation-of-duties-policy.mjs";
 
-const expectedArtifactVersion = "wave-5.slice-6.grade-7-9-math.v1";
-const expectedPolicyVersion =
-  "wave-5.slice-6.diagnostic-separation-of-duties-enforcement.placeholder.v1";
+const expectedArtifactVersion = "wave-5.slice-7.grade-7-9-math.v1";
+const expectedPolicyVersion = "wave-5.slice-7.diagnostic-conflict-of-interest.placeholder.v1";
 const expectedActivationArtifactVersion = "wave-5.slice-2.grade-7-9-math.v1";
 const expectedRoleOwnershipArtifactVersion = "wave-5.slice-5.grade-7-9-math.v1";
 const expectedRoleOwnershipPolicyVersion =
   "wave-5.slice-5.diagnostic-reviewer-role-ownership.placeholder.v1";
+const expectedSeparationArtifactVersion = "wave-5.slice-6.grade-7-9-math.v1";
+const expectedSeparationPolicyVersion =
+  "wave-5.slice-6.diagnostic-separation-of-duties-enforcement.placeholder.v1";
 const expectedAuthorityArtifactVersion = "wave-4.slice-8.grade-7-9-math.v1";
 const expectedAuthorityPolicyVersion = "wave-4.slice-8.diagnostic-review-authority.placeholder.v1";
 const expectedWorkflowArtifactVersion = "wave-4.slice-7.grade-7-9-math.v1";
 const expectedWorkflowVersion = "wave-4.slice-7.diagnostic-review-workflow-state.placeholder.v1";
 const expectedReadinessPolicyVersion = "wave-3-slice-11-diagnostic-readiness-policy-v1";
-const substantiveRolePlaceholderIds = [
-  "METHODOLOGY_REVIEWER_PLACEHOLDER",
-  "SAFETY_REVIEWER_PLACEHOLDER",
-  "RIGHTS_REVIEWER_PLACEHOLDER",
-  "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
-  "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
-];
-const decisionRolePlaceholderIds = [
-  ...substantiveRolePlaceholderIds,
-  "PRODUCTION_APPROVER_PLACEHOLDER",
-];
 const expectedRoles = new Map([
   ["METHODOLOGY_REVIEWER_PLACEHOLDER", "methodology"],
   ["SAFETY_REVIEWER_PLACEHOLDER", "safety_no_answer"],
@@ -50,16 +42,41 @@ const expectedRoles = new Map([
   ["PRODUCTION_APPROVER_PLACEHOLDER", "production_approval"],
   ["AUDIT_OBSERVER_PLACEHOLDER", "audit_observation"],
 ]);
+const expectedConflictCategories = new Map([
+  ["CANDIDATE_AUTHOR_RELATIONSHIP_PLACEHOLDER", "candidate_author_relationship"],
+  [
+    "TEXTBOOK_OR_CONTENT_SOURCE_RELATIONSHIP_PLACEHOLDER",
+    "textbook_or_content_source_relationship",
+  ],
+  [
+    "FINANCIAL_VENDOR_OR_PROVIDER_RELATIONSHIP_PLACEHOLDER",
+    "financial_vendor_or_provider_relationship",
+  ],
+  ["PERSONAL_OR_FAMILY_RELATIONSHIP_PLACEHOLDER", "personal_or_family_relationship"],
+  [
+    "ORGANIZATIONAL_OR_REPORTING_RELATIONSHIP_PLACEHOLDER",
+    "organizational_or_reporting_relationship",
+  ],
+  [
+    "PRIOR_DECISION_OR_ADVOCACY_RELATIONSHIP_PLACEHOLDER",
+    "prior_decision_or_advocacy_relationship",
+  ],
+  [
+    "OTHER_ACTUAL_POTENTIAL_OR_PERCEIVED_CONFLICT_PLACEHOLDER",
+    "other_actual_potential_or_perceived_conflict",
+  ],
+]);
 const expectedDecisionRequirementIds = [
-  "incompatible_role_combinations",
-  "maker_checker_separation",
-  "production_approver_separation",
-  "reviewer_self_approval_prohibition",
-  "candidate_author_and_reviewer_separation",
-  "audit_observer_separation",
-  "separation_enforcement_authority",
-  "separation_violation_handling",
-  "separation_waiver_and_exception_policy",
+  "conflict_category_taxonomy",
+  "reviewer_self_disclosure",
+  "candidate_author_relationship",
+  "textbook_and_content_source_relationship",
+  "financial_vendor_and_provider_relationship",
+  "recusal_and_reassignment",
+  "waiver_and_exception_policy",
+  "conflict_escalation_authority",
+  "conflict_audit_trail",
+  "assignment_decision_and_late_disclosure_enforcement_timing",
 ];
 const forbiddenTerms = [
   "finalAnswer",
@@ -96,17 +113,25 @@ const protectedRecordFields = [
   "candidateAuthorshipRecords",
   "digestValueRecords",
   "reviewEvidenceRecords",
-  "candidateAuthorIdentityRecords",
   "reviewerIdentityRecords",
   "auditIdentityRecords",
   "roleAssignmentRecords",
   "reviewerAssignmentRecords",
+  "candidateAuthorRelationshipRecords",
+  "contentSourceRelationshipRecords",
+  "financialVendorProviderRelationshipRecords",
+  "otherRelationshipRecords",
   "conflictRecords",
-  "violationRecords",
+  "disclosureRecords",
+  "recusalRecords",
+  "reassignmentRecords",
   "waiverRecords",
   "exceptionRecords",
-  "enforcementAuthorityAssignmentRecords",
-  "activeEnforcementRuleRecords",
+  "escalationAuthorityAssignmentRecords",
+  "escalationRecords",
+  "appealRecords",
+  "auditTrailRecords",
+  "activeConflictRuleRecords",
   "reviewDecisionRecords",
   "approvedDecisionRecords",
   "productionApprovalRecords",
@@ -146,15 +171,15 @@ const approvedSlice7ChangedPaths = new Set([
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
-export const defaultSeparationOfDutiesPolicyPath = path.resolve(
+export const defaultConflictOfInterestPolicyPath = path.resolve(
   scriptDir,
-  "../diagnostic-separation-of-duties-policy/grade-7-9-math.separation-of-duties-policy-placeholder.v1.json",
+  "../diagnostic-conflict-of-interest-policy/grade-7-9-math.conflict-of-interest-policy-placeholder.v1.json",
 );
 
-export class DiagnosticSeparationOfDutiesPolicyValidationError extends Error {}
+export class DiagnosticConflictOfInterestPolicyValidationError extends Error {}
 
 function fail(message) {
-  throw new DiagnosticSeparationOfDutiesPolicyValidationError(message);
+  throw new DiagnosticConflictOfInterestPolicyValidationError(message);
 }
 
 function isPlainObject(value) {
@@ -228,24 +253,25 @@ function scanForbiddenTermsAndPrivateValues(value, fieldPath = "$") {
     }
   }
   if (/\b[a-f0-9]{32,}\b/i.test(value)) {
-    fail(`${fieldPath} contains a hash-like value, which is forbidden in Slice 6.`);
+    fail(`${fieldPath} contains a hash-like value, which is forbidden in Slice 7.`);
   }
   if (/\b[^\s@]+@[^\s@]+\.[^\s@]+\b/.test(value)) {
-    fail(`${fieldPath} contains an email-like value, which is forbidden in Slice 6.`);
+    fail(`${fieldPath} contains an email-like value, which is forbidden in Slice 7.`);
   }
   if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i.test(value)) {
-    fail(`${fieldPath} contains a UUID-like value, which is forbidden in Slice 6.`);
+    fail(`${fieldPath} contains a UUID-like value, which is forbidden in Slice 7.`);
   }
   if (/\b(?:user|account|reviewer)(?:[_:-]?id)?[._:-][a-z0-9_-]*\d[a-z0-9_-]*\b/i.test(value)) {
-    fail(`${fieldPath} contains a user-id-like value, which is forbidden in Slice 6.`);
+    fail(`${fieldPath} contains a user-id-like value, which is forbidden in Slice 7.`);
   }
   if (/^dcandidate\.[a-z0-9.-]+\.v[1-9][0-9]*$/i.test(value)) {
-    fail(`${fieldPath} contains a concrete candidate ID, which is forbidden in Slice 6.`);
+    fail(`${fieldPath} contains a concrete candidate ID, which is forbidden in Slice 7.`);
   }
 }
 
 function validateUpstreamArtifacts(upstream) {
-  const roleOwnershipSummary = validateDiagnosticReviewerRoleOwnershipPolicy(
+  const separationSummary = validateDiagnosticSeparationOfDutiesPolicy(
+    upstream.separationPolicy,
     upstream.roleOwnershipPolicy,
     upstream.canonicalizationDigestPolicy,
     upstream.identityPolicy,
@@ -258,49 +284,63 @@ function validateUpstreamArtifacts(upstream) {
     upstream.workflow,
     upstream.authority,
   );
+  const authorityConflictPolicy = upstream.authority.conflictOfInterestPolicy;
   if (
-    roleOwnershipSummary.policyArtifactVersion !== expectedRoleOwnershipArtifactVersion ||
-    roleOwnershipSummary.policyVersion !== expectedRoleOwnershipPolicyVersion ||
-    roleOwnershipSummary.policyState !== "UNRESOLVED_DEFERRED" ||
-    roleOwnershipSummary.prerequisiteStatus !== "UNSATISFIED_DEFERRED" ||
-    roleOwnershipSummary.activationStatus !== "BLOCKED" ||
-    roleOwnershipSummary.reviewWorkflowStatus !== "INACTIVE" ||
-    roleOwnershipSummary.readiness !== "NOT_READY" ||
+    separationSummary.policyArtifactVersion !== expectedSeparationArtifactVersion ||
+    separationSummary.policyVersion !== expectedSeparationPolicyVersion ||
+    separationSummary.policyState !== "UNRESOLVED_DEFERRED" ||
+    separationSummary.prerequisiteStatus !== "UNSATISFIED_DEFERRED" ||
+    separationSummary.activationStatus !== "BLOCKED" ||
+    separationSummary.reviewWorkflowStatus !== "INACTIVE" ||
+    separationSummary.readiness !== "NOT_READY" ||
     upstream.activationPrerequisites.metadata.activationPrerequisitesArtifactVersion !==
       expectedActivationArtifactVersion ||
+    upstream.roleOwnershipPolicy.metadata.policyArtifactVersion !==
+      expectedRoleOwnershipArtifactVersion ||
+    upstream.roleOwnershipPolicy.policyIdentity.policyVersion !==
+      expectedRoleOwnershipPolicyVersion ||
+    upstream.roleOwnershipPolicy.policyIdentity.policyState !== "UNRESOLVED_DEFERRED" ||
     upstream.authority.metadata.authorityArtifactVersion !== expectedAuthorityArtifactVersion ||
     upstream.authority.authorityPolicy.policyVersion !== expectedAuthorityPolicyVersion ||
     upstream.authority.authorityPolicy.policyState !== "DEFERRED_NON_PRODUCTION" ||
+    authorityConflictPolicy.status !== "DEFERRED_PLACEHOLDER_ONLY" ||
+    authorityConflictPolicy.policyVersion !== null ||
+    authorityConflictPolicy.declarationReferenceFormat !== null ||
+    authorityConflictPolicy.evaluationRulesActive !== false ||
+    authorityConflictPolicy.conflictRecordsAllowed !== false ||
+    authorityConflictPolicy.runtimeAssignmentBlockingAllowed !== false ||
     upstream.workflow.metadata.workflowArtifactVersion !== expectedWorkflowArtifactVersion ||
     upstream.workflow.workflowPolicy.workflowVersion !== expectedWorkflowVersion ||
     upstream.workflow.workflowPolicy.policyState !== "DEFERRED_NON_PRODUCTION"
   ) {
-    fail("Upstream artifacts must remain pinned to the blocked Slice 2-5 and Wave 4 baseline.");
+    fail("Upstream artifacts must remain pinned to the blocked Slice 2-6 and Wave 4 baseline.");
   }
   const prerequisite = upstream.activationPrerequisites.prerequisites.find(
-    ({ prerequisiteId }) => prerequisiteId === "separation_of_duties_enforcement",
+    ({ prerequisiteId }) => prerequisiteId === "conflict_of_interest_policy",
   );
   if (
     !prerequisite ||
     prerequisite.status !== "UNSATISFIED_DEFERRED" ||
     prerequisite.ownerPlaceholderId !== "UNASSIGNED_OWNER_PLACEHOLDER" ||
     prerequisite.evidenceRequirementDescription !==
-      "Future fail-closed assignment-time and decision-time independence policy with positive and negative authorization tests." ||
+      "Future versioned disclosure, evaluation, recusal, reassignment, escalation and late-disclosure handling policy." ||
     prerequisite.evidenceRecordRefs.length !== 0
   ) {
-    fail("separation_of_duties_enforcement must remain the exact unsatisfied prerequisite.");
+    fail("conflict_of_interest_policy must remain the exact unsatisfied prerequisite.");
   }
-  return { roleOwnershipSummary, prerequisite };
+  return { separationSummary, prerequisite };
 }
 
-function expectedTaxonomy(upstream) {
-  const taxonomy = upstream.roleOwnershipPolicy.roleTaxonomyPlaceholders.map((role) => ({
+function expectedRoleTaxonomy(upstream) {
+  const taxonomy = upstream.separationPolicy.roleTaxonomyPlaceholders.map((role) => ({
     rolePlaceholderId: role.rolePlaceholderId,
     scopeRef: role.scopeRef,
     recordState: "PLACEHOLDER_ONLY",
     identityPolicyReference: null,
     assignmentPolicyReference: null,
-    separationEnforcementAllowed: false,
+    conflictEvaluationAllowed: false,
+    reviewDecisionAuthorityAllowed: false,
+    productionApprovalAuthorityAllowed: false,
   }));
   if (
     taxonomy.length !== expectedRoles.size ||
@@ -308,20 +348,24 @@ function expectedTaxonomy(upstream) {
       ({ rolePlaceholderId, scopeRef }) => expectedRoles.get(rolePlaceholderId) !== scopeRef,
     )
   ) {
-    fail("Reviewer role taxonomy must remain the exact seven-role placeholder baseline.");
+    fail("Role taxonomy must remain the exact seven-role placeholder baseline.");
   }
   return taxonomy;
 }
 
-function expectedIncompatibleRolePlaceholders(upstream) {
-  return upstream.authority.separationOfDutiesRules.map((rule) => ({
-    ruleId: rule.ruleId,
-    ruleState: "REFERENCE_ONLY_NOT_ENFORCED",
-    participantRolePlaceholderIds: rule.participantRolePlaceholderIds,
-    upstreamRuleState: "NON_AUTHORIZING_PLACEHOLDER",
-    enforcementPolicyReference: null,
+function expectedConflictTaxonomy() {
+  return [...expectedConflictCategories].map(([categoryPlaceholderId, categoryScope]) => ({
+    categoryPlaceholderId,
+    categoryScope,
+    recordState: "PLACEHOLDER_ONLY",
+    definitionPolicyReference: null,
+    disclosurePolicyReference: null,
+    evaluationPolicyReference: null,
+    disqualificationPolicyReference: null,
+    activeRuleReferences: [],
+    relationshipRecordingAllowed: false,
     runtimeEvaluationAllowed: false,
-    decisionAuthorizationAllowed: false,
+    disqualifyingStatusDefined: false,
   }));
 }
 
@@ -336,22 +380,24 @@ function unresolvedRequirement(requirementId) {
   };
 }
 
-function buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite) {
+function buildExpectedArtifact(upstream, separationSummary, prerequisite) {
+  const rolePlaceholderIds = [...expectedRoles.keys()];
   const expected = {
     metadata: {
-      schemaVersion: "learnika.diagnosticSeparationOfDutiesPolicyPlaceholder.v1",
+      schemaVersion: "learnika.diagnosticConflictOfInterestPolicyPlaceholder.v1",
       policyArtifactVersion: expectedArtifactVersion,
       status: "placeholder_only_unsatisfied_non_production",
-      artifactKind: "diagnostic_separation_of_duties_policy_placeholder",
+      artifactKind: "diagnostic_conflict_of_interest_policy_placeholder",
       subject: "math",
       locale: "ru-RU",
       audienceGrades: [7, 8, 9],
       activationPrerequisitesArtifactVersion: expectedActivationArtifactVersion,
       reviewerRoleOwnershipPolicyArtifactVersion: expectedRoleOwnershipArtifactVersion,
+      separationOfDutiesPolicyArtifactVersion: expectedSeparationArtifactVersion,
       reviewAuthorityArtifactVersion: expectedAuthorityArtifactVersion,
       reviewWorkflowStateArtifactVersion: expectedWorkflowArtifactVersion,
       diagnosticReadinessPolicyVersion: expectedReadinessPolicyVersion,
-      sourceContract: "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
+      sourceContract: "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",
       productionUseAllowed: false,
       runtimeUseAllowed: false,
       storageAllowed: false,
@@ -382,8 +428,8 @@ function buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite) {
       reviewerRoleOwnershipPolicy: {
         artifactVersion: expectedRoleOwnershipArtifactVersion,
         policyVersion: expectedRoleOwnershipPolicyVersion,
-        policyState: roleOwnershipSummary.policyState,
-        prerequisiteStatus: roleOwnershipSummary.prerequisiteStatus,
+        policyState: upstream.roleOwnershipPolicy.policyIdentity.policyState,
+        prerequisiteStatus: upstream.roleOwnershipPolicy.prerequisiteReference.status,
         rolePlaceholderCount: upstream.roleOwnershipPolicy.aggregate.rolePlaceholderCount,
         roleOwnerCount: upstream.roleOwnershipPolicy.aggregate.roleOwnerCount,
         reviewerIdentityCount: upstream.roleOwnershipPolicy.aggregate.reviewerIdentityCount,
@@ -393,13 +439,34 @@ function buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite) {
         approvedDecisionCount: upstream.roleOwnershipPolicy.aggregate.approvedDecisionCount,
         productionApprovalCount: upstream.roleOwnershipPolicy.aggregate.productionApprovalCount,
       },
+      separationOfDutiesPolicy: {
+        artifactVersion: expectedSeparationArtifactVersion,
+        policyVersion: expectedSeparationPolicyVersion,
+        policyState: separationSummary.policyState,
+        prerequisiteStatus: separationSummary.prerequisiteStatus,
+        rolePlaceholderCount: separationSummary.rolePlaceholderCount,
+        activeEnforcementRuleCount: separationSummary.activeEnforcementRuleCount,
+        reviewerIdentityCount: separationSummary.reviewerIdentityCount,
+        reviewerAssignmentCount: separationSummary.reviewerAssignmentCount,
+        conflictRecordCount: separationSummary.conflictRecordCount,
+        violationRecordCount: separationSummary.violationRecordCount,
+        waiverRecordCount: separationSummary.waiverRecordCount,
+        approvedDecisionCount: separationSummary.approvedDecisionCount,
+        productionApprovalCount: separationSummary.productionApprovalCount,
+      },
       reviewAuthority: {
         artifactVersion: expectedAuthorityArtifactVersion,
         policyVersion: expectedAuthorityPolicyVersion,
         policyState: upstream.authority.authorityPolicy.policyState,
+        conflictPolicyStatus: upstream.authority.conflictOfInterestPolicy.status,
+        conflictPolicyVersion: upstream.authority.conflictOfInterestPolicy.policyVersion,
+        declarationReferenceFormat:
+          upstream.authority.conflictOfInterestPolicy.declarationReferenceFormat,
+        evaluationRulesActive: upstream.authority.conflictOfInterestPolicy.evaluationRulesActive,
+        conflictRecordsAllowed: upstream.authority.conflictOfInterestPolicy.conflictRecordsAllowed,
+        runtimeAssignmentBlockingAllowed:
+          upstream.authority.conflictOfInterestPolicy.runtimeAssignmentBlockingAllowed,
         rolePlaceholderCount: upstream.authority.aggregate.rolePlaceholderCount,
-        separationOfDutiesRuleCount: upstream.authority.aggregate.separationOfDutiesRuleCount,
-        realReviewerRoleCount: upstream.authority.aggregate.realReviewerRoleCount,
         reviewerAssignmentCount: upstream.authority.aggregate.reviewerAssignmentCount,
         reviewerIdentityCount: upstream.authority.aggregate.reviewerIdentityCount,
         auditIdentityCount: upstream.authority.aggregate.auditIdentityCount,
@@ -426,110 +493,90 @@ function buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite) {
       evidenceRecordRefs: [],
     },
     policyIdentity: {
-      policyId: "diagnostic-separation-of-duties-enforcement",
+      policyId: "diagnostic-conflict-of-interest",
       policyVersion: expectedPolicyVersion,
       policyState: "UNRESOLVED_DEFERRED",
       activeRulesetVersion: null,
       policyApprovalAllowed: false,
-      runtimeEnforcementAllowed: false,
-      assignmentTimeEnforcementAllowed: false,
-      decisionTimeEnforcementAllowed: false,
+      conflictTaxonomyApprovalAllowed: false,
+      disclosureCollectionAllowed: false,
+      runtimeEvaluationAllowed: false,
+      assignmentTimeEvaluationAllowed: false,
+      decisionTimeEvaluationAllowed: false,
+      lateDisclosureEvaluationAllowed: false,
       reviewDecisionAuthorizationAllowed: false,
       productionApprovalAuthorizationAllowed: false,
     },
-    roleTaxonomyPlaceholders: expectedTaxonomy(upstream),
-    incompatibleRoleCombinationsPlaceholders: expectedIncompatibleRolePlaceholders(upstream),
-    makerCheckerSeparationPlaceholder: {
-      requirementId: "maker_checker_separation",
+    roleTaxonomyPlaceholders: expectedRoleTaxonomy(upstream),
+    conflictCategoryTaxonomyPlaceholders: expectedConflictTaxonomy(),
+    reviewerSelfDisclosurePlaceholder: {
+      requirementId: "reviewer_self_disclosure",
       state: "TO_BE_DECIDED",
-      makerActorClassPlaceholder: "CANDIDATE_AUTHOR_ACTOR_PLACEHOLDER",
-      checkerActorClassPlaceholder: "SUBSTANTIVE_REVIEWER_ACTOR_PLACEHOLDER",
-      identityComparisonPolicyReference: null,
-      assignmentEvaluationPolicyReference: null,
-      decisionEvaluationPolicyReference: null,
-      separationRuleReferences: [],
-      assignmentTimeEvaluationAllowed: false,
-      decisionTimeEvaluationAllowed: false,
-      quorumDeduplicationAllowed: false,
-      enforcementAllowed: false,
+      subjectRolePlaceholderIds: rolePlaceholderIds,
+      disclosurePolicyReference: null,
+      declarationReferenceFormat: null,
+      accessPolicyReference: null,
+      retentionPolicyReference: null,
+      timingRuleReferences: [],
+      disclosureSubmissionAllowed: false,
+      privateDisclosureStorageAllowed: false,
+      selfClearanceAllowed: false,
+      assignmentEvaluationAllowed: false,
+      decisionEvaluationAllowed: false,
     },
-    productionApproverSeparationPlaceholder: {
-      requirementId: "production_approver_separation",
-      state: "TO_BE_DECIDED",
-      substantiveReviewerRolePlaceholderIds: substantiveRolePlaceholderIds,
-      productionApproverRolePlaceholderId: "PRODUCTION_APPROVER_PLACEHOLDER",
-      identityComparisonPolicyReference: null,
-      separationRuleReferences: [],
-      missingGateSubstitutionAllowed: false,
-      reviewerProductionApprovalAllowed: false,
-      enforcementAllowed: false,
-    },
-    reviewerSelfApprovalProhibitionPlaceholder: {
-      requirementId: "reviewer_self_approval_prohibition",
-      state: "TO_BE_DECIDED",
-      participantRolePlaceholderIds: decisionRolePlaceholderIds,
-      identityComparisonPolicyReference: null,
-      prohibitionRuleReferences: [],
-      selfReviewAllowed: false,
-      selfApprovalAllowed: false,
-      enforcementAllowed: false,
-    },
-    candidateAuthorReviewerSeparationPlaceholder: {
-      requirementId: "candidate_author_and_reviewer_separation",
+    candidateAuthorRelationshipPlaceholder: {
+      requirementId: "candidate_author_relationship",
       state: "TO_BE_DECIDED",
       candidateAuthorActorClassPlaceholder: "CANDIDATE_AUTHOR_ACTOR_PLACEHOLDER",
-      reviewerActorClassPlaceholder: "SUBSTANTIVE_REVIEWER_ACTOR_PLACEHOLDER",
+      reviewerActorClassPlaceholder: "REVIEWER_ACTOR_PLACEHOLDER",
       authorshipPolicyReference: null,
       identityComparisonPolicyReference: null,
-      separationRuleReferences: [],
-      candidateAuthorshipRecordingAllowed: false,
+      relationshipPolicyReference: null,
+      evaluationRuleReferences: [],
+      authorshipRecordingAllowed: false,
+      relationshipRecordingAllowed: false,
       identityComparisonAllowed: false,
-      enforcementAllowed: false,
+      runtimeEvaluationAllowed: false,
     },
-    auditObserverSeparationPlaceholder: {
-      requirementId: "audit_observer_separation",
+    contentSourceRelationshipPlaceholder: {
+      requirementId: "textbook_and_content_source_relationship",
       state: "TO_BE_DECIDED",
-      auditObserverRolePlaceholderId: "AUDIT_OBSERVER_PLACEHOLDER",
-      decisionRolePlaceholderIds,
-      auditIdentityPolicyReference: null,
-      identityComparisonPolicyReference: null,
-      separationRuleReferences: [],
-      auditDecisionAuthorityAllowed: false,
-      auditProductionApprovalAllowed: false,
-      enforcementAllowed: false,
+      contentSourceReferenceFormat: null,
+      relationshipPolicyReference: null,
+      rightsPolicyReference: null,
+      evaluationRuleReferences: [],
+      sourceRelationshipRecordingAllowed: false,
+      rightsEvidenceRecordingAllowed: false,
+      runtimeEvaluationAllowed: false,
     },
-    enforcementAuthorityPlaceholder: {
-      requirementId: "separation_enforcement_authority",
+    financialVendorProviderRelationshipPlaceholder: {
+      requirementId: "financial_vendor_and_provider_relationship",
       state: "TO_BE_DECIDED",
-      authorityPlaceholderId: "UNASSIGNED_ENFORCEMENT_AUTHORITY_PLACEHOLDER",
-      authorityOwnerReference: null,
-      authorityAssignmentReference: null,
-      enforcementPolicyReference: null,
-      activeRuleReferences: [],
-      policyApprovalAllowed: false,
-      runtimeEnforcementAllowed: false,
-      assignmentTimeEvaluationAllowed: false,
-      decisionTimeEvaluationAllowed: false,
-      decisionAuthorizationAllowed: false,
-      productionApprovalAuthorizationAllowed: false,
+      financialRelationshipPolicyReference: null,
+      vendorRelationshipPolicyReference: null,
+      providerRelationshipPolicyReference: null,
+      materialityPolicyReference: null,
+      evaluationRuleReferences: [],
+      relationshipRecordingAllowed: false,
+      providerIntegrationAllowed: false,
+      runtimeEvaluationAllowed: false,
     },
-    violationHandlingPlaceholder: {
-      requirementId: "separation_violation_handling",
+    recusalPolicyPlaceholder: {
+      requirementId: "recusal_and_reassignment",
       state: "TO_BE_DECIDED",
-      detectionPolicyReference: null,
-      containmentPolicyReference: null,
-      invalidationPolicyReference: null,
-      remediationPolicyReference: null,
-      escalationPolicyReference: null,
-      handlingRuleReferences: [],
-      violationDetectionAllowed: false,
-      violationRecordingAllowed: false,
-      containmentAllowed: false,
-      decisionInvalidationAllowed: false,
-      remediationAllowed: false,
+      recusalPolicyReference: null,
+      reassignmentPolicyReference: null,
+      priorDecisionInvalidationPolicyReference: null,
+      authorityPolicyReference: null,
+      recusalRuleReferences: [],
+      recusalRecordingAllowed: false,
+      reassignmentAllowed: false,
+      assignmentBlockingAllowed: false,
+      priorDecisionInvalidationAllowed: false,
+      runtimeWorkflowAllowed: false,
     },
     waiverExceptionPolicyPlaceholder: {
-      requirementId: "separation_waiver_and_exception_policy",
+      requirementId: "waiver_and_exception_policy",
       state: "TO_BE_DECIDED",
       waiverPolicyReference: null,
       exceptionPolicyReference: null,
@@ -538,11 +585,60 @@ function buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite) {
       exceptionRuleReferences: [],
       waiverRecordingAllowed: false,
       exceptionRecordingAllowed: false,
-      separationOverrideAllowed: false,
+      conflictClearanceAllowed: false,
+      disclosureSuppressionAllowed: false,
       missingGateSatisfactionAllowed: false,
+      assignmentAuthorizationAllowed: false,
       reviewDecisionAuthorizationAllowed: false,
       productionApprovalAuthorizationAllowed: false,
       readinessTransitionAllowed: false,
+    },
+    escalationAuthorityPlaceholder: {
+      requirementId: "conflict_escalation_authority",
+      state: "TO_BE_DECIDED",
+      authorityPlaceholderId: "UNASSIGNED_CONFLICT_ESCALATION_AUTHORITY_PLACEHOLDER",
+      authorityOwnerReference: null,
+      authorityAssignmentReference: null,
+      escalationPolicyReference: null,
+      appealPolicyReference: null,
+      activeRuleReferences: [],
+      escalationAllowed: false,
+      appealAllowed: false,
+      assignmentChangeAllowed: false,
+      decisionAuthorizationAllowed: false,
+      productionApprovalAuthorizationAllowed: false,
+    },
+    auditTrailPlaceholder: {
+      requirementId: "conflict_audit_trail",
+      state: "TO_BE_DECIDED",
+      auditIdentityPolicyReference: null,
+      auditRecordSchemaReference: null,
+      auditReferenceFormat: null,
+      storagePolicyReference: null,
+      accessPolicyReference: null,
+      retentionPolicyReference: null,
+      deletionPolicyReference: null,
+      integrityPolicyReference: null,
+      auditRuleReferences: [],
+      auditRecordingAllowed: false,
+      privateReferenceLookupAllowed: false,
+      ordinaryCurriculumStorageAllowed: false,
+    },
+    enforcementTimingPlaceholder: {
+      requirementId: "assignment_decision_and_late_disclosure_enforcement_timing",
+      state: "TO_BE_DECIDED",
+      timingPolicyReference: null,
+      freshnessPolicyReference: null,
+      lateDisclosurePolicyReference: null,
+      priorDecisionHandlingPolicyReference: null,
+      timingRuleReferences: [],
+      assignmentTimeEvaluationAllowed: false,
+      decisionTimeEvaluationAllowed: false,
+      ongoingEvaluationAllowed: false,
+      lateDisclosureEvaluationAllowed: false,
+      priorDecisionInvalidationAllowed: false,
+      runtimeAssignmentBlockingAllowed: false,
+      runtimeDecisionBlockingAllowed: false,
     },
     decisionRequirements: expectedDecisionRequirementIds.map(unresolvedRequirement),
     recordBoundary: {
@@ -551,21 +647,29 @@ function buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite) {
       candidateAuthorshipRecorded: false,
       digestValuesRecorded: false,
       reviewEvidenceRecorded: false,
-      candidateAuthorIdentitiesRecorded: false,
       reviewerIdentitiesRecorded: false,
       auditIdentitiesRecorded: false,
       roleAssignmentsRecorded: false,
       reviewerAssignmentsRecorded: false,
+      candidateAuthorRelationshipsRecorded: false,
+      contentSourceRelationshipsRecorded: false,
+      financialVendorProviderRelationshipsRecorded: false,
+      otherRelationshipsRecorded: false,
       conflictsRecorded: false,
-      violationsRecorded: false,
+      disclosuresRecorded: false,
+      recusalsRecorded: false,
+      reassignmentsRecorded: false,
       waiversRecorded: false,
       exceptionsRecorded: false,
-      enforcementAuthorityAssignmentsRecorded: false,
-      activeEnforcementRulesRecorded: false,
+      escalationAuthorityAssignmentsRecorded: false,
+      escalationsRecorded: false,
+      appealsRecorded: false,
+      auditTrailRecorded: false,
+      activeConflictRulesRecorded: false,
       reviewDecisionsRecorded: false,
       approvedDecisionsRecorded: false,
       productionApprovalsRecorded: false,
-      runtimeSeparationEnforcementEnabled: false,
+      runtimeConflictEvaluationEnabled: false,
     },
     readiness: {
       policyVersion: expectedReadinessPolicyVersion,
@@ -574,26 +678,34 @@ function buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite) {
     },
     aggregate: {
       rolePlaceholderCount: 7,
-      incompatibleRulePlaceholderCount: 3,
-      decisionRequirementCount: 9,
-      undecidedRequirementCount: 9,
-      activeIncompatibleRuleCount: 0,
-      activeEnforcementRuleCount: 0,
+      conflictCategoryPlaceholderCount: 7,
+      decisionRequirementCount: 10,
+      undecidedRequirementCount: 10,
+      activeConflictCategoryCount: 0,
+      activeConflictRuleCount: 0,
       policyDecisionCount: 0,
       realCandidateCount: 0,
       candidateAuthorshipRecordCount: 0,
       digestValueCount: 0,
       reviewEvidenceRecordCount: 0,
-      candidateAuthorIdentityCount: 0,
       reviewerIdentityCount: 0,
       auditIdentityCount: 0,
       roleAssignmentCount: 0,
       reviewerAssignmentCount: 0,
+      candidateAuthorRelationshipCount: 0,
+      contentSourceRelationshipCount: 0,
+      financialVendorProviderRelationshipCount: 0,
+      otherRelationshipCount: 0,
       conflictRecordCount: 0,
-      violationRecordCount: 0,
+      disclosureRecordCount: 0,
+      recusalRecordCount: 0,
+      reassignmentRecordCount: 0,
       waiverRecordCount: 0,
       exceptionRecordCount: 0,
-      enforcementAuthorityAssignmentCount: 0,
+      escalationAuthorityAssignmentCount: 0,
+      escalationRecordCount: 0,
+      appealRecordCount: 0,
+      auditTrailRecordCount: 0,
       reviewDecisionCount: 0,
       approvedDecisionCount: 0,
       productionApprovalCount: 0,
@@ -605,8 +717,9 @@ function buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite) {
   return expected;
 }
 
-export function validateDiagnosticSeparationOfDutiesPolicy(
+export function validateDiagnosticConflictOfInterestPolicy(
   artifact,
+  separationPolicy,
   roleOwnershipPolicy,
   canonicalizationDigestPolicy,
   identityPolicy,
@@ -620,6 +733,7 @@ export function validateDiagnosticSeparationOfDutiesPolicy(
   authority,
 ) {
   const upstream = {
+    separationPolicy,
     roleOwnershipPolicy,
     canonicalizationDigestPolicy,
     identityPolicy,
@@ -632,11 +746,11 @@ export function validateDiagnosticSeparationOfDutiesPolicy(
     workflow,
     authority,
   };
-  const { roleOwnershipSummary, prerequisite } = validateUpstreamArtifacts(upstream);
+  const { separationSummary, prerequisite } = validateUpstreamArtifacts(upstream);
   scanForbiddenTermsAndPrivateValues(artifact);
   requireExactValue(
     artifact,
-    buildExpectedArtifact(upstream, roleOwnershipSummary, prerequisite),
+    buildExpectedArtifact(upstream, separationSummary, prerequisite),
     "$",
   );
   return {
@@ -645,13 +759,14 @@ export function validateDiagnosticSeparationOfDutiesPolicy(
     policyState: artifact.policyIdentity.policyState,
     prerequisiteStatus: artifact.prerequisiteReference.status,
     rolePlaceholderCount: artifact.aggregate.rolePlaceholderCount,
-    incompatibleRulePlaceholderCount: artifact.aggregate.incompatibleRulePlaceholderCount,
+    conflictCategoryPlaceholderCount: artifact.aggregate.conflictCategoryPlaceholderCount,
     decisionRequirementCount: artifact.aggregate.decisionRequirementCount,
-    activeEnforcementRuleCount: artifact.aggregate.activeEnforcementRuleCount,
+    activeConflictRuleCount: artifact.aggregate.activeConflictRuleCount,
     reviewerIdentityCount: artifact.aggregate.reviewerIdentityCount,
     reviewerAssignmentCount: artifact.aggregate.reviewerAssignmentCount,
     conflictRecordCount: artifact.aggregate.conflictRecordCount,
-    violationRecordCount: artifact.aggregate.violationRecordCount,
+    disclosureRecordCount: artifact.aggregate.disclosureRecordCount,
+    recusalRecordCount: artifact.aggregate.recusalRecordCount,
     waiverRecordCount: artifact.aggregate.waiverRecordCount,
     approvedDecisionCount: artifact.aggregate.approvedDecisionCount,
     productionApprovalCount: artifact.aggregate.productionApprovalCount,
@@ -661,8 +776,8 @@ export function validateDiagnosticSeparationOfDutiesPolicy(
   };
 }
 
-export async function readDiagnosticSeparationOfDutiesPolicy(
-  artifactPath = defaultSeparationOfDutiesPolicyPath,
+export async function readDiagnosticConflictOfInterestPolicy(
+  artifactPath = defaultConflictOfInterestPolicyPath,
 ) {
   return JSON.parse(await readFile(artifactPath, "utf8"));
 }
@@ -673,7 +788,7 @@ function normalizeStatusPath(statusLine) {
   return normalizedPath.replaceAll("\\", "/");
 }
 
-export function validateSeparationOfDutiesPolicyChangedPaths(changedPaths) {
+export function validateConflictOfInterestPolicyChangedPaths(changedPaths) {
   if (!Array.isArray(changedPaths)) {
     fail("Changed paths must be an array.");
   }
@@ -686,7 +801,7 @@ export function validateSeparationOfDutiesPolicyChangedPaths(changedPaths) {
   return [...changedPaths];
 }
 
-export function validateSeparationOfDutiesPolicyWorktreeScope({ cwd = repoRoot } = {}) {
+export function validateConflictOfInterestPolicyWorktreeScope({ cwd = repoRoot } = {}) {
   const result = spawnSync("git", ["status", "--short", "--untracked-files=all"], {
     cwd,
     encoding: "utf8",
@@ -699,11 +814,12 @@ export function validateSeparationOfDutiesPolicyWorktreeScope({ cwd = repoRoot }
     .map((line) => line.trimEnd())
     .filter(Boolean)
     .map(normalizeStatusPath);
-  return validateSeparationOfDutiesPolicyChangedPaths(changedPaths);
+  return validateConflictOfInterestPolicyChangedPaths(changedPaths);
 }
 
 async function readUpstreamArtifacts() {
   const [
+    separationPolicy,
     roleOwnershipPolicy,
     canonicalizationDigestPolicy,
     identityPolicy,
@@ -716,6 +832,7 @@ async function readUpstreamArtifacts() {
     workflow,
     authority,
   ] = await Promise.all([
+    readDiagnosticSeparationOfDutiesPolicy(),
     readDiagnosticReviewerRoleOwnershipPolicy(),
     readDiagnosticCandidateCanonicalizationDigestPolicy(),
     readDiagnosticCandidateIdentityPolicy(),
@@ -729,6 +846,7 @@ async function readUpstreamArtifacts() {
     readDiagnosticReviewAuthority(),
   ]);
   return {
+    separationPolicy,
     roleOwnershipPolicy,
     canonicalizationDigestPolicy,
     identityPolicy,
@@ -746,11 +864,12 @@ async function readUpstreamArtifacts() {
 async function main() {
   const checkWorktreeScope = process.argv.includes("--check-worktree-scope");
   const [artifact, upstream] = await Promise.all([
-    readDiagnosticSeparationOfDutiesPolicy(),
+    readDiagnosticConflictOfInterestPolicy(),
     readUpstreamArtifacts(),
   ]);
-  const summary = validateDiagnosticSeparationOfDutiesPolicy(
+  const summary = validateDiagnosticConflictOfInterestPolicy(
     artifact,
+    upstream.separationPolicy,
     upstream.roleOwnershipPolicy,
     upstream.canonicalizationDigestPolicy,
     upstream.identityPolicy,
@@ -764,10 +883,10 @@ async function main() {
     upstream.authority,
   );
   if (checkWorktreeScope) {
-    validateSeparationOfDutiesPolicyWorktreeScope();
+    validateConflictOfInterestPolicyWorktreeScope();
   }
   console.log(
-    `[curriculum] Separation-of-duties policy ${summary.policyArtifactVersion} validated: ${summary.rolePlaceholderCount} role placeholders, ${summary.incompatibleRulePlaceholderCount} reference-only rules, ${summary.decisionRequirementCount} undecided requirements, ${summary.activeEnforcementRuleCount} active enforcement rules, ${summary.reviewerIdentityCount} reviewer identities, ${summary.reviewerAssignmentCount} reviewer assignments, ${summary.conflictRecordCount} conflicts, ${summary.violationRecordCount} violations, ${summary.waiverRecordCount} waivers, ${summary.approvedDecisionCount} approved decisions, ${summary.productionApprovalCount} production approvals; policy ${summary.policyState}, prerequisite ${summary.prerequisiteStatus}, activation ${summary.activationStatus}, workflow ${summary.reviewWorkflowStatus}, readiness ${summary.readiness}.`,
+    `[curriculum] Conflict-of-interest policy ${summary.policyArtifactVersion} validated: ${summary.rolePlaceholderCount} role placeholders, ${summary.conflictCategoryPlaceholderCount} category placeholders, ${summary.decisionRequirementCount} undecided requirements, ${summary.activeConflictRuleCount} active conflict rules, ${summary.reviewerIdentityCount} reviewer identities, ${summary.reviewerAssignmentCount} reviewer assignments, ${summary.conflictRecordCount} conflicts, ${summary.disclosureRecordCount} disclosures, ${summary.recusalRecordCount} recusals, ${summary.waiverRecordCount} waivers, ${summary.approvedDecisionCount} approved decisions, ${summary.productionApprovalCount} production approvals; policy ${summary.policyState}, prerequisite ${summary.prerequisiteStatus}, activation ${summary.activationStatus}, workflow ${summary.reviewWorkflowStatus}, readiness ${summary.readiness}.`,
   );
 }
 

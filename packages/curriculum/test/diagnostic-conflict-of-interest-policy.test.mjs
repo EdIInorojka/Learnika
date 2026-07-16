@@ -7,6 +7,11 @@ import { readDiagnosticCandidateCanonicalization } from "../scripts/validate-dia
 import { readDiagnosticCandidateCanonicalizationDigestPolicy } from "../scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs";
 import { readDiagnosticCandidateDigestRegistry } from "../scripts/validate-diagnostic-candidate-digest.mjs";
 import { readDiagnosticCandidateIdentityPolicy } from "../scripts/validate-diagnostic-candidate-identity-policy.mjs";
+import {
+  readDiagnosticConflictOfInterestPolicy,
+  validateConflictOfInterestPolicyChangedPaths,
+  validateDiagnosticConflictOfInterestPolicy,
+} from "../scripts/validate-diagnostic-conflict-of-interest-policy.mjs";
 import { readDiagnosticReviewActivationPrerequisites } from "../scripts/validate-diagnostic-review-activation-prerequisites.mjs";
 import { readDiagnosticReviewAuthority } from "../scripts/validate-diagnostic-review-authority.mjs";
 import { readDiagnosticReviewCoverage } from "../scripts/validate-diagnostic-review-coverage.mjs";
@@ -14,11 +19,7 @@ import { readDiagnosticReviewEvidence } from "../scripts/validate-diagnostic-rev
 import { readDiagnosticReviewGateRubric } from "../scripts/validate-diagnostic-review-gate-rubric.mjs";
 import { readDiagnosticReviewWorkflowState } from "../scripts/validate-diagnostic-review-workflow-state.mjs";
 import { readDiagnosticReviewerRoleOwnershipPolicy } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs";
-import {
-  readDiagnosticSeparationOfDutiesPolicy,
-  validateDiagnosticSeparationOfDutiesPolicy,
-  validateSeparationOfDutiesPolicyChangedPaths,
-} from "../scripts/validate-diagnostic-separation-of-duties-policy.mjs";
+import { readDiagnosticSeparationOfDutiesPolicy } from "../scripts/validate-diagnostic-separation-of-duties-policy.mjs";
 
 const expectedRoleIds = [
   "METHODOLOGY_REVIEWER_PLACEHOLDER",
@@ -29,21 +30,26 @@ const expectedRoleIds = [
   "PRODUCTION_APPROVER_PLACEHOLDER",
   "AUDIT_OBSERVER_PLACEHOLDER",
 ];
-const expectedRuleIds = [
-  "SUBSTANTIVE_REVIEWER_SEPARATE_FROM_PRODUCTION_APPROVER",
-  "AUDIT_OBSERVER_SEPARATE_FROM_DECISION_ROLES",
-  "NO_SELF_REVIEW_OR_SELF_APPROVAL",
+const expectedCategoryIds = [
+  "CANDIDATE_AUTHOR_RELATIONSHIP_PLACEHOLDER",
+  "TEXTBOOK_OR_CONTENT_SOURCE_RELATIONSHIP_PLACEHOLDER",
+  "FINANCIAL_VENDOR_OR_PROVIDER_RELATIONSHIP_PLACEHOLDER",
+  "PERSONAL_OR_FAMILY_RELATIONSHIP_PLACEHOLDER",
+  "ORGANIZATIONAL_OR_REPORTING_RELATIONSHIP_PLACEHOLDER",
+  "PRIOR_DECISION_OR_ADVOCACY_RELATIONSHIP_PLACEHOLDER",
+  "OTHER_ACTUAL_POTENTIAL_OR_PERCEIVED_CONFLICT_PLACEHOLDER",
 ];
 const expectedDecisionRequirementIds = [
-  "incompatible_role_combinations",
-  "maker_checker_separation",
-  "production_approver_separation",
-  "reviewer_self_approval_prohibition",
-  "candidate_author_and_reviewer_separation",
-  "audit_observer_separation",
-  "separation_enforcement_authority",
-  "separation_violation_handling",
-  "separation_waiver_and_exception_policy",
+  "conflict_category_taxonomy",
+  "reviewer_self_disclosure",
+  "candidate_author_relationship",
+  "textbook_and_content_source_relationship",
+  "financial_vendor_and_provider_relationship",
+  "recusal_and_reassignment",
+  "waiver_and_exception_policy",
+  "conflict_escalation_authority",
+  "conflict_audit_trail",
+  "assignment_decision_and_late_disclosure_enforcement_timing",
 ];
 const forbiddenTerms = [
   "finalAnswer",
@@ -80,17 +86,25 @@ const protectedRecordFields = [
   "candidateAuthorshipRecords",
   "digestValueRecords",
   "reviewEvidenceRecords",
-  "candidateAuthorIdentityRecords",
   "reviewerIdentityRecords",
   "auditIdentityRecords",
   "roleAssignmentRecords",
   "reviewerAssignmentRecords",
+  "candidateAuthorRelationshipRecords",
+  "contentSourceRelationshipRecords",
+  "financialVendorProviderRelationshipRecords",
+  "otherRelationshipRecords",
   "conflictRecords",
-  "violationRecords",
+  "disclosureRecords",
+  "recusalRecords",
+  "reassignmentRecords",
   "waiverRecords",
   "exceptionRecords",
-  "enforcementAuthorityAssignmentRecords",
-  "activeEnforcementRuleRecords",
+  "escalationAuthorityAssignmentRecords",
+  "escalationRecords",
+  "appealRecords",
+  "auditTrailRecords",
+  "activeConflictRuleRecords",
   "reviewDecisionRecords",
   "approvedDecisionRecords",
   "productionApprovalRecords",
@@ -135,6 +149,7 @@ function clone(value) {
 async function readArtifacts() {
   const [
     artifact,
+    separationPolicy,
     roleOwnershipPolicy,
     canonicalizationDigestPolicy,
     identityPolicy,
@@ -147,6 +162,7 @@ async function readArtifacts() {
     workflow,
     authority,
   ] = await Promise.all([
+    readDiagnosticConflictOfInterestPolicy(),
     readDiagnosticSeparationOfDutiesPolicy(),
     readDiagnosticReviewerRoleOwnershipPolicy(),
     readDiagnosticCandidateCanonicalizationDigestPolicy(),
@@ -162,6 +178,7 @@ async function readArtifacts() {
   ]);
   return {
     artifact,
+    separationPolicy,
     roleOwnershipPolicy,
     canonicalizationDigestPolicy,
     identityPolicy,
@@ -177,8 +194,9 @@ async function readArtifacts() {
 }
 
 function validate(artifacts, artifact = artifacts.artifact) {
-  return validateDiagnosticSeparationOfDutiesPolicy(
+  return validateDiagnosticConflictOfInterestPolicy(
     artifact,
+    artifacts.separationPolicy,
     artifacts.roleOwnershipPolicy,
     artifacts.canonicalizationDigestPolicy,
     artifacts.identityPolicy,
@@ -193,21 +211,22 @@ function validate(artifacts, artifact = artifacts.artifact) {
   );
 }
 
-test("separation-of-duties policy placeholder is valid and unresolved", async () => {
+test("conflict-of-interest policy placeholder is valid and unresolved", async () => {
   const artifacts = await readArtifacts();
   assert.deepEqual(validate(artifacts), {
-    policyArtifactVersion: "wave-5.slice-6.grade-7-9-math.v1",
-    policyVersion: "wave-5.slice-6.diagnostic-separation-of-duties-enforcement.placeholder.v1",
+    policyArtifactVersion: "wave-5.slice-7.grade-7-9-math.v1",
+    policyVersion: "wave-5.slice-7.diagnostic-conflict-of-interest.placeholder.v1",
     policyState: "UNRESOLVED_DEFERRED",
     prerequisiteStatus: "UNSATISFIED_DEFERRED",
     rolePlaceholderCount: 7,
-    incompatibleRulePlaceholderCount: 3,
-    decisionRequirementCount: 9,
-    activeEnforcementRuleCount: 0,
+    conflictCategoryPlaceholderCount: 7,
+    decisionRequirementCount: 10,
+    activeConflictRuleCount: 0,
     reviewerIdentityCount: 0,
     reviewerAssignmentCount: 0,
     conflictRecordCount: 0,
-    violationRecordCount: 0,
+    disclosureRecordCount: 0,
+    recusalRecordCount: 0,
     waiverRecordCount: 0,
     approvedDecisionCount: 0,
     productionApprovalCount: 0,
@@ -217,7 +236,7 @@ test("separation-of-duties policy placeholder is valid and unresolved", async ()
   });
 });
 
-test("separation prerequisite remains exact unchanged and unsatisfied", async () => {
+test("conflict prerequisite remains exact unchanged and unsatisfied", async () => {
   const artifacts = await readArtifacts();
   for (const [field, value] of [
     ["status", "SATISFIED"],
@@ -233,17 +252,18 @@ test("separation prerequisite remains exact unchanged and unsatisfied", async ()
 
   const upstream = clone(artifacts);
   const prerequisite = upstream.activationPrerequisites.prerequisites.find(
-    ({ prerequisiteId }) => prerequisiteId === "separation_of_duties_enforcement",
+    ({ prerequisiteId }) => prerequisiteId === "conflict_of_interest_policy",
   );
   prerequisite.status = "SATISFIED";
   assert.throws(() => validate(upstream), /UNSATISFIED_DEFERRED|exact unsatisfied prerequisite/);
 });
 
-test("exact Slice 2 Slice 5 and Wave 4 pins remain unchanged", async () => {
+test("exact Slice 2 Slice 5 Slice 6 and Wave 4 pins remain unchanged", async () => {
   const artifacts = await readArtifacts();
   for (const [field, value] of [
     ["activationPrerequisitesArtifactVersion", "wave-5.slice-2.changed"],
     ["reviewerRoleOwnershipPolicyArtifactVersion", "wave-5.slice-5.changed"],
+    ["separationOfDutiesPolicyArtifactVersion", "wave-5.slice-6.changed"],
     ["reviewAuthorityArtifactVersion", "wave-4.slice-8.changed"],
     ["reviewWorkflowStateArtifactVersion", "wave-4.slice-7.changed"],
   ]) {
@@ -251,48 +271,52 @@ test("exact Slice 2 Slice 5 and Wave 4 pins remain unchanged", async () => {
     invalid.metadata[field] = value;
     assert.throws(() => validate(artifacts, invalid), new RegExp(field));
   }
-  const rolePolicy = clone(artifacts.artifact);
-  rolePolicy.dependencyReferences.reviewerRoleOwnershipPolicy.policyState = "ACTIVE";
-  assert.throws(() => validate(artifacts, rolePolicy), /policyState/);
-  const workflow = clone(artifacts.artifact);
-  workflow.dependencyReferences.reviewWorkflowState.runtimeActivationAllowed = true;
-  assert.throws(() => validate(artifacts, workflow), /runtimeActivationAllowed/);
+  const separation = clone(artifacts.artifact);
+  separation.dependencyReferences.separationOfDutiesPolicy.policyState = "ACTIVE";
+  assert.throws(() => validate(artifacts, separation), /policyState/);
+  const authority = clone(artifacts.artifact);
+  authority.dependencyReferences.reviewAuthority.conflictPolicyStatus = "ACTIVE";
+  assert.throws(() => validate(artifacts, authority), /conflictPolicyStatus/);
 });
 
-test("taxonomy remains exactly seven role placeholders without an author role", async () => {
+test("role taxonomy remains exactly seven placeholders without conflict authority", async () => {
   const artifacts = await readArtifacts();
   assert.deepEqual(
     artifacts.artifact.roleTaxonomyPlaceholders.map(({ rolePlaceholderId }) => rolePlaceholderId),
     expectedRoleIds,
   );
-  assert.equal(
-    artifacts.artifact.makerCheckerSeparationPlaceholder.makerActorClassPlaceholder,
-    "CANDIDATE_AUTHOR_ACTOR_PLACEHOLDER",
-  );
   const extra = clone(artifacts.artifact);
-  extra.roleTaxonomyPlaceholders.push({ rolePlaceholderId: "CANDIDATE_AUTHOR" });
+  extra.roleTaxonomyPlaceholders.push({ rolePlaceholderId: "CONFLICT_EVALUATOR" });
   assert.throws(() => validate(artifacts, extra), /must contain exactly 7 values/);
+  const authority = clone(artifacts.artifact);
+  authority.roleTaxonomyPlaceholders[0].conflictEvaluationAllowed = true;
+  assert.throws(() => validate(artifacts, authority), /conflictEvaluationAllowed/);
 });
 
-test("three Wave 4 separation requirements remain reference-only", async () => {
+test("conflict taxonomy is the exact seven non-disqualifying placeholders", async () => {
   const artifacts = await readArtifacts();
   assert.deepEqual(
-    artifacts.artifact.incompatibleRoleCombinationsPlaceholders.map(({ ruleId }) => ruleId),
-    expectedRuleIds,
+    artifacts.artifact.conflictCategoryTaxonomyPlaceholders.map(
+      ({ categoryPlaceholderId }) => categoryPlaceholderId,
+    ),
+    expectedCategoryIds,
   );
+  const missing = clone(artifacts.artifact);
+  missing.conflictCategoryTaxonomyPlaceholders.pop();
+  assert.throws(() => validate(artifacts, missing), /must contain exactly 7 values/);
   for (const [field, value] of [
-    ["ruleState", "ACTIVE"],
-    ["enforcementPolicyReference", "policy.v1"],
+    ["definitionPolicyReference", "policy.v1"],
+    ["relationshipRecordingAllowed", true],
     ["runtimeEvaluationAllowed", true],
-    ["decisionAuthorizationAllowed", true],
+    ["disqualifyingStatusDefined", true],
   ]) {
     const invalid = clone(artifacts.artifact);
-    invalid.incompatibleRoleCombinationsPlaceholders[0][field] = value;
+    invalid.conflictCategoryTaxonomyPlaceholders[0][field] = value;
     assert.throws(() => validate(artifacts, invalid), new RegExp(field));
   }
 });
 
-test("exact nine unique decision requirements remain unresolved", async () => {
+test("exact ten unique decision requirements remain unresolved", async () => {
   const artifacts = await readArtifacts();
   assert.deepEqual(
     artifacts.artifact.decisionRequirements.map(({ requirementId }) => requirementId),
@@ -300,29 +324,48 @@ test("exact nine unique decision requirements remain unresolved", async () => {
   );
   const missing = clone(artifacts.artifact);
   missing.decisionRequirements.pop();
-  assert.throws(() => validate(artifacts, missing), /must contain exactly 9 values/);
+  assert.throws(() => validate(artifacts, missing), /must contain exactly 10 values/);
   const decided = clone(artifacts.artifact);
   decided.decisionRequirements[0].state = "APPROVED";
   assert.throws(() => validate(artifacts, decided), /state/);
-  const duplicated = clone(artifacts.artifact);
-  duplicated.decisionRequirements[8] = clone(duplicated.decisionRequirements[0]);
-  assert.throws(() => validate(artifacts, duplicated), /requirementId/);
+  const duplicate = clone(artifacts.artifact);
+  duplicate.decisionRequirements[9] = clone(duplicate.decisionRequirements[0]);
+  assert.throws(() => validate(artifacts, duplicate), /requirementId/);
 });
 
-test("maker checker author reviewer approver and audit separation stay inactive", async () => {
+test("reviewer self-disclosure remains private unresolved and disabled", async () => {
+  const artifacts = await readArtifacts();
+  assert.deepEqual(
+    artifacts.artifact.reviewerSelfDisclosurePlaceholder.subjectRolePlaceholderIds,
+    expectedRoleIds,
+  );
+  for (const [field, value] of [
+    ["disclosurePolicyReference", "policy.v1"],
+    ["declarationReferenceFormat", "opaque.v1"],
+    ["disclosureSubmissionAllowed", true],
+    ["privateDisclosureStorageAllowed", true],
+    ["selfClearanceAllowed", true],
+    ["assignmentEvaluationAllowed", true],
+    ["decisionEvaluationAllowed", true],
+  ]) {
+    const invalid = clone(artifacts.artifact);
+    invalid.reviewerSelfDisclosurePlaceholder[field] = value;
+    assert.throws(() => validate(artifacts, invalid), new RegExp(field));
+  }
+});
+
+test("candidate content-source and commercial relationships remain unrecorded", async () => {
   const artifacts = await readArtifacts();
   for (const [objectName, field, value] of [
-    ["makerCheckerSeparationPlaceholder", "identityComparisonPolicyReference", "policy.v1"],
-    ["makerCheckerSeparationPlaceholder", "assignmentTimeEvaluationAllowed", true],
-    ["makerCheckerSeparationPlaceholder", "decisionTimeEvaluationAllowed", true],
-    ["productionApproverSeparationPlaceholder", "reviewerProductionApprovalAllowed", true],
-    ["productionApproverSeparationPlaceholder", "enforcementAllowed", true],
-    ["reviewerSelfApprovalProhibitionPlaceholder", "selfReviewAllowed", true],
-    ["reviewerSelfApprovalProhibitionPlaceholder", "enforcementAllowed", true],
-    ["candidateAuthorReviewerSeparationPlaceholder", "candidateAuthorshipRecordingAllowed", true],
-    ["candidateAuthorReviewerSeparationPlaceholder", "identityComparisonAllowed", true],
-    ["auditObserverSeparationPlaceholder", "auditDecisionAuthorityAllowed", true],
-    ["auditObserverSeparationPlaceholder", "auditProductionApprovalAllowed", true],
+    ["candidateAuthorRelationshipPlaceholder", "authorshipPolicyReference", "policy.v1"],
+    ["candidateAuthorRelationshipPlaceholder", "identityComparisonAllowed", true],
+    ["candidateAuthorRelationshipPlaceholder", "runtimeEvaluationAllowed", true],
+    ["contentSourceRelationshipPlaceholder", "contentSourceReferenceFormat", "source.v1"],
+    ["contentSourceRelationshipPlaceholder", "rightsEvidenceRecordingAllowed", true],
+    ["contentSourceRelationshipPlaceholder", "runtimeEvaluationAllowed", true],
+    ["financialVendorProviderRelationshipPlaceholder", "materialityPolicyReference", "policy.v1"],
+    ["financialVendorProviderRelationshipPlaceholder", "relationshipRecordingAllowed", true],
+    ["financialVendorProviderRelationshipPlaceholder", "providerIntegrationAllowed", true],
   ]) {
     const invalid = clone(artifacts.artifact);
     invalid[objectName][field] = value;
@@ -330,51 +373,32 @@ test("maker checker author reviewer approver and audit separation stay inactive"
   }
 });
 
-test("enforcement authority remains generic unassigned and disabled", async () => {
+test("recusal reassignment and prior-decision handling remain disabled", async () => {
   const artifacts = await readArtifacts();
   for (const [field, value] of [
-    ["authorityPlaceholderId", "ASSIGNED_AUTHORITY"],
-    ["authorityOwnerReference", "owner-ref"],
-    ["authorityAssignmentReference", "assignment-ref"],
-    ["enforcementPolicyReference", "policy.v1"],
-    ["policyApprovalAllowed", true],
-    ["runtimeEnforcementAllowed", true],
-    ["assignmentTimeEvaluationAllowed", true],
-    ["decisionTimeEvaluationAllowed", true],
-    ["decisionAuthorizationAllowed", true],
-    ["productionApprovalAuthorizationAllowed", true],
+    ["recusalPolicyReference", "policy.v1"],
+    ["recusalRecordingAllowed", true],
+    ["reassignmentAllowed", true],
+    ["assignmentBlockingAllowed", true],
+    ["priorDecisionInvalidationAllowed", true],
+    ["runtimeWorkflowAllowed", true],
   ]) {
     const invalid = clone(artifacts.artifact);
-    invalid.enforcementAuthorityPlaceholder[field] = value;
+    invalid.recusalPolicyPlaceholder[field] = value;
     assert.throws(() => validate(artifacts, invalid), new RegExp(field));
   }
 });
 
-test("violation handling remains unresolved and disabled", async () => {
-  const artifacts = await readArtifacts();
-  for (const [field, value] of [
-    ["detectionPolicyReference", "policy.v1"],
-    ["violationDetectionAllowed", true],
-    ["violationRecordingAllowed", true],
-    ["containmentAllowed", true],
-    ["decisionInvalidationAllowed", true],
-    ["remediationAllowed", true],
-  ]) {
-    const invalid = clone(artifacts.artifact);
-    invalid.violationHandlingPlaceholder[field] = value;
-    assert.throws(() => validate(artifacts, invalid), new RegExp(field));
-  }
-});
-
-test("waiver and exception placeholder cannot authorize production or bypass a gate", async () => {
+test("waiver and exception cannot clear conflicts authorize production or bypass gates", async () => {
   const artifacts = await readArtifacts();
   for (const [field, value] of [
     ["waiverPolicyReference", "policy.v1"],
-    ["exceptionPolicyReference", "policy.v1"],
     ["waiverRecordingAllowed", true],
     ["exceptionRecordingAllowed", true],
-    ["separationOverrideAllowed", true],
+    ["conflictClearanceAllowed", true],
+    ["disclosureSuppressionAllowed", true],
     ["missingGateSatisfactionAllowed", true],
+    ["assignmentAuthorizationAllowed", true],
     ["reviewDecisionAuthorizationAllowed", true],
     ["productionApprovalAuthorizationAllowed", true],
     ["readinessTransitionAllowed", true],
@@ -385,17 +409,58 @@ test("waiver and exception placeholder cannot authorize production or bypass a g
   }
 });
 
-test("activation and readiness remain blocked with the exact two reasons", async () => {
+test("escalation authority and audit trail remain unassigned and inactive", async () => {
   const artifacts = await readArtifacts();
-  for (const field of [
-    "activationAllowed",
-    "reviewWorkflowActivationAllowed",
-    "readinessTransitionAllowed",
-    "reviewDecisionAuthorizationAllowed",
-    "productionApprovalAllowed",
+  for (const [objectName, field, value] of [
+    ["escalationAuthorityPlaceholder", "authorityPlaceholderId", "ASSIGNED_AUTHORITY"],
+    ["escalationAuthorityPlaceholder", "authorityOwnerReference", "owner-ref"],
+    ["escalationAuthorityPlaceholder", "escalationAllowed", true],
+    ["escalationAuthorityPlaceholder", "appealAllowed", true],
+    ["escalationAuthorityPlaceholder", "decisionAuthorizationAllowed", true],
+    ["auditTrailPlaceholder", "auditRecordSchemaReference", "schema.v1"],
+    ["auditTrailPlaceholder", "auditRecordingAllowed", true],
+    ["auditTrailPlaceholder", "privateReferenceLookupAllowed", true],
+    ["auditTrailPlaceholder", "ordinaryCurriculumStorageAllowed", true],
   ]) {
     const invalid = clone(artifacts.artifact);
-    invalid.activationBoundary[field] = true;
+    invalid[objectName][field] = value;
+    assert.throws(() => validate(artifacts, invalid), new RegExp(field));
+  }
+});
+
+test("assignment decision and late-disclosure enforcement timing remains disabled", async () => {
+  const artifacts = await readArtifacts();
+  for (const [field, value] of [
+    ["timingPolicyReference", "policy.v1"],
+    ["assignmentTimeEvaluationAllowed", true],
+    ["decisionTimeEvaluationAllowed", true],
+    ["ongoingEvaluationAllowed", true],
+    ["lateDisclosureEvaluationAllowed", true],
+    ["priorDecisionInvalidationAllowed", true],
+    ["runtimeAssignmentBlockingAllowed", true],
+    ["runtimeDecisionBlockingAllowed", true],
+  ]) {
+    const invalid = clone(artifacts.artifact);
+    invalid.enforcementTimingPlaceholder[field] = value;
+    assert.throws(() => validate(artifacts, invalid), new RegExp(field));
+  }
+});
+
+test("policy activation and readiness remain blocked with the exact two reasons", async () => {
+  const artifacts = await readArtifacts();
+  for (const field of [
+    "policyApprovalAllowed",
+    "conflictTaxonomyApprovalAllowed",
+    "disclosureCollectionAllowed",
+    "runtimeEvaluationAllowed",
+    "assignmentTimeEvaluationAllowed",
+    "decisionTimeEvaluationAllowed",
+    "lateDisclosureEvaluationAllowed",
+    "reviewDecisionAuthorizationAllowed",
+    "productionApprovalAuthorizationAllowed",
+  ]) {
+    const invalid = clone(artifacts.artifact);
+    invalid.policyIdentity[field] = true;
     assert.throws(() => validate(artifacts, invalid), new RegExp(field));
   }
   const ready = clone(artifacts.artifact);
@@ -421,9 +486,13 @@ test("all protected records and matching aggregates remain zero", async () => {
   }
   for (const countField of [
     "reviewerIdentityCount",
-    "roleAssignmentCount",
+    "reviewerAssignmentCount",
+    "candidateAuthorRelationshipCount",
+    "contentSourceRelationshipCount",
+    "financialVendorProviderRelationshipCount",
     "conflictRecordCount",
-    "violationRecordCount",
+    "disclosureRecordCount",
+    "recusalRecordCount",
     "waiverRecordCount",
     "approvedDecisionCount",
     "productionApprovalCount",
@@ -462,45 +531,47 @@ test("unknown fields forbidden terms and private identifier patterns fail closed
   }
 });
 
-test("Slice 6 worktree guard permits only the exact 30 Slice 7 implementation paths", () => {
+test("Slice 7 worktree guard permits only the exact 30 implementation paths", () => {
   assert.deepEqual(
-    validateSeparationOfDutiesPolicyChangedPaths(approvedSlice7ChangedPaths),
+    validateConflictOfInterestPolicyChangedPaths(approvedSlice7ChangedPaths),
     approvedSlice7ChangedPaths,
   );
   for (const forbiddenPath of [
     "README.md",
     "docs/wave-5/slice-8-implementation-note.md",
-    "docs/wave-5/nested/diagnostic-separation-of-duties-policy-contract.md",
-    "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md.bak",
-    "packages/curriculum/diagnostic-separation-of-duties-policy/extra.v1.json",
-    "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs.bak",
-    "packages/curriculum/test/diagnostic-separation-of-duties-policy.test.mjs.bak",
-    "apps/api/src/diagnostic-review/authorization.ts",
+    "docs/wave-5/nested/diagnostic-conflict-of-interest-policy-contract.md",
+    "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md.bak",
+    "packages/curriculum/diagnostic-conflict-of-interest-policy/extra.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/conflict-of-interest.ts",
     "apps/api/package.json",
     "packages/contracts/openapi.json",
     "apps/api/prisma/schema.prisma",
+    "apps/api/prisma/migrations/next/migration.sql",
     "apps/web/app/diagnostic/review/page.tsx",
-    "packages/curriculum/src/diagnostic-separation-runtime.ts",
+    "packages/curriculum/src/diagnostic-conflict-of-interest-runtime.ts",
+    "packages/curriculum/package.json",
     "pnpm-lock.yaml",
     "pnpm-workspace.yaml",
   ]) {
     assert.throws(
-      () => validateSeparationOfDutiesPolicyChangedPaths([forbiddenPath]),
+      () => validateConflictOfInterestPolicyChangedPaths([forbiddenPath]),
       /Wave 5 Slice 7 out-of-scope path changed/,
       forbiddenPath,
     );
   }
 });
 
-test("root test command registers the Slice 6 validator and focused test exactly once", async () => {
+test("root test command registers the Slice 7 validator and focused test exactly once", async () => {
   const packageJson = JSON.parse(
     await readFile(new URL("../../../package.json", import.meta.url), "utf8"),
   );
   const testCommand = packageJson.scripts?.test;
   assert.equal(typeof testCommand, "string");
   for (const exactRegistration of [
-    "node packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs --check-worktree-scope",
-    "packages/curriculum/test/diagnostic-separation-of-duties-policy.test.mjs",
+    "node packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs --check-worktree-scope",
+    "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
   ]) {
     assert.equal(
       testCommand.split(exactRegistration).length - 1,
@@ -510,9 +581,9 @@ test("root test command registers the Slice 6 validator and focused test exactly
   }
 });
 
-test("Slice 6 validator contains no broad documentation curriculum or API allowlist", async () => {
+test("Slice 7 validator contains no broad documentation curriculum or API allowlist", async () => {
   const source = await readFile(
-    new URL("../scripts/validate-diagnostic-separation-of-duties-policy.mjs", import.meta.url),
+    new URL("../scripts/validate-diagnostic-conflict-of-interest-policy.mjs", import.meta.url),
     "utf8",
   );
   assert.doesNotMatch(source, /["']docs\/wave-5\/["']/);

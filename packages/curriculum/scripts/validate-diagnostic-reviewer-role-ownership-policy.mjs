@@ -74,15 +74,16 @@ const forbiddenTerms = [
   "canonicalizedContent",
   "normalizedStem",
 ];
-const approvedSlice6ChangedPaths = new Set([
-  "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
-  "docs/wave-5/slice-6-implementation-note.md",
+const approvedSlice7ChangedPaths = new Set([
+  "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",
+  "docs/wave-5/slice-7-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-separation-of-duties-policy/grade-7-9-math.separation-of-duties-policy-placeholder.v1.json",
+  "packages/curriculum/diagnostic-conflict-of-interest-policy/grade-7-9-math.conflict-of-interest-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
@@ -95,6 +96,7 @@ const approvedSlice6ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-blueprint.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-canonicalization-digest-policy.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-identity-policy.test.mjs",
+  "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
   "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
@@ -750,8 +752,8 @@ export function validateReviewerRoleOwnershipPolicyChangedPaths(changedPaths) {
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice6ChangedPaths.has(changedPath)) {
-      fail(`Wave 5 Slice 6 out-of-scope path changed: ${changedPath}.`);
+    if (!approvedSlice7ChangedPaths.has(changedPath)) {
+      fail(`Wave 5 Slice 7 out-of-scope path changed: ${changedPath}.`);
     }
   }
   return [...changedPaths];

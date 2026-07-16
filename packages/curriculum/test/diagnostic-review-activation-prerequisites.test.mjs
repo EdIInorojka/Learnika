@@ -289,7 +289,7 @@ test("Slice 2 worktree guard permits only the exact 19 implementation paths", ()
 
   const forbiddenPaths = [
     "README.md",
-    "docs/wave-5/slice-7-implementation-note.md",
+    "docs/wave-5/slice-8-implementation-note.md",
     "docs/wave-5/nested/slice-2-implementation-note.md",
     "docs/wave-5/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-review-activation-prerequisites/extra.v1.json",
@@ -425,6 +425,37 @@ test("Slice 2 guard admits only the exact five Slice 6 static files", () => {
     "apps/api/prisma/schema.prisma",
     "apps/web/app/diagnostic/review/page.tsx",
     "packages/curriculum/src/diagnostic-separation-runtime.ts",
+    "pnpm-lock.yaml",
+  ]) {
+    assert.throws(
+      () => validateActivationPrerequisitesChangedPaths([forbiddenPath]),
+      /Wave 5 Slice 2 out-of-scope path changed/,
+      forbiddenPath,
+    );
+  }
+});
+
+test("Slice 2 guard admits only the exact five Slice 7 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",
+    "docs/wave-5/slice-7-implementation-note.md",
+    "packages/curriculum/diagnostic-conflict-of-interest-policy/grade-7-9-math.conflict-of-interest-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+    "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
+  ];
+  assert.deepEqual(validateActivationPrerequisitesChangedPaths(approvedPaths), approvedPaths);
+
+  for (const forbiddenPath of [
+    "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md.bak",
+    "docs/wave-5/nested/slice-7-implementation-note.md",
+    "packages/curriculum/diagnostic-conflict-of-interest-policy/extra.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/conflict-of-interest.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-conflict-of-interest-runtime.ts",
     "pnpm-lock.yaml",
   ]) {
     assert.throws(
