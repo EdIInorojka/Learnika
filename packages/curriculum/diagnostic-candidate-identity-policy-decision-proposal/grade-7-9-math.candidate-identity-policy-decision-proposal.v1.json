@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticCandidateIdentityPolicyDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-1.grade-7-9-math.v1",
+    "proposalId": "diagnostic-candidate-identity-policy-decision-proposal",
+    "proposalVersion": "wave-6.slice-1.diagnostic-candidate-identity-policy.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_candidate_identity_policy_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "candidateIdentityPolicyPlaceholderArtifactVersion": "wave-5.slice-3.grade-7-9-math.v1",
+    "candidateDigestRegistryArtifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+    "reviewCoverageArtifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-6/diagnostic-candidate-identity-policy-decision-proposal.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "upstreamReferences": {
+    "activationPrerequisites": {
+      "artifactPath": "packages/curriculum/diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json",
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "artifactStatus": "blocked_prerequisites_only_non_production",
+      "prerequisiteId": "candidate_identity_policy",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    },
+    "candidateIdentityPolicyPlaceholder": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-identity-policy/grade-7-9-math.candidate-identity-policy-placeholder.v1.json",
+      "artifactVersion": "wave-5.slice-3.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-3.diagnostic-candidate-identity.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED"
+    },
+    "candidateDigestRegistry": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-digest/grade-7-9-math.candidate-digest-placeholder.v1.json",
+      "artifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+      "formatPolicyVersion": "wave-4.slice-5.candidate-identity-format.placeholder.v1",
+      "formatPolicyState": "FORMAT_DEFINED_ASSIGNMENT_DEFERRED"
+    },
+    "reviewCoverage": {
+      "artifactPath": "packages/curriculum/diagnostic-review-coverage/grade-7-9-math.review-coverage.v1.json",
+      "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+      "blueprintVersion": "wave-3.slice-3.grade-7-9-math.v1",
+      "blueprintSlotCount": 11,
+      "draftOnlySlotCount": 5,
+      "gapConfirmedSlotCount": 6,
+      "productionApprovedSlotCount": 0
+    }
+  },
+  "currentBaseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": {
+      "status": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "candidateIdentityPrerequisite": {
+      "prerequisiteId": "candidate_identity_policy",
+      "status": "UNSATISFIED_DEFERRED"
+    },
+    "satisfiedPrerequisiteCount": 0,
+    "productionApprovalCount": 0,
+    "approvedCandidateCount": 0
+  },
+  "proposalBoundary": {
+    "proposalStatus": "PROPOSED_DEFERRED",
+    "policyApproved": false,
+    "grammarApproved": false,
+    "candidateInstantiationAllowed": false,
+    "candidateReservationAllowed": false,
+    "candidateAllocationAllowed": false,
+    "reviewUseAllowed": false,
+    "digestUseAllowed": false,
+    "prerequisiteSatisfactionAllowed": false,
+    "activationAllowed": false,
+    "workflowActivationAllowed": false,
+    "readinessTransitionAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "proposedPolicy": {
+    "state": "PROPOSED_NOT_APPROVED",
+    "namespaceFormat": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "template": "dcandidate.math.g7-9",
+      "namespaceApproved": false,
+      "allocationAuthorityDefined": false
+    },
+    "candidateReferenceGrammar": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "template": "dcandidate.math.g7-9.<strand>.c<opaque-token>.v<major>.r<revision>",
+      "anchoredPatternProposal": "^dcandidate\\.math\\.g7-9\\.(number|algebra|functions|geometry|data)\\.c[0-9a-hjkmnp-tv-z]{12}\\.v[1-9][0-9]*\\.r(0|[1-9][0-9]*)$",
+      "allowedStrandTokens": ["number", "algebra", "functions", "geometry", "data"],
+      "opaqueTokenLength": 12,
+      "grammarApproved": false,
+      "instantiationAllowed": false
+    },
+    "versionRevisionSyntax": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "majorVersionSyntax": "v<positive-integer>",
+      "revisionSyntax": "r<non-negative-integer>",
+      "proposedMajorVersionTriggers": [
+        "future_canonical_field_change",
+        "blueprint_slot_relationship_change",
+        "candidate_semantics_change"
+      ],
+      "proposedRevisionBoundary": "future_policy_approved_non_canonical_metadata_only",
+      "classificationApproved": false
+    },
+    "collisionPrevention": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "proposedRequirements": [
+        "single_accountable_allocator",
+        "lowercase_ascii_normalization_before_allocation",
+        "atomic_full_reference_uniqueness_check",
+        "opaque_token_collision_retry",
+        "registry_reconciliation"
+      ],
+      "reservationEnabled": false,
+      "enforcementEnabled": false
+    },
+    "nonReuse": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "proposedRules": [
+        "allocated_identity_root_never_reused",
+        "allocated_full_reference_never_reused",
+        "withdrawal_does_not_release_reference",
+        "supersession_does_not_transfer_prior_review_state"
+      ],
+      "nonReuseApproved": false,
+      "enforcementEnabled": false
+    },
+    "withdrawalSupersessionReferences": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "withdrawalReferenceTemplate": "withdrawal.<candidate-reference>.event-<positive-integer>",
+      "supersessionReferenceTemplate": "supersession.<candidate-reference>.event-<positive-integer>",
+      "exactCandidateVersionRequired": true,
+      "exactCandidateRevisionRequired": true,
+      "historyPreservationRequired": true,
+      "recordingAllowed": false
+    },
+    "blueprintSlotRelationship": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "proposedRules": [
+        "candidate_reference_independent_from_blueprint_slot_id",
+        "candidate_version_pins_exactly_one_blueprint_slot",
+        "blueprint_slot_id_not_promoted_to_candidate_reference",
+        "blueprint_slot_id_not_embedded_as_opaque_token"
+      ],
+      "relationshipApproved": false
+    },
+    "candidateDigestRegistryRelationship": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "proposedRules": [
+        "future_registry_record_pins_exact_candidate_version",
+        "future_registry_record_pins_exact_candidate_revision",
+        "registry_entry_id_not_promoted_to_candidate_reference",
+        "existing_registry_placeholders_remain_unassigned"
+      ],
+      "relationshipApproved": false,
+      "registryWriteAllowed": false
+    },
+    "futureCanonicalizationDigestRelationship": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "proposedRules": [
+        "future_record_pins_separately_approved_canonicalization_policy_version",
+        "future_record_pins_separately_approved_digest_policy_version",
+        "included_field_change_requires_new_major_version",
+        "policy_change_invalidates_stale_review_state"
+      ],
+      "relationshipApproved": false,
+      "canonicalizationAllowed": false,
+      "digestGenerationAllowed": false
+    },
+    "piiExclusionRules": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "excludedDataClasses": [
+        "person_names",
+        "personal_contact_data",
+        "principal_identifiers",
+        "credential_principal_references",
+        "minor_profile_data",
+        "governance_reviewer_profile_data",
+        "governance_audit_profile_data",
+        "source_content",
+        "workflow_outcomes",
+        "storage_references"
+      ],
+      "opaqueAllocatorGeneratedTokenRequired": true,
+      "humanMeaningfulKeyAllowed": false,
+      "rulesApproved": false
+    }
+  },
+  "syntheticExamples": [
+    {
+      "vectorRef": "synthetic-positive-01",
+      "vectorType": "ACCEPTED_BY_PROPOSED_GRAMMAR",
+      "renderedValue": "SYNTHETIC_EXAMPLE_ONLY<dcandidate.math.g7-9.algebra.c0123456789ab.v1.r0>",
+      "expectedGrammarMatch": true,
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_CANDIDATE_ID": true,
+        "NOT_RESERVED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_DIGEST": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-positive-02",
+      "vectorType": "ACCEPTED_BY_PROPOSED_GRAMMAR",
+      "renderedValue": "SYNTHETIC_EXAMPLE_ONLY<dcandidate.math.g7-9.geometry.cabcdefghjkmn.v2.r3>",
+      "expectedGrammarMatch": true,
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_CANDIDATE_ID": true,
+        "NOT_RESERVED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_DIGEST": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-unsupported-strand",
+      "vectorType": "REJECTED_BY_PROPOSED_GRAMMAR",
+      "renderedValue": "SYNTHETIC_EXAMPLE_ONLY<dcandidate.math.g7-9.calculus.c0123456789ab.v1.r0>",
+      "expectedGrammarMatch": false,
+      "rejectionReasonCode": "UNSUPPORTED_STRAND",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_CANDIDATE_ID": true,
+        "NOT_RESERVED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_DIGEST": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-readable-key",
+      "vectorType": "REJECTED_BY_PROPOSED_GRAMMAR",
+      "renderedValue": "SYNTHETIC_EXAMPLE_ONLY<dcandidate.math.g7-9.algebra.clinear-equation.v1.r0>",
+      "expectedGrammarMatch": false,
+      "rejectionReasonCode": "OPAQUE_TOKEN_REQUIRED",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_CANDIDATE_ID": true,
+        "NOT_RESERVED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_DIGEST": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-missing-revision",
+      "vectorType": "REJECTED_BY_PROPOSED_GRAMMAR",
+      "renderedValue": "SYNTHETIC_EXAMPLE_ONLY<dcandidate.math.g7-9.number.c0123456789ab.v1>",
+      "expectedGrammarMatch": false,
+      "rejectionReasonCode": "REVISION_REQUIRED",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_CANDIDATE_ID": true,
+        "NOT_RESERVED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_DIGEST": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-zero-version",
+      "vectorType": "REJECTED_BY_PROPOSED_GRAMMAR",
+      "renderedValue": "SYNTHETIC_EXAMPLE_ONLY<dcandidate.math.g7-9.data.c0123456789ab.v0.r0>",
+      "expectedGrammarMatch": false,
+      "rejectionReasonCode": "POSITIVE_MAJOR_VERSION_REQUIRED",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_CANDIDATE_ID": true,
+        "NOT_RESERVED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_DIGEST": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-blueprint-shaped-key",
+      "vectorType": "REJECTED_BY_PROPOSED_GRAMMAR",
+      "renderedValue": "SYNTHETIC_EXAMPLE_ONLY<dcandidate.math.g7-9.functions.cdiag-math-g7.v1.r0>",
+      "expectedGrammarMatch": false,
+      "rejectionReasonCode": "BLUEPRINT_SHAPED_KEY_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_CANDIDATE_ID": true,
+        "NOT_RESERVED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_DIGEST": true
+      }
+    }
+  ],
+  "unresolvedDecisions": [
+    {
+      "decisionId": "namespace_owner_and_allocator_authority",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "final_candidate_reference_grammar",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "version_revision_change_classification",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "collision_reservation_and_reconciliation_design",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "permanent_non_reuse_and_identity_root_semantics",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "withdrawal_supersession_authority_and_references",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "blueprint_and_digest_registry_linkage",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "canonicalization_and_digest_policy_selection",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "identifier_data_exclusion_policy",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "policy_approval_and_prerequisite_satisfaction_gate",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    }
+  ],
+  "recordBoundary": {
+    "policyDecisionsRecorded": false,
+    "candidateIdentitiesRecorded": false,
+    "candidateReservationsRecorded": false,
+    "candidateAllocationsRecorded": false,
+    "candidateApprovalsRecorded": false,
+    "reviewEvidenceRecorded": false,
+    "reviewDecisionsRecorded": false,
+    "digestValuesRecorded": false,
+    "reviewerIdentitiesRecorded": false,
+    "auditIdentitiesRecorded": false,
+    "reviewerAssignmentsRecorded": false,
+    "authorityGrantsRecorded": false,
+    "productionApprovalsRecorded": false,
+    "withdrawalsRecorded": false,
+    "supersessionsRecorded": false,
+    "tombstonesRecorded": false,
+    "restorationsRecorded": false
+  },
+  "aggregate": {
+    "syntheticExampleCount": 7,
+    "acceptedSyntheticExampleCount": 2,
+    "rejectedSyntheticExampleCount": 5,
+    "unresolvedDecisionCount": 10,
+    "satisfiedPrerequisiteCount": 0,
+    "realCandidateIdCount": 0,
+    "reservedCandidateIdCount": 0,
+    "approvedGrammarCount": 0,
+    "approvedCandidateCount": 0,
+    "policyDecisionCount": 0,
+    "reviewEvidenceRecordCount": 0,
+    "reviewDecisionCount": 0,
+    "digestValueCount": 0,
+    "reviewerIdentityCount": 0,
+    "auditIdentityCount": 0,
+    "reviewerAssignmentCount": 0,
+    "authorityGrantCount": 0,
+    "productionApprovalCount": 0,
+    "withdrawalRecordCount": 0,
+    "supersessionRecordCount": 0,
+    "tombstoneRecordCount": 0,
+    "restorationRecordCount": 0
+  },
+  "policyDecisionRecords": [],
+  "candidateIdentityRecords": [],
+  "candidateReservationRecords": [],
+  "candidateAllocationRecords": [],
+  "candidateApprovalRecords": [],
+  "reviewEvidenceRecords": [],
+  "reviewDecisionRecords": [],
+  "digestValueRecords": [],
+  "reviewerIdentityRecords": [],
+  "auditIdentityRecords": [],
+  "reviewerAssignmentRecords": [],
+  "authorityGrantRecords": [],
+  "productionApprovalRecords": [],
+  "withdrawalRecords": [],
+  "supersessionRecords": [],
+  "tombstoneRecords": [],
+  "restorationRecords": []
+}

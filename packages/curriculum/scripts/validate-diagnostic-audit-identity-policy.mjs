@@ -199,6 +199,43 @@ const wave5Slice14ScopeUnblockPaths = new Set([
   "packages/curriculum/test/diagnostic-ci-validation-activation-gate.test.mjs",
 ]);
 const wave5ClosureScopeUnblockPaths = new Set(["docs/wave-5/closure-gate.md"]);
+const wave6Slice1ScopeUnblockPaths = new Set([
+  "docs/wave-6/diagnostic-candidate-identity-policy-decision-proposal.md",
+  "docs/wave-6/open-decisions.md",
+  "docs/wave-6/scope-and-non-goals.md",
+  "docs/wave-6/slice-1-implementation-note.md",
+  "package.json",
+  "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/grade-7-9-math.candidate-identity-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-candidate-identity-policy-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-review-authority.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -901,7 +938,8 @@ export function validateAuditIdentityPolicyChangedPaths(changedPaths) {
     if (
       !approvedSlice13ChangedPaths.has(changedPath) &&
       !wave5Slice14ScopeUnblockPaths.has(changedPath) &&
-      !wave5ClosureScopeUnblockPaths.has(changedPath)
+      !wave5ClosureScopeUnblockPaths.has(changedPath) &&
+      !wave6Slice1ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 5 Slice 13 out-of-scope path changed: ${changedPath}.`);
     }

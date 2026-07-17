@@ -14,6 +14,7 @@ import {
   validateCandidateDigestChangedPaths,
 } from "../scripts/validate-diagnostic-candidate-digest.mjs";
 import { validateCandidateIdentityPolicyChangedPaths } from "../scripts/validate-diagnostic-candidate-identity-policy.mjs";
+import { validateCandidateIdentityDecisionProposalChangedPaths } from "../scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs";
 import { validateCiValidationActivationGateChangedPaths } from "../scripts/validate-diagnostic-ci-validation-activation-gate.mjs";
 import { validateConflictOfInterestPolicyChangedPaths } from "../scripts/validate-diagnostic-conflict-of-interest-policy.mjs";
 import { validateCoverageGapClosurePlanChangedPaths } from "../scripts/validate-diagnostic-coverage-gap-closure-plan.mjs";
@@ -1077,7 +1078,95 @@ test("all governance scope guards permit only the exact Wave 5 closure document"
   }
 });
 
-test("Wave 5 scope unblocks through closure contain no broad documentation prefix", async () => {
+test("all governance scope guards permit only the exact Wave 6 Slice 1 worktree", () => {
+  const approvedPaths = [
+    "docs/wave-6/diagnostic-candidate-identity-policy-decision-proposal.md",
+    "docs/wave-6/open-decisions.md",
+    "docs/wave-6/scope-and-non-goals.md",
+    "docs/wave-6/slice-1-implementation-note.md",
+    "package.json",
+    "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/grade-7-9-math.candidate-identity-policy-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
+    "packages/curriculum/scripts/validate-skill-graph.mjs",
+    "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+    "packages/curriculum/test/diagnostic-candidate-identity-policy-decision-proposal.test.mjs",
+    "packages/curriculum/test/diagnostic-items.test.mjs",
+    "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+    "packages/curriculum/test/diagnostic-review-authority.test.mjs",
+    "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+    "packages/curriculum/test/skill-graph-seed.test.mjs",
+  ];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+    validateActivationPrerequisitesChangedPaths,
+    validateCandidateIdentityPolicyChangedPaths,
+    validateCandidateCanonicalizationDigestPolicyChangedPaths,
+    validateReviewerRoleOwnershipPolicyChangedPaths,
+    validateSeparationOfDutiesPolicyChangedPaths,
+    validateConflictOfInterestPolicyChangedPaths,
+    validateAuditIdentityPolicyChangedPaths,
+    validateEvidenceStorageRetentionPolicyChangedPaths,
+    validateProductionApprovalAuthorityPolicyChangedPaths,
+    validateCoverageGapClosurePlanChangedPaths,
+    validateReadinessIntegrationPlanChangedPaths,
+    validateRollbackWithdrawalChangedPaths,
+    validateCiValidationActivationGateChangedPaths,
+    validateCandidateIdentityDecisionProposalChangedPaths,
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+  }
+
+  const forbiddenPaths = [
+    "docs/wave-6/archive/scope-and-non-goals.md",
+    "docs/wave-6/slice-2-implementation-note.md",
+    "docs/wave-6/scope-and-non-goals.md.bak",
+    "apps/api/src/diagnostic-candidate-identity/controller.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/candidates/page.tsx",
+    "packages/curriculum/src/diagnostic-candidate-identity-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("scope unblocks through Wave 6 Slice 1 contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",
@@ -1089,6 +1178,7 @@ test("Wave 5 scope unblocks through closure contain no broad documentation prefi
     "validate-diagnostic-review-authority.mjs",
     "validate-diagnostic-review-activation-prerequisites.mjs",
     "validate-diagnostic-candidate-identity-policy.mjs",
+    "validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
     "validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
     "validate-diagnostic-reviewer-role-ownership-policy.mjs",
     "validate-diagnostic-separation-of-duties-policy.mjs",
@@ -1109,6 +1199,7 @@ test("Wave 5 scope unblocks through closure contain no broad documentation prefi
 
   for (const source of sources) {
     assert.doesNotMatch(source, /["']docs\/wave-5\/["']/);
+    assert.doesNotMatch(source, /["']docs\/wave-6\/["']/);
   }
 });
 
