@@ -17,6 +17,7 @@ import { validateCandidateIdentityPolicyChangedPaths } from "../scripts/validate
 import { validateConflictOfInterestPolicyChangedPaths } from "../scripts/validate-diagnostic-conflict-of-interest-policy.mjs";
 import { validateCoverageGapClosurePlanChangedPaths } from "../scripts/validate-diagnostic-coverage-gap-closure-plan.mjs";
 import { validateReadinessIntegrationPlanChangedPaths } from "../scripts/validate-diagnostic-readiness-integration-plan.mjs";
+import { validateRollbackWithdrawalChangedPaths } from "../scripts/validate-diagnostic-rollback-withdrawal-policy.mjs";
 import { validateEvidenceStorageRetentionPolicyChangedPaths } from "../scripts/validate-diagnostic-evidence-storage-retention-policy.mjs";
 import { validateProductionApprovalAuthorityPolicyChangedPaths } from "../scripts/validate-diagnostic-production-approval-authority-policy.mjs";
 import { validateReviewerRoleOwnershipPolicyChangedPaths } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs";
@@ -867,14 +868,6 @@ test("all governance scope guards permit only the exact Wave 5 Slice 12 static f
     validateActivationPrerequisitesChangedPaths,
     validateCandidateIdentityPolicyChangedPaths,
     validateCandidateCanonicalizationDigestPolicyChangedPaths,
-    validateReviewerRoleOwnershipPolicyChangedPaths,
-    validateSeparationOfDutiesPolicyChangedPaths,
-    validateConflictOfInterestPolicyChangedPaths,
-    validateAuditIdentityPolicyChangedPaths,
-    validateEvidenceStorageRetentionPolicyChangedPaths,
-    validateProductionApprovalAuthorityPolicyChangedPaths,
-    validateCoverageGapClosurePlanChangedPaths,
-    validateReadinessIntegrationPlanChangedPaths,
   ];
 
   for (const validateChangedPaths of validators) {
@@ -908,7 +901,68 @@ test("all governance scope guards permit only the exact Wave 5 Slice 12 static f
   }
 });
 
-test("Wave 5 scope unblocks through Slice 12 contain no broad documentation prefix", async () => {
+test("all governance scope guards permit only the exact Wave 5 Slice 13 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-rollback-withdrawal-policy-contract.md",
+    "docs/wave-5/slice-13-implementation-note.md",
+    "packages/curriculum/diagnostic-rollback-withdrawal-policy/grade-7-9-math.rollback-withdrawal-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+    "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs",
+  ];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+    validateActivationPrerequisitesChangedPaths,
+    validateCandidateIdentityPolicyChangedPaths,
+    validateCandidateCanonicalizationDigestPolicyChangedPaths,
+    validateReviewerRoleOwnershipPolicyChangedPaths,
+    validateSeparationOfDutiesPolicyChangedPaths,
+    validateConflictOfInterestPolicyChangedPaths,
+    validateAuditIdentityPolicyChangedPaths,
+    validateEvidenceStorageRetentionPolicyChangedPaths,
+    validateProductionApprovalAuthorityPolicyChangedPaths,
+    validateCoverageGapClosurePlanChangedPaths,
+    validateReadinessIntegrationPlanChangedPaths,
+    validateRollbackWithdrawalChangedPaths,
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+  }
+
+  const forbiddenPaths = [
+    "docs/wave-5/nested/diagnostic-rollback-withdrawal-policy-contract.md",
+    "docs/wave-5/diagnostic-rollback-withdrawal-policy-contract.md.bak",
+    "docs/wave-5/slice-13-implementation-note.md.bak",
+    "packages/curriculum/diagnostic-rollback-withdrawal-policy/extra.v1.json",
+    "packages/curriculum/diagnostic-rollback-withdrawal-policy/grade-7-9-math.rollback-withdrawal-policy-placeholder.v1.json.bak",
+    "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs.bak",
+    "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs.bak",
+    "apps/api/src/diagnostic-review/rollback.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-rollback-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("Wave 5 scope unblocks through Slice 13 contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",
@@ -929,6 +983,7 @@ test("Wave 5 scope unblocks through Slice 12 contain no broad documentation pref
     "validate-diagnostic-production-approval-authority-policy.mjs",
     "validate-diagnostic-coverage-gap-closure-plan.mjs",
     "validate-diagnostic-readiness-integration-plan.mjs",
+    "validate-diagnostic-rollback-withdrawal-policy.mjs",
   ];
   const sources = await Promise.all(
     validatorFiles.map((fileName) =>

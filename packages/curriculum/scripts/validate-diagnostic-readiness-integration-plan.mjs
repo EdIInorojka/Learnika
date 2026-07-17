@@ -162,11 +162,11 @@ const zeroAggregateFields = [
   "auditLogCount",
   "auditEventCount",
 ];
-const approvedSlice12ChangedPaths = new Set([
-  "docs/wave-5/diagnostic-readiness-integration-plan-contract.md",
-  "docs/wave-5/slice-12-implementation-note.md",
+const approvedSlice13ChangedPaths = new Set([
+  "docs/wave-5/diagnostic-rollback-withdrawal-policy-contract.md",
+  "docs/wave-5/slice-13-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-readiness-integration-plan/grade-7-9-math.readiness-integration-plan-placeholder.v1.json",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy/grade-7-9-math.rollback-withdrawal-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
@@ -177,6 +177,7 @@ const approvedSlice12ChangedPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
@@ -196,6 +197,7 @@ const approvedSlice12ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs",
   "packages/curriculum/test/diagnostic-readiness-integration-plan.test.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
   "packages/curriculum/test/diagnostic-review-activation-prerequisites.test.mjs",
   "packages/curriculum/test/diagnostic-review-authority.test.mjs",
@@ -765,8 +767,8 @@ export function validateReadinessIntegrationPlanChangedPaths(changedPaths) {
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice12ChangedPaths.has(changedPath)) {
-      fail(`Wave 5 Slice 12 out-of-scope path changed: ${changedPath}.`);
+    if (!approvedSlice13ChangedPaths.has(changedPath)) {
+      fail(`Wave 5 Slice 13 out-of-scope path changed: ${changedPath}.`);
     }
   }
   return [...changedPaths];

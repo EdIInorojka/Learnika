@@ -224,6 +224,13 @@ const wave5Slice12ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
   "packages/curriculum/test/diagnostic-readiness-integration-plan.test.mjs",
 ]);
+const wave5Slice13ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-rollback-withdrawal-policy-contract.md",
+  "docs/wave-5/slice-13-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy/grade-7-9-math.rollback-withdrawal-policy-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultReviewEvidencePath = path.resolve(
@@ -593,7 +600,8 @@ export function validateReviewEvidenceChangedPaths(changedPaths) {
       !wave5Slice9ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice10ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice11ScopeUnblockPaths.has(changedPath) &&
-      !wave5Slice12ScopeUnblockPaths.has(changedPath)
+      !wave5Slice12ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice13ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 4 Slice 3 out-of-scope path changed: ${changedPath}.`);
     }

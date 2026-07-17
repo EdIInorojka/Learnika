@@ -714,3 +714,30 @@ test("Slice 4 guard admits only the exact five Slice 12 static files", () => {
     );
   }
 });
+
+test("Slice 4 guard admits only the exact five Slice 13 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-rollback-withdrawal-policy-contract.md",
+    "docs/wave-5/slice-13-implementation-note.md",
+    "packages/curriculum/diagnostic-rollback-withdrawal-policy/grade-7-9-math.rollback-withdrawal-policy-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+    "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs",
+  ];
+  assert.deepEqual(
+    validateCandidateCanonicalizationDigestPolicyChangedPaths(approvedPaths),
+    approvedPaths,
+  );
+  for (const forbiddenPath of [
+    "docs/wave-5/diagnostic-rollback-withdrawal-policy-contract.md.bak",
+    "docs/wave-5/nested/slice-13-implementation-note.md",
+    "packages/curriculum/diagnostic-rollback-withdrawal-policy/extra.v1.json",
+    "apps/api/src/diagnostic-review/rollback.ts",
+    "pnpm-lock.yaml",
+  ]) {
+    assert.throws(
+      () => validateCandidateCanonicalizationDigestPolicyChangedPaths([forbiddenPath]),
+      /Wave 5 Slice 4 out-of-scope path changed/,
+      forbiddenPath,
+    );
+  }
+});

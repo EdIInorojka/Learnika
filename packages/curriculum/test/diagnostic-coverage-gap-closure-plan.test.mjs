@@ -38,10 +38,10 @@ const expectedDraftOnlySlotIds = [
   "diag.math.g7-9.data.probability-statistics-basic.v1",
 ];
 const expectedChangedPaths = [
-  "docs/wave-5/diagnostic-readiness-integration-plan-contract.md",
-  "docs/wave-5/slice-12-implementation-note.md",
+  "docs/wave-5/diagnostic-rollback-withdrawal-policy-contract.md",
+  "docs/wave-5/slice-13-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-readiness-integration-plan/grade-7-9-math.readiness-integration-plan-placeholder.v1.json",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy/grade-7-9-math.rollback-withdrawal-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
@@ -50,6 +50,7 @@ const expectedChangedPaths = [
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
   "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
@@ -68,6 +69,7 @@ const expectedChangedPaths = [
   "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
   "packages/curriculum/test/diagnostic-coverage-gap-closure-plan.test.mjs",
   "packages/curriculum/test/diagnostic-readiness-integration-plan.test.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs",
@@ -440,16 +442,16 @@ test("private identity location candidate and hash-like values fail closed", asy
   }
 });
 
-test("Slice 11 guard permits only the exact 40 Slice 12 implementation paths", () => {
-  assert.equal(expectedChangedPaths.length, 40);
-  assert.equal(new Set(expectedChangedPaths).size, 40);
+test("Slice 11 guard permits only the exact 42 Slice 13 implementation paths", () => {
+  assert.equal(expectedChangedPaths.length, 42);
+  assert.equal(new Set(expectedChangedPaths).size, 42);
   assert.deepEqual(
     validateCoverageGapClosurePlanChangedPaths(expectedChangedPaths),
     expectedChangedPaths,
   );
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-13-implementation-note.md",
+    "docs/wave-5/slice-14-implementation-note.md",
     "docs/wave-5/archive/diagnostic-coverage-gap-closure-plan-contract.md",
     "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md.bak",
     "packages/curriculum/diagnostic-coverage-gap-closure-plan/extra.json",
@@ -466,7 +468,7 @@ test("Slice 11 guard permits only the exact 40 Slice 12 implementation paths", (
   ]) {
     assert.throws(
       () => validateCoverageGapClosurePlanChangedPaths([forbiddenPath]),
-      /Wave 5 Slice 12 out-of-scope path changed/,
+      /Wave 5 Slice 13 out-of-scope path changed/,
       forbiddenPath,
     );
   }

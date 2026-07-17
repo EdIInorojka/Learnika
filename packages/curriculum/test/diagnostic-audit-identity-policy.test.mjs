@@ -105,11 +105,11 @@ const forbiddenTerms = [
   "canonicalizedContent",
   "normalizedStem",
 ];
-const approvedSlice12ChangedPaths = [
-  "docs/wave-5/diagnostic-readiness-integration-plan-contract.md",
-  "docs/wave-5/slice-12-implementation-note.md",
+const approvedSlice13ChangedPaths = [
+  "docs/wave-5/diagnostic-rollback-withdrawal-policy-contract.md",
+  "docs/wave-5/slice-13-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-readiness-integration-plan/grade-7-9-math.readiness-integration-plan-placeholder.v1.json",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy/grade-7-9-math.rollback-withdrawal-policy-placeholder.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
@@ -118,6 +118,7 @@ const approvedSlice12ChangedPaths = [
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
   "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
@@ -136,6 +137,7 @@ const approvedSlice12ChangedPaths = [
   "packages/curriculum/test/diagnostic-conflict-of-interest-policy.test.mjs",
   "packages/curriculum/test/diagnostic-coverage-gap-closure-plan.test.mjs",
   "packages/curriculum/test/diagnostic-readiness-integration-plan.test.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy.test.mjs",
   "packages/curriculum/test/diagnostic-production-approval-authority-policy.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
@@ -449,14 +451,14 @@ test("unknown fields forbidden terms and private identity patterns fail closed",
   }
 });
 
-test("Slice 8 worktree guard permits only the exact 40 Slice 12 implementation paths", () => {
+test("Slice 8 worktree guard permits only the exact 42 Slice 13 implementation paths", () => {
   assert.deepEqual(
-    validateAuditIdentityPolicyChangedPaths(approvedSlice12ChangedPaths),
-    approvedSlice12ChangedPaths,
+    validateAuditIdentityPolicyChangedPaths(approvedSlice13ChangedPaths),
+    approvedSlice13ChangedPaths,
   );
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-13-implementation-note.md",
+    "docs/wave-5/slice-14-implementation-note.md",
     "docs/wave-5/nested/diagnostic-audit-identity-policy-contract.md",
     "docs/wave-5/diagnostic-audit-identity-policy-contract.md.bak",
     "packages/curriculum/diagnostic-audit-identity-policy/extra.v1.json",
@@ -475,7 +477,7 @@ test("Slice 8 worktree guard permits only the exact 40 Slice 12 implementation p
   ]) {
     assert.throws(
       () => validateAuditIdentityPolicyChangedPaths([forbiddenPath]),
-      /Wave 5 Slice 12 out-of-scope path changed/,
+      /Wave 5 Slice 13 out-of-scope path changed/,
       forbiddenPath,
     );
   }
