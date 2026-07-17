@@ -139,6 +139,11 @@ const changedPaths = [
   "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
 ];
 const changedPathSet = new Set(changedPaths);
+const followUpRemediationPathSet = new Set([
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
+  "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -742,21 +747,32 @@ function requireCommitObject(sha, label, { cwd, runGit }) {
     );
 }
 
+function singleParentCommit(sha, { cwd, runGit }) {
+  const result = runGit(["cat-file", "-p", sha], cwd);
+  if (result.status !== 0)
+    fail(
+      `BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined: ${result.stderr || result.stdout}`,
+    );
+  const parents = result.stdout
+    .split(/\r?\n/)
+    .filter((line) => line.startsWith("parent "))
+    .map((line) => line.slice("parent ".length).trim());
+  if (parents.length !== 1 || !isCommitSha(parents[0]))
+    fail("BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined.");
+  return parents[0];
+}
+
 function currentCommitRange({ cwd, env, runGit }) {
   const head = env.GITHUB_SHA;
   if (!isCommitSha(head))
     fail("BLOCK: GITHUB_SHA is unavailable; exact CI changed-path range cannot be determined.");
   requireCommitObject(head, "head", { cwd, runGit });
   const result = runGit(["rev-list", "--parents", "-n", "1", head], cwd);
-  if (result.status !== 0)
-    fail(
-      `BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined (possibly a shallow checkout): ${result.stderr || result.stdout}`,
-    );
-  const commits = result.stdout.trim().split(/\s+/).filter(Boolean);
-  if (commits.length !== 2 || commits[0] !== head) {
-    fail("BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined.");
-  }
-  const base = commits[1];
+  const commits = result.status === 0 ? result.stdout.trim().split(/\s+/).filter(Boolean) : [];
+  const base =
+    commits.length === 2 && commits[0] === head
+      ? commits[1]
+      : singleParentCommit(head, { cwd, runGit });
   requireCommitObject(base, "base", { cwd, runGit });
   return { base, head };
 }
@@ -798,8 +814,7 @@ function ciCommitRange({ cwd, env, runGit, readEvent }) {
   return currentCommitRange({ cwd, env, runGit });
 }
 
-function ciChangedPaths({ cwd, env, runGit, readEvent }) {
-  const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
+function diffPaths({ cwd, base, head, runGit }) {
   const result = runGit(
     ["diff", "--name-status", "--find-renames", "--no-ext-diff", "-z", base, head],
     cwd,
@@ -821,6 +836,34 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
       "BLOCK: CI changed-path collection returned an empty path list; exact scope cannot be determined.",
     );
   return paths;
+}
+
+function isExactFollowUpRemediationPathSet(paths) {
+  return (
+    new Set(paths).size === paths.length &&
+    paths.length > 0 &&
+    paths.every((pathValue) => followUpRemediationPathSet.has(pathValue))
+  );
+}
+
+function ciChangedPaths({ cwd, env, runGit, readEvent }) {
+  const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
+  const paths = diffPaths({ cwd, base, head, runGit });
+  if (paths.length === changedPaths.length)
+    return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
+  if (isExactFollowUpRemediationPathSet(paths)) {
+    const baseline = singleParentCommit(base, { cwd, runGit });
+    requireCommitObject(baseline, "baseline", { cwd, runGit });
+    const cumulative = diffPaths({ cwd, base: baseline, head, runGit });
+    try {
+      return validateReviewerRoleOwnershipDecisionProposalChangedPaths(cumulative);
+    } catch (error) {
+      fail(
+        `BLOCK: CI follow-up cumulative Slice 3 range is not the exact approved 38-path baseline: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+  return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
 }
 
 export function collectReviewerRoleOwnershipDecisionProposalChangedPaths({

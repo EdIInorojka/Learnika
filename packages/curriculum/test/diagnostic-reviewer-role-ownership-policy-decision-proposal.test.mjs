@@ -60,9 +60,18 @@ const approvedWave6Slice3ChangedPaths = [
   "packages/curriculum/test/skill-graph-seed.test.mjs",
   "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
 ];
+const approvedWave6Slice3FollowUpPaths = [
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
+  "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+];
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function nameStatusOutput(paths, status = "M") {
+  return paths.map((path) => `${status}\0${path}\0`).join("");
 }
 
 async function readArtifacts() {
@@ -307,14 +316,14 @@ test("changed-path collection uses the clean GitHub push event range", () => {
       if (args[0] === "diff") {
         return {
           status: 0,
-          stdout: `M\0${approvedWave6Slice3ChangedPaths[0]}\0A\0${approvedWave6Slice3ChangedPaths[1]}\0`,
+          stdout: nameStatusOutput(approvedWave6Slice3ChangedPaths),
           stderr: "",
         };
       }
       return { status: 0, stdout: "", stderr: "" };
     },
   });
-  assert.deepEqual(paths, [approvedWave6Slice3ChangedPaths[0], approvedWave6Slice3ChangedPaths[1]]);
+  assert.deepEqual(paths, approvedWave6Slice3ChangedPaths);
   assert.deepEqual(calls, [
     { args: ["cat-file", "-e", `${base}^{commit}`], cwd: "fixture-repo" },
     { args: ["cat-file", "-e", `${head}^{commit}`], cwd: "fixture-repo" },
@@ -350,10 +359,14 @@ test("missing CI commit is fetched by exact SHA before range calculation", () =>
         baseFetched = true;
         return { status: 0, stdout: "", stderr: "" };
       }
-      return { status: 0, stdout: `A\0${approvedWave6Slice3ChangedPaths[3]}\0`, stderr: "" };
+      return {
+        status: 0,
+        stdout: nameStatusOutput(approvedWave6Slice3ChangedPaths, "A"),
+        stderr: "",
+      };
     },
   });
-  assert.deepEqual(paths, [approvedWave6Slice3ChangedPaths[3]]);
+  assert.deepEqual(paths, approvedWave6Slice3ChangedPaths);
   assert.deepEqual(calls, [
     { args: ["cat-file", "-e", `${base}^{commit}`], cwd: "fixture-repo" },
     { args: ["fetch", "--no-tags", "--depth=1", "origin", base], cwd: "fixture-repo" },
@@ -375,11 +388,49 @@ test("changed-path collection uses the clean GitHub current-commit parent range"
     runGit: (args) => {
       if (args[0] === "rev-list") return { status: 0, stdout: `${head} ${base}\n`, stderr: "" };
       if (args[0] === "diff")
-        return { status: 0, stdout: `A\0${approvedWave6Slice3ChangedPaths[2]}\0`, stderr: "" };
+        return {
+          status: 0,
+          stdout: nameStatusOutput(approvedWave6Slice3ChangedPaths, "A"),
+          stderr: "",
+        };
       return { status: 0, stdout: "", stderr: "" };
     },
   });
-  assert.deepEqual(paths, [approvedWave6Slice3ChangedPaths[2]]);
+  assert.deepEqual(paths, approvedWave6Slice3ChangedPaths);
+});
+
+test("follow-up CI range validates the cumulative original 38-path baseline", () => {
+  const base = "3".repeat(40);
+  const baseline = "4".repeat(40);
+  const head = "5".repeat(40);
+  let diffCount = 0;
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {
+      GITHUB_ACTIONS: "true",
+      GITHUB_EVENT_NAME: "push",
+      GITHUB_EVENT_PATH: "event.json",
+      GITHUB_SHA: head,
+    },
+    readEvent: () => ({ before: base, after: head }),
+    runGit: (args) => {
+      if (args[0] === "cat-file" && args[1] === "-p")
+        return { status: 0, stdout: `tree synthetic\nparent ${baseline}\n`, stderr: "" };
+      if (args[0] === "diff") {
+        diffCount += 1;
+        return {
+          status: 0,
+          stdout:
+            diffCount === 1
+              ? nameStatusOutput(approvedWave6Slice3FollowUpPaths)
+              : nameStatusOutput(approvedWave6Slice3ChangedPaths),
+          stderr: "",
+        };
+      }
+      return { status: 0, stdout: "", stderr: "" };
+    },
+  });
+  assert.deepEqual(paths, approvedWave6Slice3ChangedPaths);
 });
 
 test("shallow or unavailable GitHub ranges fail closed", () => {
