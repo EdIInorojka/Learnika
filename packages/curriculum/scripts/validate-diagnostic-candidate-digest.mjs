@@ -271,6 +271,13 @@ const wave5Slice13ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
   "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs",
 ]);
+const wave5Slice14ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-ci-validation-activation-gate-contract.md",
+  "docs/wave-5/slice-14-implementation-note.md",
+  "packages/curriculum/diagnostic-ci-validation-activation-gate/grade-7-9-math.ci-validation-activation-gate-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultCandidateDigestRegistryPath = path.resolve(
@@ -781,6 +788,7 @@ export function validateCandidateDigestChangedPaths(changedPaths) {
       !wave5Slice11ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice12ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice13ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice14ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice1ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice2ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice3ScopeUnblockPaths.has(changedPath) &&

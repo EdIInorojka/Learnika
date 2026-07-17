@@ -451,7 +451,7 @@ test("Slice 11 guard permits only the exact 42 Slice 13 implementation paths", (
   );
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-14-implementation-note.md",
+    "docs/wave-5/slice-15-implementation-note.md",
     "docs/wave-5/archive/diagnostic-coverage-gap-closure-plan-contract.md",
     "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md.bak",
     "packages/curriculum/diagnostic-coverage-gap-closure-plan/extra.json",

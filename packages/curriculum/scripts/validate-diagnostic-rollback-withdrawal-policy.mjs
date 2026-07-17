@@ -248,6 +248,13 @@ const approvedSlice13ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+const wave5Slice14ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-ci-validation-activation-gate-contract.md",
+  "docs/wave-5/slice-14-implementation-note.md",
+  "packages/curriculum/diagnostic-ci-validation-activation-gate/grade-7-9-math.ci-validation-activation-gate-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -871,7 +878,10 @@ export function validateRollbackWithdrawalChangedPaths(changedPaths) {
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice13ChangedPaths.has(changedPath)) {
+    if (
+      !approvedSlice13ChangedPaths.has(changedPath) &&
+      !wave5Slice14ScopeUnblockPaths.has(changedPath)
+    ) {
       fail(`Wave 5 Slice 13 out-of-scope path changed: ${changedPath}.`);
     }
   }

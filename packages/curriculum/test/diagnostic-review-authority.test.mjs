@@ -14,6 +14,7 @@ import {
   validateCandidateDigestChangedPaths,
 } from "../scripts/validate-diagnostic-candidate-digest.mjs";
 import { validateCandidateIdentityPolicyChangedPaths } from "../scripts/validate-diagnostic-candidate-identity-policy.mjs";
+import { validateCiValidationActivationGateChangedPaths } from "../scripts/validate-diagnostic-ci-validation-activation-gate.mjs";
 import { validateConflictOfInterestPolicyChangedPaths } from "../scripts/validate-diagnostic-conflict-of-interest-policy.mjs";
 import { validateCoverageGapClosurePlanChangedPaths } from "../scripts/validate-diagnostic-coverage-gap-closure-plan.mjs";
 import { validateReadinessIntegrationPlanChangedPaths } from "../scripts/validate-diagnostic-readiness-integration-plan.mjs";
@@ -962,7 +963,69 @@ test("all governance scope guards permit only the exact Wave 5 Slice 13 static f
   }
 });
 
-test("Wave 5 scope unblocks through Slice 13 contain no broad documentation prefix", async () => {
+test("all governance scope guards permit only the exact Wave 5 Slice 14 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-ci-validation-activation-gate-contract.md",
+    "docs/wave-5/slice-14-implementation-note.md",
+    "packages/curriculum/diagnostic-ci-validation-activation-gate/grade-7-9-math.ci-validation-activation-gate-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+    "packages/curriculum/test/diagnostic-ci-validation-activation-gate.test.mjs",
+  ];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+    validateActivationPrerequisitesChangedPaths,
+    validateCandidateIdentityPolicyChangedPaths,
+    validateCandidateCanonicalizationDigestPolicyChangedPaths,
+    validateReviewerRoleOwnershipPolicyChangedPaths,
+    validateSeparationOfDutiesPolicyChangedPaths,
+    validateConflictOfInterestPolicyChangedPaths,
+    validateAuditIdentityPolicyChangedPaths,
+    validateEvidenceStorageRetentionPolicyChangedPaths,
+    validateProductionApprovalAuthorityPolicyChangedPaths,
+    validateCoverageGapClosurePlanChangedPaths,
+    validateReadinessIntegrationPlanChangedPaths,
+    validateRollbackWithdrawalChangedPaths,
+    validateCiValidationActivationGateChangedPaths,
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+  }
+
+  const forbiddenPaths = [
+    ".github/workflows/ci.yml",
+    "docs/wave-5/nested/diagnostic-ci-validation-activation-gate-contract.md",
+    "docs/wave-5/diagnostic-ci-validation-activation-gate-contract.md.bak",
+    "docs/wave-5/slice-14-implementation-note.md.bak",
+    "packages/curriculum/diagnostic-ci-validation-activation-gate/extra.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs.bak",
+    "packages/curriculum/test/diagnostic-ci-validation-activation-gate.test.mjs.bak",
+    "apps/api/src/diagnostic-review/ci-validation.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-ci-validation-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("Wave 5 scope unblocks through Slice 14 contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",
@@ -984,6 +1047,7 @@ test("Wave 5 scope unblocks through Slice 13 contain no broad documentation pref
     "validate-diagnostic-coverage-gap-closure-plan.mjs",
     "validate-diagnostic-readiness-integration-plan.mjs",
     "validate-diagnostic-rollback-withdrawal-policy.mjs",
+    "validate-diagnostic-ci-validation-activation-gate.mjs",
   ];
   const sources = await Promise.all(
     validatorFiles.map((fileName) =>

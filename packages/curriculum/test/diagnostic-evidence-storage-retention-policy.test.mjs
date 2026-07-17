@@ -447,7 +447,7 @@ test("Slice 9 worktree guard permits only the exact 42 Slice 13 implementation p
   );
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-14-implementation-note.md",
+    "docs/wave-5/slice-15-implementation-note.md",
     "docs/wave-5/archive/diagnostic-evidence-storage-retention-policy-contract.md",
     "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md.bak",
     "packages/curriculum/diagnostic-evidence-storage-retention-policy/extra.json",

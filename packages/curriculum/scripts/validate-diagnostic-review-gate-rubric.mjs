@@ -255,6 +255,13 @@ const wave5Slice13ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
   "packages/curriculum/test/diagnostic-rollback-withdrawal-policy.test.mjs",
 ]);
+const wave5Slice14ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-ci-validation-activation-gate-contract.md",
+  "docs/wave-5/slice-14-implementation-note.md",
+  "packages/curriculum/diagnostic-ci-validation-activation-gate/grade-7-9-math.ci-validation-activation-gate-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultReviewGateRubricPath = path.resolve(
@@ -691,7 +698,8 @@ export function validateReviewGateRubricChangedPaths(changedPaths) {
       !wave5Slice10ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice11ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice12ScopeUnblockPaths.has(changedPath) &&
-      !wave5Slice13ScopeUnblockPaths.has(changedPath)
+      !wave5Slice13ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice14ScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 4 Slice 4 out-of-scope path changed: ${changedPath}.`);
     }
