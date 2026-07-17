@@ -382,7 +382,7 @@ test("unknown fields and every forbidden field or content term fail closed", asy
   assert.throws(() => validate(artifacts, concreteId), /concrete candidate ID/);
 });
 
-test("Slice 3 worktree guard permits only the exact 22 implementation paths", () => {
+test("Slice 3 worktree guard admits the cumulative exact Slice 12 scope", () => {
   assert.deepEqual(
     validateCandidateIdentityPolicyChangedPaths(approvedSlice3ChangedPaths),
     approvedSlice3ChangedPaths,
@@ -390,7 +390,6 @@ test("Slice 3 worktree guard permits only the exact 22 implementation paths", ()
 
   for (const forbiddenPath of [
     "README.md",
-    "docs/wave-5/slice-12-implementation-note.md",
     "docs/wave-5/nested/diagnostic-candidate-identity-policy-contract.md",
     "docs/wave-5/diagnostic-candidate-identity-policy-contract.md.bak",
     "packages/curriculum/diagnostic-candidate-identity-policy/extra.v1.json",
@@ -635,6 +634,30 @@ test("Slice 3 guard admits only the exact five Slice 11 static files", () => {
     "docs/wave-5/nested/slice-11-implementation-note.md",
     "packages/curriculum/diagnostic-coverage-gap-closure-plan/extra.v1.json",
     "apps/api/src/diagnostic-review/coverage.ts",
+    "pnpm-lock.yaml",
+  ]) {
+    assert.throws(
+      () => validateCandidateIdentityPolicyChangedPaths([forbiddenPath]),
+      /Wave 5 Slice 3 out-of-scope path changed/,
+      forbiddenPath,
+    );
+  }
+});
+
+test("Slice 3 guard admits only the exact five Slice 12 static files", () => {
+  const approvedPaths = [
+    "docs/wave-5/diagnostic-readiness-integration-plan-contract.md",
+    "docs/wave-5/slice-12-implementation-note.md",
+    "packages/curriculum/diagnostic-readiness-integration-plan/grade-7-9-math.readiness-integration-plan-placeholder.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+    "packages/curriculum/test/diagnostic-readiness-integration-plan.test.mjs",
+  ];
+  assert.deepEqual(validateCandidateIdentityPolicyChangedPaths(approvedPaths), approvedPaths);
+  for (const forbiddenPath of [
+    "docs/wave-5/diagnostic-readiness-integration-plan-contract.md.bak",
+    "docs/wave-5/nested/slice-12-implementation-note.md",
+    "packages/curriculum/diagnostic-readiness-integration-plan/extra.v1.json",
+    "apps/api/src/diagnostic-readiness-policy/integration.ts",
     "pnpm-lock.yaml",
   ]) {
     assert.throws(

@@ -257,6 +257,13 @@ const wave5Slice11ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
   "packages/curriculum/test/diagnostic-coverage-gap-closure-plan.test.mjs",
 ]);
+const wave5Slice12ScopeUnblockPaths = new Set([
+  "docs/wave-5/diagnostic-readiness-integration-plan-contract.md",
+  "docs/wave-5/slice-12-implementation-note.md",
+  "packages/curriculum/diagnostic-readiness-integration-plan/grade-7-9-math.readiness-integration-plan-placeholder.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/test/diagnostic-readiness-integration-plan.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultCandidateDigestRegistryPath = path.resolve(
@@ -765,6 +772,7 @@ export function validateCandidateDigestChangedPaths(changedPaths) {
       !wave5Slice9ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice10ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice11ScopeUnblockPaths.has(changedPath) &&
+      !wave5Slice12ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice1ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice2ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice3ScopeUnblockPaths.has(changedPath) &&

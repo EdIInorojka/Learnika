@@ -8,13 +8,14 @@ import {
   validateSkillGraph,
 } from "../scripts/validate-skill-graph.mjs";
 
-const wave5DocumentationPathsThroughSlice11 = [
+const wave5DocumentationPathsThroughSlice12 = [
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
   "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",
   "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",
   "docs/wave-5/diagnostic-production-approval-authority-policy-contract.md",
   "docs/wave-5/diagnostic-coverage-gap-closure-plan-contract.md",
+  "docs/wave-5/diagnostic-readiness-integration-plan-contract.md",
   "docs/wave-5/diagnostic-reviewer-role-ownership-policy-contract.md",
   "docs/wave-5/diagnostic-separation-of-duties-policy-contract.md",
   "docs/wave-5/diagnostic-candidate-identity-policy-contract.md",
@@ -32,6 +33,7 @@ const wave5DocumentationPathsThroughSlice11 = [
   "docs/wave-5/slice-9-implementation-note.md",
   "docs/wave-5/slice-10-implementation-note.md",
   "docs/wave-5/slice-11-implementation-note.md",
+  "docs/wave-5/slice-12-implementation-note.md",
 ];
 
 function cloneGraph(graph) {
@@ -128,22 +130,22 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
       changedPath,
     );
     assert.equal(
-      isLegacyStaticPath || wave5DocumentationPathsThroughSlice11.includes(changedPath),
+      isLegacyStaticPath || wave5DocumentationPathsThroughSlice12.includes(changedPath),
       true,
       changedPath,
     );
   }
 });
 
-test("Wave 5 scope guard permits only twenty-three exact documentation paths through Slice 11", () => {
+test("Wave 5 scope guard permits only twenty-five exact documentation paths through Slice 12", () => {
   assert.deepEqual(
-    validateSkillGraphChangedPaths(wave5DocumentationPathsThroughSlice11),
-    wave5DocumentationPathsThroughSlice11,
+    validateSkillGraphChangedPaths(wave5DocumentationPathsThroughSlice12),
+    wave5DocumentationPathsThroughSlice12,
   );
-  assert.equal(wave5DocumentationPathsThroughSlice11.length, 23);
+  assert.equal(wave5DocumentationPathsThroughSlice12.length, 25);
 
   const forbiddenPaths = [
-    "docs/wave-5/slice-12-implementation-note.md",
+    "docs/wave-5/slice-13-implementation-note.md",
     "docs/wave-5/nested/scope-and-non-goals.md",
     "docs/wave-5/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-review/controller.ts",
