@@ -278,6 +278,7 @@ const wave5Slice14ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
   "packages/curriculum/test/diagnostic-ci-validation-activation-gate.test.mjs",
 ]);
+const wave5ClosureScopeUnblockPaths = new Set(["docs/wave-5/closure-gate.md"]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 export const defaultCandidateDigestRegistryPath = path.resolve(
@@ -789,6 +790,7 @@ export function validateCandidateDigestChangedPaths(changedPaths) {
       !wave5Slice12ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice13ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice14ScopeUnblockPaths.has(changedPath) &&
+      !wave5ClosureScopeUnblockPaths.has(changedPath) &&
       !wave5Slice1ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice2ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice3ScopeUnblockPaths.has(changedPath) &&

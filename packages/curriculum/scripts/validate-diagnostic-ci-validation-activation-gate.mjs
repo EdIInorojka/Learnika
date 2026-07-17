@@ -260,6 +260,7 @@ const approvedSlice14ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+const wave5ClosureScopeUnblockPaths = new Set(["docs/wave-5/closure-gate.md"]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -811,7 +812,10 @@ export function validateCiValidationActivationGateChangedPaths(changedPaths) {
   if (!Array.isArray(changedPaths)) fail("Changed paths must be an array.");
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!approvedSlice14ChangedPaths.has(changedPath)) {
+    if (
+      !approvedSlice14ChangedPaths.has(changedPath) &&
+      !wave5ClosureScopeUnblockPaths.has(changedPath)
+    ) {
       fail(`Wave 5 Slice 14 out-of-scope path changed: ${changedPath}.`);
     }
   }

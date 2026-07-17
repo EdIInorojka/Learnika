@@ -19,6 +19,7 @@ const forbiddenTerms = [
 ];
 const allowedChangedPathPrefixes = ["docs/wave-3/", "docs/wave-4/", "packages/curriculum/"];
 const allowedChangedPaths = new Set([
+  "docs/wave-5/closure-gate.md",
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",
   "docs/wave-5/diagnostic-evidence-storage-retention-policy-contract.md",

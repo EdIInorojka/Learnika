@@ -1025,7 +1025,59 @@ test("all governance scope guards permit only the exact Wave 5 Slice 14 static f
   }
 });
 
-test("Wave 5 scope unblocks through Slice 14 contain no broad documentation prefix", async () => {
+test("all governance scope guards permit only the exact Wave 5 closure document", () => {
+  const approvedPaths = ["docs/wave-5/closure-gate.md"];
+  const validators = [
+    validateReviewCoverageChangedPaths,
+    validateReviewEvidenceChangedPaths,
+    validateReviewGateRubricChangedPaths,
+    validateCandidateDigestChangedPaths,
+    validateCandidateCanonicalizationChangedPaths,
+    validateReviewWorkflowStateChangedPaths,
+    validateReviewAuthorityChangedPaths,
+    validateActivationPrerequisitesChangedPaths,
+    validateCandidateIdentityPolicyChangedPaths,
+    validateCandidateCanonicalizationDigestPolicyChangedPaths,
+    validateReviewerRoleOwnershipPolicyChangedPaths,
+    validateSeparationOfDutiesPolicyChangedPaths,
+    validateConflictOfInterestPolicyChangedPaths,
+    validateAuditIdentityPolicyChangedPaths,
+    validateEvidenceStorageRetentionPolicyChangedPaths,
+    validateProductionApprovalAuthorityPolicyChangedPaths,
+    validateCoverageGapClosurePlanChangedPaths,
+    validateReadinessIntegrationPlanChangedPaths,
+    validateRollbackWithdrawalChangedPaths,
+    validateCiValidationActivationGateChangedPaths,
+  ];
+
+  for (const validateChangedPaths of validators) {
+    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+  }
+
+  const forbiddenPaths = [
+    "docs/wave-5/archive/closure-gate.md",
+    "docs/wave-5/closure-gate.md.bak",
+    "docs/wave-5/slice-15-implementation-note.md",
+    "apps/api/src/diagnostic-review/closure.ts",
+    "packages/contracts/openapi.json",
+    "apps/api/prisma/schema.prisma",
+    "apps/web/app/diagnostic/review/page.tsx",
+    "packages/curriculum/src/diagnostic-closure-runtime.ts",
+    "pnpm-lock.yaml",
+  ];
+
+  for (const validateChangedPaths of validators) {
+    for (const forbiddenPath of forbiddenPaths) {
+      assert.throws(
+        () => validateChangedPaths([forbiddenPath]),
+        /out-of-scope path changed/,
+        forbiddenPath,
+      );
+    }
+  }
+});
+
+test("Wave 5 scope unblocks through closure contain no broad documentation prefix", async () => {
   const validatorFiles = [
     "validate-skill-graph.mjs",
     "validate-diagnostic-review-coverage.mjs",

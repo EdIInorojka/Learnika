@@ -201,6 +201,7 @@ const wave5Slice14ScopeUnblockPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
   "packages/curriculum/test/diagnostic-ci-validation-activation-gate.test.mjs",
 ]);
+const wave5ClosureScopeUnblockPaths = new Set(["docs/wave-5/closure-gate.md"]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -660,7 +661,8 @@ export function validateActivationPrerequisitesChangedPaths(changedPaths) {
       !wave5Slice11ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice12ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice13ScopeUnblockPaths.has(changedPath) &&
-      !wave5Slice14ScopeUnblockPaths.has(changedPath)
+      !wave5Slice14ScopeUnblockPaths.has(changedPath) &&
+      !wave5ClosureScopeUnblockPaths.has(changedPath)
     ) {
       fail(`Wave 5 Slice 2 out-of-scope path changed: ${changedPath}.`);
     }
