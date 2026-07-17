@@ -347,14 +347,14 @@ test("private, candidate-like and machine-identity-like values fail closed", asy
   }
 });
 
-test("scope guard admits only the exact Wave 6 Slice 1 worktree", () => {
+test("scope guard retains the exact Wave 6 Slice 1 worktree admission", () => {
   assert.deepEqual(
     validateCandidateIdentityDecisionProposalChangedPaths(approvedWave6Slice1ChangedPaths),
     approvedWave6Slice1ChangedPaths,
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/scope-and-non-goals.md",
-    "docs/wave-6/slice-2-implementation-note.md",
+    "docs/wave-6/slice-3-implementation-note.md",
     "docs/wave-6/scope-and-non-goals.md.bak",
     "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-candidate-identity/controller.ts",

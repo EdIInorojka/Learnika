@@ -1,10 +1,11 @@
-# Wave 6 / Slice 1 open decisions
+# Wave 6 open decisions
 
 ## Status
 
-Every decision remains `UNRESOLVED_DEFERRED`. The proposal is not a policy
-approval and none of these rows authorizes identity allocation, review,
-digest generation, prerequisite satisfaction or activation.
+Every decision remains `UNRESOLVED_DEFERRED`. The Slice 1 and Slice 2 proposals
+are not policy approvals, and none of these rows authorizes identity allocation,
+canonicalization, digest generation, review, prerequisite satisfaction or
+activation.
 
 ## W6-S1-OD-NAMESPACE-OWNER
 
@@ -65,3 +66,73 @@ workflow and storage-derived material.
 Define the later policy-review evidence and explicit approval decision. Even
 an approved policy must not automatically satisfy the activation prerequisite
 or activate the review workflow.
+
+## W6-S2-OD-CANONICAL-FIELD-INVENTORY
+
+Review the complete field inventory, stable field identifiers, type taxonomy,
+schema-version behavior and unknown-field rejection before approval.
+
+## W6-S2-OD-INCLUSION-EXCLUSION
+
+Decide every field class explicitly, including candidate and curriculum pins,
+diagnostic payload, accessibility, rights provenance, workflow, runtime,
+personal, provider, storage, decision and audit metadata.
+
+## W6-S2-OD-DETERMINISTIC-ORDERING
+
+Approve fixed top-level ordering, ordering within sets and maps, duplicate
+handling and behavior for schema additions or removals.
+
+## W6-S2-OD-BYTE-SERIALIZATION
+
+Review framing, type tags, UTF-8 encoding, null and integer representations,
+length limits and rejection of malformed or unsupported values.
+
+## W6-S2-OD-UNICODE-RUSSIAN-LOCALE
+
+Review NFC, Russian-language handling, line endings, case behavior,
+transliteration prohibition and unsupported Unicode treatment.
+
+## W6-S2-OD-MATH-NOTATION
+
+Define the reviewed lexical alias table, symbol and unit treatment, expression
+representation and ambiguity rejection without semantic rewriting or solving.
+
+## W6-S2-OD-WHITESPACE-PUNCTUATION
+
+Review field-boundary trimming, inline-space behavior, paragraph preservation,
+punctuation stability and the treatment of non-breaking or invisible tokens.
+
+## W6-S2-OD-DIGEST-ALGORITHM-FAMILY
+
+Select a concrete algorithm only through a later security review that defines
+security properties, availability, migration and incident response. Slice 2
+selects none.
+
+## W6-S2-OD-DIGEST-ENCODING
+
+Review the proposed lowercase base32 form, padding rule, length constraints,
+parser behavior and migration compatibility before selection.
+
+## W6-S2-OD-DOMAIN-SEPARATION
+
+Approve the exact domain tag, framing position, policy-version binding and
+separation from every other Learnika digest domain.
+
+## W6-S2-OD-INVALIDATION-REGENERATION
+
+Approve the trigger matrix, affected-record propagation, regeneration
+authority, historical preservation, algorithm migration and partial-failure
+reconciliation.
+
+## W6-S2-OD-REPRODUCIBILITY-VECTORS
+
+Define independent implementations, symbolic-to-byte test evidence, negative
+vectors, provenance, review ownership and the prohibition on production
+content in published vectors.
+
+## W6-S2-OD-POLICY-GATE
+
+Define the later evidence and explicit approval decision for canonicalization
+and digest policies. Policy approval must remain separate from prerequisite
+satisfaction, workflow activation and readiness.

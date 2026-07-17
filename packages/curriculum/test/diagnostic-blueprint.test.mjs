@@ -9,10 +9,12 @@ import {
 import { readSkillGraph } from "../scripts/validate-skill-graph.mjs";
 
 const wave5DocumentationPathsThroughSlice10 = new Set([
+  "docs/wave-6/diagnostic-canonicalization-digest-policy-decision-proposal.md",
   "docs/wave-6/diagnostic-candidate-identity-policy-decision-proposal.md",
   "docs/wave-6/open-decisions.md",
   "docs/wave-6/scope-and-non-goals.md",
   "docs/wave-6/slice-1-implementation-note.md",
+  "docs/wave-6/slice-2-implementation-note.md",
   "docs/wave-5/closure-gate.md",
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",

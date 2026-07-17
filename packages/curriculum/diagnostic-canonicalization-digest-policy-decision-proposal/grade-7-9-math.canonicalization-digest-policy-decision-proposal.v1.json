@@ -1,0 +1,520 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticCandidateCanonicalizationDigestPolicyDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-2.grade-7-9-math.v1",
+    "proposalId": "diagnostic-candidate-canonicalization-digest-policy-decision-proposal",
+    "proposalVersion": "wave-6.slice-2.diagnostic-candidate-canonicalization-digest-policy.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_candidate_canonicalization_digest_policy_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "canonicalizationDigestPolicyPlaceholderArtifactVersion": "wave-5.slice-4.grade-7-9-math.v1",
+    "candidateIdentityDecisionProposalArtifactVersion": "wave-6.slice-1.grade-7-9-math.v1",
+    "candidateDigestRegistryArtifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+    "candidateCanonicalizationArtifactVersion": "wave-4.slice-6.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-6/diagnostic-canonicalization-digest-policy-decision-proposal.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "upstreamReferences": {
+    "activationPrerequisites": {
+      "artifactPath": "packages/curriculum/diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json",
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "artifactStatus": "blocked_prerequisites_only_non_production",
+      "prerequisiteId": "canonicalization_and_digest_policy",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    },
+    "canonicalizationDigestPolicyPlaceholder": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-canonicalization-digest-policy/grade-7-9-math.candidate-canonicalization-digest-policy-placeholder.v1.json",
+      "artifactVersion": "wave-5.slice-4.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-4.diagnostic-candidate-canonicalization-and-digest.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED"
+    },
+    "candidateIdentityDecisionProposal": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/grade-7-9-math.candidate-identity-policy-decision-proposal.v1.json",
+      "artifactVersion": "wave-6.slice-1.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-1.diagnostic-candidate-identity-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "realCandidateIdCount": 0,
+      "reservedCandidateIdCount": 0
+    },
+    "candidateDigestRegistry": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-digest/grade-7-9-math.candidate-digest-placeholder.v1.json",
+      "artifactVersion": "wave-4.slice-5.grade-7-9-math.v1",
+      "algorithmPolicyVersion": "wave-4.slice-5.candidate-digest-algorithm.placeholder.v1",
+      "algorithmState": "DEFERRED",
+      "algorithmId": null,
+      "valueEncoding": null,
+      "assignedCandidateIdentityCount": 0,
+      "digestValueCount": 0
+    },
+    "candidateCanonicalization": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-canonicalization/grade-7-9-math.canonicalization-placeholder.v1.json",
+      "artifactVersion": "wave-4.slice-6.grade-7-9-math.v1",
+      "policyVersion": "wave-4.slice-6.diagnostic-candidate-canonicalization.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "activeRuleCount": 0,
+      "transformedCandidateRecordCount": 0,
+      "digestValueCount": 0
+    }
+  },
+  "currentBaseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": {
+      "status": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "canonicalizationDigestPrerequisite": {
+      "prerequisiteId": "canonicalization_and_digest_policy",
+      "status": "UNSATISFIED_DEFERRED"
+    },
+    "satisfiedPrerequisiteCount": 0,
+    "productionApprovalCount": 0,
+    "approvedCandidateCount": 0
+  },
+  "proposalBoundary": {
+    "proposalStatus": "PROPOSED_DEFERRED",
+    "policyApproved": false,
+    "fieldInventoryApproved": false,
+    "canonicalizationRulesetApproved": false,
+    "canonicalizationRulesetActive": false,
+    "digestAlgorithmSelected": false,
+    "digestAlgorithmApproved": false,
+    "digestEncodingSelected": false,
+    "digestEncodingApproved": false,
+    "canonicalizationAllowed": false,
+    "digestGenerationAllowed": false,
+    "reviewUseAllowed": false,
+    "prerequisiteSatisfactionAllowed": false,
+    "activationAllowed": false,
+    "workflowActivationAllowed": false,
+    "readinessTransitionAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "proposedPolicy": {
+    "state": "PROPOSED_NOT_APPROVED",
+    "canonicalFieldInventory": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "inventoryVersionProposal": "wave-6.slice-2.canonical-field-inventory.proposal.v1",
+      "fieldClasses": [
+        { "fieldRef": "content_schema_version", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "candidate_identity_reference", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "candidate_version_revision", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "blueprint_slot_reference", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "canonical_skill_reference_set", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "diagnostic_task_payload", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "interaction_contract_metadata", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "accessibility_metadata", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "rights_provenance_reference", "disposition": "PROPOSED_INCLUDE" },
+        { "fieldRef": "review_workflow_metadata", "disposition": "PROPOSED_EXCLUDE" },
+        { "fieldRef": "runtime_delivery_metadata", "disposition": "PROPOSED_EXCLUDE" },
+        { "fieldRef": "personal_data", "disposition": "PROPOSED_EXCLUDE" },
+        { "fieldRef": "provider_data", "disposition": "PROPOSED_EXCLUDE" },
+        { "fieldRef": "transient_storage_references", "disposition": "PROPOSED_EXCLUDE" },
+        { "fieldRef": "policy_decision_metadata", "disposition": "PROPOSED_EXCLUDE" },
+        { "fieldRef": "governance_trace_metadata", "disposition": "PROPOSED_EXCLUDE" }
+      ],
+      "unknownFieldDisposition": "REJECT",
+      "inventoryApproved": false,
+      "applicationAllowed": false
+    },
+    "deterministicOrdering": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "canonicalFieldOrder": [
+        "content_schema_version",
+        "candidate_identity_reference",
+        "candidate_version_revision",
+        "blueprint_slot_reference",
+        "canonical_skill_reference_set",
+        "diagnostic_task_payload",
+        "interaction_contract_metadata",
+        "accessibility_metadata",
+        "rights_provenance_reference"
+      ],
+      "setOrderingProposal": "ASCII_CODE_POINT_ASCENDING",
+      "duplicateFieldDisposition": "REJECT",
+      "orderingApproved": false
+    },
+    "byteSerialization": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "formatProposal": "LENGTH_PREFIXED_TYPED_FIELD_SEQUENCE_V1",
+      "byteEncodingProposal": "UTF8",
+      "nullRepresentationProposal": "EXPLICIT_NULL_TAG",
+      "integerRepresentationProposal": "MINIMAL_DECIMAL",
+      "serializationApproved": false,
+      "serializationAllowed": false
+    },
+    "localeUnicodeRussianNormalization": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "targetLocale": "ru-RU",
+      "unicodeNormalizationProposal": "NFC",
+      "lineEndingProposal": "LF",
+      "localeSensitiveCaseConversionAllowed": false,
+      "transliterationAllowed": false,
+      "normalizationApproved": false
+    },
+    "mathNotationNormalization": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "proposedRuleIds": [
+        "normalize_predeclared_glyph_aliases_only",
+        "preserve_operator_order",
+        "preserve_expression_structure",
+        "preserve_unit_tokens",
+        "reject_ambiguous_notation"
+      ],
+      "semanticEquivalenceRewritingAllowed": false,
+      "expressionEvaluationAllowed": false,
+      "normalizationApproved": false
+    },
+    "whitespacePunctuationNormalization": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "proposedRuleIds": [
+        "trim_field_boundary_space",
+        "map_supported_space_tokens_to_ascii_space",
+        "collapse_repeated_inline_space",
+        "preserve_paragraph_boundaries",
+        "preserve_punctuation_code_points"
+      ],
+      "unclassifiedPunctuationDisposition": "PRESERVE",
+      "normalizationApproved": false
+    },
+    "digestAlgorithmFamily": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "familyRequirement": "FUTURE_SECURITY_REVIEWED_CRYPTOGRAPHIC_DIGEST_FAMILY",
+      "algorithmId": null,
+      "algorithmSelected": false,
+      "algorithmApproved": false,
+      "digestGenerationAllowed": false
+    },
+    "digestEncoding": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "encodingProposal": "lowercase_base32_without_padding",
+      "encodingId": null,
+      "encodingSelected": false,
+      "encodingApproved": false
+    },
+    "domainSeparation": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "domainTagProposal": "LEARNIKA-DIAGNOSTIC-CANDIDATE-DIGEST-PROPOSAL-V1",
+      "domainTagApproved": false,
+      "applicationAllowed": false
+    },
+    "invalidationRegeneration": {
+      "state": "PROPOSED_NOT_APPROVED",
+      "proposedTriggerIds": [
+        "included_field_value_change",
+        "candidate_version_or_revision_change",
+        "field_inventory_version_change",
+        "canonicalization_ruleset_change",
+        "serialization_format_change",
+        "digest_algorithm_change",
+        "digest_encoding_change",
+        "domain_separation_tag_change"
+      ],
+      "invalidationApproved": false,
+      "regenerationApproved": false,
+      "invalidationExecutionAllowed": false,
+      "regenerationExecutionAllowed": false,
+      "migrationAllowed": false
+    }
+  },
+  "syntheticExamples": [
+    {
+      "vectorRef": "synthetic-ordering-01",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "FIELD_ORDER_VARIANT",
+      "abstractInputTokens": ["SYNTHETIC_FIELD_SET_ALPHA", "SYNTHETIC_ORDER_VARIANT_BETA"],
+      "expectedSymbolicDisposition": "SAME_SERIALIZATION_SYMBOL_CLASS",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-unicode-02",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "RUSSIAN_UNICODE_VARIANT",
+      "abstractInputTokens": ["SYNTHETIC_RUSSIAN_TOKEN_VARIANT", "SYNTHETIC_NFC_TARGET_TOKEN"],
+      "expectedSymbolicDisposition": "SAME_SERIALIZATION_SYMBOL_CLASS",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-math-03",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "MATH_GLYPH_ALIAS_VARIANT",
+      "abstractInputTokens": [
+        "SYNTHETIC_MATH_GLYPH_ALIAS_TOKEN",
+        "SYNTHETIC_DECLARED_ALIAS_TARGET"
+      ],
+      "expectedSymbolicDisposition": "SAME_SERIALIZATION_SYMBOL_CLASS",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-whitespace-04",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "WHITESPACE_LINE_ENDING_VARIANT",
+      "abstractInputTokens": ["SYNTHETIC_SPACE_VARIANT_TOKEN", "SYNTHETIC_LF_TARGET_TOKEN"],
+      "expectedSymbolicDisposition": "SAME_SERIALIZATION_SYMBOL_CLASS",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-unknown-field",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "UNKNOWN_FIELD_CLASS",
+      "abstractInputTokens": ["SYNTHETIC_UNKNOWN_FIELD_TOKEN"],
+      "expectedSymbolicDisposition": "REJECT",
+      "rejectionReasonCode": "UNKNOWN_FIELD_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-personal-data",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "EXCLUDED_PERSONAL_DATA_CLASS",
+      "abstractInputTokens": ["SYNTHETIC_EXCLUDED_PERSONAL_DATA_TOKEN"],
+      "expectedSymbolicDisposition": "REJECT",
+      "rejectionReasonCode": "EXCLUDED_FIELD_CLASS_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-ambiguous-math",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "AMBIGUOUS_MATH_REWRITE",
+      "abstractInputTokens": ["SYNTHETIC_AMBIGUOUS_MATH_TOKEN"],
+      "expectedSymbolicDisposition": "REJECT",
+      "rejectionReasonCode": "AMBIGUOUS_NOTATION_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-concrete-output",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "CONCRETE_OUTPUT_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_CONCRETE_OUTPUT_REQUEST_TOKEN"],
+      "expectedSymbolicDisposition": "REJECT",
+      "rejectionReasonCode": "CANONICAL_OR_DIGEST_OUTPUT_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-candidate-reference",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "REAL_CANDIDATE_REFERENCE_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_REAL_CANDIDATE_REFERENCE_REQUEST_TOKEN"],
+      "expectedSymbolicDisposition": "REJECT",
+      "rejectionReasonCode": "REAL_CANDIDATE_REFERENCE_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_REAL_CONTENT": true,
+        "NOT_A_REAL_CANDIDATE": true,
+        "NOT_A_REAL_DIGEST": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    }
+  ],
+  "unresolvedDecisions": [
+    {
+      "decisionId": "canonical_field_inventory",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "field_inclusion_and_exclusion",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "deterministic_field_ordering",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "byte_serialization_and_framing",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "unicode_russian_locale_and_line_endings",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "math_notation_symbol_unit_and_expression_handling",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "whitespace_and_punctuation_handling",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "digest_algorithm_family_selection",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "digest_encoding_selection",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "domain_separation_tag_and_framing",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "invalidation_regeneration_and_migration",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "independent_reproducibility_vectors",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "policy_approval_and_prerequisite_satisfaction_gate",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    }
+  ],
+  "recordBoundary": {
+    "policyDecisionsRecorded": false,
+    "canonicalRepresentationsRecorded": false,
+    "digestValuesRecorded": false,
+    "candidateIdentitiesRecorded": false,
+    "candidateReservationsRecorded": false,
+    "candidateApprovalsRecorded": false,
+    "reviewEvidenceRecorded": false,
+    "reviewDecisionsRecorded": false,
+    "reviewerIdentitiesRecorded": false,
+    "auditIdentitiesRecorded": false,
+    "reviewerAssignmentsRecorded": false,
+    "ownerAssignmentsRecorded": false,
+    "authorityGrantsRecorded": false,
+    "productionApprovalsRecorded": false,
+    "algorithmSelectionsRecorded": false,
+    "encodingSelectionsRecorded": false,
+    "invalidationExecutionsRecorded": false,
+    "regenerationExecutionsRecorded": false
+  },
+  "aggregate": {
+    "syntheticExampleCount": 9,
+    "acceptedSyntheticExampleCount": 4,
+    "rejectedSyntheticExampleCount": 5,
+    "unresolvedDecisionCount": 13,
+    "satisfiedPrerequisiteCount": 0,
+    "selectedContentFieldCount": 0,
+    "activeCanonicalizationRuleCount": 0,
+    "activeCanonicalizationRulesetCount": 0,
+    "selectedDigestAlgorithmCount": 0,
+    "selectedDigestEncodingCount": 0,
+    "canonicalRepresentationCount": 0,
+    "realCandidateIdCount": 0,
+    "reservedCandidateIdCount": 0,
+    "approvedCandidateCount": 0,
+    "policyDecisionCount": 0,
+    "reviewEvidenceRecordCount": 0,
+    "reviewDecisionCount": 0,
+    "digestValueCount": 0,
+    "reviewerIdentityCount": 0,
+    "auditIdentityCount": 0,
+    "reviewerAssignmentCount": 0,
+    "ownerAssignmentCount": 0,
+    "authorityGrantCount": 0,
+    "productionApprovalCount": 0,
+    "invalidationExecutionCount": 0,
+    "regenerationExecutionCount": 0
+  },
+  "policyDecisionRecords": [],
+  "canonicalRepresentationRecords": [],
+  "digestValueRecords": [],
+  "candidateIdentityRecords": [],
+  "candidateReservationRecords": [],
+  "candidateApprovalRecords": [],
+  "reviewEvidenceRecords": [],
+  "reviewDecisionRecords": [],
+  "reviewerIdentityRecords": [],
+  "auditIdentityRecords": [],
+  "reviewerAssignmentRecords": [],
+  "ownerAssignmentRecords": [],
+  "authorityGrantRecords": [],
+  "productionApprovalRecords": [],
+  "algorithmSelectionRecords": [],
+  "encodingSelectionRecords": [],
+  "invalidationExecutionRecords": [],
+  "regenerationExecutionRecords": []
+}
