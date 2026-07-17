@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -687,11 +688,17 @@ export function validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths)
   return normalized;
 }
 
-function worktreePaths() {
-  const result = spawnSync("git", ["status", "--short", "--untracked-files=all"], {
-    cwd: repoRoot,
-    encoding: "utf8",
-  });
+function defaultGitRunner(args, cwd) {
+  const result = spawnSync("git", args, { cwd, encoding: "utf8" });
+  return {
+    status: result.status ?? 1,
+    stdout: result.stdout ?? "",
+    stderr: result.stderr ?? "",
+  };
+}
+
+function localWorktreePaths({ cwd, runGit }) {
+  const result = runGit(["status", "--short", "--untracked-files=all"], cwd);
   if (result.status !== 0) fail(`git status failed: ${result.stderr || result.stdout}`);
   return result.stdout
     .split(/\r?\n/)
@@ -701,12 +708,141 @@ function worktreePaths() {
     .map((value) => value.replaceAll("\\", "/"));
 }
 
+function readCiEvent(eventPath) {
+  try {
+    return JSON.parse(readFileSync(eventPath, "utf8"));
+  } catch (error) {
+    fail(
+      `BLOCK: GitHub Actions event metadata is unavailable or invalid: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+}
+
+function isCommitSha(value) {
+  return typeof value === "string" && /^[0-9a-f]{40}$/i.test(value);
+}
+
+function requireCommitObject(sha, label, { cwd, runGit }) {
+  if (!isCommitSha(sha))
+    fail(
+      `BLOCK: CI ${label} commit is unavailable or invalid; exact changed-path range cannot be determined.`,
+    );
+  const objectArgs = ["cat-file", "-e", `${sha}^{commit}`];
+  const result = runGit(objectArgs, cwd);
+  if (result.status === 0) return;
+  const fetchResult = runGit(["fetch", "--no-tags", "--depth=1", "origin", sha], cwd);
+  if (fetchResult.status !== 0)
+    fail(
+      `BLOCK: CI ${label} commit is unavailable and could not be fetched from origin; exact changed-path range cannot be determined: ${fetchResult.stderr || fetchResult.stdout}`,
+    );
+  const fetched = runGit(objectArgs, cwd);
+  if (fetched.status !== 0)
+    fail(
+      `BLOCK: CI ${label} commit remains unavailable after fetching the exact SHA (possibly a shallow checkout); exact changed-path range cannot be determined.`,
+    );
+}
+
+function currentCommitRange({ cwd, env, runGit }) {
+  const head = env.GITHUB_SHA;
+  if (!isCommitSha(head))
+    fail("BLOCK: GITHUB_SHA is unavailable; exact CI changed-path range cannot be determined.");
+  requireCommitObject(head, "head", { cwd, runGit });
+  const result = runGit(["rev-list", "--parents", "-n", "1", head], cwd);
+  if (result.status !== 0)
+    fail(
+      `BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined (possibly a shallow checkout): ${result.stderr || result.stdout}`,
+    );
+  const commits = result.stdout.trim().split(/\s+/).filter(Boolean);
+  if (commits.length !== 2 || commits[0] !== head) {
+    fail("BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined.");
+  }
+  const base = commits[1];
+  requireCommitObject(base, "base", { cwd, runGit });
+  return { base, head };
+}
+
+function ciCommitRange({ cwd, env, runGit, readEvent }) {
+  const eventPath = env.GITHUB_EVENT_PATH;
+  const eventName = env.GITHUB_EVENT_NAME;
+  if (eventPath) {
+    const event = readEvent(eventPath);
+    if (eventName === "pull_request" || event?.pull_request) {
+      const base = event?.pull_request?.base?.sha;
+      const head = event?.pull_request?.head?.sha;
+      if (!base || !head)
+        fail(
+          "BLOCK: GitHub pull-request base/head metadata is unavailable; exact CI changed-path range cannot be determined.",
+        );
+      requireCommitObject(base, "pull-request base", { cwd, runGit });
+      requireCommitObject(head, "pull-request head", { cwd, runGit });
+      return { base, head };
+    }
+    if (eventName === "push" || event?.before || event?.after) {
+      const base = event?.before;
+      const head = event?.after ?? env.GITHUB_SHA;
+      if (!isCommitSha(base) || !isCommitSha(head)) {
+        fail(
+          "BLOCK: GitHub push before/after metadata is unavailable or ambiguous; exact CI changed-path range cannot be determined.",
+        );
+      }
+      requireCommitObject(base, "push base", { cwd, runGit });
+      requireCommitObject(head, "push head", { cwd, runGit });
+      return { base, head };
+    }
+  }
+  if (eventName === "pull_request") {
+    fail(
+      "BLOCK: GitHub pull-request event metadata is unavailable; exact CI changed-path range cannot be determined.",
+    );
+  }
+  return currentCommitRange({ cwd, env, runGit });
+}
+
+function ciChangedPaths({ cwd, env, runGit, readEvent }) {
+  const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
+  const result = runGit(
+    ["diff", "--name-status", "--find-renames", "--no-ext-diff", "-z", base, head],
+    cwd,
+  );
+  if (result.status !== 0)
+    fail(`BLOCK: CI changed-path range could not be read: ${result.stderr || result.stdout}`);
+  const tokens = result.stdout.split("\0").filter(Boolean);
+  const paths = [];
+  for (let index = 0; index < tokens.length;) {
+    const status = tokens[index++];
+    const pathCount = /^[RC]/.test(status) ? 2 : 1;
+    if (tokens.length - index < pathCount)
+      fail("BLOCK: CI changed-path range was malformed; exact scope cannot be determined.");
+    for (let pathIndex = 0; pathIndex < pathCount; pathIndex += 1)
+      paths.push(tokens[index++].replaceAll("\\", "/"));
+  }
+  if (paths.length === 0)
+    fail(
+      "BLOCK: CI changed-path collection returned an empty path list; exact scope cannot be determined.",
+    );
+  return paths;
+}
+
+export function collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+  cwd = repoRoot,
+  env = process.env,
+  runGit = defaultGitRunner,
+  readEvent = readCiEvent,
+} = {}) {
+  const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
+  return inGitHubActions
+    ? ciChangedPaths({ cwd, env, runGit, readEvent })
+    : localWorktreePaths({ cwd, runGit });
+}
+
 export async function main() {
   const artifact = await readDiagnosticReviewerRoleOwnershipDecisionProposal();
   const upstream = await readDiagnosticReviewerRoleOwnershipDecisionProposalUpstream();
   const summary = validateDiagnosticReviewerRoleOwnershipDecisionProposal(artifact, upstream);
   if (process.argv.includes("--check-worktree-scope"))
-    validateReviewerRoleOwnershipDecisionProposalChangedPaths(worktreePaths());
+    validateReviewerRoleOwnershipDecisionProposalChangedPaths(
+      collectReviewerRoleOwnershipDecisionProposalChangedPaths(),
+    );
   console.log(
     `[curriculum] reviewer role ownership decision proposal valid: ${summary.proposalVersion}; prerequisite ${summary.prerequisiteStatus}; activation ${summary.activationStatus}; workflow ${summary.workflowStatus}; readiness ${summary.readiness}.`,
   );

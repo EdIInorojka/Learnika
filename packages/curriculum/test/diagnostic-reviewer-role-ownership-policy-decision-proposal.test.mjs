@@ -6,6 +6,7 @@ import { URL } from "node:url";
 import {
   readDiagnosticReviewerRoleOwnershipDecisionProposal,
   readDiagnosticReviewerRoleOwnershipDecisionProposalUpstream,
+  collectReviewerRoleOwnershipDecisionProposalChangedPaths,
   validateDiagnosticReviewerRoleOwnershipDecisionProposal,
   validateReviewerRoleOwnershipDecisionProposalChangedPaths,
 } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs";
@@ -231,6 +232,21 @@ test("scope guard admits only the exact cumulative Slice 3 worktree", () => {
     validateReviewerRoleOwnershipDecisionProposalChangedPaths(approvedWave6Slice3ChangedPaths),
     approvedWave6Slice3ChangedPaths,
   );
+  assert.throws(
+    () =>
+      validateReviewerRoleOwnershipDecisionProposalChangedPaths(
+        approvedWave6Slice3ChangedPaths.slice(0, -1),
+      ),
+    /requires exactly 38 changed paths/,
+  );
+  assert.throws(
+    () =>
+      validateReviewerRoleOwnershipDecisionProposalChangedPaths([
+        ...approvedWave6Slice3ChangedPaths,
+        approvedWave6Slice3ChangedPaths[0],
+      ]),
+    /must not contain duplicates/,
+  );
   for (const forbiddenPath of [
     "docs/wave-6/archive/diagnostic-reviewer-role-ownership-policy-decision-proposal.md",
     "docs/wave-6/slice-3-implementation-note.md.bak",
@@ -247,6 +263,151 @@ test("scope guard admits only the exact cumulative Slice 3 worktree", () => {
       /Wave 6 Slice 3 out-of-scope path changed/,
     );
   }
+});
+
+test("changed-path collection uses local dirty-worktree status outside GitHub Actions", () => {
+  const calls = [];
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {},
+    runGit: (args, cwd) => {
+      calls.push({ args, cwd });
+      return {
+        status: 0,
+        stdout:
+          " M packages/curriculum/scripts/validate-skill-graph.mjs\n?? docs/wave-6/open-decisions.md\n",
+        stderr: "",
+      };
+    },
+  });
+  assert.deepEqual(paths, [
+    "packages/curriculum/scripts/validate-skill-graph.mjs",
+    "docs/wave-6/open-decisions.md",
+  ]);
+  assert.deepEqual(calls, [
+    { args: ["status", "--short", "--untracked-files=all"], cwd: "fixture-repo" },
+  ]);
+});
+
+test("changed-path collection uses the clean GitHub push event range", () => {
+  const base = "a".repeat(40);
+  const head = "b".repeat(40);
+  const calls = [];
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {
+      GITHUB_ACTIONS: "true",
+      GITHUB_EVENT_NAME: "push",
+      GITHUB_EVENT_PATH: "event.json",
+      GITHUB_SHA: head,
+    },
+    readEvent: () => ({ before: base, after: head }),
+    runGit: (args, cwd) => {
+      calls.push({ args, cwd });
+      if (args[0] === "diff") {
+        return {
+          status: 0,
+          stdout: `M\0${approvedWave6Slice3ChangedPaths[0]}\0A\0${approvedWave6Slice3ChangedPaths[1]}\0`,
+          stderr: "",
+        };
+      }
+      return { status: 0, stdout: "", stderr: "" };
+    },
+  });
+  assert.deepEqual(paths, [approvedWave6Slice3ChangedPaths[0], approvedWave6Slice3ChangedPaths[1]]);
+  assert.deepEqual(calls, [
+    { args: ["cat-file", "-e", `${base}^{commit}`], cwd: "fixture-repo" },
+    { args: ["cat-file", "-e", `${head}^{commit}`], cwd: "fixture-repo" },
+    {
+      args: ["diff", "--name-status", "--find-renames", "--no-ext-diff", "-z", base, head],
+      cwd: "fixture-repo",
+    },
+  ]);
+});
+
+test("missing CI commit is fetched by exact SHA before range calculation", () => {
+  const base = "1".repeat(40);
+  const head = "2".repeat(40);
+  const calls = [];
+  let baseFetched = false;
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {
+      GITHUB_ACTIONS: "true",
+      GITHUB_EVENT_NAME: "push",
+      GITHUB_EVENT_PATH: "event.json",
+      GITHUB_SHA: head,
+    },
+    readEvent: () => ({ before: base, after: head }),
+    runGit: (args, cwd) => {
+      calls.push({ args, cwd });
+      if (args[0] === "cat-file") {
+        if (args[2] === `${base}^{commit}` && !baseFetched)
+          return { status: 1, stdout: "", stderr: "missing object" };
+        return { status: 0, stdout: "", stderr: "" };
+      }
+      if (args[0] === "fetch") {
+        baseFetched = true;
+        return { status: 0, stdout: "", stderr: "" };
+      }
+      return { status: 0, stdout: `A\0${approvedWave6Slice3ChangedPaths[3]}\0`, stderr: "" };
+    },
+  });
+  assert.deepEqual(paths, [approvedWave6Slice3ChangedPaths[3]]);
+  assert.deepEqual(calls, [
+    { args: ["cat-file", "-e", `${base}^{commit}`], cwd: "fixture-repo" },
+    { args: ["fetch", "--no-tags", "--depth=1", "origin", base], cwd: "fixture-repo" },
+    { args: ["cat-file", "-e", `${base}^{commit}`], cwd: "fixture-repo" },
+    { args: ["cat-file", "-e", `${head}^{commit}`], cwd: "fixture-repo" },
+    {
+      args: ["diff", "--name-status", "--find-renames", "--no-ext-diff", "-z", base, head],
+      cwd: "fixture-repo",
+    },
+  ]);
+});
+
+test("changed-path collection uses the clean GitHub current-commit parent range", () => {
+  const base = "e".repeat(40);
+  const head = "f".repeat(40);
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: { GITHUB_ACTIONS: "true", GITHUB_SHA: head },
+    runGit: (args) => {
+      if (args[0] === "rev-list") return { status: 0, stdout: `${head} ${base}\n`, stderr: "" };
+      if (args[0] === "diff")
+        return { status: 0, stdout: `A\0${approvedWave6Slice3ChangedPaths[2]}\0`, stderr: "" };
+      return { status: 0, stdout: "", stderr: "" };
+    },
+  });
+  assert.deepEqual(paths, [approvedWave6Slice3ChangedPaths[2]]);
+});
+
+test("shallow or unavailable GitHub ranges fail closed", () => {
+  const base = "c".repeat(40);
+  const head = "d".repeat(40);
+  assert.throws(
+    () =>
+      collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+        cwd: "fixture-repo",
+        env: { GITHUB_ACTIONS: "true", GITHUB_EVENT_NAME: "push", GITHUB_EVENT_PATH: "event.json" },
+        readEvent: () => ({ before: base, after: head }),
+        runGit: () => ({ status: 1, stdout: "", stderr: "missing object" }),
+      }),
+    /BLOCK: CI push base commit is unavailable/,
+  );
+
+  assert.throws(
+    () =>
+      collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+        cwd: "fixture-repo",
+        env: { GITHUB_ACTIONS: "true", GITHUB_EVENT_NAME: "push", GITHUB_SHA: head },
+        runGit: (args) => {
+          if (args[0] === "cat-file") return { status: 0, stdout: "", stderr: "" };
+          return { status: 1, stdout: "", stderr: "shallow repository" };
+        },
+      }),
+    /BLOCK: CI parent commit is unavailable/,
+  );
 });
 
 test("root registration is exact and validator has no broad allowlist", async () => {
