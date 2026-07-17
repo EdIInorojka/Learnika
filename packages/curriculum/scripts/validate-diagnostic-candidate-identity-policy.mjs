@@ -201,6 +201,11 @@ const wave6Slice1ScopeUnblockPaths = new Set([
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
 const wave6Slice2ScopeUnblockPaths = new Set([
+  "docs/wave-6/diagnostic-reviewer-role-ownership-policy-decision-proposal.md",
+  "docs/wave-6/slice-3-implementation-note.md",
+  "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
   "docs/wave-6/diagnostic-canonicalization-digest-policy-decision-proposal.md",
   "docs/wave-6/open-decisions.md",
   "docs/wave-6/slice-2-implementation-note.md",

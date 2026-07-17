@@ -59,6 +59,11 @@ const approvedWave6Slice2ChangedPaths = [
   "docs/wave-6/diagnostic-canonicalization-digest-policy-decision-proposal.md",
   "docs/wave-6/open-decisions.md",
   "docs/wave-6/slice-2-implementation-note.md",
+  "docs/wave-6/diagnostic-reviewer-role-ownership-policy-decision-proposal.md",
+  "docs/wave-6/slice-3-implementation-note.md",
+  "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
   "package.json",
   "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -402,15 +407,15 @@ test("private machine candidate and hash-like values fail closed", async () => {
   }
 });
 
-test("scope guard admits only the exact Wave 6 Slice 2 worktree", () => {
-  assert.equal(approvedWave6Slice2ChangedPaths.length, 36);
+test("scope guard retains exact cumulative admission through Wave 6 Slice 3", () => {
+  assert.equal(approvedWave6Slice2ChangedPaths.length, 41);
   assert.deepEqual(
     validateCanonicalizationDigestDecisionProposalChangedPaths(approvedWave6Slice2ChangedPaths),
     approvedWave6Slice2ChangedPaths,
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/diagnostic-canonicalization-digest-policy-decision-proposal.md",
-    "docs/wave-6/slice-3-implementation-note.md",
+    "docs/wave-6/slice-4-implementation-note.md",
     "docs/wave-6/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-canonicalization/controller.ts",

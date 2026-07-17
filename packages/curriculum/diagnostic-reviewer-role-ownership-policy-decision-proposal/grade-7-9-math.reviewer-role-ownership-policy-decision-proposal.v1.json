@@ -1,0 +1,473 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticReviewerRoleOwnershipPolicyDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-3.grade-7-9-math.v1",
+    "proposalId": "diagnostic-reviewer-role-ownership-policy-decision-proposal",
+    "proposalVersion": "wave-6.slice-3.diagnostic-reviewer-role-ownership-policy.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_reviewer_role_ownership_policy_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "reviewAuthorityArtifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+    "reviewerRoleOwnershipPolicyPlaceholderArtifactVersion": "wave-5.slice-5.grade-7-9-math.v1",
+    "candidateIdentityPolicyPlaceholderArtifactVersion": "wave-5.slice-3.grade-7-9-math.v1",
+    "canonicalizationDigestPolicyPlaceholderArtifactVersion": "wave-5.slice-4.grade-7-9-math.v1",
+    "candidateIdentityDecisionProposalArtifactVersion": "wave-6.slice-1.grade-7-9-math.v1",
+    "canonicalizationDigestDecisionProposalArtifactVersion": "wave-6.slice-2.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-6/diagnostic-reviewer-role-ownership-policy-decision-proposal.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "upstreamReferences": {
+    "activationPrerequisites": {
+      "artifactPath": "packages/curriculum/diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json",
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "artifactStatus": "blocked_prerequisites_only_non_production",
+      "prerequisiteId": "reviewer_role_ownership",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRecordRefs": []
+    },
+    "reviewAuthority": {
+      "artifactPath": "packages/curriculum/diagnostic-review-authority/grade-7-9-math.review-authority-placeholder.v1.json",
+      "artifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+      "policyVersion": "wave-4.slice-8.diagnostic-review-authority.placeholder.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "rolePlaceholderCount": 7,
+      "realReviewerRoleCount": 0,
+      "reviewerAssignmentCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0,
+      "reviewDecisionCount": 0,
+      "productionApprovalCount": 0
+    },
+    "reviewerRoleOwnershipPlaceholder": {
+      "artifactPath": "packages/curriculum/diagnostic-reviewer-role-ownership-policy/grade-7-9-math.reviewer-role-ownership-policy-placeholder.v1.json",
+      "artifactVersion": "wave-5.slice-5.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-5.diagnostic-reviewer-role-ownership.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "rolePlaceholderCount": 7,
+      "decisionRequirementCount": 8,
+      "roleOwnerCount": 0,
+      "ownerAssignmentCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0,
+      "productionApprovalCount": 0
+    },
+    "candidateIdentityPolicyPlaceholder": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-identity-policy/grade-7-9-math.candidate-identity-policy-placeholder.v1.json",
+      "artifactVersion": "wave-5.slice-3.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-3.diagnostic-candidate-identity.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "realCandidateIdCount": 0,
+      "approvedCandidateCount": 0,
+      "productionApprovalCount": 0
+    },
+    "canonicalizationDigestPolicyPlaceholder": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-canonicalization-digest-policy/grade-7-9-math.candidate-canonicalization-digest-policy-placeholder.v1.json",
+      "artifactVersion": "wave-5.slice-4.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-4.diagnostic-candidate-canonicalization-and-digest.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activeCanonicalizationRuleCount": 0,
+      "selectedDigestAlgorithmCount": 0,
+      "digestValueCount": 0,
+      "approvedCandidateCount": 0,
+      "productionApprovalCount": 0
+    },
+    "candidateIdentityDecisionProposal": {
+      "artifactPath": "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/grade-7-9-math.candidate-identity-policy-decision-proposal.v1.json",
+      "artifactVersion": "wave-6.slice-1.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-1.diagnostic-candidate-identity-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "realCandidateIdCount": 0,
+      "reservedCandidateIdCount": 0,
+      "approvedCandidateCount": 0,
+      "productionApprovalCount": 0
+    },
+    "canonicalizationDigestDecisionProposal": {
+      "artifactPath": "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
+      "artifactVersion": "wave-6.slice-2.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-2.diagnostic-candidate-canonicalization-digest-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "selectedDigestAlgorithmCount": 0,
+      "digestValueCount": 0,
+      "approvedCandidateCount": 0,
+      "productionApprovalCount": 0
+    }
+  },
+  "currentBaseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": { "status": "BLOCKED", "workflowStatus": "INACTIVE" },
+    "reviewerRoleOwnershipPrerequisite": {
+      "prerequisiteId": "reviewer_role_ownership",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRecordRefs": []
+    },
+    "satisfiedPrerequisiteCount": 0,
+    "productionApprovalCount": 0,
+    "approvedCandidateCount": 0
+  },
+  "proposalBoundary": {
+    "proposalStatus": "PROPOSED_DEFERRED",
+    "policyApproved": false,
+    "roleOwnershipApproved": false,
+    "eligibilityApproved": false,
+    "appointmentAuthorityApproved": false,
+    "assignmentAllowed": false,
+    "authorityGrantAllowed": false,
+    "reviewUseAllowed": false,
+    "workflowActivationAllowed": false,
+    "prerequisiteSatisfactionAllowed": false,
+    "productionApprovalAllowed": false,
+    "readinessTransitionAllowed": false
+  },
+  "roleTaxonomyPlaceholders": [
+    {
+      "rolePlaceholderId": "METHODOLOGY_REVIEWER_PLACEHOLDER",
+      "scopeRef": "methodology",
+      "recordState": "TAXONOMY_ONLY"
+    },
+    {
+      "rolePlaceholderId": "SAFETY_REVIEWER_PLACEHOLDER",
+      "scopeRef": "safety_no_answer",
+      "recordState": "TAXONOMY_ONLY"
+    },
+    {
+      "rolePlaceholderId": "RIGHTS_REVIEWER_PLACEHOLDER",
+      "scopeRef": "rights_copyright",
+      "recordState": "TAXONOMY_ONLY"
+    },
+    {
+      "rolePlaceholderId": "GRADE_PLACEMENT_REVIEWER_PLACEHOLDER",
+      "scopeRef": "grade_placement",
+      "recordState": "TAXONOMY_ONLY"
+    },
+    {
+      "rolePlaceholderId": "ACCESSIBILITY_REVIEWER_PLACEHOLDER",
+      "scopeRef": "accessibility_readability",
+      "recordState": "TAXONOMY_ONLY"
+    },
+    {
+      "rolePlaceholderId": "PRODUCTION_APPROVER_PLACEHOLDER",
+      "scopeRef": "production_approval",
+      "recordState": "TAXONOMY_ONLY"
+    },
+    {
+      "rolePlaceholderId": "AUDIT_OBSERVER_PLACEHOLDER",
+      "scopeRef": "audit_observation",
+      "recordState": "TAXONOMY_ONLY"
+    }
+  ],
+  "proposedPolicy": {
+    "state": "PROPOSED_NOT_APPROVED",
+    "accountableRoleOwnership": {
+      "decisionId": "accountable_role_ownership",
+      "ownershipShape": "OPAQUE_ORGANIZATIONAL_OWNER_REFERENCE_REQUIRED",
+      "roleOwnerRows": 7,
+      "ownerAssignmentRows": 0,
+      "ownershipActive": false
+    },
+    "roleEligibilityCompetenceIndependence": {
+      "decisionId": "role_eligibility_competence_and_independence",
+      "competenceShape": "ROLE_SCOPED_COMPETENCE_REQUIREMENTS",
+      "independenceShape": "CONFLICT_FREE_REVIEW_REQUIREMENT",
+      "eligibilityRuleSetActive": false
+    },
+    "appointmentAssignmentAuthority": {
+      "decisionId": "appointment_and_assignment_authority",
+      "appointmentShape": "SEPARATE_APPOINTMENT_AUTHORITY_REFERENCE",
+      "assignmentShape": "TIME_BOUND_SCOPE_ASSIGNMENT_REFERENCE",
+      "assignmentsAllowed": false,
+      "authorityGrantsAllowed": false
+    },
+    "scopeMinimumCountsQuorumAggregation": {
+      "decisionId": "scope_minimum_counts_quorum_and_decision_aggregation",
+      "scopeShape": "SUBJECT_LOCALE_GRADE_GATE_SCOPE",
+      "minimumCountShape": "GATE_SPECIFIC_MINIMUM_COUNT",
+      "quorumShape": "GATE_SPECIFIC_QUORUM_REQUIREMENT",
+      "aggregationShape": "EXPLICIT_DECISION_AGGREGATION_RULE",
+      "rulesActive": false
+    },
+    "reviewerLifecycleExpirySuspensionReassignment": {
+      "decisionId": "reviewer_lifecycle_expiry_suspension_and_reassignment",
+      "lifecycleShape": "APPOINTMENT_EXPIRY_SUSPENSION_REASSIGNMENT",
+      "failClosedOnMissingAuthority": true,
+      "lifecycleProcessingAllowed": false
+    },
+    "delegationRevocationEmergencyCoverage": {
+      "decisionId": "delegation_revocation_and_emergency_coverage",
+      "delegationShape": "EXPLICIT_DELEGATION_BOUNDARY",
+      "revocationShape": "PROPAGATING_REVOCATION_BOUNDARY",
+      "emergencyCoverageShape": "EXPLICIT_EMERGENCY_COVERAGE_BOUNDARY",
+      "delegationAllowed": false,
+      "revocationAllowed": false,
+      "emergencyCoverageAllowed": false
+    },
+    "policyMaintenanceAccessReviewOwnership": {
+      "decisionId": "policy_maintenance_and_access_review_ownership",
+      "maintenanceOwnershipShape": "SEPARATE_POLICY_MAINTENANCE_OWNER_REFERENCE",
+      "accessReviewOwnershipShape": "PERIODIC_ACCESS_REVIEW_OWNER_REFERENCE",
+      "maintenanceRulesActive": false,
+      "accessReviewRulesActive": false
+    },
+    "reviewerAuditIdentitySeparation": {
+      "decisionId": "reviewer_and_audit_identity_separation",
+      "reviewerIdentityShape": "OPAQUE_REVIEWER_REFERENCE",
+      "auditIdentityShape": "OPAQUE_AUDIT_REFERENCE",
+      "separationShape": "INDEPENDENT_AUDIT_AND_DECISION_CONTEXTS",
+      "identityBindingAllowed": false,
+      "separationEnforcementAllowed": false
+    }
+  },
+  "unresolvedDecisions": [
+    {
+      "decisionId": "accountable_role_ownership",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "role_eligibility_competence_and_independence",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "appointment_and_assignment_authority",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "scope_minimum_counts_quorum_and_decision_aggregation",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "reviewer_lifecycle_expiry_suspension_and_reassignment",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "delegation_revocation_and_emergency_coverage",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "policy_maintenance_and_access_review_ownership",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "reviewer_and_audit_identity_separation",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    }
+  ],
+  "syntheticExamples": [
+    {
+      "vectorRef": "synthetic-role-taxonomy-01",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "ROLE_TAXONOMY_REFERENCE",
+      "abstractInputTokens": ["SYNTHETIC_ROLE_REFERENCE_SET", "SYNTHETIC_SCOPE_REFERENCE_SET"],
+      "expectedDisposition": "PROPOSED_NON_AUTHORIZING_REFERENCE",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_ROLE_OWNER": true,
+        "NOT_ASSIGNED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_ACTIVE": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-eligibility-02",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "ELIGIBILITY_REQUIREMENT_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_COMPETENCE_SHAPE", "SYNTHETIC_INDEPENDENCE_SHAPE"],
+      "expectedDisposition": "PROPOSED_NON_AUTHORIZING_REFERENCE",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_ROLE_OWNER": true,
+        "NOT_ASSIGNED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_ACTIVE": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-quorum-03",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "QUORUM_SCOPE_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_SCOPE_SHAPE", "SYNTHETIC_QUORUM_SHAPE"],
+      "expectedDisposition": "PROPOSED_NON_AUTHORIZING_REFERENCE",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_ROLE_OWNER": true,
+        "NOT_ASSIGNED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_ACTIVE": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-lifecycle-04",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "LIFECYCLE_TRANSITION_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_EXPIRY_SHAPE", "SYNTHETIC_REVOCATION_SHAPE"],
+      "expectedDisposition": "PROPOSED_NON_AUTHORIZING_REFERENCE",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_ROLE_OWNER": true,
+        "NOT_ASSIGNED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_ACTIVE": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-owner-reference",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "REAL_OWNER_REFERENCE",
+      "abstractInputTokens": ["SYNTHETIC_OWNER_REFERENCE_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "REAL_OWNER_REFERENCE_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_ROLE_OWNER": true,
+        "NOT_ASSIGNED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_ACTIVE": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-assignment",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "REVIEWER_ASSIGNMENT_RECORD",
+      "abstractInputTokens": ["SYNTHETIC_ASSIGNMENT_RECORD_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "ASSIGNMENT_RECORD_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_ROLE_OWNER": true,
+        "NOT_ASSIGNED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_ACTIVE": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-authority",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "AUTHORITY_GRANT_RECORD",
+      "abstractInputTokens": ["SYNTHETIC_AUTHORITY_GRANT_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "AUTHORITY_GRANT_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_ROLE_OWNER": true,
+        "NOT_ASSIGNED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_ACTIVE": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-identity",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "REAL_IDENTITY_REFERENCE",
+      "abstractInputTokens": ["SYNTHETIC_IDENTITY_REFERENCE_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "REAL_IDENTITY_REFERENCE_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NOT_A_REAL_ROLE_OWNER": true,
+        "NOT_ASSIGNED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_ACTIVE": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    }
+  ],
+  "recordBoundary": {
+    "policyDecisionRecords": false,
+    "roleOwnerRecords": false,
+    "ownerAssignmentRecords": false,
+    "roleEligibilityRecords": false,
+    "assignmentAuthorityRecords": false,
+    "reviewerLifecycleRecords": false,
+    "delegationRecords": false,
+    "revocationRecords": false,
+    "realReviewerRoleRecords": false,
+    "activeRoleGrantRecords": false,
+    "reviewerIdentityRecords": false,
+    "auditIdentityRecords": false,
+    "reviewerAssignmentRecords": false,
+    "reviewDecisionRecords": false,
+    "approvedDecisionRecords": false,
+    "productionApprovalRecords": false,
+    "runtimeRoleOwnershipEnabled": false
+  },
+  "aggregate": {
+    "syntheticExampleCount": 8,
+    "acceptedSyntheticExampleCount": 4,
+    "rejectedSyntheticExampleCount": 4,
+    "unresolvedDecisionCount": 8,
+    "roleTaxonomyPlaceholderCount": 7,
+    "satisfiedPrerequisiteCount": 0,
+    "policyDecisionCount": 0,
+    "roleOwnerCount": 0,
+    "ownerAssignmentCount": 0,
+    "roleEligibilityRecordCount": 0,
+    "assignmentAuthorityRecordCount": 0,
+    "reviewerLifecycleRecordCount": 0,
+    "delegationRecordCount": 0,
+    "revocationRecordCount": 0,
+    "realReviewerRoleCount": 0,
+    "activeRoleGrantCount": 0,
+    "reviewerIdentityCount": 0,
+    "auditIdentityCount": 0,
+    "reviewerAssignmentCount": 0,
+    "reviewDecisionCount": 0,
+    "approvedDecisionCount": 0,
+    "productionApprovalCount": 0
+  },
+  "policyDecisionRecords": [],
+  "roleOwnerRecords": [],
+  "ownerAssignmentRecords": [],
+  "roleEligibilityRecords": [],
+  "assignmentAuthorityRecords": [],
+  "reviewerLifecycleRecords": [],
+  "delegationRecords": [],
+  "revocationRecords": [],
+  "realReviewerRoleRecords": [],
+  "activeRoleGrantRecords": [],
+  "reviewerIdentityRecords": [],
+  "auditIdentityRecords": [],
+  "reviewerAssignmentRecords": [],
+  "reviewDecisionRecords": [],
+  "approvedDecisionRecords": [],
+  "productionApprovalRecords": []
+}

@@ -136,3 +136,44 @@ content in published vectors.
 Define the later evidence and explicit approval decision for canonicalization
 and digest policies. Policy approval must remain separate from prerequisite
 satisfaction, workflow activation and readiness.
+
+## W6-S3-OD-ROLE-OWNERSHIP
+
+Define accountable organizational ownership for each reviewer taxonomy entry,
+policy maintenance and access review without placing a personal identity in a
+curriculum artifact.
+
+## W6-S3-OD-ELIGIBILITY-COMPETENCE-INDEPENDENCE
+
+Approve role-specific competence, independence and conflict-free eligibility
+criteria before any reviewer appointment or assignment.
+
+## W6-S3-OD-APPOINTMENT-ASSIGNMENT-AUTHORITY
+
+Define who may appoint and assign a reviewer, the scope of that authority and
+the required evidence without creating an assignment in this slice.
+
+## W6-S3-OD-SCOPE-QUORUM-AGGREGATION
+
+Set subject, locale, grade and gate scope, minimum counts, quorum and decision
+aggregation rules through a later policy gate.
+
+## W6-S3-OD-LIFECYCLE-EXPIRY-SUSPENSION-REASSIGNMENT
+
+Define appointment expiry, renewal, suspension, reassignment and fail-closed
+behavior for missing or revoked authority.
+
+## W6-S3-OD-DELEGATION-REVOCATION-EMERGENCY-COVERAGE
+
+Decide whether delegation is allowed, how revocation propagates and how any
+emergency coverage is bounded and reconciled.
+
+## W6-S3-OD-POLICY-MAINTENANCE-ACCESS-REVIEW
+
+Assign future policy-maintenance and periodic access-review ownership without
+activating a ruleset or recording an owner.
+
+## W6-S3-OD-IDENTITY-SEPARATION
+
+Define independent opaque reviewer and audit identity references and enforce
+separation of duties without creating identities or bindings.
