@@ -9,6 +9,7 @@ import {
   collectReviewerRoleOwnershipDecisionProposalChangedPaths,
   validateDiagnosticReviewerRoleOwnershipDecisionProposal,
   validateReviewerRoleOwnershipDecisionProposalChangedPaths,
+  validateReviewerRoleOwnershipDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs";
 
 const expectedMarkers = {
@@ -298,6 +299,48 @@ test("changed-path collection uses local dirty-worktree status outside GitHub Ac
   ]);
 });
 
+test("clean local checkout passes worktree scope without inventing changed paths", () => {
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {},
+    runGit: () => ({ status: 0, stdout: "", stderr: "" }),
+  });
+  assert.deepEqual(paths, []);
+  assert.deepEqual(
+    validateReviewerRoleOwnershipDecisionProposalWorktreeScope(paths, { env: {} }),
+    [],
+  );
+});
+
+test("local dirty worktree admits only narrow Slice 3 remediation paths", () => {
+  const expected = approvedWave6Slice3FollowUpPaths.slice(0, 2);
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {},
+    runGit: () => ({
+      status: 0,
+      stdout: expected.map((path) => ` M ${path}\n`).join(""),
+      stderr: "",
+    }),
+  });
+  assert.deepEqual(paths, expected);
+  assert.deepEqual(
+    validateReviewerRoleOwnershipDecisionProposalWorktreeScope(paths, { env: {} }),
+    expected,
+  );
+});
+
+test("local dirty worktree rejects an out-of-scope path", () => {
+  assert.throws(
+    () =>
+      validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
+        [approvedWave6Slice3FollowUpPaths[0], "apps/api/src/diagnostic-reviewer/controller.ts"],
+        { env: {} },
+      ),
+    /local remediation out-of-scope path changed/,
+  );
+});
+
 test("changed-path collection uses the clean GitHub push event range", () => {
   const base = "a".repeat(40);
   const head = "b".repeat(40);
@@ -431,6 +474,126 @@ test("follow-up CI range validates the cumulative original 38-path baseline", ()
     },
   });
   assert.deepEqual(paths, approvedWave6Slice3ChangedPaths);
+});
+
+test("two consecutive CI follow-up commits recover the original 38-path baseline", () => {
+  const beforeSlice = "1".repeat(40);
+  const sliceCommit = "2".repeat(40);
+  const firstFollowUp = "3".repeat(40);
+  const secondFollowUp = "4".repeat(40);
+  let diffCount = 0;
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {
+      GITHUB_ACTIONS: "true",
+      GITHUB_EVENT_NAME: "push",
+      GITHUB_EVENT_PATH: "event.json",
+      GITHUB_SHA: secondFollowUp,
+    },
+    readEvent: () => ({ before: firstFollowUp, after: secondFollowUp }),
+    runGit: (args) => {
+      if (args[0] === "cat-file" && args[1] === "-p") {
+        const parent = args[2] === firstFollowUp ? sliceCommit : beforeSlice;
+        return { status: 0, stdout: `tree synthetic\nparent ${parent}\n`, stderr: "" };
+      }
+      if (args[0] === "diff") {
+        diffCount += 1;
+        return {
+          status: 0,
+          stdout:
+            diffCount < 3
+              ? nameStatusOutput(approvedWave6Slice3FollowUpPaths.slice(0, 2))
+              : nameStatusOutput(approvedWave6Slice3ChangedPaths),
+          stderr: "",
+        };
+      }
+      return { status: 0, stdout: "", stderr: "" };
+    },
+  });
+  assert.equal(diffCount, 3);
+  assert.deepEqual(paths, approvedWave6Slice3ChangedPaths);
+});
+
+test("workflow dispatch current commit recovers through multiple remediation commits", () => {
+  const beforeSlice = "6".repeat(40);
+  const sliceCommit = "7".repeat(40);
+  const firstFollowUp = "8".repeat(40);
+  const secondFollowUp = "9".repeat(40);
+  let diffCount = 0;
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {
+      GITHUB_ACTIONS: "true",
+      GITHUB_EVENT_NAME: "workflow_dispatch",
+      GITHUB_SHA: secondFollowUp,
+    },
+    runGit: (args) => {
+      if (args[0] === "rev-list")
+        return {
+          status: 0,
+          stdout: `${secondFollowUp} ${firstFollowUp}\n`,
+          stderr: "",
+        };
+      if (args[0] === "cat-file" && args[1] === "-p") {
+        const parent = args[2] === firstFollowUp ? sliceCommit : beforeSlice;
+        return { status: 0, stdout: `tree synthetic\nparent ${parent}\n`, stderr: "" };
+      }
+      if (args[0] === "diff") {
+        diffCount += 1;
+        return {
+          status: 0,
+          stdout:
+            diffCount < 3
+              ? nameStatusOutput(approvedWave6Slice3FollowUpPaths)
+              : nameStatusOutput(approvedWave6Slice3ChangedPaths, "A"),
+          stderr: "",
+        };
+      }
+      return { status: 0, stdout: "", stderr: "" };
+    },
+  });
+  assert.equal(diffCount, 3);
+  assert.deepEqual(paths, approvedWave6Slice3ChangedPaths);
+});
+
+test("multi-follow-up cumulative scope fails closed on an out-of-scope path", () => {
+  const baseline = "a".repeat(40);
+  const followUp = "b".repeat(40);
+  const head = "c".repeat(40);
+  let diffCount = 0;
+  assert.throws(
+    () =>
+      collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+        cwd: "fixture-repo",
+        env: {
+          GITHUB_ACTIONS: "true",
+          GITHUB_EVENT_NAME: "push",
+          GITHUB_EVENT_PATH: "event.json",
+          GITHUB_SHA: head,
+        },
+        readEvent: () => ({ before: followUp, after: head }),
+        runGit: (args) => {
+          if (args[0] === "cat-file" && args[1] === "-p")
+            return { status: 0, stdout: `tree synthetic\nparent ${baseline}\n`, stderr: "" };
+          if (args[0] === "diff") {
+            diffCount += 1;
+            return {
+              status: 0,
+              stdout:
+                diffCount === 1
+                  ? nameStatusOutput(approvedWave6Slice3FollowUpPaths.slice(0, 1))
+                  : nameStatusOutput([
+                      ...approvedWave6Slice3FollowUpPaths,
+                      "apps/web/app/diagnostic/page.tsx",
+                    ]),
+              stderr: "",
+            };
+          }
+          return { status: 0, stdout: "", stderr: "" };
+        },
+      }),
+    /BLOCK: CI follow-up cumulative Slice 3 range.*out-of-scope path changed/,
+  );
 });
 
 test("shallow or unavailable GitHub ranges fail closed", () => {

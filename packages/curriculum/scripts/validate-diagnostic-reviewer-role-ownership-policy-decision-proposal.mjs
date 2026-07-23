@@ -693,6 +693,27 @@ export function validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths)
   return normalized;
 }
 
+function validateLocalRemediationChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  const unexpected = normalized.filter((value) => !followUpRemediationPathSet.has(value));
+  if (unexpected.length > 0)
+    fail(`Wave 6 Slice 3 local remediation out-of-scope path changed: ${unexpected[0]}`);
+  if (new Set(normalized).size !== normalized.length)
+    fail("Changed paths must not contain duplicates.");
+  return normalized;
+}
+
+export function validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
+  paths,
+  { env = process.env } = {},
+) {
+  const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
+  return inGitHubActions
+    ? validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths)
+    : validateLocalRemediationChangedPaths(paths);
+}
+
 function defaultGitRunner(args, cwd) {
   const result = spawnSync("git", args, { cwd, encoding: "utf8" });
   return {
@@ -838,7 +859,7 @@ function diffPaths({ cwd, base, head, runGit }) {
   return paths;
 }
 
-function isExactFollowUpRemediationPathSet(paths) {
+function isNarrowRemediationPathSet(paths) {
   return (
     new Set(paths).size === paths.length &&
     paths.length > 0 &&
@@ -848,22 +869,39 @@ function isExactFollowUpRemediationPathSet(paths) {
 
 function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
-  const paths = diffPaths({ cwd, base, head, runGit });
+  let cumulativeBase = base;
+  let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
   if (paths.length === changedPaths.length)
     return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
-  if (isExactFollowUpRemediationPathSet(paths)) {
-    const baseline = singleParentCommit(base, { cwd, runGit });
-    requireCommitObject(baseline, "baseline", { cwd, runGit });
-    const cumulative = diffPaths({ cwd, base: baseline, head, runGit });
-    try {
-      return validateReviewerRoleOwnershipDecisionProposalChangedPaths(cumulative);
-    } catch (error) {
+  if (!isNarrowRemediationPathSet(paths))
+    return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
+
+  const visited = new Set([head]);
+  while (isNarrowRemediationPathSet(paths)) {
+    if (visited.has(cumulativeBase))
       fail(
-        `BLOCK: CI follow-up cumulative Slice 3 range is not the exact approved 38-path baseline: ${error instanceof Error ? error.message : String(error)}`,
+        "BLOCK: CI follow-up ancestry contains a cycle; exact Slice 3 baseline cannot be determined.",
       );
-    }
+    visited.add(cumulativeBase);
+    const ancestor = singleParentCommit(cumulativeBase, { cwd, runGit });
+    if (visited.has(ancestor))
+      fail(
+        "BLOCK: CI follow-up ancestry contains a cycle; exact Slice 3 baseline cannot be determined.",
+      );
+    requireCommitObject(ancestor, "baseline ancestor", { cwd, runGit });
+    cumulativeBase = ancestor;
+    paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
+    if (paths.length === changedPaths.length)
+      return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
   }
-  return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
+
+  try {
+    return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
+  } catch (error) {
+    fail(
+      `BLOCK: CI follow-up cumulative Slice 3 range is not the exact approved 38-path baseline: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
 }
 
 export function collectReviewerRoleOwnershipDecisionProposalChangedPaths({
@@ -882,10 +920,10 @@ export async function main() {
   const artifact = await readDiagnosticReviewerRoleOwnershipDecisionProposal();
   const upstream = await readDiagnosticReviewerRoleOwnershipDecisionProposalUpstream();
   const summary = validateDiagnosticReviewerRoleOwnershipDecisionProposal(artifact, upstream);
-  if (process.argv.includes("--check-worktree-scope"))
-    validateReviewerRoleOwnershipDecisionProposalChangedPaths(
-      collectReviewerRoleOwnershipDecisionProposalChangedPaths(),
-    );
+  if (process.argv.includes("--check-worktree-scope")) {
+    const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths();
+    validateReviewerRoleOwnershipDecisionProposalWorktreeScope(paths);
+  }
   console.log(
     `[curriculum] reviewer role ownership decision proposal valid: ${summary.proposalVersion}; prerequisite ${summary.prerequisiteStatus}; activation ${summary.activationStatus}; workflow ${summary.workflowStatus}; readiness ${summary.readiness}.`,
   );
