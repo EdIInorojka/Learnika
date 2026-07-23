@@ -10,6 +10,7 @@ import {
   validateDiagnosticReviewerRoleOwnershipDecisionProposal,
   validateReviewerRoleOwnershipDecisionProposalChangedPaths,
   validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths,
+  validateReviewerRoleOwnershipDecisionProposalSlice5ChangedPaths,
   validateReviewerRoleOwnershipDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs";
 
@@ -79,6 +80,19 @@ const approvedWave6Slice4ChangedPaths = [
   "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+];
+const slice4PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+  "docs/wave-6/slice-4-implementation-note.md",
+  "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+]);
+const approvedWave6Slice5ChangedPaths = [
+  ...approvedWave6Slice4ChangedPaths.filter((path) => !slice4PrimaryOnlyPaths.has(path)),
+  "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
+  "docs/wave-6/slice-5-implementation-note.md",
+  "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -309,6 +323,29 @@ test("Slice 3 guard admits the exact cumulative Slice 4 continuation separately"
         approvedWave6Slice4ChangedPaths.slice(1),
       ),
     /requires exactly 40 changed paths/,
+  );
+});
+
+test("Slice 3 guard admits the exact cumulative Slice 5 continuation separately", () => {
+  assert.equal(approvedWave6Slice5ChangedPaths.length, 42);
+  assert.deepEqual(
+    validateReviewerRoleOwnershipDecisionProposalSlice5ChangedPaths(
+      approvedWave6Slice5ChangedPaths,
+    ),
+    approvedWave6Slice5ChangedPaths,
+  );
+  assert.deepEqual(
+    validateReviewerRoleOwnershipDecisionProposalWorktreeScope(approvedWave6Slice5ChangedPaths, {
+      env: {},
+    }),
+    approvedWave6Slice5ChangedPaths,
+  );
+  assert.throws(
+    () =>
+      validateReviewerRoleOwnershipDecisionProposalSlice5ChangedPaths(
+        approvedWave6Slice5ChangedPaths.slice(1),
+      ),
+    /requires exactly 42 changed paths/,
   );
 });
 

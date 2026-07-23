@@ -4,48 +4,62 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const expectedProposalArtifactVersion = "wave-6.slice-4.grade-7-9-math.v1";
-const expectedProposalVersion = "wave-6.slice-4.diagnostic-separation-of-duties-policy.proposal.v1";
+const expectedProposalArtifactVersion = "wave-6.slice-5.grade-7-9-math.v1";
+const expectedProposalVersion = "wave-6.slice-5.diagnostic-conflict-of-interest-policy.proposal.v1";
 const expectedActivationVersion = "wave-5.slice-2.grade-7-9-math.v1";
-const expectedSeparationPlaceholderVersion = "wave-5.slice-6.grade-7-9-math.v1";
-const expectedSeparationPolicyVersion =
-  "wave-5.slice-6.diagnostic-separation-of-duties-enforcement.placeholder.v1";
-const expectedRoleOwnershipProposalVersion = "wave-6.slice-3.grade-7-9-math.v1";
 const expectedConflictPlaceholderVersion = "wave-5.slice-7.grade-7-9-math.v1";
 const expectedConflictPolicyVersion =
   "wave-5.slice-7.diagnostic-conflict-of-interest.placeholder.v1";
+const expectedSeparationProposalVersion = "wave-6.slice-4.grade-7-9-math.v1";
+const expectedRoleOwnershipProposalVersion = "wave-6.slice-3.grade-7-9-math.v1";
 const expectedAuditPlaceholderVersion = "wave-5.slice-8.grade-7-9-math.v1";
-const expectedAuditPolicyVersion = "wave-5.slice-8.diagnostic-audit-identity.placeholder.v1";
+const expectedEvidencePlaceholderVersion = "wave-5.slice-9.grade-7-9-math.v1";
 const expectedAuthorityVersion = "wave-4.slice-8.grade-7-9-math.v1";
 const expectedWorkflowVersion = "wave-4.slice-7.grade-7-9-math.v1";
 const expectedReadinessPolicyVersion = "wave-3-slice-11-diagnostic-readiness-policy-v1";
 const requiredBlockingReasons = ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"];
 
-const expectedRoleTaxonomy = [
-  ["METHODOLOGY_REVIEWER_PLACEHOLDER", "methodology"],
-  ["SAFETY_REVIEWER_PLACEHOLDER", "safety_no_answer"],
-  ["RIGHTS_REVIEWER_PLACEHOLDER", "rights_copyright"],
-  ["GRADE_PLACEMENT_REVIEWER_PLACEHOLDER", "grade_placement"],
-  ["ACCESSIBILITY_REVIEWER_PLACEHOLDER", "accessibility_readability"],
-  ["PRODUCTION_APPROVER_PLACEHOLDER", "production_approval"],
-  ["AUDIT_OBSERVER_PLACEHOLDER", "audit_observation"],
+const expectedConflictTaxonomy = [
+  ["CANDIDATE_AUTHOR_RELATIONSHIP_PLACEHOLDER", "candidate_author_relationship"],
+  [
+    "TEXTBOOK_OR_CONTENT_SOURCE_RELATIONSHIP_PLACEHOLDER",
+    "textbook_or_content_source_relationship",
+  ],
+  [
+    "FINANCIAL_VENDOR_OR_PROVIDER_RELATIONSHIP_PLACEHOLDER",
+    "financial_vendor_or_provider_relationship",
+  ],
+  ["PERSONAL_OR_FAMILY_RELATIONSHIP_PLACEHOLDER", "personal_or_family_relationship"],
+  [
+    "ORGANIZATIONAL_OR_REPORTING_RELATIONSHIP_PLACEHOLDER",
+    "organizational_or_reporting_relationship",
+  ],
+  [
+    "PRIOR_DECISION_OR_ADVOCACY_RELATIONSHIP_PLACEHOLDER",
+    "prior_decision_or_advocacy_relationship",
+  ],
+  [
+    "OTHER_ACTUAL_POTENTIAL_OR_PERCEIVED_CONFLICT_PLACEHOLDER",
+    "other_actual_potential_or_perceived_conflict",
+  ],
 ];
 const expectedDecisionIds = [
-  "maker_checker_separation",
-  "author_reviewer_approver_separation",
-  "reviewer_role_incompatibilities",
-  "audit_observer_separation",
-  "conflict_of_interest_dependency",
-  "emergency_exception_boundaries",
-  "violation_handling",
-  "future_enforcement_evidence",
-  "future_policy_gate_requirements",
+  "conflict_relationship_taxonomy",
+  "self_disclosure_boundary",
+  "candidate_content_source_relationships",
+  "commercial_financial_relationships",
+  "recusal_reassignment_requirements",
+  "late_disclosure_handling",
+  "waiver_exception_boundaries",
+  "escalation_authority",
+  "future_audit_evidence_requirements",
+  "separation_of_duties_dependency",
 ];
 const expectedMarkers = {
   SYNTHETIC_EXAMPLE_ONLY: true,
   NON_OPERATIONAL: true,
   NOT_ASSIGNED: true,
-  NOT_ENFORCED: true,
+  NOT_EVALUATED: true,
   NOT_APPROVED: true,
   NOT_USABLE_FOR_REVIEW: true,
   NOT_USABLE_FOR_PRODUCTION: true,
@@ -101,11 +115,11 @@ const privateValuePatterns = [
 ];
 
 const changedPaths = [
-  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+  "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
   "docs/wave-6/open-decisions.md",
-  "docs/wave-6/slice-4-implementation-note.md",
+  "docs/wave-6/slice-5-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+  "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
@@ -114,6 +128,7 @@ const changedPaths = [
   "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-canonicalization-digest-policy-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
@@ -134,6 +149,7 @@ const changedPaths = [
   "packages/curriculum/test/diagnostic-blueprint.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-identity-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-canonicalization-digest-policy-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
   "packages/curriculum/test/diagnostic-review-authority.test.mjs",
@@ -143,81 +159,37 @@ const changedPaths = [
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];
 const changedPathSet = new Set(changedPaths);
-const slice4PrimaryOnlyPaths = new Set([
-  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
-  "docs/wave-6/slice-4-implementation-note.md",
-  "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
-]);
-const wave6Slice5ChangedPaths = [
-  ...changedPaths.filter((changedPath) => !slice4PrimaryOnlyPaths.has(changedPath)),
-  "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
-  "docs/wave-6/slice-5-implementation-note.md",
-  "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
-  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
-  "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
-];
-const wave6Slice5ChangedPathSet = new Set(wave6Slice5ChangedPaths);
-const ciRemediationPathSet = new Set([
-  "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-canonicalization-digest-policy-decision-proposal.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
-  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
-  "packages/curriculum/scripts/validate-skill-graph.mjs",
-  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
-  "packages/curriculum/test/diagnostic-items.test.mjs",
-  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
-  "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
-  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
-  "packages/curriculum/test/skill-graph-seed.test.mjs",
-]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
 export const defaultProposalPath = path.resolve(
   scriptDir,
-  "../diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+  "../diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
 );
 const upstreamPaths = {
   activationPrerequisites: path.resolve(
     scriptDir,
     "../diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json",
   ),
-  separationPlaceholder: path.resolve(
-    scriptDir,
-    "../diagnostic-separation-of-duties-policy/grade-7-9-math.separation-of-duties-policy-placeholder.v1.json",
-  ),
-  reviewerRoleOwnershipProposal: path.resolve(
-    scriptDir,
-    "../diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
-  ),
   conflictPlaceholder: path.resolve(
     scriptDir,
     "../diagnostic-conflict-of-interest-policy/grade-7-9-math.conflict-of-interest-policy-placeholder.v1.json",
   ),
+  separationProposal: path.resolve(
+    scriptDir,
+    "../diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+  ),
+  roleOwnershipProposal: path.resolve(
+    scriptDir,
+    "../diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+  ),
   auditPlaceholder: path.resolve(
     scriptDir,
     "../diagnostic-audit-identity-policy/grade-7-9-math.audit-identity-policy-placeholder.v1.json",
+  ),
+  evidencePlaceholder: path.resolve(
+    scriptDir,
+    "../diagnostic-evidence-storage-retention-policy/grade-7-9-math.evidence-storage-retention-policy-placeholder.v1.json",
   ),
   reviewAuthority: path.resolve(
     scriptDir,
@@ -229,10 +201,10 @@ const upstreamPaths = {
   ),
 };
 
-export class DiagnosticSeparationOfDutiesDecisionProposalValidationError extends Error {}
+export class DiagnosticConflictOfInterestDecisionProposalValidationError extends Error {}
 
 function fail(message) {
-  throw new DiagnosticSeparationOfDutiesDecisionProposalValidationError(message);
+  throw new DiagnosticConflictOfInterestDecisionProposalValidationError(message);
 }
 
 function isObject(value) {
@@ -249,12 +221,10 @@ function exact(actual, expected, fieldPath) {
   }
   if (isObject(expected)) {
     if (!isObject(actual)) fail(`${fieldPath} must be an object.`);
-    const actualKeys = Object.keys(actual);
-    const expectedKeys = Object.keys(expected);
-    for (const key of actualKeys) {
+    for (const key of Object.keys(actual)) {
       if (!Object.hasOwn(expected, key)) fail(`${fieldPath}.${key} is unexpected.`);
     }
-    for (const key of expectedKeys) {
+    for (const key of Object.keys(expected)) {
       if (!Object.hasOwn(actual, key)) fail(`${fieldPath}.${key} is required.`);
       exact(actual[key], expected[key], `${fieldPath}.${key}`);
     }
@@ -304,24 +274,25 @@ function scan(value, fieldPath = "$") {
 
 function exactMetadata() {
   return {
-    schemaVersion: "learnika.diagnosticSeparationOfDutiesPolicyDecisionProposal.v1",
+    schemaVersion: "learnika.diagnosticConflictOfInterestPolicyDecisionProposal.v1",
     proposalArtifactVersion: expectedProposalArtifactVersion,
-    proposalId: "diagnostic-separation-of-duties-policy-decision-proposal",
+    proposalId: "diagnostic-conflict-of-interest-policy-decision-proposal",
     proposalVersion: expectedProposalVersion,
     status: "PROPOSED_DEFERRED",
-    artifactKind: "diagnostic_separation_of_duties_policy_decision_proposal",
+    artifactKind: "diagnostic_conflict_of_interest_policy_decision_proposal",
     subject: "math",
     locale: "ru-RU",
     audienceGrades: [7, 8, 9],
     activationPrerequisitesArtifactVersion: expectedActivationVersion,
-    separationOfDutiesPolicyPlaceholderArtifactVersion: expectedSeparationPlaceholderVersion,
-    reviewerRoleOwnershipDecisionProposalArtifactVersion: expectedRoleOwnershipProposalVersion,
     conflictOfInterestPolicyPlaceholderArtifactVersion: expectedConflictPlaceholderVersion,
+    separationOfDutiesDecisionProposalArtifactVersion: expectedSeparationProposalVersion,
+    reviewerRoleOwnershipDecisionProposalArtifactVersion: expectedRoleOwnershipProposalVersion,
     auditIdentityPolicyPlaceholderArtifactVersion: expectedAuditPlaceholderVersion,
+    evidenceStorageRetentionPolicyPlaceholderArtifactVersion: expectedEvidencePlaceholderVersion,
     reviewAuthorityArtifactVersion: expectedAuthorityVersion,
     reviewWorkflowStateArtifactVersion: expectedWorkflowVersion,
     diagnosticReadinessPolicyVersion: expectedReadinessPolicyVersion,
-    sourceContract: "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+    sourceContract: "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
     productionUseAllowed: false,
     runtimeUseAllowed: false,
     storageAllowed: false,
@@ -335,43 +306,12 @@ function exactUpstreamReferences() {
         "packages/curriculum/diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json",
       artifactVersion: expectedActivationVersion,
       artifactStatus: "blocked_prerequisites_only_non_production",
-      prerequisiteId: "separation_of_duties_enforcement",
+      prerequisiteId: "conflict_of_interest_policy",
       prerequisiteStatus: "UNSATISFIED_DEFERRED",
       ownerPlaceholderId: "UNASSIGNED_OWNER_PLACEHOLDER",
       evidenceRecordRefs: [],
       prerequisiteCount: 12,
       satisfiedPrerequisiteCount: 0,
-      productionApprovalCount: 0,
-    },
-    separationOfDutiesPlaceholder: {
-      artifactPath:
-        "packages/curriculum/diagnostic-separation-of-duties-policy/grade-7-9-math.separation-of-duties-policy-placeholder.v1.json",
-      artifactVersion: expectedSeparationPlaceholderVersion,
-      policyVersion: expectedSeparationPolicyVersion,
-      policyState: "UNRESOLVED_DEFERRED",
-      prerequisiteStatus: "UNSATISFIED_DEFERRED",
-      rolePlaceholderCount: 7,
-      decisionRequirementCount: 9,
-      activeEnforcementRuleCount: 0,
-      reviewerIdentityCount: 0,
-      auditIdentityCount: 0,
-      reviewerAssignmentCount: 0,
-      conflictRecordCount: 0,
-      violationRecordCount: 0,
-      productionApprovalCount: 0,
-    },
-    reviewerRoleOwnershipDecisionProposal: {
-      artifactPath:
-        "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
-      artifactVersion: expectedRoleOwnershipProposalVersion,
-      proposalVersion: "wave-6.slice-3.diagnostic-reviewer-role-ownership-policy.proposal.v1",
-      proposalStatus: "PROPOSED_DEFERRED",
-      unresolvedDecisionCount: 8,
-      roleTaxonomyPlaceholderCount: 7,
-      ownerAssignmentCount: 0,
-      reviewerIdentityCount: 0,
-      auditIdentityCount: 0,
-      reviewerAssignmentCount: 0,
       productionApprovalCount: 0,
     },
     conflictOfInterestPlaceholder: {
@@ -381,23 +321,65 @@ function exactUpstreamReferences() {
       policyVersion: expectedConflictPolicyVersion,
       policyState: "UNRESOLVED_DEFERRED",
       prerequisiteStatus: "UNSATISFIED_DEFERRED",
+      conflictCategoryPlaceholderCount: 7,
+      decisionRequirementCount: 10,
       activeConflictRuleCount: 0,
       conflictRecordCount: 0,
       disclosureRecordCount: 0,
       recusalRecordCount: 0,
+      waiverRecordCount: 0,
+      productionApprovalCount: 0,
+    },
+    separationOfDutiesDecisionProposal: {
+      artifactPath:
+        "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+      artifactVersion: expectedSeparationProposalVersion,
+      proposalVersion: "wave-6.slice-4.diagnostic-separation-of-duties-policy.proposal.v1",
+      proposalStatus: "PROPOSED_DEFERRED",
+      prerequisiteStatus: "UNSATISFIED_DEFERRED",
+      unresolvedDecisionCount: 9,
+      activeEnforcementRuleCount: 0,
+      conflictDisclosureCount: 0,
+      conflictEvaluationCount: 0,
+      violationCount: 0,
+      productionApprovalCount: 0,
+    },
+    reviewerRoleOwnershipDecisionProposal: {
+      artifactPath:
+        "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+      artifactVersion: expectedRoleOwnershipProposalVersion,
+      proposalVersion: "wave-6.slice-3.diagnostic-reviewer-role-ownership-policy.proposal.v1",
+      proposalStatus: "PROPOSED_DEFERRED",
+      unresolvedDecisionCount: 8,
+      ownerAssignmentCount: 0,
+      reviewerIdentityCount: 0,
+      reviewerAssignmentCount: 0,
       productionApprovalCount: 0,
     },
     auditIdentityPlaceholder: {
       artifactPath:
         "packages/curriculum/diagnostic-audit-identity-policy/grade-7-9-math.audit-identity-policy-placeholder.v1.json",
       artifactVersion: expectedAuditPlaceholderVersion,
-      policyVersion: expectedAuditPolicyVersion,
+      policyVersion: "wave-5.slice-8.diagnostic-audit-identity.placeholder.v1",
       policyState: "UNRESOLVED_DEFERRED",
       prerequisiteStatus: "UNSATISFIED_DEFERRED",
       activeIdentityRuleCount: 0,
       reviewerIdentityCount: 0,
       auditIdentityCount: 0,
-      identityBindingCount: 0,
+      auditEventCount: 0,
+      productionApprovalCount: 0,
+    },
+    evidenceStorageRetentionPlaceholder: {
+      artifactPath:
+        "packages/curriculum/diagnostic-evidence-storage-retention-policy/grade-7-9-math.evidence-storage-retention-policy-placeholder.v1.json",
+      artifactVersion: expectedEvidencePlaceholderVersion,
+      policyVersion: "wave-5.slice-9.diagnostic-evidence-storage-and-retention.placeholder.v1",
+      policyState: "UNRESOLVED_DEFERRED",
+      prerequisiteStatus: "UNSATISFIED_DEFERRED",
+      activeStorageRuleCount: 0,
+      reviewEvidenceRecordCount: 0,
+      storageObjectCount: 0,
+      retentionScheduleCount: 0,
       auditEventCount: 0,
       productionApprovalCount: 0,
     },
@@ -407,7 +389,6 @@ function exactUpstreamReferences() {
       artifactVersion: expectedAuthorityVersion,
       policyVersion: "wave-4.slice-8.diagnostic-review-authority.placeholder.v1",
       policyState: "DEFERRED_NON_PRODUCTION",
-      separationOfDutiesRuleCount: 3,
       reviewerAssignmentCount: 0,
       reviewDecisionCount: 0,
       productionApprovalCount: 0,
@@ -434,8 +415,8 @@ function exactBaseline() {
       blockingReasons: requiredBlockingReasons,
     },
     activation: { status: "BLOCKED", workflowStatus: "INACTIVE" },
-    separationOfDutiesPrerequisite: {
-      prerequisiteId: "separation_of_duties_enforcement",
+    conflictOfInterestPrerequisite: {
+      prerequisiteId: "conflict_of_interest_policy",
       status: "UNSATISFIED_DEFERRED",
       ownerPlaceholderId: "UNASSIGNED_OWNER_PLACEHOLDER",
       evidenceRecordRefs: [],
@@ -450,13 +431,17 @@ function exactProposalBoundary() {
   return {
     proposalStatus: "PROPOSED_DEFERRED",
     policyApproved: false,
+    taxonomyApproved: false,
     rulesetApproved: false,
-    enforcementAllowed: false,
-    assignmentEvaluationAllowed: false,
-    decisionEvaluationAllowed: false,
+    disclosureCollectionAllowed: false,
+    relationshipEvaluationAllowed: false,
     identityComparisonAllowed: false,
+    recusalProcessingAllowed: false,
+    reassignmentAllowed: false,
+    waiverAllowed: false,
     exceptionAllowed: false,
-    violationProcessingAllowed: false,
+    escalationProcessingAllowed: false,
+    evidenceRecordingAllowed: false,
     reviewUseAllowed: false,
     workflowActivationAllowed: false,
     prerequisiteSatisfactionAllowed: false,
@@ -468,83 +453,96 @@ function exactProposalBoundary() {
 function exactProposedPolicy() {
   return {
     state: "PROPOSED_NOT_APPROVED",
-    makerCheckerSeparation: {
-      decisionId: "maker_checker_separation",
+    conflictRelationshipTaxonomy: {
+      decisionId: "conflict_relationship_taxonomy",
       decisionState: "UNRESOLVED_DEFERRED",
-      makerShape: "ABSTRACT_AUTHORING_STAGE",
-      checkerShape: "ABSTRACT_SUBSTANTIVE_REVIEW_STAGE",
-      samePrincipalAllowed: false,
+      taxonomyShape: "CLOSED_ACTUAL_POTENTIAL_PERCEIVED_RELATIONSHIP_TAXONOMY",
+      unclassifiedRelationshipFailsClosed: true,
+      activeCategoryCount: 0,
       ruleActive: false,
     },
-    authorReviewerApproverSeparation: {
-      decisionId: "author_reviewer_approver_separation",
+    selfDisclosureBoundary: {
+      decisionId: "self_disclosure_boundary",
       decisionState: "UNRESOLVED_DEFERRED",
-      stageShape: "THREE_DISTINCT_GOVERNANCE_STAGES",
-      authorMayReview: false,
-      authorMayApprove: false,
-      reviewerMayApprove: false,
+      boundaryShape: "FUTURE_PRIVATE_MINIMUM_NECESSARY_DECLARATION",
+      selfClearanceAllowed: false,
+      collectionAllowed: false,
+      evaluationAllowed: false,
       ruleActive: false,
     },
-    reviewerRoleIncompatibilities: {
-      decisionId: "reviewer_role_incompatibilities",
+    candidateContentSourceRelationships: {
+      decisionId: "candidate_content_source_relationships",
       decisionState: "UNRESOLVED_DEFERRED",
-      ruleShape: "EXPLICIT_CLOSED_INCOMPATIBILITY_MATRIX",
-      quorumDeduplicationRequired: true,
-      activeRuleCount: 0,
+      relationshipShape: "AUTHOR_AND_SOURCE_RELATIONSHIP_EVALUATION",
+      authorshipRecordingAllowed: false,
+      sourceRelationshipRecordingAllowed: false,
+      identityComparisonAllowed: false,
       ruleActive: false,
     },
-    auditObserverSeparation: {
-      decisionId: "audit_observer_separation",
+    commercialFinancialRelationships: {
+      decisionId: "commercial_financial_relationships",
       decisionState: "UNRESOLVED_DEFERRED",
-      observerShape: "NON_DECIDING_AUDIT_OBSERVATION_STAGE",
-      observerMayReview: false,
-      observerMayApprove: false,
+      relationshipShape: "COMMERCIAL_FINANCIAL_VENDOR_PROVIDER_MATERIALITY_REVIEW",
+      materialityBoundaryApproved: false,
+      relationshipRecordingAllowed: false,
+      providerIntegrationAllowed: false,
       ruleActive: false,
     },
-    conflictOfInterestDependency: {
-      decisionId: "conflict_of_interest_dependency",
+    recusalReassignmentRequirements: {
+      decisionId: "recusal_reassignment_requirements",
       decisionState: "UNRESOLVED_DEFERRED",
-      dependencyShape: "SEPARATE_CONFLICT_POLICY_REQUIRED",
+      requirementShape: "FAIL_CLOSED_RECUSAL_THEN_INDEPENDENT_REASSIGNMENT",
       unresolvedConflictFailsClosed: true,
-      dependencySatisfied: false,
+      recusalProcessingAllowed: false,
+      reassignmentAllowed: false,
       ruleActive: false,
     },
-    emergencyExceptionBoundaries: {
-      decisionId: "emergency_exception_boundaries",
+    lateDisclosureHandling: {
+      decisionId: "late_disclosure_handling",
       decisionState: "UNRESOLVED_DEFERRED",
-      boundaryShape: "TIME_BOUND_NON_PRODUCTION_EXCEPTION_REVIEW",
-      missingGateBypassAllowed: false,
-      productionBypassAllowed: false,
-      exceptionRulesActive: false,
-    },
-    violationHandling: {
-      decisionId: "violation_handling",
-      decisionState: "UNRESOLVED_DEFERRED",
-      handlingShape: "DETECT_CONTAIN_INVALIDATE_REVIEW_REMEDIATE",
-      automaticProductionAuthorizationAllowed: false,
+      handlingShape: "CONTAIN_REEVALUATE_AFFECTED_DECISIONS_REMEDIATE",
+      affectedDecisionAuthorizationAllowed: false,
       processingActive: false,
     },
-    futureEnforcementEvidence: {
-      decisionId: "future_enforcement_evidence",
+    waiverExceptionBoundaries: {
+      decisionId: "waiver_exception_boundaries",
       decisionState: "UNRESOLVED_DEFERRED",
-      evidenceShape: "FUTURE_SYNTHETIC_POSITIVE_NEGATIVE_AUTHORIZATION_VECTORS",
-      evidenceRecorded: false,
-      enforcementProven: false,
+      boundaryShape: "SEPARATE_TIME_BOUND_INDEPENDENT_REVIEW",
+      selfAuthorizationAllowed: false,
+      disclosureSuppressionAllowed: false,
+      missingGateBypassAllowed: false,
+      productionBypassAllowed: false,
+      ruleActive: false,
     },
-    futurePolicyGateRequirements: {
-      decisionId: "future_policy_gate_requirements",
+    escalationAuthority: {
+      decisionId: "escalation_authority",
       decisionState: "UNRESOLVED_DEFERRED",
-      gateShape: "SEPARATE_GOVERNANCE_SECURITY_QA_APPROVAL",
-      policyGatePassed: false,
-      prerequisiteSatisfied: false,
-      activationAllowed: false,
+      authorityShape: "SEPARATE_UNASSIGNED_ORGANIZATIONAL_AUTHORITY",
+      authorityAssigned: false,
+      appealBoundaryApproved: false,
+      processingActive: false,
+    },
+    futureAuditEvidenceRequirements: {
+      decisionId: "future_audit_evidence_requirements",
+      decisionState: "UNRESOLVED_DEFERRED",
+      evidenceShape: "FUTURE_MINIMUM_NECESSARY_ACCESS_CONTROLLED_RETAINED_EVIDENCE",
+      evidenceRecorded: false,
+      auditProven: false,
+    },
+    separationOfDutiesDependency: {
+      decisionId: "separation_of_duties_dependency",
+      decisionState: "UNRESOLVED_DEFERRED",
+      dependencyShape: "EXACT_SLICE_4_PROPOSAL_NON_AUTHORIZING",
+      dependencySatisfied: false,
+      enforcementActive: false,
+      ruleActive: false,
     },
   };
 }
 
 function validateUpstream(upstream) {
   const prerequisite = upstream.activationPrerequisites.prerequisites?.find(
-    ({ prerequisiteId }) => prerequisiteId === "separation_of_duties_enforcement",
+    ({ prerequisiteId }) => prerequisiteId === "conflict_of_interest_policy",
   );
   exact(
     {
@@ -576,11 +574,11 @@ function validateUpstream(upstream) {
         productionApprovalAllowed: false,
       },
       prerequisite: {
-        prerequisiteId: "separation_of_duties_enforcement",
+        prerequisiteId: "conflict_of_interest_policy",
         status: "UNSATISFIED_DEFERRED",
         ownerPlaceholderId: "UNASSIGNED_OWNER_PLACEHOLDER",
         evidenceRequirementDescription:
-          "Future fail-closed assignment-time and decision-time independence policy with positive and negative authorization tests.",
+          "Future versioned disclosure, evaluation, recusal, reassignment, escalation and late-disclosure handling policy.",
         evidenceRecordRefs: [],
       },
       prerequisiteCount: 12,
@@ -592,28 +590,30 @@ function validateUpstream(upstream) {
 
   exact(
     {
-      artifactVersion: upstream.separationPlaceholder.metadata?.policyArtifactVersion,
-      policyVersion: upstream.separationPlaceholder.policyIdentity?.policyVersion,
-      policyState: upstream.separationPlaceholder.policyIdentity?.policyState,
-      prerequisite: upstream.separationPlaceholder.prerequisiteReference,
-      readiness: upstream.separationPlaceholder.readiness,
-      activeEnforcementRuleCount:
-        upstream.separationPlaceholder.aggregate?.activeEnforcementRuleCount,
-      reviewerAssignmentCount: upstream.separationPlaceholder.aggregate?.reviewerAssignmentCount,
-      conflictRecordCount: upstream.separationPlaceholder.aggregate?.conflictRecordCount,
-      violationRecordCount: upstream.separationPlaceholder.aggregate?.violationRecordCount,
-      productionApprovalCount: upstream.separationPlaceholder.aggregate?.productionApprovalCount,
+      artifactVersion: upstream.conflictPlaceholder.metadata?.policyArtifactVersion,
+      policyVersion: upstream.conflictPlaceholder.policyIdentity?.policyVersion,
+      policyState: upstream.conflictPlaceholder.policyIdentity?.policyState,
+      prerequisite: upstream.conflictPlaceholder.prerequisiteReference,
+      readiness: upstream.conflictPlaceholder.readiness,
+      activationStatus: upstream.conflictPlaceholder.activationBoundary?.status,
+      workflowStatus: upstream.conflictPlaceholder.activationBoundary?.reviewWorkflowStatus,
+      activeConflictRuleCount: upstream.conflictPlaceholder.aggregate?.activeConflictRuleCount,
+      conflictRecordCount: upstream.conflictPlaceholder.aggregate?.conflictRecordCount,
+      disclosureRecordCount: upstream.conflictPlaceholder.aggregate?.disclosureRecordCount,
+      recusalRecordCount: upstream.conflictPlaceholder.aggregate?.recusalRecordCount,
+      waiverRecordCount: upstream.conflictPlaceholder.aggregate?.waiverRecordCount,
+      productionApprovalCount: upstream.conflictPlaceholder.aggregate?.productionApprovalCount,
     },
     {
-      artifactVersion: expectedSeparationPlaceholderVersion,
-      policyVersion: expectedSeparationPolicyVersion,
+      artifactVersion: expectedConflictPlaceholderVersion,
+      policyVersion: expectedConflictPolicyVersion,
       policyState: "UNRESOLVED_DEFERRED",
       prerequisite: {
-        prerequisiteId: "separation_of_duties_enforcement",
+        prerequisiteId: "conflict_of_interest_policy",
         status: "UNSATISFIED_DEFERRED",
         ownerPlaceholderId: "UNASSIGNED_OWNER_PLACEHOLDER",
         evidenceRequirementDescription:
-          "Future fail-closed assignment-time and decision-time independence policy with positive and negative authorization tests.",
+          "Future versioned disclosure, evaluation, recusal, reassignment, escalation and late-disclosure handling policy.",
         evidenceRecordRefs: [],
       },
       readiness: {
@@ -621,31 +621,83 @@ function validateUpstream(upstream) {
         status: "NOT_READY",
         blockingReasons: requiredBlockingReasons,
       },
-      activeEnforcementRuleCount: 0,
-      reviewerAssignmentCount: 0,
+      activationStatus: "BLOCKED",
+      workflowStatus: "INACTIVE",
+      activeConflictRuleCount: 0,
       conflictRecordCount: 0,
-      violationRecordCount: 0,
+      disclosureRecordCount: 0,
+      recusalRecordCount: 0,
+      waiverRecordCount: 0,
       productionApprovalCount: 0,
     },
-    "upstream.separationPlaceholder",
+    "upstream.conflictPlaceholder",
   );
 
   exact(
     {
-      artifactVersion: upstream.reviewerRoleOwnershipProposal.metadata?.proposalArtifactVersion,
-      proposalVersion: upstream.reviewerRoleOwnershipProposal.metadata?.proposalVersion,
-      proposalStatus: upstream.reviewerRoleOwnershipProposal.metadata?.status,
-      readiness: upstream.reviewerRoleOwnershipProposal.currentBaseline?.readiness,
-      activation: upstream.reviewerRoleOwnershipProposal.currentBaseline?.activation,
-      prerequisite:
-        upstream.reviewerRoleOwnershipProposal.currentBaseline?.reviewerRoleOwnershipPrerequisite,
+      artifactVersion: upstream.separationProposal.metadata?.proposalArtifactVersion,
+      proposalVersion: upstream.separationProposal.metadata?.proposalVersion,
+      proposalStatus: upstream.separationProposal.metadata?.status,
+      readiness: upstream.separationProposal.currentBaseline?.readiness,
+      activation: upstream.separationProposal.currentBaseline?.activation,
+      prerequisite: upstream.separationProposal.currentBaseline?.separationOfDutiesPrerequisite,
+      boundary: upstream.separationProposal.proposalBoundary,
+      satisfiedPrerequisiteCount: upstream.separationProposal.aggregate?.satisfiedPrerequisiteCount,
+      activeEnforcementRuleCount: upstream.separationProposal.aggregate?.activeEnforcementRuleCount,
+      productionApprovalCount: upstream.separationProposal.aggregate?.productionApprovalCount,
+    },
+    {
+      artifactVersion: expectedSeparationProposalVersion,
+      proposalVersion: "wave-6.slice-4.diagnostic-separation-of-duties-policy.proposal.v1",
+      proposalStatus: "PROPOSED_DEFERRED",
+      readiness: {
+        policyVersion: expectedReadinessPolicyVersion,
+        status: "NOT_READY",
+        blockingReasons: requiredBlockingReasons,
+      },
+      activation: { status: "BLOCKED", workflowStatus: "INACTIVE" },
+      prerequisite: {
+        prerequisiteId: "separation_of_duties_enforcement",
+        status: "UNSATISFIED_DEFERRED",
+        ownerPlaceholderId: "UNASSIGNED_OWNER_PLACEHOLDER",
+        evidenceRecordRefs: [],
+      },
+      boundary: {
+        proposalStatus: "PROPOSED_DEFERRED",
+        policyApproved: false,
+        rulesetApproved: false,
+        enforcementAllowed: false,
+        assignmentEvaluationAllowed: false,
+        decisionEvaluationAllowed: false,
+        identityComparisonAllowed: false,
+        exceptionAllowed: false,
+        violationProcessingAllowed: false,
+        reviewUseAllowed: false,
+        workflowActivationAllowed: false,
+        prerequisiteSatisfactionAllowed: false,
+        productionApprovalAllowed: false,
+        readinessTransitionAllowed: false,
+      },
+      satisfiedPrerequisiteCount: 0,
+      activeEnforcementRuleCount: 0,
+      productionApprovalCount: 0,
+    },
+    "upstream.separationProposal",
+  );
+
+  exact(
+    {
+      artifactVersion: upstream.roleOwnershipProposal.metadata?.proposalArtifactVersion,
+      proposalVersion: upstream.roleOwnershipProposal.metadata?.proposalVersion,
+      proposalStatus: upstream.roleOwnershipProposal.metadata?.status,
+      readiness: upstream.roleOwnershipProposal.currentBaseline?.readiness,
+      activation: upstream.roleOwnershipProposal.currentBaseline?.activation,
       satisfiedPrerequisiteCount:
-        upstream.reviewerRoleOwnershipProposal.aggregate?.satisfiedPrerequisiteCount,
-      ownerAssignmentCount: upstream.reviewerRoleOwnershipProposal.aggregate?.ownerAssignmentCount,
-      reviewerAssignmentCount:
-        upstream.reviewerRoleOwnershipProposal.aggregate?.reviewerAssignmentCount,
-      productionApprovalCount:
-        upstream.reviewerRoleOwnershipProposal.aggregate?.productionApprovalCount,
+        upstream.roleOwnershipProposal.aggregate?.satisfiedPrerequisiteCount,
+      ownerAssignmentCount: upstream.roleOwnershipProposal.aggregate?.ownerAssignmentCount,
+      reviewerIdentityCount: upstream.roleOwnershipProposal.aggregate?.reviewerIdentityCount,
+      reviewerAssignmentCount: upstream.roleOwnershipProposal.aggregate?.reviewerAssignmentCount,
+      productionApprovalCount: upstream.roleOwnershipProposal.aggregate?.productionApprovalCount,
     },
     {
       artifactVersion: expectedRoleOwnershipProposalVersion,
@@ -657,34 +709,47 @@ function validateUpstream(upstream) {
         blockingReasons: requiredBlockingReasons,
       },
       activation: { status: "BLOCKED", workflowStatus: "INACTIVE" },
-      prerequisite: {
-        prerequisiteId: "reviewer_role_ownership",
-        status: "UNSATISFIED_DEFERRED",
-        ownerPlaceholderId: "UNASSIGNED_OWNER_PLACEHOLDER",
-        evidenceRecordRefs: [],
-      },
       satisfiedPrerequisiteCount: 0,
       ownerAssignmentCount: 0,
+      reviewerIdentityCount: 0,
       reviewerAssignmentCount: 0,
       productionApprovalCount: 0,
     },
-    "upstream.reviewerRoleOwnershipProposal",
+    "upstream.roleOwnershipProposal",
   );
 
-  for (const [name, artifact, expectedArtifactVersion, expectedPolicyVersion, prerequisiteId] of [
-    [
-      "conflictPlaceholder",
-      upstream.conflictPlaceholder,
-      expectedConflictPlaceholderVersion,
-      expectedConflictPolicyVersion,
-      "conflict_of_interest_policy",
-    ],
+  for (const [
+    name,
+    artifact,
+    artifactVersion,
+    policyVersion,
+    prerequisiteId,
+    extraActual,
+    extraExpected,
+  ] of [
     [
       "auditPlaceholder",
       upstream.auditPlaceholder,
       expectedAuditPlaceholderVersion,
-      expectedAuditPolicyVersion,
+      "wave-5.slice-8.diagnostic-audit-identity.placeholder.v1",
       "audit_identity_policy",
+      {
+        activeRuleCount: upstream.auditPlaceholder.aggregate?.activeIdentityRuleCount,
+        auditEventCount: upstream.auditPlaceholder.aggregate?.auditEventCount,
+      },
+      { activeRuleCount: 0, auditEventCount: 0 },
+    ],
+    [
+      "evidencePlaceholder",
+      upstream.evidencePlaceholder,
+      expectedEvidencePlaceholderVersion,
+      "wave-5.slice-9.diagnostic-evidence-storage-and-retention.placeholder.v1",
+      "evidence_storage_and_retention_policy",
+      {
+        activeRuleCount: upstream.evidencePlaceholder.aggregate?.activeStorageRuleCount,
+        auditEventCount: upstream.evidencePlaceholder.aggregate?.auditEventCount,
+      },
+      { activeRuleCount: 0, auditEventCount: 0 },
     ],
   ]) {
     exact(
@@ -694,21 +759,18 @@ function validateUpstream(upstream) {
         policyState: artifact.policyIdentity?.policyState,
         prerequisiteId: artifact.prerequisiteReference?.prerequisiteId,
         prerequisiteStatus: artifact.prerequisiteReference?.status,
-        ownerPlaceholderId: artifact.prerequisiteReference?.ownerPlaceholderId,
-        evidenceRecordRefs: artifact.prerequisiteReference?.evidenceRecordRefs,
         readiness: artifact.readiness,
         activationStatus: artifact.activationBoundary?.status,
         workflowStatus: artifact.activationBoundary?.reviewWorkflowStatus,
         productionApprovalCount: artifact.aggregate?.productionApprovalCount,
+        ...extraActual,
       },
       {
-        artifactVersion: expectedArtifactVersion,
-        policyVersion: expectedPolicyVersion,
+        artifactVersion,
+        policyVersion,
         policyState: "UNRESOLVED_DEFERRED",
         prerequisiteId,
         prerequisiteStatus: "UNSATISFIED_DEFERRED",
-        ownerPlaceholderId: "UNASSIGNED_OWNER_PLACEHOLDER",
-        evidenceRecordRefs: [],
         readiness: {
           policyVersion: expectedReadinessPolicyVersion,
           status: "NOT_READY",
@@ -717,6 +779,7 @@ function validateUpstream(upstream) {
         activationStatus: "BLOCKED",
         workflowStatus: "INACTIVE",
         productionApprovalCount: 0,
+        ...extraExpected,
       },
       `upstream.${name}`,
     );
@@ -766,13 +829,13 @@ function validateUpstream(upstream) {
   );
 }
 
-export async function readDiagnosticSeparationOfDutiesPolicyDecisionProposal(
+export async function readDiagnosticConflictOfInterestPolicyDecisionProposal(
   artifactPath = defaultProposalPath,
 ) {
   return JSON.parse(await readFile(artifactPath, "utf8"));
 }
 
-export async function readDiagnosticSeparationOfDutiesPolicyDecisionProposalUpstream() {
+export async function readDiagnosticConflictOfInterestPolicyDecisionProposalUpstream() {
   const entries = await Promise.all(
     Object.entries(upstreamPaths).map(async ([name, artifactPath]) => [
       name,
@@ -782,10 +845,34 @@ export async function readDiagnosticSeparationOfDutiesPolicyDecisionProposalUpst
   return Object.fromEntries(entries);
 }
 
-export function validateDiagnosticSeparationOfDutiesPolicyDecisionProposal(artifact, upstream) {
+export function validateDiagnosticConflictOfInterestPolicyDecisionProposal(artifact, upstream) {
   if (!isObject(artifact)) fail("Decision proposal must be a JSON object.");
   if (!isObject(upstream)) fail("Upstream artifacts must be an object.");
   scan(artifact);
+  const recordFields = [
+    "policyDecisionRecords",
+    "realPrincipalRecords",
+    "reviewerIdentityRecords",
+    "auditIdentityRecords",
+    "roleAssignmentRecords",
+    "reviewerAssignmentRecords",
+    "conflictRelationshipRecords",
+    "conflictDisclosureRecords",
+    "conflictEvaluationRecords",
+    "recusalRecords",
+    "reassignmentRecords",
+    "lateDisclosureRecords",
+    "waiverRecords",
+    "exceptionRecords",
+    "escalationAuthorityAssignmentRecords",
+    "escalationRecords",
+    "auditEvidenceRecords",
+    "separationEnforcementRecords",
+    "activeConflictRuleRecords",
+    "reviewDecisionRecords",
+    "approvedDecisionRecords",
+    "productionApprovalRecords",
+  ];
   requireExactFields(
     artifact,
     [
@@ -793,30 +880,13 @@ export function validateDiagnosticSeparationOfDutiesPolicyDecisionProposal(artif
       "upstreamReferences",
       "currentBaseline",
       "proposalBoundary",
-      "roleTaxonomyPlaceholders",
+      "conflictCategoryTaxonomyPlaceholders",
       "proposedPolicy",
       "unresolvedDecisions",
       "syntheticExamples",
       "recordBoundary",
       "aggregate",
-      "policyDecisionRecords",
-      "authorshipRecords",
-      "realPrincipalRecords",
-      "reviewerIdentityRecords",
-      "auditIdentityRecords",
-      "roleAssignmentRecords",
-      "reviewerAssignmentRecords",
-      "conflictDisclosureRecords",
-      "conflictEvaluationRecords",
-      "recusalRecords",
-      "emergencyExceptionRecords",
-      "violationRecords",
-      "enforcementEvidenceRecords",
-      "activeEnforcementRuleRecords",
-      "policyGateRecords",
-      "reviewDecisionRecords",
-      "approvedDecisionRecords",
-      "productionApprovalRecords",
+      ...recordFields,
     ],
     "$",
   );
@@ -825,13 +895,13 @@ export function validateDiagnosticSeparationOfDutiesPolicyDecisionProposal(artif
   exact(artifact.currentBaseline, exactBaseline(), "currentBaseline");
   exact(artifact.proposalBoundary, exactProposalBoundary(), "proposalBoundary");
   exact(
-    artifact.roleTaxonomyPlaceholders,
-    expectedRoleTaxonomy.map(([rolePlaceholderId, scopeRef]) => ({
-      rolePlaceholderId,
-      scopeRef,
+    artifact.conflictCategoryTaxonomyPlaceholders,
+    expectedConflictTaxonomy.map(([categoryPlaceholderId, categoryScope]) => ({
+      categoryPlaceholderId,
+      categoryScope,
       recordState: "TAXONOMY_ONLY",
     })),
-    "roleTaxonomyPlaceholders",
+    "conflictCategoryTaxonomyPlaceholders",
   );
   exact(artifact.proposedPolicy, exactProposedPolicy(), "proposedPolicy");
   exact(
@@ -910,78 +980,66 @@ export function validateDiagnosticSeparationOfDutiesPolicyDecisionProposal(artif
     fail("Synthetic examples must remain 4 accepted and 4 rejected.");
   }
 
-  const recordBoundaryFields = [
-    "policyDecisionRecords",
-    "authorshipRecords",
-    "realPrincipalRecords",
-    "reviewerIdentityRecords",
-    "auditIdentityRecords",
-    "roleAssignmentRecords",
-    "reviewerAssignmentRecords",
-    "conflictDisclosureRecords",
-    "conflictEvaluationRecords",
-    "recusalRecords",
-    "emergencyExceptionRecords",
-    "violationRecords",
-    "enforcementEvidenceRecords",
-    "activeEnforcementRuleRecords",
-    "policyGateRecords",
-    "reviewDecisionRecords",
-    "approvedDecisionRecords",
-    "productionApprovalRecords",
-    "runtimeSeparationEnforcementEnabled",
-  ];
   exact(
     artifact.recordBoundary,
-    Object.fromEntries(recordBoundaryFields.map((field) => [field, false])),
+    {
+      ...Object.fromEntries(recordFields.map((field) => [field, false])),
+      runtimeConflictEvaluationEnabled: false,
+    },
     "recordBoundary",
   );
-  const expectedAggregate = {
-    syntheticExampleCount: 8,
-    acceptedSyntheticExampleCount: 4,
-    rejectedSyntheticExampleCount: 4,
-    unresolvedDecisionCount: 9,
-    roleTaxonomyPlaceholderCount: 7,
-    satisfiedPrerequisiteCount: 0,
-    policyDecisionCount: 0,
-    authorshipRecordCount: 0,
-    realPrincipalCount: 0,
-    reviewerIdentityCount: 0,
-    auditIdentityCount: 0,
-    roleAssignmentCount: 0,
-    reviewerAssignmentCount: 0,
-    conflictDisclosureCount: 0,
-    conflictEvaluationCount: 0,
-    recusalCount: 0,
-    emergencyExceptionCount: 0,
-    violationCount: 0,
-    enforcementEvidenceCount: 0,
-    activeEnforcementRuleCount: 0,
-    policyGateRecordCount: 0,
-    reviewDecisionCount: 0,
-    approvedDecisionCount: 0,
-    approvedCandidateCount: 0,
-    productionApprovalCount: 0,
-  };
-  exact(artifact.aggregate, expectedAggregate, "aggregate");
-  for (const field of recordBoundaryFields.filter((name) => name.endsWith("Records"))) {
-    exact(artifact[field], [], field);
-  }
+  exact(
+    artifact.aggregate,
+    {
+      syntheticExampleCount: 8,
+      acceptedSyntheticExampleCount: 4,
+      rejectedSyntheticExampleCount: 4,
+      unresolvedDecisionCount: 10,
+      conflictCategoryPlaceholderCount: 7,
+      satisfiedPrerequisiteCount: 0,
+      policyDecisionCount: 0,
+      realPrincipalCount: 0,
+      reviewerIdentityCount: 0,
+      auditIdentityCount: 0,
+      roleAssignmentCount: 0,
+      reviewerAssignmentCount: 0,
+      conflictRelationshipCount: 0,
+      conflictDisclosureCount: 0,
+      conflictEvaluationCount: 0,
+      recusalCount: 0,
+      reassignmentCount: 0,
+      lateDisclosureCount: 0,
+      waiverCount: 0,
+      exceptionCount: 0,
+      escalationAuthorityAssignmentCount: 0,
+      escalationCount: 0,
+      auditEvidenceCount: 0,
+      separationEnforcementCount: 0,
+      activeConflictRuleCount: 0,
+      reviewDecisionCount: 0,
+      approvedDecisionCount: 0,
+      approvedCandidateCount: 0,
+      productionApprovalCount: 0,
+    },
+    "aggregate",
+  );
+  for (const field of recordFields) exact(artifact[field], [], field);
   validateUpstream(upstream);
 
   return {
     proposalArtifactVersion: expectedProposalArtifactVersion,
     proposalVersion: expectedProposalVersion,
     proposalStatus: artifact.metadata.status,
-    prerequisiteStatus: artifact.currentBaseline.separationOfDutiesPrerequisite.status,
+    prerequisiteStatus: artifact.currentBaseline.conflictOfInterestPrerequisite.status,
+    separationDependencyStatus: artifact.proposedPolicy.separationOfDutiesDependency.decisionState,
     syntheticExampleCount: artifact.aggregate.syntheticExampleCount,
     acceptedSyntheticExampleCount: artifact.aggregate.acceptedSyntheticExampleCount,
     rejectedSyntheticExampleCount: artifact.aggregate.rejectedSyntheticExampleCount,
     unresolvedDecisionCount: artifact.aggregate.unresolvedDecisionCount,
-    activeEnforcementRuleCount: artifact.aggregate.activeEnforcementRuleCount,
+    activeConflictRuleCount: artifact.aggregate.activeConflictRuleCount,
     satisfiedPrerequisiteCount: artifact.aggregate.satisfiedPrerequisiteCount,
-    reviewerIdentityCount: artifact.aggregate.reviewerIdentityCount,
-    reviewerAssignmentCount: artifact.aggregate.reviewerAssignmentCount,
+    conflictDisclosureCount: artifact.aggregate.conflictDisclosureCount,
+    recusalCount: artifact.aggregate.recusalCount,
     productionApprovalCount: artifact.aggregate.productionApprovalCount,
     activationStatus: artifact.currentBaseline.activation.status,
     workflowStatus: artifact.currentBaseline.activation.workflowStatus,
@@ -989,7 +1047,7 @@ export function validateDiagnosticSeparationOfDutiesPolicyDecisionProposal(artif
   };
 }
 
-export function validateSeparationOfDutiesDecisionProposalChangedPaths(paths) {
+export function validateConflictOfInterestDecisionProposalChangedPaths(paths) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
   if (new Set(normalized).size !== normalized.length) {
@@ -997,64 +1055,12 @@ export function validateSeparationOfDutiesDecisionProposalChangedPaths(paths) {
   }
   const unexpected = normalized.filter((value) => !changedPathSet.has(value));
   if (unexpected.length > 0) {
-    fail(`Wave 6 Slice 4 out-of-scope path changed: ${unexpected[0]}.`);
-  }
-  if (normalized.length !== changedPaths.length) {
-    fail(`Wave 6 Slice 4 requires exactly ${changedPaths.length} changed paths.`);
-  }
-  return normalized;
-}
-
-export function validateSeparationOfDutiesDecisionProposalSlice5ChangedPaths(paths) {
-  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
-  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
-  if (new Set(normalized).size !== normalized.length) {
-    fail("Changed paths must not contain duplicates.");
-  }
-  const unexpected = normalized.filter((value) => !wave6Slice5ChangedPathSet.has(value));
-  if (unexpected.length > 0) {
     fail(`Wave 6 Slice 5 out-of-scope path changed: ${unexpected[0]}.`);
   }
-  if (normalized.length !== wave6Slice5ChangedPaths.length) {
-    fail(`Wave 6 Slice 5 requires exactly ${wave6Slice5ChangedPaths.length} changed paths.`);
+  if (normalized.length !== changedPaths.length) {
+    fail(`Wave 6 Slice 5 requires exactly ${changedPaths.length} changed paths.`);
   }
   return normalized;
-}
-
-function validateCiRemediationChangedPaths(paths) {
-  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
-  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
-  if (new Set(normalized).size !== normalized.length) {
-    fail("Changed paths must not contain duplicates.");
-  }
-  if (normalized.length === 0) {
-    fail("Wave 6 Slice 4 CI remediation must contain at least one changed path.");
-  }
-  const unexpected = normalized.filter((value) => !ciRemediationPathSet.has(value));
-  if (unexpected.length > 0) {
-    fail(`Wave 6 Slice 4 CI remediation out-of-scope path changed: ${unexpected[0]}.`);
-  }
-  return normalized;
-}
-
-function isCiRemediationPathSet(paths) {
-  return (
-    Array.isArray(paths) &&
-    new Set(paths).size === paths.length &&
-    paths.length > 0 &&
-    paths.every((value) => ciRemediationPathSet.has(value))
-  );
-}
-
-function isSlice4BaselineWithRemediation(paths) {
-  if (!Array.isArray(paths)) return false;
-  const pathSet = new Set(paths);
-  return (
-    pathSet.size === paths.length &&
-    paths.length > changedPaths.length &&
-    changedPaths.every((value) => pathSet.has(value)) &&
-    paths.every((value) => changedPathSet.has(value) || ciRemediationPathSet.has(value))
-  );
 }
 
 function defaultGitRunner(args, cwd) {
@@ -1112,23 +1118,6 @@ function requireCommitObject(sha, label, { cwd, runGit }) {
   }
 }
 
-function singleParentCommit(sha, { cwd, runGit }) {
-  const result = runGit(["cat-file", "-p", sha], cwd);
-  if (result.status !== 0) {
-    fail(
-      `BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined: ${result.stderr || result.stdout}`,
-    );
-  }
-  const parents = result.stdout
-    .split(/\r?\n/)
-    .filter((line) => line.startsWith("parent "))
-    .map((line) => line.slice("parent ".length).trim());
-  if (parents.length !== 1 || !isCommitSha(parents[0])) {
-    fail("BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined.");
-  }
-  return parents[0];
-}
-
 function ciCommitRange({ cwd, env, runGit, readEvent }) {
   const event = env.GITHUB_EVENT_PATH ? readEvent(env.GITHUB_EVENT_PATH) : undefined;
   let base;
@@ -1141,13 +1130,9 @@ function ciCommitRange({ cwd, env, runGit, readEvent }) {
     head = event?.after ?? env.GITHUB_SHA;
   } else {
     head = env.GITHUB_SHA;
-    if (!isCommitSha(head)) {
-      fail("BLOCK: GITHUB_SHA is unavailable; exact CI changed-path range cannot be determined.");
-    }
     requireCommitObject(head, "head", { cwd, runGit });
-    const parentResult = runGit(["rev-list", "--parents", "-n", "1", head], cwd);
-    const commits =
-      parentResult.status === 0 ? parentResult.stdout.trim().split(/\s+/).filter(Boolean) : [];
+    const result = runGit(["rev-list", "--parents", "-n", "1", head], cwd);
+    const commits = result.status === 0 ? result.stdout.trim().split(/\s+/).filter(Boolean) : [];
     base = commits.length === 2 && commits[0] === head ? commits[1] : undefined;
   }
   if (!isCommitSha(base) || !isCommitSha(head)) {
@@ -1184,94 +1169,40 @@ function diffPaths({ cwd, base, head, runGit }) {
   return paths;
 }
 
-function ciChangedPaths({ cwd, env, runGit, readEvent }) {
-  const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
-  let cumulativeBase = base;
-  let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
-
-  if (paths.length === changedPaths.length && paths.every((value) => changedPathSet.has(value))) {
-    return paths;
-  }
-  if (isSlice4BaselineWithRemediation(paths)) {
-    return paths;
-  }
-  if (!isCiRemediationPathSet(paths)) {
-    return paths;
-  }
-
-  const visited = new Set([head]);
-  while (isCiRemediationPathSet(paths)) {
-    if (visited.has(cumulativeBase)) {
-      fail(
-        "BLOCK: CI follow-up ancestry contains a cycle; exact Slice 4 baseline cannot be determined.",
-      );
-    }
-    visited.add(cumulativeBase);
-    const ancestor = singleParentCommit(cumulativeBase, { cwd, runGit });
-    if (visited.has(ancestor)) {
-      fail(
-        "BLOCK: CI follow-up ancestry contains a cycle; exact Slice 4 baseline cannot be determined.",
-      );
-    }
-    requireCommitObject(ancestor, "baseline ancestor", { cwd, runGit });
-    cumulativeBase = ancestor;
-    paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
-    if (
-      (paths.length === changedPaths.length && paths.every((value) => changedPathSet.has(value))) ||
-      isSlice4BaselineWithRemediation(paths)
-    ) {
-      return paths;
-    }
-  }
-
-  return paths;
-}
-
-export function collectSeparationOfDutiesDecisionProposalChangedPaths({
+export function collectConflictOfInterestDecisionProposalChangedPaths({
   cwd = repoRoot,
   env = process.env,
   runGit = defaultGitRunner,
   readEvent = readCiEvent,
 } = {}) {
-  return String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true"
-    ? ciChangedPaths({ cwd, env, runGit, readEvent })
-    : localWorktreePaths({ cwd, runGit });
+  if (String(env.GITHUB_ACTIONS ?? "").toLowerCase() !== "true") {
+    return localWorktreePaths({ cwd, runGit });
+  }
+  const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
+  return diffPaths({ cwd, base, head, runGit });
 }
 
-export function validateSeparationOfDutiesDecisionProposalWorktreeScope(
+export function validateConflictOfInterestDecisionProposalWorktreeScope(
   paths,
   { env = process.env } = {},
 ) {
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   if (!inGitHubActions && Array.isArray(paths) && paths.length === 0) return [];
-  if (
-    Array.isArray(paths) &&
-    paths.length === wave6Slice5ChangedPaths.length &&
-    paths.every((value) => wave6Slice5ChangedPathSet.has(value))
-  ) {
-    return validateSeparationOfDutiesDecisionProposalSlice5ChangedPaths(paths);
-  }
-  if (!inGitHubActions && isCiRemediationPathSet(paths)) {
-    return validateCiRemediationChangedPaths(paths);
-  }
-  if (isSlice4BaselineWithRemediation(paths)) {
-    return paths;
-  }
-  return validateSeparationOfDutiesDecisionProposalChangedPaths(paths);
+  return validateConflictOfInterestDecisionProposalChangedPaths(paths);
 }
 
 export async function main() {
   const [artifact, upstream] = await Promise.all([
-    readDiagnosticSeparationOfDutiesPolicyDecisionProposal(),
-    readDiagnosticSeparationOfDutiesPolicyDecisionProposalUpstream(),
+    readDiagnosticConflictOfInterestPolicyDecisionProposal(),
+    readDiagnosticConflictOfInterestPolicyDecisionProposalUpstream(),
   ]);
-  const summary = validateDiagnosticSeparationOfDutiesPolicyDecisionProposal(artifact, upstream);
+  const summary = validateDiagnosticConflictOfInterestPolicyDecisionProposal(artifact, upstream);
   if (process.argv.includes("--check-worktree-scope")) {
-    const paths = collectSeparationOfDutiesDecisionProposalChangedPaths();
-    validateSeparationOfDutiesDecisionProposalWorktreeScope(paths);
+    const paths = collectConflictOfInterestDecisionProposalChangedPaths();
+    validateConflictOfInterestDecisionProposalWorktreeScope(paths);
   }
   console.log(
-    `[curriculum] Separation-of-duties decision proposal ${summary.proposalArtifactVersion} validated: ${summary.syntheticExampleCount} synthetic vectors, ${summary.unresolvedDecisionCount} unresolved decisions, ${summary.activeEnforcementRuleCount} active rules, ${summary.satisfiedPrerequisiteCount} satisfied prerequisites, ${summary.productionApprovalCount} production approvals; proposal ${summary.proposalStatus}, prerequisite ${summary.prerequisiteStatus}, activation ${summary.activationStatus}, workflow ${summary.workflowStatus}, readiness ${summary.readiness}.`,
+    `[curriculum] Conflict-of-interest decision proposal ${summary.proposalArtifactVersion} validated: ${summary.syntheticExampleCount} synthetic vectors, ${summary.unresolvedDecisionCount} unresolved decisions, ${summary.activeConflictRuleCount} active rules, ${summary.satisfiedPrerequisiteCount} satisfied prerequisites, ${summary.productionApprovalCount} production approvals; proposal ${summary.proposalStatus}, prerequisite ${summary.prerequisiteStatus}, separation dependency ${summary.separationDependencyStatus}, activation ${summary.activationStatus}, workflow ${summary.workflowStatus}, readiness ${summary.readiness}.`,
   );
   return summary;
 }

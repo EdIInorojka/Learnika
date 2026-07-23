@@ -69,6 +69,11 @@ const approvedWave6Slice2ChangedPaths = [
   "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
+  "docs/wave-6/slice-5-implementation-note.md",
+  "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
   "package.json",
   "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -412,15 +417,15 @@ test("private machine candidate and hash-like values fail closed", async () => {
   }
 });
 
-test("scope guard retains exact cumulative admission through Wave 6 Slice 4", () => {
-  assert.equal(approvedWave6Slice2ChangedPaths.length, 46);
+test("scope guard retains exact cumulative admission through Wave 6 Slice 5", () => {
+  assert.equal(approvedWave6Slice2ChangedPaths.length, 51);
   assert.deepEqual(
     validateCanonicalizationDigestDecisionProposalChangedPaths(approvedWave6Slice2ChangedPaths),
     approvedWave6Slice2ChangedPaths,
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/diagnostic-canonicalization-digest-policy-decision-proposal.md",
-    "docs/wave-6/slice-5-implementation-note.md",
+    "docs/wave-6/slice-6-implementation-note.md",
     "docs/wave-6/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-canonicalization/controller.ts",

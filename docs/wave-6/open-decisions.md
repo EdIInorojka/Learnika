@@ -223,3 +223,61 @@ for assignment-time and decision-time enforcement.
 Define the separate governance, security and QA approval gate while keeping
 policy approval distinct from prerequisite satisfaction, activation and
 readiness.
+
+## W6-S5-OD-CONFLICT-RELATIONSHIP-TAXONOMY
+
+Approve a closed taxonomy for actual, potential and perceived relationships,
+including category definitions, precedence and fail-closed treatment of an
+unclassified relationship.
+
+## W6-S5-OD-SELF-DISCLOSURE-BOUNDARY
+
+Define the minimum necessary private disclosure, timing, access, retention and
+independent evaluation boundary without permitting self-clearance or storing a
+disclosure in a curriculum artifact.
+
+## W6-S5-OD-CANDIDATE-CONTENT-SOURCE-RELATIONSHIPS
+
+Approve how future authoring and source relationships are evaluated without
+recording an author, governed candidate, source reference or rights evidence in
+this slice.
+
+## W6-S5-OD-COMMERCIAL-FINANCIAL-RELATIONSHIPS
+
+Define commercial, financial, vendor and provider relationship categories,
+materiality rules and independent evaluation without authorizing provider
+integration or recording a relationship.
+
+## W6-S5-OD-RECUSAL-REASSIGNMENT
+
+Approve fail-closed recusal, independent reassignment, affected-stage handling
+and restoration criteria before any assignment may be evaluated.
+
+## W6-S5-OD-LATE-DISCLOSURE
+
+Define containment, re-evaluation, affected-decision review, remediation and
+audit preservation for a late disclosure without processing a disclosure in
+this slice.
+
+## W6-S5-OD-WAIVER-EXCEPTION-BOUNDARIES
+
+Decide whether a waiver or exception may exist and, if so, its separate
+authority, duration, review and absolute prohibition on self-authorization,
+missing-gate bypass or production authorization.
+
+## W6-S5-OD-ESCALATION-AUTHORITY
+
+Assign a future organizational escalation authority, appeal boundary and
+separation requirements without naming or assigning a real principal.
+
+## W6-S5-OD-FUTURE-AUDIT-EVIDENCE
+
+Approve the minimum necessary, access-controlled and retained evidence needed
+to prove disclosure evaluation, recusal, reassignment, escalation and
+late-disclosure handling without creating evidence now.
+
+## W6-S5-OD-SEPARATION-OF-DUTIES-DEPENDENCY
+
+Define how a later approved conflict policy consumes the still-unapproved
+Slice 4 separation proposal. Neither proposal may authorize the other,
+satisfy a prerequisite or activate review.

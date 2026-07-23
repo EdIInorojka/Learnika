@@ -98,6 +98,11 @@ const approvedWave6Slice1ChangedPaths = [
   "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
+  "docs/wave-6/slice-5-implementation-note.md",
+  "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];
@@ -357,14 +362,14 @@ test("private, candidate-like and machine-identity-like values fail closed", asy
   }
 });
 
-test("scope guard retains exact cumulative admission through Wave 6 Slice 4", () => {
+test("scope guard retains exact cumulative admission through Wave 6 Slice 5", () => {
   assert.deepEqual(
     validateCandidateIdentityDecisionProposalChangedPaths(approvedWave6Slice1ChangedPaths),
     approvedWave6Slice1ChangedPaths,
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/scope-and-non-goals.md",
-    "docs/wave-6/slice-5-implementation-note.md",
+    "docs/wave-6/slice-6-implementation-note.md",
     "docs/wave-6/scope-and-non-goals.md.bak",
     "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-candidate-identity/controller.ts",

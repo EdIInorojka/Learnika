@@ -4,41 +4,41 @@ import test from "node:test";
 import { URL } from "node:url";
 
 import {
-  collectSeparationOfDutiesDecisionProposalChangedPaths,
-  readDiagnosticSeparationOfDutiesPolicyDecisionProposal,
-  readDiagnosticSeparationOfDutiesPolicyDecisionProposalUpstream,
-  validateDiagnosticSeparationOfDutiesPolicyDecisionProposal,
-  validateSeparationOfDutiesDecisionProposalChangedPaths,
-  validateSeparationOfDutiesDecisionProposalSlice5ChangedPaths,
-  validateSeparationOfDutiesDecisionProposalWorktreeScope,
-} from "../scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs";
+  collectConflictOfInterestDecisionProposalChangedPaths,
+  readDiagnosticConflictOfInterestPolicyDecisionProposal,
+  readDiagnosticConflictOfInterestPolicyDecisionProposalUpstream,
+  validateConflictOfInterestDecisionProposalChangedPaths,
+  validateConflictOfInterestDecisionProposalWorktreeScope,
+  validateDiagnosticConflictOfInterestPolicyDecisionProposal,
+} from "../scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs";
 
 const expectedDecisionIds = [
-  "maker_checker_separation",
-  "author_reviewer_approver_separation",
-  "reviewer_role_incompatibilities",
-  "audit_observer_separation",
-  "conflict_of_interest_dependency",
-  "emergency_exception_boundaries",
-  "violation_handling",
-  "future_enforcement_evidence",
-  "future_policy_gate_requirements",
+  "conflict_relationship_taxonomy",
+  "self_disclosure_boundary",
+  "candidate_content_source_relationships",
+  "commercial_financial_relationships",
+  "recusal_reassignment_requirements",
+  "late_disclosure_handling",
+  "waiver_exception_boundaries",
+  "escalation_authority",
+  "future_audit_evidence_requirements",
+  "separation_of_duties_dependency",
 ];
 const expectedMarkers = {
   SYNTHETIC_EXAMPLE_ONLY: true,
   NON_OPERATIONAL: true,
   NOT_ASSIGNED: true,
-  NOT_ENFORCED: true,
+  NOT_EVALUATED: true,
   NOT_APPROVED: true,
   NOT_USABLE_FOR_REVIEW: true,
   NOT_USABLE_FOR_PRODUCTION: true,
 };
-const approvedWave6Slice4ChangedPaths = [
-  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+const approvedWave6Slice5ChangedPaths = [
+  "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
   "docs/wave-6/open-decisions.md",
-  "docs/wave-6/slice-4-implementation-note.md",
+  "docs/wave-6/slice-5-implementation-note.md",
   "package.json",
-  "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+  "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
   "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
@@ -47,6 +47,7 @@ const approvedWave6Slice4ChangedPaths = [
   "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-canonicalization-digest-policy-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
@@ -67,6 +68,7 @@ const approvedWave6Slice4ChangedPaths = [
   "packages/curriculum/test/diagnostic-blueprint.test.mjs",
   "packages/curriculum/test/diagnostic-candidate-identity-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-canonicalization-digest-policy-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
   "packages/curriculum/test/diagnostic-review-authority.test.mjs",
@@ -74,19 +76,6 @@ const approvedWave6Slice4ChangedPaths = [
   "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
-];
-const slice4PrimaryOnlyPaths = new Set([
-  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
-  "docs/wave-6/slice-4-implementation-note.md",
-  "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
-]);
-const approvedWave6Slice5ChangedPaths = [
-  ...approvedWave6Slice4ChangedPaths.filter((path) => !slice4PrimaryOnlyPaths.has(path)),
-  "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
-  "docs/wave-6/slice-5-implementation-note.md",
-  "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
-  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
-  "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -99,30 +88,31 @@ function nameStatusOutput(paths) {
 
 async function readArtifacts() {
   return {
-    artifact: await readDiagnosticSeparationOfDutiesPolicyDecisionProposal(),
-    upstream: await readDiagnosticSeparationOfDutiesPolicyDecisionProposalUpstream(),
+    artifact: await readDiagnosticConflictOfInterestPolicyDecisionProposal(),
+    upstream: await readDiagnosticConflictOfInterestPolicyDecisionProposalUpstream(),
   };
 }
 
 function validate(artifacts, artifact = artifacts.artifact, upstream = artifacts.upstream) {
-  return validateDiagnosticSeparationOfDutiesPolicyDecisionProposal(artifact, upstream);
+  return validateDiagnosticConflictOfInterestPolicyDecisionProposal(artifact, upstream);
 }
 
 test("proposal is valid, deferred and non-production", async () => {
   const artifacts = await readArtifacts();
   assert.deepEqual(validate(artifacts), {
-    proposalArtifactVersion: "wave-6.slice-4.grade-7-9-math.v1",
-    proposalVersion: "wave-6.slice-4.diagnostic-separation-of-duties-policy.proposal.v1",
+    proposalArtifactVersion: "wave-6.slice-5.grade-7-9-math.v1",
+    proposalVersion: "wave-6.slice-5.diagnostic-conflict-of-interest-policy.proposal.v1",
     proposalStatus: "PROPOSED_DEFERRED",
     prerequisiteStatus: "UNSATISFIED_DEFERRED",
+    separationDependencyStatus: "UNRESOLVED_DEFERRED",
     syntheticExampleCount: 8,
     acceptedSyntheticExampleCount: 4,
     rejectedSyntheticExampleCount: 4,
-    unresolvedDecisionCount: 9,
-    activeEnforcementRuleCount: 0,
+    unresolvedDecisionCount: 10,
+    activeConflictRuleCount: 0,
     satisfiedPrerequisiteCount: 0,
-    reviewerIdentityCount: 0,
-    reviewerAssignmentCount: 0,
+    conflictDisclosureCount: 0,
+    recusalCount: 0,
     productionApprovalCount: 0,
     activationStatus: "BLOCKED",
     workflowStatus: "INACTIVE",
@@ -130,15 +120,17 @@ test("proposal is valid, deferred and non-production", async () => {
   });
 });
 
-test("all seven upstream artifact pins are exact", async () => {
+test("all eight upstream artifact pins are exact", async () => {
   const artifacts = await readArtifacts();
   for (const mutate of [
     (artifact) => (artifact.metadata.activationPrerequisitesArtifactVersion = "stale"),
-    (artifact) => (artifact.metadata.separationOfDutiesPolicyPlaceholderArtifactVersion = "stale"),
+    (artifact) => (artifact.metadata.conflictOfInterestPolicyPlaceholderArtifactVersion = "stale"),
+    (artifact) => (artifact.metadata.separationOfDutiesDecisionProposalArtifactVersion = "stale"),
     (artifact) =>
       (artifact.metadata.reviewerRoleOwnershipDecisionProposalArtifactVersion = "stale"),
-    (artifact) => (artifact.metadata.conflictOfInterestPolicyPlaceholderArtifactVersion = "stale"),
     (artifact) => (artifact.metadata.auditIdentityPolicyPlaceholderArtifactVersion = "stale"),
+    (artifact) =>
+      (artifact.metadata.evidenceStorageRetentionPolicyPlaceholderArtifactVersion = "stale"),
     (artifact) => (artifact.metadata.reviewAuthorityArtifactVersion = "stale"),
     (artifact) => (artifact.metadata.reviewWorkflowStateArtifactVersion = "stale"),
   ]) {
@@ -146,20 +138,36 @@ test("all seven upstream artifact pins are exact", async () => {
     mutate(invalid);
     assert.throws(() => validate(artifacts, invalid));
   }
-
-  const upstream = clone(artifacts.upstream);
-  upstream.separationPlaceholder.policyIdentity.policyState = "ACTIVE";
-  assert.throws(() => validate(artifacts, artifacts.artifact, upstream), /policyState/);
 });
 
-test("readiness activation workflow and prerequisite remain blocked", async () => {
+test("Slice 4 dependency remains exact unresolved and non-authorizing", async () => {
+  const artifacts = await readArtifacts();
+  for (const mutate of [
+    (artifact) =>
+      (artifact.upstreamReferences.separationOfDutiesDecisionProposal.proposalStatus = "APPROVED"),
+    (artifact) =>
+      (artifact.upstreamReferences.separationOfDutiesDecisionProposal.prerequisiteStatus =
+        "SATISFIED"),
+    (artifact) => (artifact.proposedPolicy.separationOfDutiesDependency.dependencySatisfied = true),
+    (artifact) => (artifact.proposedPolicy.separationOfDutiesDependency.enforcementActive = true),
+  ]) {
+    const invalid = clone(artifacts.artifact);
+    mutate(invalid);
+    assert.throws(() => validate(artifacts, invalid));
+  }
+  const upstream = clone(artifacts.upstream);
+  upstream.separationProposal.proposalBoundary.enforcementAllowed = true;
+  assert.throws(() => validate(artifacts, artifacts.artifact, upstream), /enforcementAllowed/);
+});
+
+test("readiness activation workflow and conflict prerequisite remain blocked", async () => {
   const artifacts = await readArtifacts();
   for (const mutate of [
     (artifact) => (artifact.currentBaseline.readiness.status = "READY"),
     (artifact) => artifact.currentBaseline.readiness.blockingReasons.reverse(),
     (artifact) => (artifact.currentBaseline.activation.status = "ACTIVE"),
     (artifact) => (artifact.currentBaseline.activation.workflowStatus = "ACTIVE"),
-    (artifact) => (artifact.currentBaseline.separationOfDutiesPrerequisite.status = "SATISFIED"),
+    (artifact) => (artifact.currentBaseline.conflictOfInterestPrerequisite.status = "SATISFIED"),
     (artifact) => (artifact.currentBaseline.satisfiedPrerequisiteCount = 1),
     (artifact) => (artifact.proposalBoundary.prerequisiteSatisfactionAllowed = true),
   ]) {
@@ -169,23 +177,29 @@ test("readiness activation workflow and prerequisite remain blocked", async () =
   }
 });
 
-test("nine policy areas and unresolved decisions remain exact", async () => {
+test("ten policy areas and unresolved decisions remain exact", async () => {
   const artifacts = await readArtifacts();
   assert.deepEqual(
     artifacts.artifact.unresolvedDecisions.map(({ decisionId }) => decisionId),
     expectedDecisionIds,
   );
-  assert.equal(Object.keys(artifacts.artifact.proposedPolicy).length, 10);
+  assert.equal(Object.keys(artifacts.artifact.proposedPolicy).length, 11);
   for (const mutate of [
     (artifact) => (artifact.unresolvedDecisions[0].state = "APPROVED"),
     (artifact) => artifact.unresolvedDecisions.pop(),
-    (artifact) => (artifact.proposedPolicy.makerCheckerSeparation.ruleActive = true),
+    (artifact) => (artifact.proposedPolicy.conflictRelationshipTaxonomy.ruleActive = true),
+    (artifact) => (artifact.proposedPolicy.selfDisclosureBoundary.selfClearanceAllowed = true),
     (artifact) =>
-      (artifact.proposedPolicy.authorReviewerApproverSeparation.reviewerMayApprove = true),
-    (artifact) => (artifact.proposedPolicy.conflictOfInterestDependency.dependencySatisfied = true),
+      (artifact.proposedPolicy.candidateContentSourceRelationships.identityComparisonAllowed = true),
     (artifact) =>
-      (artifact.proposedPolicy.emergencyExceptionBoundaries.productionBypassAllowed = true),
-    (artifact) => (artifact.proposedPolicy.futurePolicyGateRequirements.policyGatePassed = true),
+      (artifact.proposedPolicy.commercialFinancialRelationships.providerIntegrationAllowed = true),
+    (artifact) =>
+      (artifact.proposedPolicy.recusalReassignmentRequirements.reassignmentAllowed = true),
+    (artifact) => (artifact.proposedPolicy.lateDisclosureHandling.processingActive = true),
+    (artifact) =>
+      (artifact.proposedPolicy.waiverExceptionBoundaries.productionBypassAllowed = true),
+    (artifact) => (artifact.proposedPolicy.escalationAuthority.authorityAssigned = true),
+    (artifact) => (artifact.proposedPolicy.futureAuditEvidenceRequirements.evidenceRecorded = true),
   ]) {
     const invalid = clone(artifacts.artifact);
     mutate(invalid);
@@ -206,7 +220,7 @@ test("synthetic vectors stay marker-complete and non-operational", async () => {
   );
   for (const vector of vectors) assert.deepEqual(vector.markers, expectedMarkers);
   for (const mutate of [
-    (artifact) => delete artifact.syntheticExamples[0].markers.NON_OPERATIONAL,
+    (artifact) => delete artifact.syntheticExamples[0].markers.NOT_EVALUATED,
     (artifact) => (artifact.syntheticExamples[0].abstractInputTokens[0] = "OPERATIVE_TOKEN"),
     (artifact) => (artifact.syntheticExamples[4].rejectionReasonCode = null),
     (artifact) => (artifact.syntheticExamples[0].vectorType = "ACTIVE_VECTOR"),
@@ -221,14 +235,14 @@ test("operational arrays and counts remain empty or zero", async () => {
   const artifacts = await readArtifacts();
   for (const mutate of [
     (artifact) => artifact.policyDecisionRecords.push({ synthetic: true }),
-    (artifact) => artifact.reviewerIdentityRecords.push({ synthetic: true }),
-    (artifact) => artifact.reviewerAssignmentRecords.push({ synthetic: true }),
-    (artifact) => artifact.enforcementEvidenceRecords.push({ synthetic: true }),
+    (artifact) => artifact.conflictDisclosureRecords.push({ synthetic: true }),
+    (artifact) => artifact.recusalRecords.push({ synthetic: true }),
+    (artifact) => artifact.auditEvidenceRecords.push({ synthetic: true }),
     (artifact) => artifact.productionApprovalRecords.push({ synthetic: true }),
-    (artifact) => (artifact.aggregate.activeEnforcementRuleCount = 1),
-    (artifact) => (artifact.aggregate.reviewerIdentityCount = 1),
+    (artifact) => (artifact.aggregate.activeConflictRuleCount = 1),
+    (artifact) => (artifact.aggregate.satisfiedPrerequisiteCount = 1),
     (artifact) => (artifact.aggregate.productionApprovalCount = 1),
-    (artifact) => (artifact.recordBoundary.runtimeSeparationEnforcementEnabled = true),
+    (artifact) => (artifact.recordBoundary.runtimeConflictEvaluationEnabled = true),
   ]) {
     const invalid = clone(artifacts.artifact);
     mutate(invalid);
@@ -259,141 +273,79 @@ test("private runtime and content material fails closed", async () => {
   assert.throws(() => validate(artifacts, runtimeField), /forbidden field term|unexpected/);
 });
 
-test("Slice 4 worktree guard is exact, duplicate-safe and fail-closed", () => {
-  assert.equal(approvedWave6Slice4ChangedPaths.length, 40);
+test("Slice 5 worktree guard is exact duplicate-safe cumulative and fail-closed", () => {
+  assert.equal(approvedWave6Slice5ChangedPaths.length, 42);
   assert.deepEqual(
-    validateSeparationOfDutiesDecisionProposalChangedPaths(approvedWave6Slice4ChangedPaths),
-    approvedWave6Slice4ChangedPaths,
+    validateConflictOfInterestDecisionProposalChangedPaths(approvedWave6Slice5ChangedPaths),
+    approvedWave6Slice5ChangedPaths,
   );
   assert.deepEqual(
-    validateSeparationOfDutiesDecisionProposalWorktreeScope([], {
+    validateConflictOfInterestDecisionProposalWorktreeScope([], {
       env: { GITHUB_ACTIONS: "false" },
     }),
     [],
   );
-  const remediationPaths = [
-    "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
-    "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
-    "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
-  ];
-  assert.deepEqual(
-    validateSeparationOfDutiesDecisionProposalWorktreeScope(remediationPaths, {
-      env: { GITHUB_ACTIONS: "false" },
-    }),
-    remediationPaths,
-  );
   assert.throws(
     () =>
-      validateSeparationOfDutiesDecisionProposalWorktreeScope(
-        ["apps/api/src/diagnostic-review/controller.ts"],
-        { env: { GITHUB_ACTIONS: "false" } },
-      ),
-    /out-of-scope path changed/,
-  );
-  assert.throws(
-    () =>
-      validateSeparationOfDutiesDecisionProposalChangedPaths([
-        ...approvedWave6Slice4ChangedPaths,
-        approvedWave6Slice4ChangedPaths[0],
+      validateConflictOfInterestDecisionProposalChangedPaths([
+        ...approvedWave6Slice5ChangedPaths,
+        approvedWave6Slice5ChangedPaths[0],
       ]),
     /duplicates/,
   );
   assert.throws(
     () =>
-      validateSeparationOfDutiesDecisionProposalChangedPaths(
-        approvedWave6Slice4ChangedPaths.slice(1),
+      validateConflictOfInterestDecisionProposalChangedPaths(
+        approvedWave6Slice5ChangedPaths.slice(1),
       ),
-    /exactly 40 changed paths/,
+    /exactly 42 changed paths/,
   );
   for (const forbiddenPath of [
-    "docs/wave-6/nested/diagnostic-separation-of-duties-policy-decision-proposal.md",
-    "docs/wave-6/slice-5-implementation-note.md",
-    "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/extra.json",
+    "docs/wave-6/nested/diagnostic-conflict-of-interest-policy-decision-proposal.md",
+    "docs/wave-6/slice-6-implementation-note.md",
+    "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-review/controller.ts",
     "packages/contracts/openapi.json",
     "apps/api/prisma/schema.prisma",
     "apps/web/app/diagnostic/review/page.tsx",
-    "packages/curriculum/src/diagnostic-separation-runtime.ts",
+    "packages/curriculum/src/diagnostic-conflict-runtime.ts",
     "pnpm-lock.yaml",
   ]) {
     assert.throws(
-      () => validateSeparationOfDutiesDecisionProposalChangedPaths([forbiddenPath]),
-      /Wave 6 Slice 4 out-of-scope path changed/,
+      () => validateConflictOfInterestDecisionProposalChangedPaths([forbiddenPath]),
+      /Wave 6 Slice 5 out-of-scope path changed/,
       forbiddenPath,
     );
   }
 });
 
-test("Slice 4 guard admits only the exact cumulative Slice 5 continuation", () => {
-  assert.equal(approvedWave6Slice5ChangedPaths.length, 42);
-  assert.deepEqual(
-    validateSeparationOfDutiesDecisionProposalSlice5ChangedPaths(approvedWave6Slice5ChangedPaths),
-    approvedWave6Slice5ChangedPaths,
-  );
-  assert.deepEqual(
-    validateSeparationOfDutiesDecisionProposalWorktreeScope(approvedWave6Slice5ChangedPaths, {
-      env: { GITHUB_ACTIONS: "false" },
-    }),
-    approvedWave6Slice5ChangedPaths,
-  );
-  assert.throws(
-    () =>
-      validateSeparationOfDutiesDecisionProposalSlice5ChangedPaths(
-        approvedWave6Slice5ChangedPaths.slice(1),
-      ),
-    /requires exactly 42 changed paths/,
-  );
-});
-
-test("Slice 4 CI follow-up recovers the exact baseline plus narrow remediation", () => {
-  const ancestor = "1".repeat(40);
-  const baseline = "2".repeat(40);
-  const head = "3".repeat(40);
-  const remediationPaths = [
-    "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
-    "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
-    "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
-  ];
-  let diffCount = 0;
-  const paths = collectSeparationOfDutiesDecisionProposalChangedPaths({
+test("clean CI current-commit range preserves exact Slice 5 validation", () => {
+  const base = "1".repeat(40);
+  const head = "2".repeat(40);
+  const paths = collectConflictOfInterestDecisionProposalChangedPaths({
     cwd: "fixture-repo",
     env: {
       GITHUB_ACTIONS: "true",
-      GITHUB_EVENT_NAME: "push",
-      GITHUB_EVENT_PATH: "event.json",
+      GITHUB_EVENT_NAME: "workflow_dispatch",
       GITHUB_SHA: head,
     },
-    readEvent: () => ({ after: head, before: baseline }),
     runGit: (args) => {
-      if (args[0] === "cat-file" && args[1] === "-p") {
-        return { status: 0, stdout: `tree fixture\nparent ${ancestor}\n`, stderr: "" };
-      }
-      if (args[0] === "cat-file") {
-        return { status: 0, stdout: "", stderr: "" };
+      if (args[0] === "rev-list") {
+        return { status: 0, stdout: `${head} ${base}\n`, stderr: "" };
       }
       if (args[0] === "diff") {
-        diffCount += 1;
-        return {
-          status: 0,
-          stdout:
-            diffCount === 1
-              ? nameStatusOutput(remediationPaths)
-              : nameStatusOutput([
-                  ...approvedWave6Slice4ChangedPaths,
-                  "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
-                ]),
-          stderr: "",
-        };
+        return { status: 0, stdout: nameStatusOutput(approvedWave6Slice5ChangedPaths), stderr: "" };
       }
       return { status: 0, stdout: "", stderr: "" };
     },
   });
-
-  assert.equal(diffCount, 2);
-  assert.deepEqual(paths, [
-    ...approvedWave6Slice4ChangedPaths,
-    "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
-  ]);
+  assert.deepEqual(paths, approvedWave6Slice5ChangedPaths);
+  assert.deepEqual(
+    validateConflictOfInterestDecisionProposalWorktreeScope(paths, {
+      env: { GITHUB_ACTIONS: "true" },
+    }),
+    paths,
+  );
 });
 
 test("root registration is exact and no broad allowlist exists", async () => {
@@ -401,14 +353,14 @@ test("root registration is exact and no broad allowlist exists", async () => {
     await readFile(new URL("../../../package.json", import.meta.url), "utf8"),
   );
   for (const registration of [
-    "node packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs --check-worktree-scope",
-    "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+    "node packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs --check-worktree-scope",
+    "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
   ]) {
     assert.equal(packageJson.scripts.test.split(registration).length - 1, 1, registration);
   }
   const source = await readFile(
     new URL(
-      "../scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+      "../scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
       import.meta.url,
     ),
     "utf8",
