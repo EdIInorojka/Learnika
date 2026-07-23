@@ -4,6 +4,7 @@ import test from "node:test";
 import { URL } from "node:url";
 
 import {
+  collectSeparationOfDutiesDecisionProposalChangedPaths,
   readDiagnosticSeparationOfDutiesPolicyDecisionProposal,
   readDiagnosticSeparationOfDutiesPolicyDecisionProposalUpstream,
   validateDiagnosticSeparationOfDutiesPolicyDecisionProposal,
@@ -76,6 +77,10 @@ const approvedWave6Slice4ChangedPaths = [
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function nameStatusOutput(paths) {
+  return paths.map((value) => `M\0${value}\0`).join("");
 }
 
 async function readArtifacts() {
@@ -252,6 +257,25 @@ test("Slice 4 worktree guard is exact, duplicate-safe and fail-closed", () => {
     }),
     [],
   );
+  const remediationPaths = [
+    "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+  ];
+  assert.deepEqual(
+    validateSeparationOfDutiesDecisionProposalWorktreeScope(remediationPaths, {
+      env: { GITHUB_ACTIONS: "false" },
+    }),
+    remediationPaths,
+  );
+  assert.throws(
+    () =>
+      validateSeparationOfDutiesDecisionProposalWorktreeScope(
+        ["apps/api/src/diagnostic-review/controller.ts"],
+        { env: { GITHUB_ACTIONS: "false" } },
+      ),
+    /out-of-scope path changed/,
+  );
   assert.throws(
     () =>
       validateSeparationOfDutiesDecisionProposalChangedPaths([
@@ -284,6 +308,57 @@ test("Slice 4 worktree guard is exact, duplicate-safe and fail-closed", () => {
       forbiddenPath,
     );
   }
+});
+
+test("Slice 4 CI follow-up recovers the exact baseline plus narrow remediation", () => {
+  const ancestor = "1".repeat(40);
+  const baseline = "2".repeat(40);
+  const head = "3".repeat(40);
+  const remediationPaths = [
+    "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+  ];
+  let diffCount = 0;
+  const paths = collectSeparationOfDutiesDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {
+      GITHUB_ACTIONS: "true",
+      GITHUB_EVENT_NAME: "push",
+      GITHUB_EVENT_PATH: "event.json",
+      GITHUB_SHA: head,
+    },
+    readEvent: () => ({ after: head, before: baseline }),
+    runGit: (args) => {
+      if (args[0] === "cat-file" && args[1] === "-p") {
+        return { status: 0, stdout: `tree fixture\nparent ${ancestor}\n`, stderr: "" };
+      }
+      if (args[0] === "cat-file") {
+        return { status: 0, stdout: "", stderr: "" };
+      }
+      if (args[0] === "diff") {
+        diffCount += 1;
+        return {
+          status: 0,
+          stdout:
+            diffCount === 1
+              ? nameStatusOutput(remediationPaths)
+              : nameStatusOutput([
+                  ...approvedWave6Slice4ChangedPaths,
+                  "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
+                ]),
+          stderr: "",
+        };
+      }
+      return { status: 0, stdout: "", stderr: "" };
+    },
+  });
+
+  assert.equal(diffCount, 2);
+  assert.deepEqual(paths, [
+    ...approvedWave6Slice4ChangedPaths,
+    "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
+  ]);
 });
 
 test("root registration is exact and no broad allowlist exists", async () => {

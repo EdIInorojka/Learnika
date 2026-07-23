@@ -158,6 +158,43 @@ const wave6Slice4ChangedPaths = [
   "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
 ];
 const wave6Slice4ChangedPathSet = new Set(wave6Slice4ChangedPaths);
+const slice4CiRemediationPathSet = new Set([
+  "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-canonicalization-digest-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
+for (const value of slice4CiRemediationPathSet) {
+  followUpRemediationPathSet.add(value);
+}
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -744,6 +781,9 @@ export function validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
   ) {
     return validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths(normalized);
   }
+  if (Array.isArray(normalized) && isSlice4BaselineWithRemediation(normalized)) {
+    return normalized;
+  }
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   return inGitHubActions
     ? validateReviewerRoleOwnershipDecisionProposalChangedPaths(normalized)
@@ -903,6 +943,19 @@ function isNarrowRemediationPathSet(paths) {
   );
 }
 
+function isSlice4BaselineWithRemediation(paths) {
+  const pathSet = new Set(paths);
+  return (
+    pathSet.size === paths.length &&
+    paths.length > wave6Slice4ChangedPaths.length &&
+    wave6Slice4ChangedPaths.every((pathValue) => pathSet.has(pathValue)) &&
+    paths.every(
+      (pathValue) =>
+        wave6Slice4ChangedPathSet.has(pathValue) || slice4CiRemediationPathSet.has(pathValue),
+    )
+  );
+}
+
 function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
   let cumulativeBase = base;
@@ -912,6 +965,7 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
     paths.every((value) => wave6Slice4ChangedPathSet.has(value))
   )
     return validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths(paths);
+  if (isSlice4BaselineWithRemediation(paths)) return paths;
   if (paths.length === changedPaths.length)
     return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
   if (!isNarrowRemediationPathSet(paths))
@@ -932,6 +986,7 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
     requireCommitObject(ancestor, "baseline ancestor", { cwd, runGit });
     cumulativeBase = ancestor;
     paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
+    if (isSlice4BaselineWithRemediation(paths)) return paths;
     if (paths.length === changedPaths.length)
       return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
   }

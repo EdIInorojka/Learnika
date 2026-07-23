@@ -1,15 +1,18 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import { createServer } from "node:net";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
 import { after, before, test } from "node:test";
+import { URL } from "node:url";
 
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-const apiPort = 5300 + Math.floor(Math.random() * 500);
-const baseUrl = `http://127.0.0.1:${apiPort}`;
+const apiPortRangeStart = 5800;
+const apiPortRangeSize = 500;
+const startupDiagnosticMaxChars = 2_048;
 const runId = Date.now();
 const parentAEmail = `mock-ocr-parent-a-${runId}@example.test`;
 const parentBEmail = `mock-ocr-parent-b-${runId}@example.test`;
@@ -48,10 +51,113 @@ const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: databaseUrl }),
 });
 const serverOutput = [];
+let apiPort;
+let baseUrl;
 let server;
 
 function authHeader(accessToken) {
   return { authorization: `Bearer ${accessToken}` };
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function sensitiveDiagnosticValues() {
+  const values = [
+    password,
+    candidateText,
+    parentAEmail,
+    parentBEmail,
+    childANickname,
+    childBNickname,
+    authSecret,
+    databaseUrl,
+  ];
+
+  for (const [key, value] of Object.entries(process.env)) {
+    if (
+      /AUTHORIZATION|COOKIE|DATABASE_URL|EMAIL|NICKNAME|PASSWORD|SECRET|STORAGE_KEY|TOKEN/i.test(
+        key,
+      ) &&
+      typeof value === "string"
+    ) {
+      values.push(value);
+    }
+  }
+
+  for (const value of [databaseUrl, process.env.DATABASE_URL]) {
+    if (!value) {
+      continue;
+    }
+    try {
+      const parsed = new URL(value);
+      values.push(decodeURIComponent(parsed.username), decodeURIComponent(parsed.password));
+    } catch {
+      values.push(value);
+    }
+  }
+
+  return [
+    ...new Set(values.filter((value) => typeof value === "string" && value.length >= 4)),
+  ].sort((left, right) => right.length - left.length);
+}
+
+function sanitizeServerOutput(rawOutput) {
+  let sanitized = String(rawOutput);
+
+  for (const value of sensitiveDiagnosticValues()) {
+    sanitized = sanitized.replace(new RegExp(escapeRegExp(value), "g"), "[redacted]");
+  }
+
+  sanitized = sanitized
+    .replace(/\bBearer\s+[^\s,;]+/gi, "[redacted-auth]")
+    .replace(/\b(?:set-)?cookie\s*[:=]\s*[^\r\n]*/gi, "[redacted-header]")
+    .replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, "[redacted-email]")
+    .replace(/\bpostgres(?:ql)?:\/\/[^\s"'`]+/gi, "[redacted-database-url]")
+    .replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g, "[redacted-token]")
+    .replace(/\b(?:families|children)\/[^\s"'`]+/gi, "[redacted-storage-key]")
+    .replace(
+      /\b(authorization|candidateText|childNickname|databaseUrl|email|mediaBinary|ocrText|password|providerPayload|rawMedia|secret|storageKey|token)\s*[:=]\s*(?:"[^"]*"|'[^']*'|[^\s,;}]+)/gi,
+      "$1=[redacted]",
+    )
+    .trim();
+
+  if (!sanitized) {
+    return "[no server output captured]";
+  }
+  if (sanitized.length <= startupDiagnosticMaxChars) {
+    return sanitized;
+  }
+  return `[truncated]\n${sanitized.slice(-startupDiagnosticMaxChars)}`;
+}
+
+function apiStartupError(reason, rawOutput = serverOutput.join("")) {
+  return new Error(
+    `${reason}\nSanitized server output (bounded):\n${sanitizeServerOutput(rawOutput)}`,
+  );
+}
+
+function canBindApiPort(port) {
+  return new Promise((resolve) => {
+    const probe = createServer();
+    probe.unref();
+    probe.once("error", () => resolve(false));
+    probe.listen({ exclusive: true, host: "127.0.0.1", port }, () => {
+      probe.close((error) => resolve(error === undefined));
+    });
+  });
+}
+
+async function selectAvailableApiPort() {
+  const firstOffset = process.pid % apiPortRangeSize;
+  for (let offset = 0; offset < apiPortRangeSize; offset += 1) {
+    const candidate = apiPortRangeStart + ((firstOffset + offset) % apiPortRangeSize);
+    if (await canBindApiPort(candidate)) {
+      return candidate;
+    }
+  }
+  throw new Error("No available port exists in the isolated mock OCR E2E range.");
 }
 
 async function cleanupSyntheticUsers() {
@@ -95,7 +201,7 @@ async function cleanupSyntheticUsers() {
 async function waitForApi() {
   for (let attempt = 0; attempt < 60; attempt += 1) {
     if (server.exitCode !== null) {
-      throw new Error(`API server exited early with code ${server.exitCode}`);
+      throw apiStartupError(`API server exited early with code ${server.exitCode}.`);
     }
     try {
       const response = await fetch(`${baseUrl}/health/live`);
@@ -106,7 +212,7 @@ async function waitForApi() {
       await delay(250);
     }
   }
-  throw new Error("API server did not become healthy.");
+  throw apiStartupError("API server did not become healthy.");
 }
 
 async function request(urlPath, init = {}) {
@@ -215,6 +321,8 @@ function assertCandidateResponse(response, mediaAssetId) {
 
 before(async () => {
   await cleanupSyntheticUsers();
+  apiPort = await selectAvailableApiPort();
+  baseUrl = `http://127.0.0.1:${apiPort}`;
   server = spawn(process.execPath, ["dist/main.js"], {
     cwd: process.cwd(),
     env: {
@@ -228,6 +336,7 @@ before(async () => {
   });
   server.stdout.on("data", (chunk) => serverOutput.push(String(chunk)));
   server.stderr.on("data", (chunk) => serverOutput.push(String(chunk)));
+  server.on("error", (error) => serverOutput.push(`${error.name}: ${error.message}`));
   await waitForApi();
 });
 
@@ -413,5 +522,53 @@ test("mock OCR candidate API is tenant-safe untrusted read-only and scope-limite
     "Cookie",
   ]) {
     assert.equal(output.includes(leakedValue), false);
+  }
+});
+
+test("early API exit diagnostics are bounded and sanitize forbidden values", () => {
+  const rawDiagnostic = [
+    `Bearer synthetic-header-token`,
+    `Cookie: session=synthetic-cookie`,
+    parentAEmail,
+    parentBEmail,
+    childANickname,
+    childBNickname,
+    authSecret,
+    databaseUrl,
+    candidateText,
+    "password=synthetic-database-password",
+    "storageKey=families/11111111-1111-4111-8111-111111111111/raw.png",
+    'providerPayload={"rawMedia":"synthetic-provider-data"}',
+    "EADDRINUSE: address already in use",
+  ].join("\n");
+  const error = apiStartupError("API server exited early with code 1.", rawDiagnostic);
+  const diagnostic = error.message.split("Sanitized server output (bounded):\n")[1];
+  const bounded = sanitizeServerOutput(
+    `${"x".repeat(startupDiagnosticMaxChars * 2)}\nEADDRINUSE: address already in use`,
+  );
+
+  assert.match(error.message, /API server exited early with code 1\./);
+  assert.match(diagnostic, /EADDRINUSE/);
+  assert.match(bounded, /^\[truncated\]\n/);
+  assert.match(bounded, /EADDRINUSE/);
+  assert.ok(bounded.length <= startupDiagnosticMaxChars + "[truncated]\n".length);
+  for (const forbiddenValue of [
+    "Bearer",
+    "Cookie",
+    "synthetic-header-token",
+    "synthetic-cookie",
+    parentAEmail,
+    parentBEmail,
+    childANickname,
+    childBNickname,
+    authSecret,
+    databaseUrl,
+    "learnika_local_password",
+    candidateText,
+    "synthetic-database-password",
+    "families/11111111-1111-4111-8111-111111111111/raw.png",
+    "synthetic-provider-data",
+  ]) {
+    assert.equal(diagnostic.includes(forbiddenValue), false);
   }
 });

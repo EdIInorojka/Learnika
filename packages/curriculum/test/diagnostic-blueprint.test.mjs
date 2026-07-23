@@ -179,7 +179,9 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
       changedPath,
     );
     assert.equal(
-      isLegacyStaticPath || wave5DocumentationPathsThroughSlice10.has(changedPath),
+      isLegacyStaticPath ||
+        wave5DocumentationPathsThroughSlice10.has(changedPath) ||
+        changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,
       changedPath,
     );

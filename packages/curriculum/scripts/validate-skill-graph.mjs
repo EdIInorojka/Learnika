@@ -35,6 +35,7 @@ const allowedChangedPaths = new Set([
   "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+  "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "docs/wave-5/closure-gate.md",
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-conflict-of-interest-policy-contract.md",

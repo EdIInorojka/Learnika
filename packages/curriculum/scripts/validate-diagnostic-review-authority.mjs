@@ -446,6 +446,7 @@ const wave6Slice2ScopeUnblockPaths = new Set([
   "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+  "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "package.json",
   "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",

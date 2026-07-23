@@ -143,6 +143,40 @@ const changedPaths = [
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];
 const changedPathSet = new Set(changedPaths);
+const ciRemediationPathSet = new Set([
+  "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-canonicalization-digest-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -957,6 +991,42 @@ export function validateSeparationOfDutiesDecisionProposalChangedPaths(paths) {
   return normalized;
 }
 
+function validateCiRemediationChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length) {
+    fail("Changed paths must not contain duplicates.");
+  }
+  if (normalized.length === 0) {
+    fail("Wave 6 Slice 4 CI remediation must contain at least one changed path.");
+  }
+  const unexpected = normalized.filter((value) => !ciRemediationPathSet.has(value));
+  if (unexpected.length > 0) {
+    fail(`Wave 6 Slice 4 CI remediation out-of-scope path changed: ${unexpected[0]}.`);
+  }
+  return normalized;
+}
+
+function isCiRemediationPathSet(paths) {
+  return (
+    Array.isArray(paths) &&
+    new Set(paths).size === paths.length &&
+    paths.length > 0 &&
+    paths.every((value) => ciRemediationPathSet.has(value))
+  );
+}
+
+function isSlice4BaselineWithRemediation(paths) {
+  if (!Array.isArray(paths)) return false;
+  const pathSet = new Set(paths);
+  return (
+    pathSet.size === paths.length &&
+    paths.length > changedPaths.length &&
+    changedPaths.every((value) => pathSet.has(value)) &&
+    paths.every((value) => changedPathSet.has(value) || ciRemediationPathSet.has(value))
+  );
+}
+
 function defaultGitRunner(args, cwd) {
   const result = spawnSync("git", args, { cwd, encoding: "utf8" });
   return {
@@ -1012,6 +1082,23 @@ function requireCommitObject(sha, label, { cwd, runGit }) {
   }
 }
 
+function singleParentCommit(sha, { cwd, runGit }) {
+  const result = runGit(["cat-file", "-p", sha], cwd);
+  if (result.status !== 0) {
+    fail(
+      `BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined: ${result.stderr || result.stdout}`,
+    );
+  }
+  const parents = result.stdout
+    .split(/\r?\n/)
+    .filter((line) => line.startsWith("parent "))
+    .map((line) => line.slice("parent ".length).trim());
+  if (parents.length !== 1 || !isCommitSha(parents[0])) {
+    fail("BLOCK: CI parent commit is unavailable; exact changed-path range cannot be determined.");
+  }
+  return parents[0];
+}
+
 function ciCommitRange({ cwd, env, runGit, readEvent }) {
   const event = env.GITHUB_EVENT_PATH ? readEvent(env.GITHUB_EVENT_PATH) : undefined;
   let base;
@@ -1041,8 +1128,7 @@ function ciCommitRange({ cwd, env, runGit, readEvent }) {
   return { base, head };
 }
 
-function ciChangedPaths({ cwd, env, runGit, readEvent }) {
-  const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
+function diffPaths({ cwd, base, head, runGit }) {
   const result = runGit(
     ["diff", "--name-status", "--find-renames", "--no-ext-diff", "-z", base, head],
     cwd,
@@ -1068,6 +1154,49 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   return paths;
 }
 
+function ciChangedPaths({ cwd, env, runGit, readEvent }) {
+  const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
+  let cumulativeBase = base;
+  let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
+
+  if (paths.length === changedPaths.length && paths.every((value) => changedPathSet.has(value))) {
+    return paths;
+  }
+  if (isSlice4BaselineWithRemediation(paths)) {
+    return paths;
+  }
+  if (!isCiRemediationPathSet(paths)) {
+    return paths;
+  }
+
+  const visited = new Set([head]);
+  while (isCiRemediationPathSet(paths)) {
+    if (visited.has(cumulativeBase)) {
+      fail(
+        "BLOCK: CI follow-up ancestry contains a cycle; exact Slice 4 baseline cannot be determined.",
+      );
+    }
+    visited.add(cumulativeBase);
+    const ancestor = singleParentCommit(cumulativeBase, { cwd, runGit });
+    if (visited.has(ancestor)) {
+      fail(
+        "BLOCK: CI follow-up ancestry contains a cycle; exact Slice 4 baseline cannot be determined.",
+      );
+    }
+    requireCommitObject(ancestor, "baseline ancestor", { cwd, runGit });
+    cumulativeBase = ancestor;
+    paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
+    if (
+      (paths.length === changedPaths.length && paths.every((value) => changedPathSet.has(value))) ||
+      isSlice4BaselineWithRemediation(paths)
+    ) {
+      return paths;
+    }
+  }
+
+  return paths;
+}
+
 export function collectSeparationOfDutiesDecisionProposalChangedPaths({
   cwd = repoRoot,
   env = process.env,
@@ -1085,6 +1214,12 @@ export function validateSeparationOfDutiesDecisionProposalWorktreeScope(
 ) {
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   if (!inGitHubActions && Array.isArray(paths) && paths.length === 0) return [];
+  if (!inGitHubActions && isCiRemediationPathSet(paths)) {
+    return validateCiRemediationChangedPaths(paths);
+  }
+  if (isSlice4BaselineWithRemediation(paths)) {
+    return paths;
+  }
   return validateSeparationOfDutiesDecisionProposalChangedPaths(paths);
 }
 
