@@ -18,6 +18,8 @@ const wave5DocumentationPathsThroughSlice10 = new Set([
   "docs/wave-6/slice-2-implementation-note.md",
   "docs/wave-6/diagnostic-reviewer-role-ownership-policy-decision-proposal.md",
   "docs/wave-6/slice-3-implementation-note.md",
+  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+  "docs/wave-6/slice-4-implementation-note.md",
   "docs/wave-5/closure-gate.md",
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",

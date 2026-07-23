@@ -9,6 +9,7 @@ import {
   collectReviewerRoleOwnershipDecisionProposalChangedPaths,
   validateDiagnosticReviewerRoleOwnershipDecisionProposal,
   validateReviewerRoleOwnershipDecisionProposalChangedPaths,
+  validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths,
   validateReviewerRoleOwnershipDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs";
 
@@ -65,6 +66,19 @@ const approvedWave6Slice3FollowUpPaths = [
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
   "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+];
+const slice3PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-reviewer-role-ownership-policy-decision-proposal.md",
+  "docs/wave-6/slice-3-implementation-note.md",
+  "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+]);
+const approvedWave6Slice4ChangedPaths = [
+  ...approvedWave6Slice3ChangedPaths.filter((path) => !slice3PrimaryOnlyPaths.has(path)),
+  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+  "docs/wave-6/slice-4-implementation-note.md",
+  "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -273,6 +287,29 @@ test("scope guard admits only the exact cumulative Slice 3 worktree", () => {
       /Wave 6 Slice 3 out-of-scope path changed/,
     );
   }
+});
+
+test("Slice 3 guard admits the exact cumulative Slice 4 continuation separately", () => {
+  assert.equal(approvedWave6Slice4ChangedPaths.length, 40);
+  assert.deepEqual(
+    validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths(
+      approvedWave6Slice4ChangedPaths,
+    ),
+    approvedWave6Slice4ChangedPaths,
+  );
+  assert.deepEqual(
+    validateReviewerRoleOwnershipDecisionProposalWorktreeScope(approvedWave6Slice4ChangedPaths, {
+      env: {},
+    }),
+    approvedWave6Slice4ChangedPaths,
+  );
+  assert.throws(
+    () =>
+      validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths(
+        approvedWave6Slice4ChangedPaths.slice(1),
+      ),
+    /requires exactly 40 changed paths/,
+  );
 });
 
 test("changed-path collection uses local dirty-worktree status outside GitHub Actions", () => {

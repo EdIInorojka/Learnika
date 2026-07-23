@@ -17,6 +17,8 @@ const staticDocumentationPathsThroughWave6Slice2 = [
   "docs/wave-6/slice-2-implementation-note.md",
   "docs/wave-6/diagnostic-reviewer-role-ownership-policy-decision-proposal.md",
   "docs/wave-6/slice-3-implementation-note.md",
+  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+  "docs/wave-6/slice-4-implementation-note.md",
   "docs/wave-5/closure-gate.md",
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
@@ -150,12 +152,12 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
   }
 });
 
-test("scope guard permits only thirty-eight exact documentation paths through Wave 6 Slice 3", () => {
+test("scope guard permits only forty exact documentation paths through Wave 6 Slice 4", () => {
   assert.deepEqual(
     validateSkillGraphChangedPaths(staticDocumentationPathsThroughWave6Slice2),
     staticDocumentationPathsThroughWave6Slice2,
   );
-  assert.equal(staticDocumentationPathsThroughWave6Slice2.length, 38);
+  assert.equal(staticDocumentationPathsThroughWave6Slice2.length, 40);
 
   const forbiddenPaths = [
     "docs/wave-5/slice-15-implementation-note.md",

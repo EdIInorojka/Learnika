@@ -144,6 +144,20 @@ const followUpRemediationPathSet = new Set([
   "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
   "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
 ]);
+const slice3PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-reviewer-role-ownership-policy-decision-proposal.md",
+  "docs/wave-6/slice-3-implementation-note.md",
+  "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+]);
+const wave6Slice4ChangedPaths = [
+  ...changedPaths.filter((changedPath) => !slice3PrimaryOnlyPaths.has(changedPath)),
+  "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+  "docs/wave-6/slice-4-implementation-note.md",
+  "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
+];
+const wave6Slice4ChangedPathSet = new Set(wave6Slice4ChangedPaths);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -693,6 +707,18 @@ export function validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths)
   return normalized;
 }
 
+export function validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  const unexpected = normalized.filter((value) => !wave6Slice4ChangedPathSet.has(value));
+  if (unexpected.length > 0) fail(`Wave 6 Slice 4 out-of-scope path changed: ${unexpected[0]}`);
+  if (new Set(normalized).size !== normalized.length)
+    fail("Changed paths must not contain duplicates.");
+  if (normalized.length !== wave6Slice4ChangedPaths.length)
+    fail(`Wave 6 Slice 4 requires exactly ${wave6Slice4ChangedPaths.length} changed paths.`);
+  return normalized;
+}
+
 function validateLocalRemediationChangedPaths(paths) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
@@ -708,10 +734,20 @@ export function validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
   paths,
   { env = process.env } = {},
 ) {
+  const normalized = Array.isArray(paths)
+    ? paths.map((value) => String(value).replaceAll("\\", "/"))
+    : paths;
+  if (
+    Array.isArray(normalized) &&
+    normalized.length === wave6Slice4ChangedPaths.length &&
+    normalized.every((value) => wave6Slice4ChangedPathSet.has(value))
+  ) {
+    return validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths(normalized);
+  }
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   return inGitHubActions
-    ? validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths)
-    : validateLocalRemediationChangedPaths(paths);
+    ? validateReviewerRoleOwnershipDecisionProposalChangedPaths(normalized)
+    : validateLocalRemediationChangedPaths(normalized);
 }
 
 function defaultGitRunner(args, cwd) {
@@ -871,6 +907,11 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
   let cumulativeBase = base;
   let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
+  if (
+    paths.length === wave6Slice4ChangedPaths.length &&
+    paths.every((value) => wave6Slice4ChangedPathSet.has(value))
+  )
+    return validateReviewerRoleOwnershipDecisionProposalSlice4ChangedPaths(paths);
   if (paths.length === changedPaths.length)
     return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
   if (!isNarrowRemediationPathSet(paths))

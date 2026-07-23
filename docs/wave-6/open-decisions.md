@@ -177,3 +177,49 @@ activating a ruleset or recording an owner.
 
 Define independent opaque reviewer and audit identity references and enforce
 separation of duties without creating identities or bindings.
+
+## W6-S4-OD-MAKER-CHECKER-SEPARATION
+
+Approve the exact maker/checker independence rule, comparison boundary and
+fail-closed behavior without creating an author, reviewer or assignment.
+
+## W6-S4-OD-AUTHOR-REVIEWER-APPROVER-SEPARATION
+
+Decide the exact three-stage incompatibility requirements, including revision
+scope and decision-time re-evaluation, before any rule can become active.
+
+## W6-S4-OD-REVIEWER-ROLE-INCOMPATIBILITIES
+
+Approve a closed incompatibility matrix and quorum de-duplication behavior for
+the seven role placeholders without granting a role or authority.
+
+## W6-S4-OD-AUDIT-OBSERVER-SEPARATION
+
+Define the non-deciding audit-observer boundary and its dependency on the
+separately unresolved audit-identity policy.
+
+## W6-S4-OD-CONFLICT-OF-INTEREST-DEPENDENCY
+
+Define how the future separation policy consumes conflict disclosure, recusal
+and reassignment outcomes while unresolved conflicts continue to fail closed.
+
+## W6-S4-OD-EMERGENCY-EXCEPTION-BOUNDARIES
+
+Decide whether any exception can exist and, if so, its authority, duration,
+independent review and absolute prohibition on gate or production bypass.
+
+## W6-S4-OD-VIOLATION-HANDLING
+
+Define detection, containment, affected-decision review, invalidation,
+remediation, escalation and audit preservation without processing a violation.
+
+## W6-S4-OD-FUTURE-ENFORCEMENT-EVIDENCE
+
+Approve the deterministic synthetic positive and negative evidence required
+for assignment-time and decision-time enforcement.
+
+## W6-S4-OD-FUTURE-POLICY-GATE
+
+Define the separate governance, security and QA approval gate while keeping
+policy approval distinct from prerequisite satisfaction, activation and
+readiness.

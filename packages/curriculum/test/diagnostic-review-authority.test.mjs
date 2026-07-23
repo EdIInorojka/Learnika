@@ -1147,7 +1147,7 @@ test("all governance scope guards retain the exact Wave 6 Slice 1 worktree admis
 
   const forbiddenPaths = [
     "docs/wave-6/archive/scope-and-non-goals.md",
-    "docs/wave-6/slice-4-implementation-note.md",
+    "docs/wave-6/slice-5-implementation-note.md",
     "docs/wave-6/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-candidate-identity/controller.ts",
     "packages/contracts/openapi.json",
@@ -1167,7 +1167,7 @@ test("all governance scope guards retain the exact Wave 6 Slice 1 worktree admis
   }
 });
 
-test("all governance scope guards retain exact cumulative admission through Wave 6 Slice 3", () => {
+test("all governance scope guards retain exact cumulative admission through Wave 6 Slice 4", () => {
   const approvedPaths = [
     "docs/wave-6/diagnostic-canonicalization-digest-policy-decision-proposal.md",
     "docs/wave-6/open-decisions.md",
@@ -1177,6 +1177,11 @@ test("all governance scope guards retain exact cumulative admission through Wave
     "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
     "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
     "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
+    "docs/wave-6/diagnostic-separation-of-duties-policy-decision-proposal.md",
+    "docs/wave-6/slice-4-implementation-note.md",
+    "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
     "package.json",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
     "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -1211,7 +1216,7 @@ test("all governance scope guards retain exact cumulative admission through Wave
     "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
     "packages/curriculum/test/skill-graph-seed.test.mjs",
   ];
-  assert.equal(approvedPaths.length, 41);
+  assert.equal(approvedPaths.length, 46);
   const validators = [
     validateReviewCoverageChangedPaths,
     validateReviewEvidenceChangedPaths,
@@ -1242,7 +1247,7 @@ test("all governance scope guards retain exact cumulative admission through Wave
 
   const forbiddenPaths = [
     "docs/wave-6/archive/diagnostic-canonicalization-digest-policy-decision-proposal.md",
-    "docs/wave-6/slice-4-implementation-note.md",
+    "docs/wave-6/slice-5-implementation-note.md",
     "docs/wave-6/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-canonicalization/controller.ts",
