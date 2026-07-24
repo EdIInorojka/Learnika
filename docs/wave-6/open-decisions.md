@@ -352,3 +352,64 @@ current placeholder remains non-authorizing.
 Define how an approved audit identity policy consumes future Slice 4
 separation and Slice 5 conflict outcomes. Unresolved dependency state must
 fail closed, and no proposal may authorize another.
+
+## W6-S7-OD-EVIDENCE-TAXONOMY
+
+Approve evidence classes, sufficiency criteria, provenance boundaries and
+minimum necessary metadata without creating an evidence schema or record.
+
+## W6-S7-OD-STORAGE-CLASSIFICATION
+
+Define storage sensitivity classes, location and encryption requirements,
+access boundaries and residency constraints without selecting a backend,
+bucket, region or storage key.
+
+## W6-S7-OD-RECORD-ACCESS
+
+Define least-privilege read, write, review, support and emergency access,
+purpose limitation, authorization snapshots and access logging without
+granting access or exposing evidence.
+
+## W6-S7-OD-RETENTION-EXPIRY
+
+Approve category-specific triggers, durations, expiry semantics, renewal,
+clock source, failure handling and backup propagation before scheduling
+retention.
+
+## W6-S7-OD-DELETION-EXECUTION
+
+Define verified request authority, scope, retries, idempotency, orphan
+handling, deletion verification and historical traceability without creating
+a deletion request or execution.
+
+## W6-S7-OD-LEGAL-HOLD
+
+Decide legal-hold authority, trigger, scope, precedence, release,
+reconciliation and audit requirements without recording a hold or blocking
+deletion.
+
+## W6-S7-OD-AUDIT-TRAIL
+
+Define minimum event metadata, attribution, integrity, access and retention
+for storage, retention and deletion events without creating an audit event or
+linking a real identity.
+
+## W6-S7-OD-EXPORT-REDACTION
+
+Approve eligible recipients, purpose, redaction, review, disclosure limits,
+access logging and the boundary between export, redaction and deletion
+without enabling an export.
+
+## W6-S7-OD-RECOVERY-RESTORE
+
+Define backup protection, restore authority, deletion propagation, orphan
+detection, replay safety and partial-failure reconciliation without creating a
+backup, restore or recovery record.
+
+## W6-S7-OD-GOVERNANCE-DEPENDENCIES
+
+Define how evidence storage and retention consumes the unresolved Slice 6
+audit identity policy plus the Slice 4 separation-of-duties and Slice 5
+conflict-of-interest policies. No evidence access, attribution, deletion or
+export may proceed before the relevant dependency is separately approved;
+unresolved dependencies must fail closed and cannot authorize one another.

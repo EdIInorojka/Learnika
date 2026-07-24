@@ -173,6 +173,20 @@ const slice6ChangedPaths = [
   "packages/curriculum/test/diagnostic-audit-identity-policy-decision-proposal.test.mjs",
 ];
 const slice6ChangedPathSet = new Set(slice6ChangedPaths);
+const slice6PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-audit-identity-policy-decision-proposal.md",
+  "docs/wave-6/slice-6-implementation-note.md",
+  "packages/curriculum/diagnostic-audit-identity-policy-decision-proposal/grade-7-9-math.audit-identity-policy-decision-proposal.v1.json",
+]);
+const slice7ChangedPaths = [
+  ...slice6ChangedPaths.filter((changedPath) => !slice6PrimaryOnlyPaths.has(changedPath)),
+  "docs/wave-6/diagnostic-evidence-storage-retention-policy-decision-proposal.md",
+  "docs/wave-6/slice-7-implementation-note.md",
+  "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-evidence-storage-retention-policy-decision-proposal.test.mjs",
+];
+const slice7ChangedPathSet = new Set(slice7ChangedPaths);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -1093,6 +1107,22 @@ export function validateConflictOfInterestDecisionProposalSlice6ChangedPaths(pat
   return normalized;
 }
 
+export function validateConflictOfInterestDecisionProposalSlice7ChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length) {
+    fail("Changed paths must not contain duplicates.");
+  }
+  const unexpected = normalized.filter((value) => !slice7ChangedPathSet.has(value));
+  if (unexpected.length > 0) {
+    fail(`Wave 6 Slice 7 out-of-scope path changed: ${unexpected[0]}.`);
+  }
+  if (normalized.length !== slice7ChangedPaths.length) {
+    fail(`Wave 6 Slice 7 requires exactly ${slice7ChangedPaths.length} changed paths.`);
+  }
+  return normalized;
+}
+
 function defaultGitRunner(args, cwd) {
   const result = spawnSync("git", args, { cwd, encoding: "utf8" });
   return {
@@ -1210,6 +1240,12 @@ export function collectConflictOfInterestDecisionProposalChangedPaths({
   }
   const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
   const paths = diffPaths({ cwd, base, head, runGit });
+  if (
+    paths.length === slice7ChangedPaths.length &&
+    paths.every((value) => slice7ChangedPathSet.has(value))
+  ) {
+    return validateConflictOfInterestDecisionProposalSlice7ChangedPaths(paths);
+  }
   return paths.length === slice6ChangedPaths.length &&
     paths.every((value) => slice6ChangedPathSet.has(value))
     ? validateConflictOfInterestDecisionProposalSlice6ChangedPaths(paths)
@@ -1222,6 +1258,13 @@ export function validateConflictOfInterestDecisionProposalWorktreeScope(
 ) {
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   if (!inGitHubActions && Array.isArray(paths) && paths.length === 0) return [];
+  if (
+    Array.isArray(paths) &&
+    paths.length === slice7ChangedPaths.length &&
+    paths.every((value) => slice7ChangedPathSet.has(value))
+  ) {
+    return validateConflictOfInterestDecisionProposalSlice7ChangedPaths(paths);
+  }
   if (
     Array.isArray(paths) &&
     paths.length === slice6ChangedPaths.length &&

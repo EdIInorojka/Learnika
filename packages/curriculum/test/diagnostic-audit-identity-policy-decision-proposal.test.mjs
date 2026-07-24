@@ -9,6 +9,7 @@ import {
   readDiagnosticAuditIdentityPolicyDecisionProposalUpstream,
   validateDiagnosticAuditIdentityDecisionProposalWorktreeScope,
   validateDiagnosticAuditIdentityDecisionProposalChangedPaths,
+  validateDiagnosticAuditIdentityDecisionProposalSlice7ChangedPaths,
   validateDiagnosticAuditIdentityPolicyDecisionProposal,
 } from "../scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs";
 
@@ -71,6 +72,19 @@ const approvedSlice6ChangedPaths = [
   "packages/curriculum/test/diagnostic-separation-of-duties-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
+];
+const slice6PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-audit-identity-policy-decision-proposal.md",
+  "docs/wave-6/slice-6-implementation-note.md",
+  "packages/curriculum/diagnostic-audit-identity-policy-decision-proposal/grade-7-9-math.audit-identity-policy-decision-proposal.v1.json",
+]);
+const approvedSlice7ChangedPaths = [
+  ...approvedSlice6ChangedPaths.filter((value) => !slice6PrimaryOnlyPaths.has(value)),
+  "docs/wave-6/diagnostic-evidence-storage-retention-policy-decision-proposal.md",
+  "docs/wave-6/slice-7-implementation-note.md",
+  "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-evidence-storage-retention-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -314,6 +328,20 @@ test("Slice 6 scope is exact, duplicate-safe and rejects broad/runtime paths", (
       forbiddenPath,
     );
   }
+});
+
+test("Slice 6 guard admits the separate exact Slice 7 continuation", () => {
+  assert.equal(approvedSlice7ChangedPaths.length, 46);
+  assert.deepEqual(
+    validateDiagnosticAuditIdentityDecisionProposalSlice7ChangedPaths(approvedSlice7ChangedPaths),
+    approvedSlice7ChangedPaths,
+  );
+  assert.deepEqual(
+    validateDiagnosticAuditIdentityDecisionProposalWorktreeScope(approvedSlice7ChangedPaths, {
+      env: { GITHUB_ACTIONS: "false" },
+    }),
+    approvedSlice7ChangedPaths,
+  );
 });
 
 test("clean CI commit range and unavailable range fail closed", () => {

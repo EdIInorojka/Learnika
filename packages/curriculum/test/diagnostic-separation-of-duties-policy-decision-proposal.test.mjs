@@ -11,6 +11,7 @@ import {
   validateSeparationOfDutiesDecisionProposalChangedPaths,
   validateSeparationOfDutiesDecisionProposalSlice5ChangedPaths,
   validateSeparationOfDutiesDecisionProposalSlice6ChangedPaths,
+  validateSeparationOfDutiesDecisionProposalSlice7ChangedPaths,
   validateSeparationOfDutiesDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs";
 
@@ -101,6 +102,19 @@ const approvedWave6Slice6ChangedPaths = [
   "packages/curriculum/diagnostic-audit-identity-policy-decision-proposal/grade-7-9-math.audit-identity-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-audit-identity-policy-decision-proposal.test.mjs",
+];
+const slice6PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-audit-identity-policy-decision-proposal.md",
+  "docs/wave-6/slice-6-implementation-note.md",
+  "packages/curriculum/diagnostic-audit-identity-policy-decision-proposal/grade-7-9-math.audit-identity-policy-decision-proposal.v1.json",
+]);
+const approvedWave6Slice7ChangedPaths = [
+  ...approvedWave6Slice6ChangedPaths.filter((path) => !slice6PrimaryOnlyPaths.has(path)),
+  "docs/wave-6/diagnostic-evidence-storage-retention-policy-decision-proposal.md",
+  "docs/wave-6/slice-7-implementation-note.md",
+  "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-evidence-storage-retention-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -377,6 +391,20 @@ test("Slice 4 guard admits only the exact cumulative Slice 6 continuation", () =
         approvedWave6Slice6ChangedPaths.slice(1),
       ),
     /requires exactly 44 changed paths/,
+  );
+});
+
+test("Slice 4 guard admits only the exact cumulative Slice 7 continuation", () => {
+  assert.equal(approvedWave6Slice7ChangedPaths.length, 46);
+  assert.deepEqual(
+    validateSeparationOfDutiesDecisionProposalSlice7ChangedPaths(approvedWave6Slice7ChangedPaths),
+    approvedWave6Slice7ChangedPaths,
+  );
+  assert.deepEqual(
+    validateSeparationOfDutiesDecisionProposalWorktreeScope(approvedWave6Slice7ChangedPaths, {
+      env: { GITHUB_ACTIONS: "false" },
+    }),
+    approvedWave6Slice7ChangedPaths,
   );
 });
 

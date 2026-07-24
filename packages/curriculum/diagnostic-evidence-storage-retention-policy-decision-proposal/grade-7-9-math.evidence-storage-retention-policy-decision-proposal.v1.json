@@ -1,0 +1,580 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticEvidenceStorageRetentionPolicyDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-7.grade-7-9-math.v1",
+    "proposalId": "diagnostic-evidence-storage-retention-policy-decision-proposal",
+    "proposalVersion": "wave-6.slice-7.diagnostic-evidence-storage-retention-policy.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_evidence_storage_retention_policy_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "evidenceStorageRetentionPolicyPlaceholderArtifactVersion": "wave-5.slice-9.grade-7-9-math.v1",
+    "separationOfDutiesDecisionProposalArtifactVersion": "wave-6.slice-4.grade-7-9-math.v1",
+    "conflictOfInterestDecisionProposalArtifactVersion": "wave-6.slice-5.grade-7-9-math.v1",
+    "auditIdentityDecisionProposalArtifactVersion": "wave-6.slice-6.grade-7-9-math.v1",
+    "reviewAuthorityArtifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+    "reviewWorkflowStateArtifactVersion": "wave-4.slice-7.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-6/diagnostic-evidence-storage-retention-policy-decision-proposal.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "upstreamReferences": {
+    "activationPrerequisites": {
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "artifactStatus": "blocked_prerequisites_only_non_production",
+      "prerequisiteId": "evidence_storage_and_retention_policy",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "satisfiedPrerequisiteCount": 0,
+      "productionApprovalCount": 0
+    },
+    "evidenceStorageRetentionPlaceholder": {
+      "artifactVersion": "wave-5.slice-9.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-9.diagnostic-evidence-storage-and-retention.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activeStorageRuleCount": 0,
+      "evidenceRecordCount": 0,
+      "storageObjectCount": 0,
+      "retentionScheduleCount": 0,
+      "deletionExecutionCount": 0,
+      "legalHoldCount": 0,
+      "auditEventCount": 0,
+      "productionApprovalCount": 0
+    },
+    "separationOfDutiesDecisionProposal": {
+      "artifactVersion": "wave-6.slice-4.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-4.diagnostic-separation-of-duties-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "enforcementAllowed": false,
+      "unresolvedDecisionCount": 9,
+      "productionApprovalCount": 0
+    },
+    "conflictOfInterestDecisionProposal": {
+      "artifactVersion": "wave-6.slice-5.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-5.diagnostic-conflict-of-interest-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "identityComparisonAllowed": false,
+      "unresolvedDecisionCount": 10,
+      "productionApprovalCount": 0
+    },
+    "auditIdentityDecisionProposal": {
+      "artifactVersion": "wave-6.slice-6.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-6.diagnostic-audit-identity-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "identityBindingAllowed": false,
+      "auditEventRecordingAllowed": false,
+      "unresolvedDecisionCount": 12,
+      "productionApprovalCount": 0
+    },
+    "reviewAuthority": {
+      "artifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "reviewDecisionAuthorityAllowed": false,
+      "productionApprovalCount": 0
+    },
+    "reviewWorkflowState": {
+      "artifactVersion": "wave-4.slice-7.grade-7-9-math.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "runtimeActivationAllowed": false,
+      "productionApprovalCount": 0
+    }
+  },
+  "currentBaseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": {
+      "status": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "evidenceStorageRetentionPrerequisite": {
+      "prerequisiteId": "evidence_storage_and_retention_policy",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRecordRefs": []
+    },
+    "satisfiedPrerequisiteCount": 0,
+    "approvedCandidateCount": 0,
+    "productionApprovalCount": 0
+  },
+  "proposalBoundary": {
+    "proposalStatus": "PROPOSED_DEFERRED",
+    "policyApproved": false,
+    "evidenceTaxonomyApproved": false,
+    "storageClassificationApproved": false,
+    "recordAccessAllowed": false,
+    "retentionSchedulingAllowed": false,
+    "expiryEnforcementAllowed": false,
+    "deletionRequestAllowed": false,
+    "deletionExecutionAllowed": false,
+    "legalHoldAllowed": false,
+    "auditTrailRecordingAllowed": false,
+    "exportAllowed": false,
+    "redactionAllowed": false,
+    "recoveryAllowed": false,
+    "restoreAllowed": false,
+    "prerequisiteSatisfactionAllowed": false,
+    "workflowActivationAllowed": false,
+    "productionApprovalAllowed": false,
+    "readinessTransitionAllowed": false
+  },
+  "evidenceTaxonomyPlaceholders": [
+    {
+      "typePlaceholderId": "METHODOLOGY_EVIDENCE_PLACEHOLDER",
+      "scope": "methodology",
+      "recordState": "TAXONOMY_ONLY",
+      "schemaReference": null,
+      "collectionAllowed": false
+    },
+    {
+      "typePlaceholderId": "SAFETY_NO_ANSWER_EVIDENCE_PLACEHOLDER",
+      "scope": "safety",
+      "recordState": "TAXONOMY_ONLY",
+      "schemaReference": null,
+      "collectionAllowed": false
+    },
+    {
+      "typePlaceholderId": "RIGHTS_COPYRIGHT_EVIDENCE_PLACEHOLDER",
+      "scope": "rights",
+      "recordState": "TAXONOMY_ONLY",
+      "schemaReference": null,
+      "collectionAllowed": false
+    },
+    {
+      "typePlaceholderId": "GRADE_PLACEMENT_EVIDENCE_PLACEHOLDER",
+      "scope": "placement",
+      "recordState": "TAXONOMY_ONLY",
+      "schemaReference": null,
+      "collectionAllowed": false
+    },
+    {
+      "typePlaceholderId": "ACCESSIBILITY_READABILITY_EVIDENCE_PLACEHOLDER",
+      "scope": "accessibility",
+      "recordState": "TAXONOMY_ONLY",
+      "schemaReference": null,
+      "collectionAllowed": false
+    },
+    {
+      "typePlaceholderId": "PRODUCTION_APPROVAL_SUPPORTING_EVIDENCE_PLACEHOLDER",
+      "scope": "production_approval_support",
+      "recordState": "TAXONOMY_ONLY",
+      "schemaReference": null,
+      "collectionAllowed": false
+    }
+  ],
+  "storageClassificationPlaceholders": [
+    {
+      "classPlaceholderId": "REVIEW_EVIDENCE_STORAGE_CLASS_PLACEHOLDER",
+      "scope": "review_evidence",
+      "recordState": "TAXONOMY_ONLY",
+      "locationReference": null,
+      "encryptionReference": null,
+      "accessReference": null,
+      "storageAllowed": false
+    },
+    {
+      "classPlaceholderId": "RIGHTS_SENSITIVE_EVIDENCE_STORAGE_CLASS_PLACEHOLDER",
+      "scope": "rights_sensitive",
+      "recordState": "TAXONOMY_ONLY",
+      "locationReference": null,
+      "encryptionReference": null,
+      "accessReference": null,
+      "storageAllowed": false
+    },
+    {
+      "classPlaceholderId": "IDENTITY_LINKAGE_STORAGE_CLASS_PLACEHOLDER",
+      "scope": "identity_linkage",
+      "recordState": "TAXONOMY_ONLY",
+      "locationReference": null,
+      "encryptionReference": null,
+      "accessReference": null,
+      "storageAllowed": false
+    }
+  ],
+  "proposedPolicy": {
+    "state": "PROPOSED_NOT_APPROVED",
+    "evidenceTaxonomy": {
+      "decisionId": "evidence_taxonomy",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "CLOSED_EVIDENCE_CLASS_AND_SUFFICIENCY_BOUNDARY",
+      "ruleActive": false
+    },
+    "storageClassificationTaxonomy": {
+      "decisionId": "storage_classification_taxonomy",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "SENSITIVITY_LOCATION_AND_ACCESS_CLASSIFICATION",
+      "ruleActive": false
+    },
+    "recordAccessBoundary": {
+      "decisionId": "record_access_boundary",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "PURPOSE_LIMITED_LEAST_PRIVILEGE_ACCESS",
+      "accessRuleActive": false
+    },
+    "retentionDurationExpiry": {
+      "decisionId": "retention_duration_expiry",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "CATEGORY_TRIGGER_DURATION_EXPIRY_RENEWAL",
+      "schedulingAllowed": false
+    },
+    "deletionRequestExecution": {
+      "decisionId": "deletion_request_execution",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "VERIFIED_BOUNDED_IDEMPOTENT_DELETION",
+      "executionAllowed": false
+    },
+    "legalHoldBoundary": {
+      "decisionId": "legal_hold_boundary",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "SCOPED_AUTHORIZED_PRECEDENCE_AND_RELEASE",
+      "enforcementAllowed": false
+    },
+    "auditTrailBoundary": {
+      "decisionId": "audit_trail_boundary",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "MINIMUM_ATTRIBUTED_LIFECYCLE_EVENT_METADATA",
+      "recordingAllowed": false
+    },
+    "exportRedactionBoundary": {
+      "decisionId": "export_redaction_boundary",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "ELIGIBLE_RECIPIENT_REVIEWED_BOUNDED_DISCLOSURE",
+      "exportAllowed": false
+    },
+    "recoveryRestoreBoundary": {
+      "decisionId": "recovery_restore_boundary",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "PROTECTED_RESTORE_ORPHAN_AND_REPLAY_RECONCILIATION",
+      "recoveryAllowed": false
+    },
+    "identitySeparationDependencies": {
+      "decisionId": "identity_separation_dependencies",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "shape": "AUDIT_IDENTITY_AND_ROLE_CONFLICT_GATES",
+      "dependencySatisfied": false
+    }
+  },
+  "unresolvedDecisions": [
+    {
+      "decisionId": "evidence_taxonomy",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "storage_classification_taxonomy",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "record_access_boundary",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "retention_duration_expiry",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "deletion_request_execution",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "legal_hold_boundary",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "audit_trail_boundary",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "export_redaction_boundary",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "recovery_restore_boundary",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "identity_separation_dependencies",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    }
+  ],
+  "syntheticExamples": [
+    {
+      "vectorRef": "synthetic-evidence-taxonomy-shape",
+      "scenarioCode": "EVIDENCE_TAXONOMY_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_EVIDENCE_CLASS", "SYNTHETIC_SUFFICIENCY_BOUNDARY"],
+      "expectedDisposition": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_STORED": true,
+        "NOT_SCHEDULED": true,
+        "NOT_DELETED": true,
+        "NOT_EXPORTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-storage-class-shape",
+      "scenarioCode": "STORAGE_CLASSIFICATION_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_STORAGE_CLASS", "SYNTHETIC_ACCESS_BOUNDARY"],
+      "expectedDisposition": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_STORED": true,
+        "NOT_SCHEDULED": true,
+        "NOT_DELETED": true,
+        "NOT_EXPORTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-retention-expiry-shape",
+      "scenarioCode": "RETENTION_EXPIRY_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_RETENTION_TRIGGER", "SYNTHETIC_EXPIRY_BOUNDARY"],
+      "expectedDisposition": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_STORED": true,
+        "NOT_SCHEDULED": true,
+        "NOT_DELETED": true,
+        "NOT_EXPORTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-recovery-restore-shape",
+      "scenarioCode": "RECOVERY_RESTORE_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_BACKUP_BOUNDARY", "SYNTHETIC_RECONCILIATION_BOUNDARY"],
+      "expectedDisposition": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_STORED": true,
+        "NOT_SCHEDULED": true,
+        "NOT_DELETED": true,
+        "NOT_EXPORTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-evidence-record",
+      "scenarioCode": "EVIDENCE_RECORD_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_EVIDENCE_RECORD_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "EVIDENCE_RECORD_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_STORED": true,
+        "NOT_SCHEDULED": true,
+        "NOT_DELETED": true,
+        "NOT_EXPORTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-retention-schedule",
+      "scenarioCode": "RETENTION_SCHEDULE_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_RETENTION_SCHEDULE_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "RETENTION_SCHEDULE_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_STORED": true,
+        "NOT_SCHEDULED": true,
+        "NOT_DELETED": true,
+        "NOT_EXPORTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-legal-hold",
+      "scenarioCode": "LEGAL_HOLD_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_LEGAL_HOLD_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "LEGAL_HOLD_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_STORED": true,
+        "NOT_SCHEDULED": true,
+        "NOT_DELETED": true,
+        "NOT_EXPORTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-private-content",
+      "scenarioCode": "PRIVATE_OR_CONTENT_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_PRIVATE_CONTENT_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "PRIVATE_CONTENT_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_STORED": true,
+        "NOT_SCHEDULED": true,
+        "NOT_DELETED": true,
+        "NOT_EXPORTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    }
+  ],
+  "recordBoundary": {
+    "runtimeStorageEnabled": false,
+    "evidenceCollectionEnabled": false,
+    "storageObjectCreationEnabled": false,
+    "retentionSchedulingEnabled": false,
+    "deletionExecutionEnabled": false,
+    "legalHoldRecordingEnabled": false,
+    "auditTrailRecordingEnabled": false,
+    "exportExecutionEnabled": false,
+    "recoveryExecutionEnabled": false
+  },
+  "aggregate": {
+    "syntheticExampleCount": 8,
+    "acceptedSyntheticExampleCount": 4,
+    "rejectedSyntheticExampleCount": 4,
+    "unresolvedDecisionCount": 10,
+    "evidenceTypePlaceholderCount": 6,
+    "storageClassPlaceholderCount": 3,
+    "satisfiedPrerequisiteCount": 0,
+    "evidenceRecordCount": 0,
+    "storageObjectCount": 0,
+    "retentionScheduleCount": 0,
+    "retentionExecutionCount": 0,
+    "deletionRequestCount": 0,
+    "deletionExecutionCount": 0,
+    "legalHoldCount": 0,
+    "policyDecisionCount": 0,
+    "realCandidateCount": 0,
+    "digestValueCount": 0,
+    "reviewEvidenceCount": 0,
+    "realPrincipalCount": 0,
+    "accountRecordCount": 0,
+    "reviewerIdentityCount": 0,
+    "auditIdentityCount": 0,
+    "identityBindingCount": 0,
+    "authorizationSnapshotCount": 0,
+    "attributionCount": 0,
+    "accessGrantCount": 0,
+    "accessLogCount": 0,
+    "evidenceFileCount": 0,
+    "storageClassAssignmentCount": 0,
+    "withdrawalCount": 0,
+    "redactionCount": 0,
+    "integrityChecksumCount": 0,
+    "integrityVerificationCount": 0,
+    "auditLogCount": 0,
+    "auditEventCount": 0,
+    "exportCount": 0,
+    "evidenceReviewCount": 0,
+    "correctionCount": 0,
+    "amendmentCount": 0,
+    "reviewerAssignmentCount": 0,
+    "conflictCount": 0,
+    "disclosureCount": 0,
+    "recusalCount": 0,
+    "waiverCount": 0,
+    "exceptionCount": 0,
+    "recoveryCount": 0,
+    "restoreCount": 0,
+    "reviewDecisionCount": 0,
+    "approvedDecisionCount": 0,
+    "approvedCandidateCount": 0,
+    "productionApprovalCount": 0,
+    "activeStorageRuleCount": 0
+  },
+  "policyDecisionRecords": [],
+  "realCandidateRecords": [],
+  "digestValueRecords": [],
+  "reviewEvidenceRecords": [],
+  "realPrincipalRecords": [],
+  "accountRecords": [],
+  "reviewerIdentityRecords": [],
+  "auditIdentityRecords": [],
+  "identityBindingRecords": [],
+  "authorizationSnapshotRecords": [],
+  "attributionRecords": [],
+  "evidenceRecordRecords": [],
+  "evidenceFileRecords": [],
+  "storageObjectRecords": [],
+  "storageClassAssignmentRecords": [],
+  "retentionScheduleRecords": [],
+  "retentionExecutionRecords": [],
+  "deletionRequestRecords": [],
+  "deletionExecutionRecords": [],
+  "withdrawalRecords": [],
+  "legalHoldRecords": [],
+  "accessGrantRecords": [],
+  "accessLogRecords": [],
+  "redactionRecords": [],
+  "integrityChecksumRecords": [],
+  "integrityVerificationRecords": [],
+  "auditLogRecords": [],
+  "auditEventRecords": [],
+  "evidenceExportRecords": [],
+  "evidenceReviewRecords": [],
+  "correctionRecords": [],
+  "amendmentRecords": [],
+  "reviewerAssignmentRecords": [],
+  "conflictRecords": [],
+  "disclosureRecords": [],
+  "recusalRecords": [],
+  "waiverRecords": [],
+  "exceptionRecords": [],
+  "recoveryRecords": [],
+  "restoreRecords": [],
+  "reviewDecisionRecords": [],
+  "approvedDecisionRecords": [],
+  "productionApprovalRecords": []
+}
