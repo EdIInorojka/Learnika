@@ -13,6 +13,7 @@ import {
   validateReviewerRoleOwnershipDecisionProposalSlice5ChangedPaths,
   validateReviewerRoleOwnershipDecisionProposalSlice6ChangedPaths,
   validateReviewerRoleOwnershipDecisionProposalSlice7ChangedPaths,
+  validateReviewerRoleOwnershipDecisionProposalSlice8ChangedPaths,
   validateReviewerRoleOwnershipDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs";
 
@@ -121,6 +122,19 @@ const approvedWave6Slice7ChangedPaths = [
   "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy-decision-proposal.test.mjs",
+];
+const slice7PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-evidence-storage-retention-policy-decision-proposal.md",
+  "docs/wave-6/slice-7-implementation-note.md",
+  "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
+]);
+const approvedWave6Slice8ChangedPaths = [
+  ...approvedWave6Slice7ChangedPaths.filter((path) => !slice7PrimaryOnlyPaths.has(path)),
+  "docs/wave-6/diagnostic-production-approval-authority-policy-decision-proposal.md",
+  "docs/wave-6/slice-8-implementation-note.md",
+  "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -413,6 +427,22 @@ test("Slice 3 guard admits the exact cumulative Slice 7 continuation separately"
       env: {},
     }),
     approvedWave6Slice7ChangedPaths,
+  );
+});
+
+test("Slice 3 guard admits the exact cumulative Slice 8 continuation separately", () => {
+  assert.equal(approvedWave6Slice8ChangedPaths.length, 48);
+  assert.deepEqual(
+    validateReviewerRoleOwnershipDecisionProposalSlice8ChangedPaths(
+      approvedWave6Slice8ChangedPaths,
+    ),
+    approvedWave6Slice8ChangedPaths,
+  );
+  assert.deepEqual(
+    validateReviewerRoleOwnershipDecisionProposalWorktreeScope(approvedWave6Slice8ChangedPaths, {
+      env: { GITHUB_ACTIONS: "false" },
+    }),
+    approvedWave6Slice8ChangedPaths,
   );
 });
 

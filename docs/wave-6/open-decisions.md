@@ -413,3 +413,26 @@ audit identity policy plus the Slice 4 separation-of-duties and Slice 5
 conflict-of-interest policies. No evidence access, attribution, deletion or
 export may proceed before the relevant dependency is separately approved;
 unresolved dependencies must fail closed and cannot authorize one another.
+## W6-S8 — production approval authority policy decision proposal
+
+The following decisions remain unresolved and deferred; none is an approval
+or an authority grant:
+
+- `W6-S8-OD-APPROVER-TAXONOMY` — accountable approver role taxonomy and
+  ownership;
+- `W6-S8-OD-QUORUM-GATES` — quorum, duplicate handling and substantive gate
+  requirements;
+- `W6-S8-OD-EVIDENCE-LINKAGE` — linkage to the candidate digest and review
+  chain;
+- `W6-S8-OD-AUTHORITY-GRANTS` — grant scope, expiry, delegation and
+  revocation;
+- `W6-S8-OD-DECISION-SCHEMA` — approval decision record shape and outcomes;
+- `W6-S8-OD-REVOCATION-APPEAL` — revocation, withdrawal and appeal
+  boundaries;
+- `W6-S8-OD-CLEARANCES` — conflict-of-interest and separation-of-duties
+  clearances;
+- `W6-S8-OD-MAINTENANCE-ACCESS-REVIEW` — policy maintenance and periodic
+  access review;
+- `W6-S8-OD-ENFORCEMENT-AUDIT` — future enforcement and audit evidence;
+- `W6-S8-OD-DEPENDENCY-ORDER` — dependency ordering across the Slice 4–7
+  proposals.

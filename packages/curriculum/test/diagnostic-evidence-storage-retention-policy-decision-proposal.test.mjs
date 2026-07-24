@@ -10,6 +10,7 @@ import {
   validateDiagnosticEvidenceStorageRetentionPolicyDecisionProposal,
   validateDiagnosticEvidenceStorageRetentionPolicyDecisionProposalChangedPaths,
   validateDiagnosticEvidenceStorageRetentionDecisionProposalWorktreeScope,
+  validateEvidenceStorageRetentionDecisionProposalSlice8ChangedPaths,
 } from "../scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs";
 
 const expectedChangedPaths = [
@@ -59,6 +60,19 @@ const expectedChangedPaths = [
   "packages/curriculum/test/skill-graph-seed.test.mjs",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy-decision-proposal.test.mjs",
+];
+const slice7PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-evidence-storage-retention-policy-decision-proposal.md",
+  "docs/wave-6/slice-7-implementation-note.md",
+  "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
+]);
+const expectedSlice8ChangedPaths = [
+  ...expectedChangedPaths.filter((value) => !slice7PrimaryOnlyPaths.has(value)),
+  "docs/wave-6/diagnostic-production-approval-authority-policy-decision-proposal.md",
+  "docs/wave-6/slice-8-implementation-note.md",
+  "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -288,6 +302,21 @@ test("clean local checkout is allowed while dirty local scope is exact", () => {
         { env: { GITHUB_ACTIONS: "false" } },
       ),
     /exactly 46 changed paths/,
+  );
+});
+
+test("Slice 8 continuation keeps the exact cumulative worktree scope", () => {
+  assert.equal(expectedSlice8ChangedPaths.length, 48);
+  assert.deepEqual(
+    validateEvidenceStorageRetentionDecisionProposalSlice8ChangedPaths(expectedSlice8ChangedPaths),
+    expectedSlice8ChangedPaths,
+  );
+  assert.deepEqual(
+    validateDiagnosticEvidenceStorageRetentionDecisionProposalWorktreeScope(
+      expectedSlice8ChangedPaths,
+      { env: { GITHUB_ACTIONS: "false" } },
+    ),
+    expectedSlice8ChangedPaths,
   );
 });
 

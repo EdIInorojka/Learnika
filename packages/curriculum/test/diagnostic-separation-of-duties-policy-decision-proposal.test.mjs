@@ -12,6 +12,7 @@ import {
   validateSeparationOfDutiesDecisionProposalSlice5ChangedPaths,
   validateSeparationOfDutiesDecisionProposalSlice6ChangedPaths,
   validateSeparationOfDutiesDecisionProposalSlice7ChangedPaths,
+  validateSeparationOfDutiesDecisionProposalSlice8ChangedPaths,
   validateSeparationOfDutiesDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs";
 
@@ -115,6 +116,19 @@ const approvedWave6Slice7ChangedPaths = [
   "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy-decision-proposal.test.mjs",
+];
+const slice7PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-evidence-storage-retention-policy-decision-proposal.md",
+  "docs/wave-6/slice-7-implementation-note.md",
+  "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
+]);
+const approvedWave6Slice8ChangedPaths = [
+  ...approvedWave6Slice7ChangedPaths.filter((path) => !slice7PrimaryOnlyPaths.has(path)),
+  "docs/wave-6/diagnostic-production-approval-authority-policy-decision-proposal.md",
+  "docs/wave-6/slice-8-implementation-note.md",
+  "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -405,6 +419,20 @@ test("Slice 4 guard admits only the exact cumulative Slice 7 continuation", () =
       env: { GITHUB_ACTIONS: "false" },
     }),
     approvedWave6Slice7ChangedPaths,
+  );
+});
+
+test("Slice 4 guard admits only the exact cumulative Slice 8 continuation", () => {
+  assert.equal(approvedWave6Slice8ChangedPaths.length, 48);
+  assert.deepEqual(
+    validateSeparationOfDutiesDecisionProposalSlice8ChangedPaths(approvedWave6Slice8ChangedPaths),
+    approvedWave6Slice8ChangedPaths,
+  );
+  assert.deepEqual(
+    validateSeparationOfDutiesDecisionProposalWorktreeScope(approvedWave6Slice8ChangedPaths, {
+      env: { GITHUB_ACTIONS: "false" },
+    }),
+    approvedWave6Slice8ChangedPaths,
   );
 });
 

@@ -10,6 +10,7 @@ import {
   validateDiagnosticAuditIdentityDecisionProposalWorktreeScope,
   validateDiagnosticAuditIdentityDecisionProposalChangedPaths,
   validateDiagnosticAuditIdentityDecisionProposalSlice7ChangedPaths,
+  validateDiagnosticAuditIdentityDecisionProposalSlice8ChangedPaths,
   validateDiagnosticAuditIdentityPolicyDecisionProposal,
 } from "../scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs";
 
@@ -85,6 +86,19 @@ const approvedSlice7ChangedPaths = [
   "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy-decision-proposal.test.mjs",
+];
+const slice7PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-evidence-storage-retention-policy-decision-proposal.md",
+  "docs/wave-6/slice-7-implementation-note.md",
+  "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
+]);
+const approvedSlice8ChangedPaths = [
+  ...approvedSlice7ChangedPaths.filter((value) => !slice7PrimaryOnlyPaths.has(value)),
+  "docs/wave-6/diagnostic-production-approval-authority-policy-decision-proposal.md",
+  "docs/wave-6/slice-8-implementation-note.md",
+  "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -341,6 +355,20 @@ test("Slice 6 guard admits the separate exact Slice 7 continuation", () => {
       env: { GITHUB_ACTIONS: "false" },
     }),
     approvedSlice7ChangedPaths,
+  );
+});
+
+test("Slice 6 guard admits the separate exact Slice 8 continuation", () => {
+  assert.equal(approvedSlice8ChangedPaths.length, 48);
+  assert.deepEqual(
+    validateDiagnosticAuditIdentityDecisionProposalSlice8ChangedPaths(approvedSlice8ChangedPaths),
+    approvedSlice8ChangedPaths,
+  );
+  assert.deepEqual(
+    validateDiagnosticAuditIdentityDecisionProposalWorktreeScope(approvedSlice8ChangedPaths, {
+      env: { GITHUB_ACTIONS: "false" },
+    }),
+    approvedSlice8ChangedPaths,
   );
 });
 

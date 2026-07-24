@@ -113,6 +113,11 @@ const approvedWave6Slice1ChangedPaths = [
   "packages/curriculum/diagnostic-evidence-storage-retention-policy-decision-proposal/grade-7-9-math.evidence-storage-retention-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-evidence-storage-retention-policy-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-production-approval-authority-policy-decision-proposal.md",
+  "docs/wave-6/slice-8-implementation-note.md",
+  "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];
@@ -372,14 +377,14 @@ test("private, candidate-like and machine-identity-like values fail closed", asy
   }
 });
 
-test("scope guard retains exact cumulative admission through Wave 6 Slice 7", () => {
+test("scope guard retains exact cumulative admission through Wave 6 Slice 8", () => {
   assert.deepEqual(
     validateCandidateIdentityDecisionProposalChangedPaths(approvedWave6Slice1ChangedPaths),
     approvedWave6Slice1ChangedPaths,
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/scope-and-non-goals.md",
-    "docs/wave-6/slice-8-implementation-note.md",
+    "docs/wave-6/slice-9-implementation-note.md",
     "docs/wave-6/scope-and-non-goals.md.bak",
     "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-candidate-identity/controller.ts",
