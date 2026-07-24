@@ -281,3 +281,74 @@ late-disclosure handling without creating evidence now.
 Define how a later approved conflict policy consumes the still-unapproved
 Slice 4 separation proposal. Neither proposal may authorize the other,
 satisfy a prerequisite or activate review.
+
+## W6-S6-OD-OPAQUE-REVIEWER-REFERENCE-DOMAIN
+
+Approve the namespace owner, non-semantic format, versioning, allocation,
+rotation, retirement and controlled-resolution boundary without embedding
+personal, organizational, source, content or workflow data.
+
+## W6-S6-OD-OPAQUE-AUDIT-REFERENCE-DOMAIN
+
+Define a separate audit reference namespace, allocator, resolver, collision
+handling and non-reuse semantics without issuing or storing a reference now.
+
+## W6-S6-OD-REVIEWER-AUDIT-DOMAIN-SEPARATION
+
+Approve the independent reviewer and audit reference domains, any
+minimum-necessary cross-domain binding and the prohibition on substitution or
+ordinary curriculum lookup.
+
+## W6-S6-OD-IDENTITY-BINDING-AUTHORITY
+
+Assign future proofing, binding, change, revocation and review authority with
+least privilege, separation of duties and fail-closed handling while creating
+no binding or authority assignment.
+
+## W6-S6-OD-ATTRIBUTION-REQUIREMENTS
+
+Define the future attributable-action schema, required actor class, policy
+version, time source, integrity linkage and behavior for unavailable or
+revoked references.
+
+## W6-S6-OD-AUDIT-ACTOR-TAXONOMY
+
+Approve a closed taxonomy for substantive review, production approval and
+audit observation, including whether any additional non-human actor class
+requires a separate gate.
+
+## W6-S6-OD-AUTHORIZATION-SNAPSHOT
+
+Define minimum-necessary decision-time authorization context, later
+revocation traceability, data exclusions, integrity requirements and access
+controls without recording a snapshot now.
+
+## W6-S6-OD-PRIVACY-DATA-EXCLUSION
+
+Approve classification, minimization, redaction, controlled resolution and
+absolute exclusions for contact, account, authentication, network/device,
+storage, content and provider data.
+
+## W6-S6-OD-CORRECTION-AMENDMENT
+
+Define append-only correction and amendment authority, attribution, review,
+historical preservation and the prohibition on silent mutation or retroactive
+authority changes.
+
+## W6-S6-OD-ACCESS-EXPORT
+
+Approve least-privilege lookup, purpose limitation, recipient eligibility,
+bounded disclosure, export review, access auditing and emergency-access
+constraints.
+
+## W6-S6-OD-RETENTION-DELETION-DEPENDENCY
+
+Resolve storage duration, deletion, legal hold, tombstone and historical
+traceability through a later approved evidence storage/retention policy; its
+current placeholder remains non-authorizing.
+
+## W6-S6-OD-SEPARATION-CONFLICT-DEPENDENCIES
+
+Define how an approved audit identity policy consumes future Slice 4
+separation and Slice 5 conflict outcomes. Unresolved dependency state must
+fail closed, and no proposal may authorize another.

@@ -1,0 +1,624 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticAuditIdentityPolicyDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-6.grade-7-9-math.v1",
+    "proposalId": "diagnostic-audit-identity-policy-decision-proposal",
+    "proposalVersion": "wave-6.slice-6.diagnostic-audit-identity-policy.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_audit_identity_policy_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "auditIdentityPolicyPlaceholderArtifactVersion": "wave-5.slice-8.grade-7-9-math.v1",
+    "reviewerRoleOwnershipDecisionProposalArtifactVersion": "wave-6.slice-3.grade-7-9-math.v1",
+    "separationOfDutiesDecisionProposalArtifactVersion": "wave-6.slice-4.grade-7-9-math.v1",
+    "conflictOfInterestDecisionProposalArtifactVersion": "wave-6.slice-5.grade-7-9-math.v1",
+    "evidenceStorageRetentionPolicyPlaceholderArtifactVersion": "wave-5.slice-9.grade-7-9-math.v1",
+    "reviewAuthorityArtifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+    "reviewWorkflowStateArtifactVersion": "wave-4.slice-7.grade-7-9-math.v1",
+    "diagnosticReadinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "sourceContract": "docs/wave-6/diagnostic-audit-identity-policy-decision-proposal.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "upstreamReferences": {
+    "activationPrerequisites": {
+      "artifactPath": "packages/curriculum/diagnostic-review-activation-prerequisites/grade-7-9-math.review-activation-prerequisites.v1.json",
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "artifactStatus": "blocked_prerequisites_only_non_production",
+      "prerequisiteId": "audit_identity_policy",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRecordRefs": [],
+      "prerequisiteCount": 12,
+      "satisfiedPrerequisiteCount": 0,
+      "productionApprovalCount": 0
+    },
+    "auditIdentityPlaceholder": {
+      "artifactPath": "packages/curriculum/diagnostic-audit-identity-policy/grade-7-9-math.audit-identity-policy-placeholder.v1.json",
+      "artifactVersion": "wave-5.slice-8.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-8.diagnostic-audit-identity.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "decisionRequirementCount": 10,
+      "activeIdentityRuleCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0,
+      "identityBindingCount": 0,
+      "authorizationSnapshotCount": 0,
+      "auditEventCount": 0,
+      "productionApprovalCount": 0
+    },
+    "reviewerRoleOwnershipDecisionProposal": {
+      "artifactPath": "packages/curriculum/diagnostic-reviewer-role-ownership-policy-decision-proposal/grade-7-9-math.reviewer-role-ownership-policy-decision-proposal.v1.json",
+      "artifactVersion": "wave-6.slice-3.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-3.diagnostic-reviewer-role-ownership-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "unresolvedDecisionCount": 8,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0,
+      "reviewerAssignmentCount": 0,
+      "productionApprovalCount": 0
+    },
+    "separationOfDutiesDecisionProposal": {
+      "artifactPath": "packages/curriculum/diagnostic-separation-of-duties-policy-decision-proposal/grade-7-9-math.separation-of-duties-policy-decision-proposal.v1.json",
+      "artifactVersion": "wave-6.slice-4.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-4.diagnostic-separation-of-duties-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "unresolvedDecisionCount": 9,
+      "activeEnforcementRuleCount": 0,
+      "auditIdentityCount": 0,
+      "violationCount": 0,
+      "productionApprovalCount": 0
+    },
+    "conflictOfInterestDecisionProposal": {
+      "artifactPath": "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
+      "artifactVersion": "wave-6.slice-5.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-5.diagnostic-conflict-of-interest-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "unresolvedDecisionCount": 10,
+      "activeConflictRuleCount": 0,
+      "conflictDisclosureCount": 0,
+      "recusalCount": 0,
+      "productionApprovalCount": 0
+    },
+    "evidenceStorageRetentionPlaceholder": {
+      "artifactPath": "packages/curriculum/diagnostic-evidence-storage-retention-policy/grade-7-9-math.evidence-storage-retention-policy-placeholder.v1.json",
+      "artifactVersion": "wave-5.slice-9.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-9.diagnostic-evidence-storage-and-retention.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activeStorageRuleCount": 0,
+      "retentionScheduleCount": 0,
+      "deletionExecutionCount": 0,
+      "auditEventCount": 0,
+      "productionApprovalCount": 0
+    },
+    "reviewAuthority": {
+      "artifactPath": "packages/curriculum/diagnostic-review-authority/grade-7-9-math.review-authority-placeholder.v1.json",
+      "artifactVersion": "wave-4.slice-8.grade-7-9-math.v1",
+      "policyVersion": "wave-4.slice-8.diagnostic-review-authority.placeholder.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "reviewerAssignmentCount": 0,
+      "reviewerIdentityCount": 0,
+      "auditIdentityCount": 0,
+      "reviewDecisionCount": 0,
+      "productionApprovalCount": 0
+    },
+    "reviewWorkflowState": {
+      "artifactPath": "packages/curriculum/diagnostic-review-workflow-state/grade-7-9-math.review-workflow-state-placeholder.v1.json",
+      "artifactVersion": "wave-4.slice-7.grade-7-9-math.v1",
+      "workflowVersion": "wave-4.slice-7.diagnostic-review-workflow-state.placeholder.v1",
+      "policyState": "DEFERRED_NON_PRODUCTION",
+      "runtimeActivationAllowed": false,
+      "activeReviewCount": 0,
+      "auditIdentityCount": 0,
+      "reviewDecisionCount": 0,
+      "productionApprovalCount": 0
+    }
+  },
+  "currentBaseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": {
+      "status": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "auditIdentityPrerequisite": {
+      "prerequisiteId": "audit_identity_policy",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRecordRefs": []
+    },
+    "satisfiedPrerequisiteCount": 0,
+    "approvedCandidateCount": 0,
+    "productionApprovalCount": 0
+  },
+  "proposalBoundary": {
+    "proposalStatus": "PROPOSED_DEFERRED",
+    "policyApproved": false,
+    "referenceDomainApproved": false,
+    "actorTaxonomyApproved": false,
+    "identityBindingAllowed": false,
+    "referenceIssuanceAllowed": false,
+    "identityResolutionAllowed": false,
+    "attributionAllowed": false,
+    "authorizationSnapshotAllowed": false,
+    "auditEventRecordingAllowed": false,
+    "accessAllowed": false,
+    "exportAllowed": false,
+    "correctionAllowed": false,
+    "amendmentAllowed": false,
+    "retentionEnforcementAllowed": false,
+    "deletionExecutionAllowed": false,
+    "reviewUseAllowed": false,
+    "workflowActivationAllowed": false,
+    "prerequisiteSatisfactionAllowed": false,
+    "productionApprovalAllowed": false,
+    "readinessTransitionAllowed": false
+  },
+  "referenceDomainTaxonomyPlaceholders": [
+    {
+      "domainPlaceholderId": "REVIEWER_REFERENCE_DOMAIN_PLACEHOLDER",
+      "domainScope": "review_decision_attribution",
+      "recordState": "TAXONOMY_ONLY",
+      "referenceFormat": null,
+      "allocationAuthorityReference": null,
+      "resolverReference": null,
+      "issuanceAllowed": false,
+      "bindingAllowed": false,
+      "lookupAllowed": false
+    },
+    {
+      "domainPlaceholderId": "AUDIT_REFERENCE_DOMAIN_PLACEHOLDER",
+      "domainScope": "audit_event_attribution",
+      "recordState": "TAXONOMY_ONLY",
+      "referenceFormat": null,
+      "allocationAuthorityReference": null,
+      "resolverReference": null,
+      "issuanceAllowed": false,
+      "bindingAllowed": false,
+      "lookupAllowed": false
+    }
+  ],
+  "auditActorTaxonomyPlaceholders": [
+    {
+      "actorPlaceholderId": "SUBSTANTIVE_REVIEW_ACTOR_PLACEHOLDER",
+      "actorScope": "substantive_review_attribution",
+      "recordState": "TAXONOMY_ONLY",
+      "decisionAuthorityAllowed": false,
+      "productionAuthorityAllowed": false
+    },
+    {
+      "actorPlaceholderId": "PRODUCTION_APPROVAL_ACTOR_PLACEHOLDER",
+      "actorScope": "production_approval_attribution",
+      "recordState": "TAXONOMY_ONLY",
+      "decisionAuthorityAllowed": false,
+      "productionAuthorityAllowed": false
+    },
+    {
+      "actorPlaceholderId": "AUDIT_OBSERVATION_ACTOR_PLACEHOLDER",
+      "actorScope": "audit_observation",
+      "recordState": "TAXONOMY_ONLY",
+      "decisionAuthorityAllowed": false,
+      "productionAuthorityAllowed": false
+    }
+  ],
+  "proposedPolicy": {
+    "state": "PROPOSED_NOT_APPROVED",
+    "opaqueReviewerReferenceDomain": {
+      "decisionId": "opaque_reviewer_reference_domain",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "domainShape": "OPAQUE_NONSEMANTIC_VERSIONED_REFERENCE_DOMAIN",
+      "personalDataEmbeddingAllowed": false,
+      "referenceIssuanceAllowed": false,
+      "ruleActive": false
+    },
+    "opaqueAuditReferenceDomain": {
+      "decisionId": "opaque_audit_reference_domain",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "domainShape": "SEPARATE_OPAQUE_NONSEMANTIC_AUDIT_REFERENCE_DOMAIN",
+      "reviewerDomainSubstitutionAllowed": false,
+      "referenceIssuanceAllowed": false,
+      "ruleActive": false
+    },
+    "reviewerAuditDomainSeparation": {
+      "decisionId": "reviewer_audit_domain_separation",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "separationShape": "INDEPENDENT_REFERENCE_DOMAINS_WITH_CONTROLLED_BINDING",
+      "crossDomainLookupAllowed": false,
+      "domainSubstitutionAllowed": false,
+      "ruleActive": false
+    },
+    "identityBindingAuthority": {
+      "decisionId": "identity_binding_authority",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "authorityShape": "SEPARATE_PROOFING_BINDING_REVOCATION_REVIEW_AUTHORITY",
+      "authorityAssigned": false,
+      "selfBindingAllowed": false,
+      "bindingAllowed": false,
+      "ruleActive": false
+    },
+    "attributionRequirements": {
+      "decisionId": "attribution_requirements",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "attributionShape": "ACTOR_CLASS_REFERENCE_POLICY_TIME_AUTHORIZATION_CONTEXT",
+      "attributionRecordingAllowed": false,
+      "eventGenerationAllowed": false,
+      "ruleActive": false
+    },
+    "auditActorTaxonomy": {
+      "decisionId": "audit_actor_taxonomy",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "taxonomyShape": "CLOSED_SUBSTANTIVE_APPROVAL_OBSERVATION_ACTOR_TAXONOMY",
+      "activeActorClassCount": 0,
+      "taxonomyApproved": false,
+      "ruleActive": false
+    },
+    "authorizationSnapshotRequirements": {
+      "decisionId": "authorization_snapshot_requirements",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "snapshotShape": "MINIMUM_NECESSARY_DECISION_TIME_AUTHORIZATION_CONTEXT",
+      "snapshotRecordingAllowed": false,
+      "historicalResolutionAllowed": false,
+      "ruleActive": false
+    },
+    "privacyDataExclusion": {
+      "decisionId": "privacy_and_data_exclusion",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "exclusionShape": "MINIMUM_NECESSARY_EXTERNAL_CONTROLLED_RESOLUTION",
+      "personalDataRecordingAllowed": false,
+      "curriculumResolutionAllowed": false,
+      "ruleActive": false
+    },
+    "correctionAmendmentBoundaries": {
+      "decisionId": "correction_and_amendment_boundaries",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "boundaryShape": "APPEND_ONLY_ATTRIBUTED_HISTORICALLY_PRESERVED_CHANGE",
+      "silentMutationAllowed": false,
+      "historicalReplacementAllowed": false,
+      "processingActive": false
+    },
+    "accessExportConstraints": {
+      "decisionId": "access_and_export_constraints",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "constraintShape": "LEAST_PRIVILEGE_PURPOSE_LIMITED_BOUNDED_DISCLOSURE",
+      "lookupAllowed": false,
+      "bulkExportAllowed": false,
+      "processingActive": false
+    },
+    "retentionDeletionDependency": {
+      "decisionId": "retention_and_deletion_dependency",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "dependencyShape": "EXACT_WAVE_5_STORAGE_RETENTION_PLACEHOLDER_NON_AUTHORIZING",
+      "dependencySatisfied": false,
+      "storageAllowed": false,
+      "deletionExecutionAllowed": false,
+      "ruleActive": false
+    },
+    "separationConflictDependencies": {
+      "decisionId": "separation_and_conflict_dependencies",
+      "decisionState": "UNRESOLVED_DEFERRED",
+      "dependencyShape": "EXACT_SLICE_4_AND_SLICE_5_PROPOSALS_NON_AUTHORIZING",
+      "separationDependencySatisfied": false,
+      "conflictDependencySatisfied": false,
+      "identityUseAllowed": false,
+      "ruleActive": false
+    }
+  },
+  "unresolvedDecisions": [
+    {
+      "decisionId": "opaque_reviewer_reference_domain",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "opaque_audit_reference_domain",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "reviewer_audit_domain_separation",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "identity_binding_authority",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "attribution_requirements",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "audit_actor_taxonomy",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "authorization_snapshot_requirements",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "privacy_and_data_exclusion",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "correction_and_amendment_boundaries",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "access_and_export_constraints",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "retention_and_deletion_dependency",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "separation_and_conflict_dependencies",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    }
+  ],
+  "syntheticExamples": [
+    {
+      "vectorRef": "synthetic-review-reference-domain-shape",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "OPAQUE_REVIEW_REFERENCE_DOMAIN_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_REFERENCE_DOMAIN", "SYNTHETIC_ALLOCATION_BOUNDARY"],
+      "expectedDisposition": "PROPOSED_NON_OPERATIONAL_REFERENCE",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_ISSUED": true,
+        "NOT_BOUND": true,
+        "NOT_ATTRIBUTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-audit-reference-domain-shape",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "OPAQUE_AUDIT_REFERENCE_DOMAIN_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_AUDIT_DOMAIN", "SYNTHETIC_RESOLUTION_BOUNDARY"],
+      "expectedDisposition": "PROPOSED_NON_OPERATIONAL_REFERENCE",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_ISSUED": true,
+        "NOT_BOUND": true,
+        "NOT_ATTRIBUTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-domain-separation-shape",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "INDEPENDENT_REFERENCE_DOMAIN_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_REVIEW_DOMAIN", "SYNTHETIC_AUDIT_DOMAIN"],
+      "expectedDisposition": "PROPOSED_NON_OPERATIONAL_REFERENCE",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_ISSUED": true,
+        "NOT_BOUND": true,
+        "NOT_ATTRIBUTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-attribution-requirement-shape",
+      "vectorType": "PROPOSED_ACCEPTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "ATTRIBUTION_AND_AUTHORIZATION_CONTEXT_SHAPE",
+      "abstractInputTokens": ["SYNTHETIC_ACTOR_CLASS", "SYNTHETIC_AUTHORIZATION_CONTEXT"],
+      "expectedDisposition": "PROPOSED_NON_OPERATIONAL_REFERENCE",
+      "rejectionReasonCode": null,
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_ISSUED": true,
+        "NOT_BOUND": true,
+        "NOT_ATTRIBUTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-binding-record",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "IDENTITY_BINDING_RECORD_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_BINDING_RECORD_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "IDENTITY_BINDING_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_ISSUED": true,
+        "NOT_BOUND": true,
+        "NOT_ATTRIBUTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-audit-event",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "AUDIT_EVENT_RECORD_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_EVENT_RECORD_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "AUDIT_EVENT_RECORD_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_ISSUED": true,
+        "NOT_BOUND": true,
+        "NOT_ATTRIBUTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-private-material",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "PRIVATE_MATERIAL_EMBEDDING_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_PRIVATE_MATERIAL_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "PRIVATE_MATERIAL_FORBIDDEN",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_ISSUED": true,
+        "NOT_BOUND": true,
+        "NOT_ATTRIBUTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    },
+    {
+      "vectorRef": "synthetic-rejected-dependency-bypass",
+      "vectorType": "EXPLICITLY_REJECTED_SYMBOLIC_VECTOR",
+      "scenarioCode": "UNRESOLVED_DEPENDENCY_BYPASS_REQUEST",
+      "abstractInputTokens": ["SYNTHETIC_DEPENDENCY_BYPASS_REQUEST"],
+      "expectedDisposition": "REJECT",
+      "rejectionReasonCode": "UNSATISFIED_DEPENDENCY_MUST_FAIL_CLOSED",
+      "markers": {
+        "SYNTHETIC_EXAMPLE_ONLY": true,
+        "NON_OPERATIONAL": true,
+        "NOT_ISSUED": true,
+        "NOT_BOUND": true,
+        "NOT_ATTRIBUTED": true,
+        "NOT_AUTHORIZED": true,
+        "NOT_APPROVED": true,
+        "NOT_USABLE_FOR_REVIEW": true,
+        "NOT_USABLE_FOR_PRODUCTION": true
+      }
+    }
+  ],
+  "recordBoundary": {
+    "policyDecisionRecords": false,
+    "realPrincipalRecords": false,
+    "accountRecords": false,
+    "reviewerIdentityRecords": false,
+    "auditIdentityRecords": false,
+    "reviewerReferenceRecords": false,
+    "auditReferenceRecords": false,
+    "identityBindingRecords": false,
+    "identityResolutionRecords": false,
+    "roleAssignmentRecords": false,
+    "reviewerAssignmentRecords": false,
+    "conflictDisclosureRecords": false,
+    "authorizationSnapshotRecords": false,
+    "auditEventRecords": false,
+    "attributionRecords": false,
+    "accessGrantRecords": false,
+    "accessLogRecords": false,
+    "exportRecords": false,
+    "correctionRecords": false,
+    "amendmentRecords": false,
+    "retentionPolicyRecords": false,
+    "deletionPolicyRecords": false,
+    "evidenceRecords": false,
+    "reviewDecisionRecords": false,
+    "approvedDecisionRecords": false,
+    "productionApprovalRecords": false,
+    "runtimeAuditIdentityEnabled": false
+  },
+  "aggregate": {
+    "syntheticExampleCount": 8,
+    "acceptedSyntheticExampleCount": 4,
+    "rejectedSyntheticExampleCount": 4,
+    "unresolvedDecisionCount": 12,
+    "referenceDomainPlaceholderCount": 2,
+    "auditActorPlaceholderCount": 3,
+    "satisfiedPrerequisiteCount": 0,
+    "policyDecisionCount": 0,
+    "realPrincipalCount": 0,
+    "accountRecordCount": 0,
+    "reviewerIdentityCount": 0,
+    "auditIdentityCount": 0,
+    "reviewerReferenceCount": 0,
+    "auditReferenceCount": 0,
+    "identityBindingCount": 0,
+    "identityResolutionCount": 0,
+    "roleAssignmentCount": 0,
+    "reviewerAssignmentCount": 0,
+    "conflictDisclosureCount": 0,
+    "authorizationSnapshotCount": 0,
+    "auditEventCount": 0,
+    "attributionCount": 0,
+    "accessGrantCount": 0,
+    "accessLogCount": 0,
+    "exportCount": 0,
+    "correctionCount": 0,
+    "amendmentCount": 0,
+    "retentionPolicyCount": 0,
+    "deletionPolicyCount": 0,
+    "evidenceCount": 0,
+    "reviewDecisionCount": 0,
+    "approvedDecisionCount": 0,
+    "approvedCandidateCount": 0,
+    "productionApprovalCount": 0,
+    "activeIdentityRuleCount": 0
+  },
+  "policyDecisionRecords": [],
+  "realPrincipalRecords": [],
+  "accountRecords": [],
+  "reviewerIdentityRecords": [],
+  "auditIdentityRecords": [],
+  "reviewerReferenceRecords": [],
+  "auditReferenceRecords": [],
+  "identityBindingRecords": [],
+  "identityResolutionRecords": [],
+  "roleAssignmentRecords": [],
+  "reviewerAssignmentRecords": [],
+  "conflictDisclosureRecords": [],
+  "authorizationSnapshotRecords": [],
+  "auditEventRecords": [],
+  "attributionRecords": [],
+  "accessGrantRecords": [],
+  "accessLogRecords": [],
+  "exportRecords": [],
+  "correctionRecords": [],
+  "amendmentRecords": [],
+  "retentionPolicyRecords": [],
+  "deletionPolicyRecords": [],
+  "evidenceRecords": [],
+  "reviewDecisionRecords": [],
+  "approvedDecisionRecords": [],
+  "productionApprovalRecords": []
+}

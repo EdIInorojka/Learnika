@@ -159,6 +159,20 @@ const changedPaths = [
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];
 const changedPathSet = new Set(changedPaths);
+const slice5PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-conflict-of-interest-policy-decision-proposal.md",
+  "docs/wave-6/slice-5-implementation-note.md",
+  "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
+]);
+const slice6ChangedPaths = [
+  ...changedPaths.filter((changedPath) => !slice5PrimaryOnlyPaths.has(changedPath)),
+  "docs/wave-6/diagnostic-audit-identity-policy-decision-proposal.md",
+  "docs/wave-6/slice-6-implementation-note.md",
+  "packages/curriculum/diagnostic-audit-identity-policy-decision-proposal/grade-7-9-math.audit-identity-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-audit-identity-policy-decision-proposal.test.mjs",
+];
+const slice6ChangedPathSet = new Set(slice6ChangedPaths);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -1063,6 +1077,22 @@ export function validateConflictOfInterestDecisionProposalChangedPaths(paths) {
   return normalized;
 }
 
+export function validateConflictOfInterestDecisionProposalSlice6ChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length) {
+    fail("Changed paths must not contain duplicates.");
+  }
+  const unexpected = normalized.filter((value) => !slice6ChangedPathSet.has(value));
+  if (unexpected.length > 0) {
+    fail(`Wave 6 Slice 6 out-of-scope path changed: ${unexpected[0]}.`);
+  }
+  if (normalized.length !== slice6ChangedPaths.length) {
+    fail(`Wave 6 Slice 6 requires exactly ${slice6ChangedPaths.length} changed paths.`);
+  }
+  return normalized;
+}
+
 function defaultGitRunner(args, cwd) {
   const result = spawnSync("git", args, { cwd, encoding: "utf8" });
   return {
@@ -1179,7 +1209,11 @@ export function collectConflictOfInterestDecisionProposalChangedPaths({
     return localWorktreePaths({ cwd, runGit });
   }
   const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
-  return diffPaths({ cwd, base, head, runGit });
+  const paths = diffPaths({ cwd, base, head, runGit });
+  return paths.length === slice6ChangedPaths.length &&
+    paths.every((value) => slice6ChangedPathSet.has(value))
+    ? validateConflictOfInterestDecisionProposalSlice6ChangedPaths(paths)
+    : paths;
 }
 
 export function validateConflictOfInterestDecisionProposalWorktreeScope(
@@ -1188,6 +1222,13 @@ export function validateConflictOfInterestDecisionProposalWorktreeScope(
 ) {
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   if (!inGitHubActions && Array.isArray(paths) && paths.length === 0) return [];
+  if (
+    Array.isArray(paths) &&
+    paths.length === slice6ChangedPaths.length &&
+    paths.every((value) => slice6ChangedPathSet.has(value))
+  ) {
+    return validateConflictOfInterestDecisionProposalSlice6ChangedPaths(paths);
+  }
   return validateConflictOfInterestDecisionProposalChangedPaths(paths);
 }
 

@@ -74,6 +74,11 @@ const approvedWave6Slice2ChangedPaths = [
   "packages/curriculum/diagnostic-conflict-of-interest-policy-decision-proposal/grade-7-9-math.conflict-of-interest-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-conflict-of-interest-policy-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-audit-identity-policy-decision-proposal.md",
+  "docs/wave-6/slice-6-implementation-note.md",
+  "packages/curriculum/diagnostic-audit-identity-policy-decision-proposal/grade-7-9-math.audit-identity-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-audit-identity-policy-decision-proposal.test.mjs",
   "package.json",
   "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -417,15 +422,15 @@ test("private machine candidate and hash-like values fail closed", async () => {
   }
 });
 
-test("scope guard retains exact cumulative admission through Wave 6 Slice 5", () => {
-  assert.equal(approvedWave6Slice2ChangedPaths.length, 51);
+test("scope guard retains exact cumulative admission through Wave 6 Slice 6", () => {
+  assert.equal(approvedWave6Slice2ChangedPaths.length, 56);
   assert.deepEqual(
     validateCanonicalizationDigestDecisionProposalChangedPaths(approvedWave6Slice2ChangedPaths),
     approvedWave6Slice2ChangedPaths,
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/diagnostic-canonicalization-digest-policy-decision-proposal.md",
-    "docs/wave-6/slice-6-implementation-note.md",
+    "docs/wave-6/slice-7-implementation-note.md",
     "docs/wave-6/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-canonicalization/controller.ts",
