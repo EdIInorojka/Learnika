@@ -128,6 +128,11 @@ const approvedWave6Slice1ChangedPaths = [
   "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+  "docs/wave-6/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];
@@ -388,13 +393,18 @@ test("private, candidate-like and machine-identity-like values fail closed", asy
 });
 
 test("scope guard retains exact cumulative admission through Wave 6 Slice 8", () => {
+  const slice1Baseline = approvedWave6Slice1ChangedPaths.filter(
+    (value) =>
+      !value.includes("rollback-withdrawal-policy-decision-proposal") &&
+      !value.includes("slice-11-implementation-note"),
+  );
   assert.deepEqual(
-    validateCandidateIdentityDecisionProposalChangedPaths(approvedWave6Slice1ChangedPaths),
-    approvedWave6Slice1ChangedPaths,
+    validateCandidateIdentityDecisionProposalChangedPaths(slice1Baseline),
+    slice1Baseline,
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/scope-and-non-goals.md",
-    "docs/wave-6/slice-11-implementation-note.md",
+    "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md.bak",
     "docs/wave-6/scope-and-non-goals.md.bak",
     "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-candidate-identity/controller.ts",

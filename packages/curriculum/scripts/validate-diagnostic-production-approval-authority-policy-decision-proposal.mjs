@@ -181,6 +181,26 @@ const slice10ChangedPaths = [
   ...slice10PrimaryPaths,
 ];
 const slice10ChangedPathSet = new Set(slice10ChangedPaths);
+const slice11PrimaryPaths = [
+  "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+  "docs/wave-6/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
+];
+const slice11BaselinePrimaryPaths = new Set([
+  "docs/wave-6/diagnostic-readiness-integration-plan-decision-proposal.md",
+  "docs/wave-6/slice-10-implementation-note.md",
+  "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+]);
+const slice11ChangedPaths = [
+  ...slice10ChangedPaths.filter((value) => !slice11BaselinePrimaryPaths.has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  ...slice11PrimaryPaths,
+];
+const slice11ChangedPathSet = new Set(slice11ChangedPaths);
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
 export const defaultProposalPath = path.resolve(
@@ -853,6 +873,14 @@ export function validateDiagnosticProductionApprovalAuthorityDecisionProposalWor
 ) {
   if (String(env.GITHUB_ACTIONS ?? "").toLowerCase() !== "true" && paths.length === 0) return [];
   const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === slice11ChangedPaths.length &&
+    normalized.every((value) => slice11ChangedPathSet.has(value))
+  ) {
+    if (new Set(normalized).size !== normalized.length)
+      fail("Changed paths must not contain duplicates.");
+    return normalized;
+  }
   if (
     normalized.length === slice9ChangedPaths.length &&
     normalized.every((value) => slice9ChangedPathSet.has(value))

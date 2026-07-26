@@ -133,6 +133,26 @@ slice10ChangedPaths.push(
   "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
 );
 const slice10ChangedPathSet = new Set(slice10ChangedPaths);
+const slice11PrimaryPaths = [
+  "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+  "docs/wave-6/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
+];
+const slice11BaselinePrimaryPaths = new Set([
+  "docs/wave-6/diagnostic-readiness-integration-plan-decision-proposal.md",
+  "docs/wave-6/slice-10-implementation-note.md",
+  "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+]);
+const slice11ChangedPaths = [
+  ...slice10ChangedPaths.filter((value) => !slice11BaselinePrimaryPaths.has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  ...slice11PrimaryPaths,
+];
+const slice11ChangedPathSet = new Set(slice11ChangedPaths);
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
 export const defaultProposalPath = path.resolve(
@@ -528,6 +548,17 @@ function validateDiagnosticCoverageGapClosurePlanDecisionProposalSlice10ChangedP
     fail(`Wave 6 Slice 10 requires exactly ${slice10ChangedPaths.length} changed paths.`);
   return normalized;
 }
+function validateDiagnosticCoverageGapClosurePlanDecisionProposalSlice11ChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length)
+    fail("Changed paths must not contain duplicates.");
+  const unexpected = normalized.filter((value) => !slice11ChangedPathSet.has(value));
+  if (unexpected.length > 0) fail(`Wave 6 Slice 11 out-of-scope path changed: ${unexpected[0]}.`);
+  if (normalized.length !== slice11ChangedPaths.length)
+    fail(`Wave 6 Slice 11 requires exactly ${slice11ChangedPaths.length} changed paths.`);
+  return normalized;
+}
 export function collectDiagnosticCoverageGapClosurePlanDecisionProposalChangedPaths({
   cwd = repoRoot,
   env = process.env,
@@ -542,6 +573,11 @@ export function validateDiagnosticCoverageGapClosurePlanDecisionProposalWorktree
 ) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   if (String(env.GITHUB_ACTIONS ?? "").toLowerCase() !== "true" && paths.length === 0) return [];
+  if (
+    paths.length === slice11ChangedPaths.length &&
+    paths.every((value) => slice11ChangedPathSet.has(String(value).replaceAll("\\", "/")))
+  )
+    return validateDiagnosticCoverageGapClosurePlanDecisionProposalSlice11ChangedPaths(paths);
   if (
     paths.length === slice10ChangedPaths.length &&
     paths.every((value) => slice10ChangedPathSet.has(String(value).replaceAll("\\", "/")))

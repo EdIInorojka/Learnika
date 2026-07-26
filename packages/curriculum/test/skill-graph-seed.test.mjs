@@ -34,6 +34,11 @@ const staticDocumentationPathsThroughWave6Slice2 = [
   "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+  "docs/wave-6/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
   "docs/wave-5/closure-gate.md",
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
@@ -180,6 +185,11 @@ test("scope guard permits only forty-eight exact documentation paths through Wav
         "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
         "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
         "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+        "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+        "docs/wave-6/slice-11-implementation-note.md",
+        "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+        "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+        "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
       ].includes(value),
   );
   assert.deepEqual(validateSkillGraphChangedPaths(slice8Only), slice8Only);

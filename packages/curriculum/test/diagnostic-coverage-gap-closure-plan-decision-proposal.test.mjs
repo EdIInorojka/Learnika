@@ -98,6 +98,21 @@ test("Slice 10 continuation paths remain explicit and narrow", () => {
   );
 });
 
+test("Slice 11 continuation paths remain explicit and narrow", () => {
+  const slice11Paths = [
+    "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+    "docs/wave-6/slice-11-implementation-note.md",
+    "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
+  ];
+  assert.equal(new Set(slice11Paths).size, 5);
+  assert.throws(
+    () => validateDiagnosticCoverageGapClosurePlanDecisionProposalChangedPaths(slice11Paths),
+    /out-of-scope/,
+  );
+});
+
 test("clean local checkout is allowed while dirty scope is exact", () => {
   assert.deepEqual(
     validateDiagnosticCoverageGapClosurePlanDecisionProposalWorktreeScope([], { env: {} }),

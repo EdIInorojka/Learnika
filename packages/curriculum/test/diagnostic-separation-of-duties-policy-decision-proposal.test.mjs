@@ -139,6 +139,11 @@ const approvedWave6Slice8ChangedPaths = [
   "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+  "docs/wave-6/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -438,7 +443,9 @@ test("Slice 4 guard admits only the exact cumulative Slice 8 continuation", () =
       !value.includes("slice-9") &&
       !value.includes("coverage-gap-closure-plan-decision-proposal") &&
       !value.includes("readiness-integration-plan-decision-proposal") &&
-      !value.includes("slice-10-implementation-note"),
+      !value.includes("slice-10-implementation-note") &&
+      !value.includes("rollback-withdrawal-policy-decision-proposal") &&
+      !value.includes("slice-11-implementation-note"),
   );
   assert.equal(slice8Only.length, 48);
   assert.deepEqual(

@@ -248,6 +248,19 @@ const wave6Slice10ChangedPaths = [
   ...wave6Slice10PrimaryPaths,
 ];
 const wave6Slice10ChangedPathSet = new Set(wave6Slice10ChangedPaths);
+const wave6Slice11PrimaryPaths = [
+  "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+  "docs/wave-6/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
+];
+const wave6Slice11ChangedPaths = [
+  ...wave6Slice10ChangedPaths.filter((value) => !new Set(wave6Slice10PrimaryPaths).has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  ...wave6Slice11PrimaryPaths,
+];
+const wave6Slice11ChangedPathSet = new Set(wave6Slice11ChangedPaths);
 const slice4CiRemediationPathSet = new Set([
   "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -936,6 +949,14 @@ export function validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
     : paths;
   if (
     Array.isArray(normalized) &&
+    normalized.length === wave6Slice11ChangedPaths.length &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave6Slice11ChangedPathSet.has(value))
+  ) {
+    return normalized;
+  }
+  if (
+    Array.isArray(normalized) &&
     normalized.length === wave6Slice10ChangedPaths.length &&
     normalized.every((value) => wave6Slice10ChangedPathSet.has(value))
   ) {
@@ -1162,6 +1183,11 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   const { base, head } = ciCommitRange({ cwd, env, runGit, readEvent });
   let cumulativeBase = base;
   let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
+  if (
+    paths.length === wave6Slice11ChangedPaths.length &&
+    paths.every((value) => wave6Slice11ChangedPathSet.has(value))
+  )
+    return paths;
   if (
     paths.length === wave6Slice8ChangedPaths.length &&
     paths.every((value) => wave6Slice8ChangedPathSet.has(value))

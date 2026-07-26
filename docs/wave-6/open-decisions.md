@@ -487,3 +487,32 @@ changes readiness:
   negative vectors and the prohibition on CI-derived authorization;
 - `W6-S10-OD-POLICY-CHANGE-SEQUENCING` — separate policy approval,
   activation sequencing and release authority.
+
+## W6-S11 — diagnostic rollback and withdrawal policy decision proposal
+
+The following decisions remain unresolved and deferred; none evaluates a
+trigger, withdraws a candidate, rolls back readiness, preserves operational
+evidence or authorizes a lifecycle transition:
+
+- `W6-S11-OD-WITHDRAWAL-TRIGGER-TAXONOMY` — candidate revision, policy,
+  evidence, rights, safety, authorization and digest trigger categories;
+- `W6-S11-OD-ROLLBACK-TRIGGER-TAXONOMY` — readiness-input, coverage,
+  approval-withdrawal, propagation-failure and policy-version triggers;
+- `W6-S11-OD-CANDIDATE-WITHDRAWAL-CONTAINMENT` — exact-version binding,
+  authority, immediate containment and downstream propagation;
+- `W6-S11-OD-PRODUCTION-APPROVAL-WITHDRAWAL` — suspension, withdrawal,
+  historical status, re-approval and authority boundaries;
+- `W6-S11-OD-EVIDENCE-TOMBSTONE` — retention, deletion, legal hold, orphan
+  handling and controlled tombstone semantics;
+- `W6-S11-OD-DIGEST-INVALIDATION-PROPAGATION` — invalidation triggers,
+  dependency propagation, regeneration authority and partial failure;
+- `W6-S11-OD-READINESS-ROLLBACK` — blocker reopening, containment,
+  transition authority and recovery after a future readiness transition;
+- `W6-S11-OD-AUDIT-HISTORY-PRESERVATION` — append-only history,
+  attribution, integrity, retention and withdrawn-state interpretation;
+- `W6-S11-OD-NOTIFICATION-ESCALATION` — minimum disclosure, recipients,
+  severity, acknowledgement, retry and escalation ownership;
+- `W6-S11-OD-RESTORATION-REAPPROVAL-FORWARD-FIX` — restoration prohibition,
+  repeated gates, independent re-approval and forward-fix sequencing;
+- `W6-S11-OD-PARTIAL-FAILURE-RECOVERY` — reconciliation, idempotency,
+  recovery checkpoints and fail-closed handling of incomplete propagation.

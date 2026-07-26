@@ -133,10 +133,23 @@ const slice10PrimaryPaths = [
   "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
 ];
+const slice11PrimaryPaths = [
+  "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+  "docs/wave-6/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
+];
 export const changedPaths = [
   ...slice9ChangedPaths.filter((changedPath) => !slice9PrimaryPaths.has(changedPath)),
   ...slice10PrimaryPaths,
 ];
+const slice11ChangedPaths = [
+  ...changedPaths.filter((changedPath) => !new Set(slice10PrimaryPaths).has(changedPath)),
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  ...slice11PrimaryPaths,
+];
+const slice11ChangedPathSet = new Set(slice11ChangedPaths);
 const changedPathSet = new Set(changedPaths);
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "../../..");
@@ -807,6 +820,14 @@ export function validateDiagnosticReadinessIntegrationPlanDecisionProposalWorktr
 ) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   if (!ci && paths.length === 0) return [];
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === slice11ChangedPaths.length &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => slice11ChangedPathSet.has(value))
+  ) {
+    return normalized;
+  }
   return validateDiagnosticReadinessIntegrationPlanDecisionProposalChangedPaths(paths);
 }
 

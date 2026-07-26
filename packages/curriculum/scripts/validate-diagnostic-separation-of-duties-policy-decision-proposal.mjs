@@ -233,6 +233,19 @@ const wave6Slice10ChangedPaths = [
   ...wave6Slice10PrimaryPaths,
 ];
 const wave6Slice10ChangedPathSet = new Set(wave6Slice10ChangedPaths);
+const wave6Slice11PrimaryPaths = [
+  "docs/wave-6/diagnostic-rollback-withdrawal-policy-decision-proposal.md",
+  "docs/wave-6/slice-11-implementation-note.md",
+  "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
+];
+const wave6Slice11ChangedPaths = [
+  ...wave6Slice10ChangedPaths.filter((value) => !new Set(wave6Slice10PrimaryPaths).has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  ...wave6Slice11PrimaryPaths,
+];
+const wave6Slice11ChangedPathSet = new Set(wave6Slice11ChangedPaths);
 const ciRemediationPathSet = new Set([
   "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -1332,6 +1345,12 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
 
   if (
+    paths.length === wave6Slice11ChangedPaths.length &&
+    paths.every((value) => wave6Slice11ChangedPathSet.has(value))
+  ) {
+    return paths;
+  }
+  if (
     paths.length === wave6Slice9ChangedPaths.length &&
     paths.every((value) => wave6Slice9ChangedPathSet.has(value))
   ) {
@@ -1416,6 +1435,14 @@ export function validateSeparationOfDutiesDecisionProposalWorktreeScope(
 ) {
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   if (!inGitHubActions && Array.isArray(paths) && paths.length === 0) return [];
+  if (
+    Array.isArray(paths) &&
+    paths.length === wave6Slice11ChangedPaths.length &&
+    new Set(paths).size === paths.length &&
+    paths.every((value) => wave6Slice11ChangedPathSet.has(String(value).replaceAll("\\", "/")))
+  ) {
+    return paths;
+  }
   if (
     Array.isArray(paths) &&
     paths.length === wave6Slice10ChangedPaths.length &&
