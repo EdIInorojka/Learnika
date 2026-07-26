@@ -1,0 +1,304 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticCoverageGapClosurePlanDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-9.grade-7-9-math.v1",
+    "proposalVersion": "wave-6.slice-9.diagnostic-coverage-gap-closure-plan.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_coverage_gap_closure_plan_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "reviewCoverageArtifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "coverageGapClosurePlaceholderArtifactVersion": "wave-5.slice-11.grade-7-9-math.v1",
+    "separationOfDutiesDecisionProposalArtifactVersion": "wave-6.slice-4.grade-7-9-math.v1",
+    "conflictOfInterestDecisionProposalArtifactVersion": "wave-6.slice-5.grade-7-9-math.v1",
+    "auditIdentityDecisionProposalArtifactVersion": "wave-6.slice-6.grade-7-9-math.v1",
+    "evidenceStorageRetentionDecisionProposalArtifactVersion": "wave-6.slice-7.grade-7-9-math.v1",
+    "productionApprovalAuthorityDecisionProposalArtifactVersion": "wave-6.slice-8.grade-7-9-math.v1",
+    "sourceContract": "docs/wave-6/diagnostic-coverage-gap-closure-plan-decision-proposal.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "coverageClosureAllowed": false
+  },
+  "upstreamReferences": {
+    "activationPrerequisites": {
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "prerequisiteId": "coverage_gap_closure_plan",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "satisfiedPrerequisiteCount": 0,
+      "activationStatus": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "coverageGapClosurePlaceholder": {
+      "artifactVersion": "wave-5.slice-11.grade-7-9-math.v1",
+      "planState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "slotPlanEntryCount": 11,
+      "draftOnlyEntryCount": 5,
+      "gapEntryCount": 6,
+      "closedGapCount": 0,
+      "productionApprovedSlotCount": 0,
+      "gapClosureAllowed": false,
+      "productionCoverageAllowed": false
+    },
+    "separationOfDuties": {
+      "artifactVersion": "wave-6.slice-4.grade-7-9-math.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "enforcementAllowed": false
+    },
+    "conflictOfInterest": {
+      "artifactVersion": "wave-6.slice-5.grade-7-9-math.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "identityComparisonAllowed": false
+    },
+    "auditIdentity": {
+      "artifactVersion": "wave-6.slice-6.grade-7-9-math.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "identityBindingAllowed": false,
+      "auditEventRecordingAllowed": false
+    },
+    "evidenceStorageRetention": {
+      "artifactVersion": "wave-6.slice-7.grade-7-9-math.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "evidenceRecordCount": 0,
+      "storageObjectCount": 0,
+      "retentionScheduleCount": 0
+    },
+    "productionApprovalAuthority": {
+      "artifactVersion": "wave-6.slice-8.grade-7-9-math.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "authorityGrantCount": 0,
+      "approvalDecisionCount": 0,
+      "productionApprovalCount": 0,
+      "productionApprovalAllowed": false
+    }
+  },
+  "currentBaseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": {
+      "status": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "coverageGapClosurePrerequisite": {
+      "prerequisiteId": "coverage_gap_closure_plan",
+      "status": "UNSATISFIED_DEFERRED",
+      "evidenceRecordRefs": []
+    },
+    "satisfiedPrerequisiteCount": 0
+  },
+  "coverageBaseline": {
+    "artifactVersion": "wave-4.slice-2.grade-7-9-math.v1",
+    "slotCount": 11,
+    "statusCounts": {
+      "DRAFT_ONLY": 5,
+      "GAP_CONFIRMED": 6,
+      "PRODUCTION_APPROVED": 0
+    },
+    "gradeBands": [7, 8, 9],
+    "strands": ["number", "algebra", "functions", "geometry", "data"],
+    "slots": [
+      {
+        "blueprintSlotId": "diag.math.g7-9.number.rational-number-operations.v1",
+        "coverageStatus": "DRAFT_ONLY",
+        "gradeBand": "7-9",
+        "strand": "number"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.number.percent-ratio.v1",
+        "coverageStatus": "GAP_CONFIRMED",
+        "gradeBand": "7-9",
+        "strand": "number"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.algebra.expression-transformations.v1",
+        "coverageStatus": "DRAFT_ONLY",
+        "gradeBand": "7-9",
+        "strand": "algebra"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.algebra.linear-equation-one-variable.v1",
+        "coverageStatus": "GAP_CONFIRMED",
+        "gradeBand": "7-9",
+        "strand": "algebra"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.algebra.powers-and-roots.v1",
+        "coverageStatus": "GAP_CONFIRMED",
+        "gradeBand": "7-9",
+        "strand": "algebra"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.functions.coordinate-plane-graphs.v1",
+        "coverageStatus": "DRAFT_ONLY",
+        "gradeBand": "7-9",
+        "strand": "functions"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.functions.linear-function.v1",
+        "coverageStatus": "GAP_CONFIRMED",
+        "gradeBand": "7-9",
+        "strand": "functions"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.geometry.basic-objects-angles.v1",
+        "coverageStatus": "GAP_CONFIRMED",
+        "gradeBand": "7-9",
+        "strand": "geometry"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.geometry.triangle-properties.v1",
+        "coverageStatus": "GAP_CONFIRMED",
+        "gradeBand": "7-9",
+        "strand": "geometry"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.geometry.parallel-lines.v1",
+        "coverageStatus": "DRAFT_ONLY",
+        "gradeBand": "7-9",
+        "strand": "geometry"
+      },
+      {
+        "blueprintSlotId": "diag.math.g7-9.data.probability-statistics-basic.v1",
+        "coverageStatus": "DRAFT_ONLY",
+        "gradeBand": "7-9",
+        "strand": "data"
+      }
+    ],
+    "closureRecorded": false,
+    "coverageAdvanceAllowed": false
+  },
+  "rightsSafeAuthoringRequirements": {
+    "state": "UNRESOLVED_DEFERRED",
+    "originalityRequired": true,
+    "rightsEvidenceRequired": true,
+    "provenanceRequired": true,
+    "copiedMaterialAllowed": false,
+    "authoringActivationAllowed": false
+  },
+  "reviewEvidenceRequirements": {
+    "state": "UNRESOLVED_DEFERRED",
+    "evidenceSufficiencyRequired": true,
+    "freshnessRequired": true,
+    "invalidationRequired": true,
+    "evidenceRecordingAllowed": false,
+    "evidenceLinkageAllowed": false
+  },
+  "approvalDispositionBoundary": {
+    "state": "UNRESOLVED_DEFERRED",
+    "coverageApprovalAllowed": false,
+    "waiverAllowed": false,
+    "silentWaiverAllowed": false,
+    "productionApprovalAllowed": false,
+    "approvalRecordingAllowed": false
+  },
+  "gradeStrandBalanceConstraints": {
+    "state": "UNRESOLVED_DEFERRED",
+    "gradeCoverageRequired": true,
+    "strandCoverageRequired": true,
+    "imbalanceExceptionAllowed": false,
+    "balanceRecordingAllowed": false
+  },
+  "closureGatingRequirements": {
+    "state": "UNRESOLVED_DEFERRED",
+    "allRequiredGatesMustPass": true,
+    "noSilentWaiver": true,
+    "reconciliationRequired": true,
+    "rollbackRequired": true,
+    "closureRecordingAllowed": false
+  },
+  "unresolvedDecisions": [
+    {
+      "decisionId": "baseline_slot_taxonomy",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "rights_safe_authoring",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "review_evidence_requirements",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "approval_waiver_boundary",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "grade_strand_balance",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    { "decisionId": "closure_gating", "state": "UNRESOLVED_DEFERRED", "decisionRecordRef": null },
+    {
+      "decisionId": "draft_gap_sequencing",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    {
+      "decisionId": "production_approval_separation",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    },
+    { "decisionId": "dependency_order", "state": "UNRESOLVED_DEFERRED", "decisionRecordRef": null },
+    {
+      "decisionId": "audit_and_maintenance",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionRecordRef": null
+    }
+  ],
+  "syntheticExamples": [
+    { "vectorRef": "synthetic-slot-taxonomy", "disposition": "PROPOSED_NON_OPERATIONAL" },
+    { "vectorRef": "synthetic-draft-disposition", "disposition": "PROPOSED_NON_OPERATIONAL" },
+    { "vectorRef": "synthetic-gap-sequence", "disposition": "PROPOSED_NON_OPERATIONAL" },
+    { "vectorRef": "synthetic-waiver-rejection", "disposition": "REJECT" },
+    { "vectorRef": "synthetic-rights-boundary", "disposition": "REJECT" }
+  ],
+  "recordBoundary": {
+    "coverageClosureRecords": false,
+    "coverageApprovalRecords": false,
+    "coverageWaiverRecords": false,
+    "candidateRecords": false,
+    "evidenceRecords": false,
+    "reviewDecisionRecords": false,
+    "productionApprovalRecords": false,
+    "identityRecords": false,
+    "runtimeCoverageEnabled": false
+  },
+  "aggregate": {
+    "slotCount": 11,
+    "draftOnlySlotCount": 5,
+    "gapConfirmedSlotCount": 6,
+    "productionApprovedSlotCount": 0,
+    "unresolvedDecisionCount": 10,
+    "syntheticExampleCount": 5,
+    "closedGapCount": 0,
+    "coverageApprovalCount": 0,
+    "coverageWaiverCount": 0,
+    "candidateCount": 0,
+    "evidenceRecordCount": 0,
+    "productionApprovalCount": 0,
+    "satisfiedPrerequisiteCount": 0
+  },
+  "coverageClosureRecords": [],
+  "coverageApprovalRecords": [],
+  "coverageWaiverRecords": [],
+  "candidateRecords": [],
+  "evidenceRecords": [],
+  "reviewDecisionRecords": [],
+  "productionApprovalRecords": [],
+  "identityRecords": []
+}

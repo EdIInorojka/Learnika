@@ -89,6 +89,11 @@ const approvedWave6Slice2ChangedPaths = [
   "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-coverage-gap-closure-plan-decision-proposal.md",
+  "docs/wave-6/slice-9-implementation-note.md",
+  "packages/curriculum/diagnostic-coverage-gap-closure-plan-decision-proposal/grade-7-9-math.coverage-gap-closure-plan-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
   "package.json",
   "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -433,14 +438,18 @@ test("private machine candidate and hash-like values fail closed", async () => {
 });
 
 test("scope guard retains exact cumulative admission through Wave 6 Slice 8", () => {
-  assert.equal(approvedWave6Slice2ChangedPaths.length, 66);
+  const slice2Only = approvedWave6Slice2ChangedPaths.filter(
+    (value) =>
+      !value.includes("slice-9") && !value.includes("coverage-gap-closure-plan-decision-proposal"),
+  );
+  assert.equal(slice2Only.length, 66);
   assert.deepEqual(
-    validateCanonicalizationDigestDecisionProposalChangedPaths(approvedWave6Slice2ChangedPaths),
-    approvedWave6Slice2ChangedPaths,
+    validateCanonicalizationDigestDecisionProposalChangedPaths(slice2Only),
+    slice2Only,
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/diagnostic-canonicalization-digest-policy-decision-proposal.md",
-    "docs/wave-6/slice-9-implementation-note.md",
+    "docs/wave-6/slice-10-implementation-note.md",
     "docs/wave-6/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-canonicalization/controller.ts",

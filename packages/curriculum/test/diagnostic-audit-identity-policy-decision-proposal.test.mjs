@@ -99,6 +99,11 @@ const approvedSlice8ChangedPaths = [
   "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-coverage-gap-closure-plan-decision-proposal.md",
+  "docs/wave-6/slice-9-implementation-note.md",
+  "packages/curriculum/diagnostic-coverage-gap-closure-plan-decision-proposal/grade-7-9-math.coverage-gap-closure-plan-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -359,16 +364,20 @@ test("Slice 6 guard admits the separate exact Slice 7 continuation", () => {
 });
 
 test("Slice 6 guard admits the separate exact Slice 8 continuation", () => {
-  assert.equal(approvedSlice8ChangedPaths.length, 48);
+  const slice8Only = approvedSlice8ChangedPaths.filter(
+    (value) =>
+      !value.includes("slice-9") && !value.includes("coverage-gap-closure-plan-decision-proposal"),
+  );
+  assert.equal(slice8Only.length, 48);
   assert.deepEqual(
-    validateDiagnosticAuditIdentityDecisionProposalSlice8ChangedPaths(approvedSlice8ChangedPaths),
-    approvedSlice8ChangedPaths,
+    validateDiagnosticAuditIdentityDecisionProposalSlice8ChangedPaths(slice8Only),
+    slice8Only,
   );
   assert.deepEqual(
-    validateDiagnosticAuditIdentityDecisionProposalWorktreeScope(approvedSlice8ChangedPaths, {
+    validateDiagnosticAuditIdentityDecisionProposalWorktreeScope(slice8Only, {
       env: { GITHUB_ACTIONS: "false" },
     }),
-    approvedSlice8ChangedPaths,
+    slice8Only,
   );
 });
 

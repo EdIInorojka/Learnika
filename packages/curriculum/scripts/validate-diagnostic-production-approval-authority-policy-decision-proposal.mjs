@@ -145,6 +145,25 @@ const changedPaths = [
   "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
 ];
 const changedPathSet = new Set(changedPaths);
+const slice9PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-coverage-gap-closure-plan-decision-proposal.md",
+  "docs/wave-6/slice-9-implementation-note.md",
+  "packages/curriculum/diagnostic-coverage-gap-closure-plan-decision-proposal/grade-7-9-math.coverage-gap-closure-plan-decision-proposal.v1.json",
+]);
+const slice9ChangedPaths = [
+  ...changedPaths.filter(
+    (changedPath) =>
+      !new Set([
+        "docs/wave-6/diagnostic-production-approval-authority-policy-decision-proposal.md",
+        "docs/wave-6/slice-8-implementation-note.md",
+        "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
+      ]).has(changedPath),
+  ),
+  ...slice9PrimaryOnlyPaths,
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
+];
+const slice9ChangedPathSet = new Set(slice9ChangedPaths);
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
 export const defaultProposalPath = path.resolve(
@@ -816,7 +835,29 @@ export function validateDiagnosticProductionApprovalAuthorityDecisionProposalWor
   { env = process.env } = {},
 ) {
   if (String(env.GITHUB_ACTIONS ?? "").toLowerCase() !== "true" && paths.length === 0) return [];
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === slice9ChangedPaths.length &&
+    normalized.every((value) => slice9ChangedPathSet.has(value))
+  ) {
+    return validateDiagnosticProductionApprovalAuthorityDecisionProposalSlice9ChangedPaths(
+      normalized,
+    );
+  }
   return validateDiagnosticProductionApprovalAuthorityDecisionProposalChangedPaths(paths);
+}
+export function validateDiagnosticProductionApprovalAuthorityDecisionProposalSlice9ChangedPaths(
+  paths,
+) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length)
+    fail("Changed paths must not contain duplicates.");
+  const unexpected = normalized.filter((value) => !slice9ChangedPathSet.has(value));
+  if (unexpected.length > 0) fail(`Wave 6 Slice 9 out-of-scope path changed: ${unexpected[0]}.`);
+  if (normalized.length !== slice9ChangedPaths.length)
+    fail(`Wave 6 Slice 9 requires exactly ${slice9ChangedPaths.length} changed paths.`);
+  return normalized;
 }
 export async function main() {
   const [artifact, upstream] = await Promise.all([

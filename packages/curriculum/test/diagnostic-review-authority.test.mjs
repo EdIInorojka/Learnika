@@ -1147,7 +1147,7 @@ test("all governance scope guards retain the exact Wave 6 Slice 1 worktree admis
 
   const forbiddenPaths = [
     "docs/wave-6/archive/scope-and-non-goals.md",
-    "docs/wave-6/slice-9-implementation-note.md",
+    "docs/wave-6/slice-10-implementation-note.md",
     "docs/wave-6/scope-and-non-goals.md.bak",
     "apps/api/src/diagnostic-candidate-identity/controller.ts",
     "packages/contracts/openapi.json",
@@ -1202,6 +1202,11 @@ test("all governance scope guards retain exact cumulative admission through Wave
     "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
     "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
     "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
+    "docs/wave-6/diagnostic-coverage-gap-closure-plan-decision-proposal.md",
+    "docs/wave-6/slice-9-implementation-note.md",
+    "packages/curriculum/diagnostic-coverage-gap-closure-plan-decision-proposal/grade-7-9-math.coverage-gap-closure-plan-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
     "package.json",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
     "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -1236,7 +1241,11 @@ test("all governance scope guards retain exact cumulative admission through Wave
     "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
     "packages/curriculum/test/skill-graph-seed.test.mjs",
   ];
-  assert.equal(approvedPaths.length, 66);
+  const approvedPathsThroughSlice8 = approvedPaths.filter(
+    (value) =>
+      !value.includes("slice-9") && !value.includes("coverage-gap-closure-plan-decision-proposal"),
+  );
+  assert.equal(approvedPathsThroughSlice8.length, 66);
   const validators = [
     validateReviewCoverageChangedPaths,
     validateReviewEvidenceChangedPaths,
@@ -1262,12 +1271,12 @@ test("all governance scope guards retain exact cumulative admission through Wave
     validateCanonicalizationDigestDecisionProposalChangedPaths,
   ];
   for (const validateChangedPaths of validators) {
-    assert.deepEqual(validateChangedPaths(approvedPaths), approvedPaths);
+    assert.deepEqual(validateChangedPaths(approvedPathsThroughSlice8), approvedPathsThroughSlice8);
   }
 
   const forbiddenPaths = [
     "docs/wave-6/archive/diagnostic-canonicalization-digest-policy-decision-proposal.md",
-    "docs/wave-6/slice-9-implementation-note.md",
+    "docs/wave-6/slice-10-implementation-note.md",
     "docs/wave-6/slice-2-implementation-note.md.bak",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-canonicalization/controller.ts",

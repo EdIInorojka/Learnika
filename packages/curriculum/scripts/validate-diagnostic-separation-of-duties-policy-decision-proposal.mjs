@@ -199,6 +199,23 @@ const wave6Slice8ChangedPaths = [
   "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
 ];
 const wave6Slice8ChangedPathSet = new Set(wave6Slice8ChangedPaths);
+const wave6Slice8PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-production-approval-authority-policy-decision-proposal.md",
+  "docs/wave-6/slice-8-implementation-note.md",
+  "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
+]);
+const wave6Slice9PrimaryOnlyPaths = new Set([
+  "docs/wave-6/diagnostic-coverage-gap-closure-plan-decision-proposal.md",
+  "docs/wave-6/slice-9-implementation-note.md",
+  "packages/curriculum/diagnostic-coverage-gap-closure-plan-decision-proposal/grade-7-9-math.coverage-gap-closure-plan-decision-proposal.v1.json",
+]);
+const wave6Slice9ChangedPaths = [
+  ...wave6Slice8ChangedPaths.filter((changedPath) => !wave6Slice8PrimaryOnlyPaths.has(changedPath)),
+  ...wave6Slice9PrimaryOnlyPaths,
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
+];
+const wave6Slice9ChangedPathSet = new Set(wave6Slice9ChangedPaths);
 const ciRemediationPathSet = new Set([
   "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -1106,6 +1123,17 @@ export function validateSeparationOfDutiesDecisionProposalSlice8ChangedPaths(pat
     fail(`Wave 6 Slice 8 requires exactly ${wave6Slice8ChangedPaths.length} changed paths.`);
   return normalized;
 }
+export function validateSeparationOfDutiesDecisionProposalSlice9ChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length)
+    fail("Changed paths must not contain duplicates.");
+  const unexpected = normalized.filter((value) => !wave6Slice9ChangedPathSet.has(value));
+  if (unexpected.length > 0) fail(`Wave 6 Slice 9 out-of-scope path changed: ${unexpected[0]}.`);
+  if (normalized.length !== wave6Slice9ChangedPaths.length)
+    fail(`Wave 6 Slice 9 requires exactly ${wave6Slice9ChangedPaths.length} changed paths.`);
+  return normalized;
+}
 
 function validateCiRemediationChangedPaths(paths) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
@@ -1276,6 +1304,12 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
 
   if (
+    paths.length === wave6Slice9ChangedPaths.length &&
+    paths.every((value) => wave6Slice9ChangedPathSet.has(value))
+  ) {
+    return validateSeparationOfDutiesDecisionProposalSlice9ChangedPaths(paths);
+  }
+  if (
     paths.length === wave6Slice8ChangedPaths.length &&
     paths.every((value) => wave6Slice8ChangedPathSet.has(value))
   ) {
@@ -1348,6 +1382,13 @@ export function validateSeparationOfDutiesDecisionProposalWorktreeScope(
 ) {
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   if (!inGitHubActions && Array.isArray(paths) && paths.length === 0) return [];
+  if (
+    Array.isArray(paths) &&
+    paths.length === wave6Slice9ChangedPaths.length &&
+    paths.every((value) => wave6Slice9ChangedPathSet.has(value))
+  ) {
+    return validateSeparationOfDutiesDecisionProposalSlice9ChangedPaths(paths);
+  }
   if (
     Array.isArray(paths) &&
     paths.length === wave6Slice8ChangedPaths.length &&

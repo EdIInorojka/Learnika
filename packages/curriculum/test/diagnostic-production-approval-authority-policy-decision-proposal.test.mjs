@@ -8,6 +8,7 @@ import {
   readDiagnosticProductionApprovalAuthorityDecisionProposalUpstream,
   validateDiagnosticProductionApprovalAuthorityDecisionProposal,
   validateDiagnosticProductionApprovalAuthorityDecisionProposalChangedPaths,
+  validateDiagnosticProductionApprovalAuthorityDecisionProposalSlice9ChangedPaths,
 } from "../scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs";
 
 const expectedChangedPaths = [
@@ -236,4 +237,26 @@ test("Slice 8 validator has no broad allowlist", async () => {
   assert.doesNotMatch(source, /["']docs\/wave-6\/["']/);
   assert.doesNotMatch(source, /["']packages\/curriculum\/["']/);
   assert.doesNotMatch(source, /["']apps\/api\/["']/);
+});
+
+test("Slice 9 cumulative scope remains exact without broadening", () => {
+  const slice8Primary = new Set([
+    "docs/wave-6/diagnostic-production-approval-authority-policy-decision-proposal.md",
+    "docs/wave-6/slice-8-implementation-note.md",
+    "packages/curriculum/diagnostic-production-approval-authority-policy-decision-proposal/grade-7-9-math.production-approval-authority-policy-decision-proposal.v1.json",
+  ]);
+  const slice9Paths = [
+    ...expectedChangedPaths.filter((value) => !slice8Primary.has(value)),
+    "docs/wave-6/diagnostic-coverage-gap-closure-plan-decision-proposal.md",
+    "docs/wave-6/slice-9-implementation-note.md",
+    "packages/curriculum/diagnostic-coverage-gap-closure-plan-decision-proposal/grade-7-9-math.coverage-gap-closure-plan-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
+  ];
+  assert.equal(slice9Paths.length, 50);
+  assert.equal(new Set(slice9Paths).size, 50);
+  assert.deepEqual(
+    validateDiagnosticProductionApprovalAuthorityDecisionProposalSlice9ChangedPaths(slice9Paths),
+    slice9Paths,
+  );
 });

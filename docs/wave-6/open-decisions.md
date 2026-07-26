@@ -436,3 +436,27 @@ or an authority grant:
 - `W6-S8-OD-ENFORCEMENT-AUDIT` — future enforcement and audit evidence;
 - `W6-S8-OD-DEPENDENCY-ORDER` — dependency ordering across the Slice 4–7
   proposals.
+
+## W6-S9 — coverage gap closure plan decision proposal
+
+The following decisions remain unresolved and deferred; none closes coverage,
+authorizes authoring, grants a waiver, or approves production use:
+
+- `W6-S9-OD-BASELINE-SLOT-TAXONOMY` — baseline state and slot taxonomy for
+  five draft-only and six gap-confirmed slots;
+- `W6-S9-OD-RIGHTS-SAFE-AUTHORING` — original authoring, provenance and
+  rights-safe source requirements;
+- `W6-S9-OD-REVIEW-EVIDENCE` — evidence sufficiency, freshness, invalidation
+  and retention dependencies;
+- `W6-S9-OD-APPROVAL-WAIVER-BOUNDARY` — approval disposition and explicit
+  no-silent-waiver boundary;
+- `W6-S9-OD-GRADE-STRAND-BALANCE` — grade and strand balance constraints;
+- `W6-S9-OD-CLOSURE-GATING` — closure gates, reconciliation and rollback;
+- `W6-S9-OD-DRAFT-GAP-SEQUENCING` — sequencing and disposition of draft-only
+  and gap-confirmed slots;
+- `W6-S9-OD-PRODUCTION-SEPARATION` — separation of coverage closure from
+  future production approval;
+- `W6-S9-OD-DEPENDENCY-ORDER` — non-authorizing dependency order across
+  Slices 4–8;
+- `W6-S9-OD-AUDIT-AND-MAINTENANCE` — future audit, maintenance and policy
+  change requirements.
