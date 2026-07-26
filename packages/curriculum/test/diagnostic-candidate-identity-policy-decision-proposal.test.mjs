@@ -123,6 +123,11 @@ const approvedWave6Slice1ChangedPaths = [
   "packages/curriculum/diagnostic-coverage-gap-closure-plan-decision-proposal/grade-7-9-math.coverage-gap-closure-plan-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-readiness-integration-plan-decision-proposal.md",
+  "docs/wave-6/slice-10-implementation-note.md",
+  "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];
@@ -389,7 +394,7 @@ test("scope guard retains exact cumulative admission through Wave 6 Slice 8", ()
   );
   for (const forbiddenPath of [
     "docs/wave-6/archive/scope-and-non-goals.md",
-    "docs/wave-6/slice-10-implementation-note.md",
+    "docs/wave-6/slice-11-implementation-note.md",
     "docs/wave-6/scope-and-non-goals.md.bak",
     "packages/curriculum/diagnostic-candidate-identity-policy-decision-proposal/extra.json",
     "apps/api/src/diagnostic-candidate-identity/controller.ts",

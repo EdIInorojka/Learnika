@@ -460,3 +460,30 @@ authorizes authoring, grants a waiver, or approves production use:
   Slices 4–8;
 - `W6-S9-OD-AUDIT-AND-MAINTENANCE` — future audit, maintenance and policy
   change requirements.
+
+## W6-S10 — diagnostic readiness integration plan decision proposal
+
+The following decisions remain unresolved and deferred; none evaluates an
+input, closes a blocker, satisfies a prerequisite, activates review or
+changes readiness:
+
+- `W6-S10-OD-READINESS-INPUT-CONTRACT` — input schema, exact version pins,
+  freshness and fail-closed handling;
+- `W6-S10-OD-PREREQUISITE-RECONCILIATION` — current prerequisite inputs,
+  authority and reconciliation semantics;
+- `W6-S10-OD-BLOCKER-RECONCILIATION` — per-blocker closure evidence,
+  reopening, invalidation and no-silent-closure rules;
+- `W6-S10-OD-PRODUCTION-APPROVAL-INPUT` — independent approval inputs,
+  expiry, withdrawal and authority validation;
+- `W6-S10-OD-COVERAGE-COMPLETION-INPUT` — per-slot coverage reconciliation,
+  duplicate handling and completion threshold;
+- `W6-S10-OD-EVIDENCE-DIGEST-IDENTITY-DEPENDENCIES` — consistency,
+  freshness, invalidation and withdrawal across governance dependencies;
+- `W6-S10-OD-TRANSITION-GUARD-AUTHORITY` — readiness transition conditions,
+  authority, negative vectors and explicit denial paths;
+- `W6-S10-OD-WITHDRAWAL-READINESS-ROLLBACK` — propagation, containment,
+  blocker reopening, history preservation and recovery;
+- `W6-S10-OD-CI-VALIDATION-GATE` — deterministic checks, provenance,
+  negative vectors and the prohibition on CI-derived authorization;
+- `W6-S10-OD-POLICY-CHANGE-SEQUENCING` — separate policy approval,
+  activation sequencing and release authority.

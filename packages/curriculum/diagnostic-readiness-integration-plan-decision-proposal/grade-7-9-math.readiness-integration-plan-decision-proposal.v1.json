@@ -1,0 +1,403 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticReadinessIntegrationPlanDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-10.grade-7-9-math.v1",
+    "proposalVersion": "wave-6.slice-10.diagnostic-readiness-integration-plan.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_readiness_integration_plan_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "readinessIntegrationPlaceholderArtifactVersion": "wave-5.slice-12.grade-7-9-math.v1",
+    "readinessIntegrationPlaceholderPlanVersion": "wave-5.slice-12.diagnostic-readiness-integration-plan.placeholder.v1",
+    "activationPrerequisitesArtifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+    "readinessPolicyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+    "readinessEvaluationVersion": "wave-3.slice-11.grade-7-9-math.v1",
+    "sourceContract": "docs/wave-5/diagnostic-readiness-integration-plan-contract.md",
+    "sourceProposal": "docs/wave-6/diagnostic-readiness-integration-plan-decision-proposal.md",
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "inputEvaluationAllowed": false,
+    "blockerClosureAllowed": false,
+    "readinessTransitionAllowed": false,
+    "policyChangeAllowed": false
+  },
+  "upstreamReferences": {
+    "readinessIntegrationPlaceholder": {
+      "artifactVersion": "wave-5.slice-12.grade-7-9-math.v1",
+      "planVersion": "wave-5.slice-12.diagnostic-readiness-integration-plan.placeholder.v1",
+      "planState": "UNRESOLVED_DEFERRED",
+      "prerequisiteId": "readiness_integration_plan",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "integrationEvaluationAllowed": false,
+      "readinessTransitionAllowed": false,
+      "blockerClosureAllowed": false
+    },
+    "activationPrerequisites": {
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "prerequisiteCount": 12,
+      "unsatisfiedPrerequisiteCount": 12,
+      "satisfiedPrerequisiteCount": 0,
+      "activationStatus": "BLOCKED",
+      "workflowStatus": "INACTIVE",
+      "productionApprovalCount": 0
+    },
+    "candidateIdentity": {
+      "artifactVersion": "wave-6.slice-1.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-1.diagnostic-candidate-identity-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "allocationAllowed": false,
+      "candidateRecordCount": 0
+    },
+    "canonicalizationDigest": {
+      "artifactVersion": "wave-6.slice-2.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-2.diagnostic-candidate-canonicalization-digest-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "policyActivationAllowed": false,
+      "selectedAlgorithmCount": 0,
+      "digestValueCount": 0
+    },
+    "reviewerRoleOwnership": {
+      "artifactVersion": "wave-6.slice-3.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-3.diagnostic-reviewer-role-ownership-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "roleOwnerCount": 0,
+      "reviewerAssignmentCount": 0
+    },
+    "separationOfDuties": {
+      "artifactVersion": "wave-6.slice-4.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-4.diagnostic-separation-of-duties-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "enforcementAllowed": false
+    },
+    "conflictOfInterest": {
+      "artifactVersion": "wave-6.slice-5.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-5.diagnostic-conflict-of-interest-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "identityComparisonAllowed": false
+    },
+    "auditIdentity": {
+      "artifactVersion": "wave-6.slice-6.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-6.diagnostic-audit-identity-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "identityBindingAllowed": false,
+      "auditEventCount": 0
+    },
+    "evidenceStorageRetention": {
+      "artifactVersion": "wave-6.slice-7.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-7.diagnostic-evidence-storage-retention-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "evidenceRecordCount": 0,
+      "retentionScheduleCount": 0
+    },
+    "productionApprovalAuthority": {
+      "artifactVersion": "wave-6.slice-8.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-8.diagnostic-production-approval-authority-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "authorityGrantCount": 0,
+      "approvalDecisionCount": 0,
+      "productionApprovalCount": 0,
+      "approvalInputAllowed": false
+    },
+    "coverageGapClosure": {
+      "artifactVersion": "wave-6.slice-9.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-9.diagnostic-coverage-gap-closure-plan.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "slotCount": 11,
+      "draftOnlySlotCount": 5,
+      "gapConfirmedSlotCount": 6,
+      "closedGapCount": 0,
+      "coverageClosureAllowed": false
+    },
+    "rollbackWithdrawal": {
+      "artifactVersion": "wave-5.slice-13.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-13.diagnostic-rollback-and-withdrawal.placeholder.v1",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activeRuleCount": 0,
+      "rollbackExecutionAllowed": false
+    },
+    "ciValidationGate": {
+      "artifactVersion": "wave-5.slice-14.grade-7-9-math.v1",
+      "gateVersion": "wave-5.slice-14.diagnostic-ci-and-deterministic-validation-activation-gate.placeholder.v1",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activeRuleCount": 0,
+      "gateExecutionCount": 0,
+      "readinessAuthorizationAllowed": false
+    }
+  },
+  "baseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "evaluationVersion": "wave-3.slice-11.grade-7-9-math.v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": {
+      "status": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "readinessIntegrationPrerequisite": {
+      "prerequisiteId": "readiness_integration_plan",
+      "status": "UNSATISFIED_DEFERRED",
+      "evidenceRecordRefs": []
+    },
+    "prerequisiteCount": 12,
+    "unsatisfiedPrerequisiteCount": 12,
+    "satisfiedPrerequisiteCount": 0,
+    "coverage": {
+      "slotCount": 11,
+      "draftOnlySlotCount": 5,
+      "gapConfirmedSlotCount": 6,
+      "productionApprovedSlotCount": 0,
+      "closedGapCount": 0
+    }
+  },
+  "decisionRequirements": [
+    {
+      "decisionId": "readiness_input_contract_and_version_pins",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "activation_prerequisite_reconciliation",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "blocker_reconciliation_and_reopening",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "production_approval_input_requirements",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "coverage_completion_input_requirements",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "evidence_digest_identity_dependency_requirements",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "readiness_transition_guard_and_authority",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "withdrawal_and_readiness_rollback",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "ci_validation_gate_and_negative_vectors",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "readiness_policy_change_and_activation_sequencing",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    }
+  ],
+  "readinessInputContractPlaceholder": {
+    "requirementId": "readiness_input_contract_and_version_pins",
+    "state": "UNRESOLVED_DEFERRED",
+    "inputSchemaReference": null,
+    "versionPinPolicyReference": null,
+    "freshnessPolicyReference": null,
+    "activeRuleReferences": [],
+    "inputEvaluationAllowed": false,
+    "recordingAllowed": false
+  },
+  "activationPrerequisiteReconciliationPlaceholder": {
+    "requirementId": "activation_prerequisite_reconciliation",
+    "state": "UNRESOLVED_DEFERRED",
+    "reconciliationPolicyReference": null,
+    "authorityReference": null,
+    "activeRuleReferences": [],
+    "evaluationAllowed": false,
+    "recordingAllowed": false
+  },
+  "blockerReconciliationPlaceholder": {
+    "requirementId": "blocker_reconciliation_and_reopening",
+    "state": "UNRESOLVED_DEFERRED",
+    "closureEvidencePolicyReference": null,
+    "reopeningPolicyReference": null,
+    "activeRuleReferences": [],
+    "evaluationAllowed": false,
+    "closureRecordingAllowed": false,
+    "silentClosureAllowed": false
+  },
+  "productionApprovalInputPlaceholder": {
+    "requirementId": "production_approval_input_requirements",
+    "state": "UNRESOLVED_DEFERRED",
+    "authorityPolicyReference": null,
+    "expiryPolicyReference": null,
+    "withdrawalPolicyReference": null,
+    "activeRuleReferences": [],
+    "inputEvaluationAllowed": false,
+    "recordingAllowed": false
+  },
+  "coverageCompletionInputPlaceholder": {
+    "requirementId": "coverage_completion_input_requirements",
+    "state": "UNRESOLVED_DEFERRED",
+    "coveragePolicyReference": null,
+    "perSlotReconciliationPolicyReference": null,
+    "activeRuleReferences": [],
+    "evaluationAllowed": false,
+    "recordingAllowed": false
+  },
+  "evidenceDigestIdentityDependencyPlaceholder": {
+    "requirementId": "evidence_digest_identity_dependency_requirements",
+    "state": "UNRESOLVED_DEFERRED",
+    "evidencePolicyReference": null,
+    "digestPolicyReference": null,
+    "identityPolicyReference": null,
+    "activeRuleReferences": [],
+    "dependencyEvaluationAllowed": false,
+    "recordingAllowed": false
+  },
+  "readinessTransitionGuardPlaceholder": {
+    "requirementId": "readiness_transition_guard_and_authority",
+    "state": "UNRESOLVED_DEFERRED",
+    "transitionPolicyReference": null,
+    "authorityReference": null,
+    "negativeVectorReferences": [],
+    "activeRuleReferences": [],
+    "evaluationAllowed": false,
+    "recordingAllowed": false
+  },
+  "readinessRollbackPlaceholder": {
+    "requirementId": "withdrawal_and_readiness_rollback",
+    "state": "UNRESOLVED_DEFERRED",
+    "withdrawalPolicyReference": null,
+    "propagationPolicyReference": null,
+    "activeRuleReferences": [],
+    "evaluationAllowed": false,
+    "recordingAllowed": false
+  },
+  "ciValidationGatePlaceholder": {
+    "requirementId": "ci_validation_gate_and_negative_vectors",
+    "state": "UNRESOLVED_DEFERRED",
+    "gatePolicyReference": null,
+    "negativeVectorReferences": [],
+    "activeRuleReferences": [],
+    "gateExecutionAllowed": false,
+    "readinessAuthorizationAllowed": false
+  },
+  "policyChangeActivationSequencingPlaceholder": {
+    "requirementId": "readiness_policy_change_and_activation_sequencing",
+    "state": "UNRESOLVED_DEFERRED",
+    "policyChangeReference": null,
+    "activationSequenceReference": null,
+    "authorityReference": null,
+    "activeRuleReferences": [],
+    "policyChangeAllowed": false,
+    "activationAllowed": false
+  },
+  "recordBoundary": {
+    "readinessInputRecords": false,
+    "blockerReconciliationRecords": false,
+    "blockerClosureRecords": false,
+    "productionApprovalInputRecords": false,
+    "coverageCompletionInputRecords": false,
+    "evidenceDependencyRecords": false,
+    "digestDependencyRecords": false,
+    "identityDependencyRecords": false,
+    "readinessTransitionRecords": false,
+    "readinessRollbackRecords": false,
+    "ciGateExecutionRecords": false,
+    "readyStateRecords": false,
+    "prerequisiteSatisfactionRecords": false,
+    "productionApprovalRecords": false,
+    "runtimeIntegrationEnabled": false
+  },
+  "aggregate": {
+    "decisionRequirementCount": 10,
+    "unresolvedDecisionCount": 10,
+    "blockingReasonCount": 2,
+    "openBlockingReasonCount": 2,
+    "prerequisiteCount": 12,
+    "unsatisfiedPrerequisiteCount": 12,
+    "satisfiedPrerequisiteCount": 0,
+    "slotCount": 11,
+    "draftOnlySlotCount": 5,
+    "gapConfirmedSlotCount": 6,
+    "productionApprovedSlotCount": 0,
+    "closedGapCount": 0,
+    "readinessInputRecordCount": 0,
+    "blockerReconciliationRecordCount": 0,
+    "blockerClosureRecordCount": 0,
+    "productionApprovalInputRecordCount": 0,
+    "coverageCompletionInputRecordCount": 0,
+    "evidenceDependencyRecordCount": 0,
+    "digestDependencyRecordCount": 0,
+    "identityDependencyRecordCount": 0,
+    "readinessTransitionRecordCount": 0,
+    "readinessRollbackRecordCount": 0,
+    "ciGateExecutionCount": 0,
+    "readyStateRecordCount": 0,
+    "productionApprovalCount": 0,
+    "approvalDecisionCount": 0,
+    "authorityGrantCount": 0,
+    "auditEventCount": 0
+  },
+  "readinessInputRecords": [],
+  "blockerReconciliationRecords": [],
+  "blockerClosureRecords": [],
+  "productionApprovalInputRecords": [],
+  "coverageCompletionInputRecords": [],
+  "evidenceDependencyRecords": [],
+  "digestDependencyRecords": [],
+  "identityDependencyRecords": [],
+  "readinessTransitionRecords": [],
+  "readinessRollbackRecords": [],
+  "ciGateExecutionRecords": [],
+  "readyStateRecords": [],
+  "prerequisiteSatisfactionRecords": [],
+  "productionApprovalRecords": []
+}

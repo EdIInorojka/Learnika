@@ -231,6 +231,23 @@ const wave6Slice9ChangedPaths = [
   "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
 ];
 const wave6Slice9ChangedPathSet = new Set(wave6Slice9ChangedPaths);
+const wave6Slice10PrimaryPaths = [
+  "docs/wave-6/diagnostic-readiness-integration-plan-decision-proposal.md",
+  "docs/wave-6/slice-10-implementation-note.md",
+  "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+];
+const wave6Slice10ChangedPaths = [
+  ...wave6Slice9ChangedPaths.filter(
+    (changedPath) =>
+      !wave6Slice9PrimaryOnlyPaths.has(changedPath) &&
+      changedPath !==
+        "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
+  ),
+  ...wave6Slice10PrimaryPaths,
+];
+const wave6Slice10ChangedPathSet = new Set(wave6Slice10ChangedPaths);
 const slice4CiRemediationPathSet = new Set([
   "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -887,6 +904,17 @@ export function validateReviewerRoleOwnershipDecisionProposalSlice9ChangedPaths(
     fail(`Wave 6 Slice 9 requires exactly ${wave6Slice9ChangedPaths.length} changed paths.`);
   return normalized;
 }
+function validateReviewerRoleOwnershipDecisionProposalSlice10ChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length)
+    fail("Changed paths must not contain duplicates.");
+  const unexpected = normalized.filter((value) => !wave6Slice10ChangedPathSet.has(value));
+  if (unexpected.length > 0) fail(`Wave 6 Slice 10 out-of-scope path changed: ${unexpected[0]}`);
+  if (normalized.length !== wave6Slice10ChangedPaths.length)
+    fail(`Wave 6 Slice 10 requires exactly ${wave6Slice10ChangedPaths.length} changed paths.`);
+  return normalized;
+}
 
 function validateLocalRemediationChangedPaths(paths) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
@@ -906,6 +934,13 @@ export function validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
   const normalized = Array.isArray(paths)
     ? paths.map((value) => String(value).replaceAll("\\", "/"))
     : paths;
+  if (
+    Array.isArray(normalized) &&
+    normalized.length === wave6Slice10ChangedPaths.length &&
+    normalized.every((value) => wave6Slice10ChangedPathSet.has(value))
+  ) {
+    return validateReviewerRoleOwnershipDecisionProposalSlice10ChangedPaths(normalized);
+  }
   if (
     Array.isArray(normalized) &&
     normalized.length === wave6Slice9ChangedPaths.length &&
@@ -1133,6 +1168,11 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   )
     return validateReviewerRoleOwnershipDecisionProposalSlice8ChangedPaths(paths);
   if (
+    paths.length === wave6Slice10ChangedPaths.length &&
+    paths.every((value) => wave6Slice10ChangedPathSet.has(value))
+  )
+    return validateReviewerRoleOwnershipDecisionProposalSlice10ChangedPaths(paths);
+  if (
     paths.length === wave6Slice7ChangedPaths.length &&
     paths.every((value) => wave6Slice7ChangedPathSet.has(value))
   )
@@ -1174,6 +1214,11 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
     cumulativeBase = ancestor;
     paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
     if (isSlice4BaselineWithRemediation(paths)) return paths;
+    if (
+      paths.length === wave6Slice10ChangedPaths.length &&
+      paths.every((value) => wave6Slice10ChangedPathSet.has(value))
+    )
+      return validateReviewerRoleOwnershipDecisionProposalSlice10ChangedPaths(paths);
     if (paths.length === changedPaths.length)
       return validateReviewerRoleOwnershipDecisionProposalChangedPaths(paths);
   }

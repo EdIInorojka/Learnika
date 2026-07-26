@@ -205,6 +205,23 @@ const slice9ChangedPaths = [
   "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
 ];
 const slice9ChangedPathSet = new Set(slice9ChangedPaths);
+const slice10PrimaryPaths = [
+  "docs/wave-6/diagnostic-readiness-integration-plan-decision-proposal.md",
+  "docs/wave-6/slice-10-implementation-note.md",
+  "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+];
+const slice10ChangedPaths = [
+  ...slice9ChangedPaths.filter(
+    (changedPath) =>
+      !slice9PrimaryOnlyPaths.has(changedPath) &&
+      changedPath !==
+        "packages/curriculum/test/diagnostic-production-approval-authority-policy-decision-proposal.test.mjs",
+  ),
+  ...slice10PrimaryPaths,
+];
+const slice10ChangedPathSet = new Set(slice10ChangedPaths);
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
@@ -818,6 +835,17 @@ export function validateEvidenceStorageRetentionDecisionProposalSlice9ChangedPat
     fail(`Wave 6 Slice 9 requires exactly ${slice9ChangedPaths.length} changed paths.`);
   return normalized;
 }
+function validateEvidenceStorageRetentionDecisionProposalSlice10ChangedPaths(paths) {
+  if (!Array.isArray(paths)) fail("Changed paths must be an array.");
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length)
+    fail("Changed paths must not contain duplicates.");
+  const unexpected = normalized.filter((value) => !slice10ChangedPathSet.has(value));
+  if (unexpected.length > 0) fail(`Wave 6 Slice 10 out-of-scope path changed: ${unexpected[0]}.`);
+  if (normalized.length !== slice10ChangedPaths.length)
+    fail(`Wave 6 Slice 10 requires exactly ${slice10ChangedPaths.length} changed paths.`);
+  return normalized;
+}
 function defaultGitRunner(args, cwd) {
   const result = spawnSync("git", args, { cwd, encoding: "utf8" });
   return { status: result.status ?? 1, stdout: result.stdout ?? "", stderr: result.stderr ?? "" };
@@ -921,6 +949,13 @@ export function validateDiagnosticEvidenceStorageRetentionDecisionProposalWorktr
 ) {
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   if (!inGitHubActions && Array.isArray(paths) && paths.length === 0) return [];
+  if (
+    Array.isArray(paths) &&
+    paths.length === slice10ChangedPaths.length &&
+    paths.every((value) => slice10ChangedPathSet.has(String(value).replaceAll("\\", "/")))
+  ) {
+    return validateEvidenceStorageRetentionDecisionProposalSlice10ChangedPaths(paths);
+  }
   if (
     Array.isArray(paths) &&
     paths.length === slice9ChangedPaths.length &&

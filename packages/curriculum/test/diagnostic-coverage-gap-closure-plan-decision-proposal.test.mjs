@@ -83,6 +83,21 @@ test("exact cumulative Slice 9 scope rejects duplicates and out-of-scope paths",
   );
 });
 
+test("Slice 10 continuation paths remain explicit and narrow", () => {
+  const slice10Paths = [
+    "docs/wave-6/diagnostic-readiness-integration-plan-decision-proposal.md",
+    "docs/wave-6/slice-10-implementation-note.md",
+    "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+  ];
+  assert.equal(new Set(slice10Paths).size, 5);
+  assert.throws(
+    () => validateDiagnosticCoverageGapClosurePlanDecisionProposalChangedPaths(slice10Paths),
+    /out-of-scope/,
+  );
+});
+
 test("clean local checkout is allowed while dirty scope is exact", () => {
   assert.deepEqual(
     validateDiagnosticCoverageGapClosurePlanDecisionProposalWorktreeScope([], { env: {} }),

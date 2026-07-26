@@ -104,6 +104,11 @@ const approvedSlice8ChangedPaths = [
   "packages/curriculum/diagnostic-coverage-gap-closure-plan-decision-proposal/grade-7-9-math.coverage-gap-closure-plan-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-coverage-gap-closure-plan-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-readiness-integration-plan-decision-proposal.md",
+  "docs/wave-6/slice-10-implementation-note.md",
+  "packages/curriculum/diagnostic-readiness-integration-plan-decision-proposal/grade-7-9-math.readiness-integration-plan-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
 ];
 
 function clone(value) {
@@ -366,7 +371,10 @@ test("Slice 6 guard admits the separate exact Slice 7 continuation", () => {
 test("Slice 6 guard admits the separate exact Slice 8 continuation", () => {
   const slice8Only = approvedSlice8ChangedPaths.filter(
     (value) =>
-      !value.includes("slice-9") && !value.includes("coverage-gap-closure-plan-decision-proposal"),
+      !value.includes("slice-9") &&
+      !value.includes("coverage-gap-closure-plan-decision-proposal") &&
+      !value.includes("readiness-integration-plan-decision-proposal") &&
+      !value.includes("slice-10-implementation-note"),
   );
   assert.equal(slice8Only.length, 48);
   assert.deepEqual(
