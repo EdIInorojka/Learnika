@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { wave6ClosureContinuationPaths } from "./validate-skill-graph.mjs";
 
 const expectedArtifactVersion = "wave-6.slice-8.grade-7-9-math.v1";
 const expectedProposalVersion =
@@ -901,6 +902,12 @@ export function validateDiagnosticProductionApprovalAuthorityDecisionProposalWor
 ) {
   if (String(env.GITHUB_ACTIONS ?? "").toLowerCase() !== "true" && paths.length === 0) return [];
   const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === wave6ClosureContinuationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave6ClosureContinuationPaths.has(value))
+  )
+    return normalized;
   if (
     normalized.length === slice13ChangedPaths.length &&
     normalized.every((value) => slice13ChangedPathSet.has(value))

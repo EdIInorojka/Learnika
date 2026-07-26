@@ -284,6 +284,7 @@ const wave6Slice2ScopeUnblockPaths = new Set([
   "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+  "docs/wave-6/closure-gate.md",
   "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "package.json",
   "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",

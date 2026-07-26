@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { wave6ClosureContinuationPaths } from "./validate-skill-graph.mjs";
 
 const expectedArtifactVersion = "wave-6.slice-9.grade-7-9-math.v1";
 const expectedProposalVersion = "wave-6.slice-9.diagnostic-coverage-gap-closure-plan.proposal.v1";
@@ -601,6 +602,13 @@ export function validateDiagnosticCoverageGapClosurePlanDecisionProposalWorktree
 ) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   if (String(env.GITHUB_ACTIONS ?? "").toLowerCase() !== "true" && paths.length === 0) return [];
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === wave6ClosureContinuationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave6ClosureContinuationPaths.has(value))
+  )
+    return normalized;
   if (
     paths.length === slice13ChangedPaths.length &&
     new Set(paths).size === paths.length &&

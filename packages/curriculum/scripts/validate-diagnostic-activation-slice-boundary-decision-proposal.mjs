@@ -9,6 +9,7 @@ import {
   readDiagnosticCiValidationActivationGateDecisionProposalUpstreamArtifacts,
   validateDiagnosticCiValidationActivationGateDecisionProposal,
 } from "./validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs";
+import { wave6ClosureContinuationPaths } from "./validate-skill-graph.mjs";
 
 const expectedArtifactVersion = "wave-6.slice-13.grade-7-9-math.v1";
 const expectedProposalVersion = "wave-6.slice-13.diagnostic-activation-slice-boundary.proposal.v1";
@@ -110,6 +111,7 @@ const changedPaths = [
   ...slice13PrimaryPaths,
 ];
 const changedPathSet = new Set(changedPaths);
+const wave6ClosureGatePath = "docs/wave-6/closure-gate.md";
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "../../..");
 
@@ -623,7 +625,15 @@ export function validateDiagnosticActivationSliceBoundaryDecisionProposalWorktre
 ) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   if (!ci && paths.length === 0) return [];
-  return validateDiagnosticActivationSliceBoundaryDecisionProposalChangedPaths(paths);
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === wave6ClosureContinuationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave6ClosureContinuationPaths.has(value))
+  )
+    return normalized;
+  if (normalized.length === 1 && normalized[0] === wave6ClosureGatePath) return normalized;
+  return validateDiagnosticActivationSliceBoundaryDecisionProposalChangedPaths(normalized);
 }
 
 export { changedPaths };
