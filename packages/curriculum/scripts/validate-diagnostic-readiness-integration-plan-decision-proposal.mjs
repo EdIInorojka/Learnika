@@ -150,6 +150,19 @@ const slice11ChangedPaths = [
   ...slice11PrimaryPaths,
 ];
 const slice11ChangedPathSet = new Set(slice11ChangedPaths);
+const slice12PrimaryPaths = [
+  "docs/wave-6/diagnostic-ci-validation-activation-gate-decision-proposal.md",
+  "docs/wave-6/slice-12-implementation-note.md",
+  "packages/curriculum/diagnostic-ci-validation-activation-gate-decision-proposal/grade-7-9-math.ci-validation-activation-gate-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+];
+const slice12ChangedPaths = [
+  ...slice11ChangedPaths.filter((value) => !new Set(slice11PrimaryPaths).has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  ...slice12PrimaryPaths,
+];
+const slice12ChangedPathSet = new Set(slice12ChangedPaths);
 const changedPathSet = new Set(changedPaths);
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "../../..");
@@ -825,6 +838,13 @@ export function validateDiagnosticReadinessIntegrationPlanDecisionProposalWorktr
     normalized.length === slice11ChangedPaths.length &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => slice11ChangedPathSet.has(value))
+  ) {
+    return normalized;
+  }
+  if (
+    normalized.length === slice12ChangedPaths.length &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => slice12ChangedPathSet.has(value))
   ) {
     return normalized;
   }

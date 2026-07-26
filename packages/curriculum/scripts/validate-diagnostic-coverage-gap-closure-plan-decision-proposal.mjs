@@ -153,6 +153,19 @@ const slice11ChangedPaths = [
   ...slice11PrimaryPaths,
 ];
 const slice11ChangedPathSet = new Set(slice11ChangedPaths);
+const slice12PrimaryPaths = [
+  "docs/wave-6/diagnostic-ci-validation-activation-gate-decision-proposal.md",
+  "docs/wave-6/slice-12-implementation-note.md",
+  "packages/curriculum/diagnostic-ci-validation-activation-gate-decision-proposal/grade-7-9-math.ci-validation-activation-gate-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+];
+const slice12ChangedPaths = [
+  ...slice11ChangedPaths.filter((value) => !new Set(slice11PrimaryPaths).has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  ...slice12PrimaryPaths,
+];
+const slice12ChangedPathSet = new Set(slice12ChangedPaths);
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
 export const defaultProposalPath = path.resolve(
@@ -573,6 +586,11 @@ export function validateDiagnosticCoverageGapClosurePlanDecisionProposalWorktree
 ) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   if (String(env.GITHUB_ACTIONS ?? "").toLowerCase() !== "true" && paths.length === 0) return [];
+  if (
+    paths.length === slice12ChangedPaths.length &&
+    paths.every((value) => slice12ChangedPathSet.has(String(value).replaceAll("\\", "/")))
+  )
+    return paths;
   if (
     paths.length === slice11ChangedPaths.length &&
     paths.every((value) => slice11ChangedPathSet.has(String(value).replaceAll("\\", "/")))

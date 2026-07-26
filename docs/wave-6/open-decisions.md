@@ -516,3 +516,24 @@ evidence or authorizes a lifecycle transition:
   repeated gates, independent re-approval and forward-fix sequencing;
 - `W6-S11-OD-PARTIAL-FAILURE-RECOVERY` — reconciliation, idempotency,
   recovery checkpoints and fail-closed handling of incomplete propagation.
+
+## W6-S12 — diagnostic CI validation activation gate decision proposal
+
+The following decisions remain unresolved and deferred; none runs CI,
+evaluates a release, satisfies a prerequisite or authorizes activation:
+
+- `W6-S12-OD-CI-JOB-GRAPH` — required CI jobs, dependency order and ownership;
+- `W6-S12-OD-VALIDATOR-OWNERSHIP-FIXTURES` — deterministic validator
+  ownership, synthetic fixtures and negative authorization cases;
+- `W6-S12-OD-RULE-VERSIONS` — governance, safety/no-answer/no-scoring and
+  privacy rule versions;
+- `W6-S12-OD-CHANGE-REVIEW-ROUTING` — runtime, API, OpenAPI and web change
+  classification and review routing;
+- `W6-S12-OD-SCHEMA-DRIFT` — migration and schema-drift baseline and failure
+  policy;
+- `W6-S12-OD-INFRASTRUCTURE-FAILURE` — Docker/infrastructure availability
+  expectations and failure classification;
+- `W6-S12-OD-RERUN-REPRODUCIBILITY` — rerun limits, flakiness ownership and
+  reproducibility vectors;
+- `W6-S12-OD-MANUAL-HANDOFF-SEQUENCING` — independent release evidence,
+  manual approval handoff and activation sequencing.

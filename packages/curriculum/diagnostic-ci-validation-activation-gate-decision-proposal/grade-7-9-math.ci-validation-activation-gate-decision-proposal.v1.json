@@ -1,0 +1,301 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticCiValidationActivationGateDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-12.grade-7-9-math.v1",
+    "proposalVersion": "wave-6.slice-12.diagnostic-ci-validation-activation-gate.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_ci_validation_activation_gate_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "sourceContract": "docs/wave-5/diagnostic-ci-validation-activation-gate-contract.md",
+    "workflowSourcePath": ".github/workflows/ci.yml",
+    "workflowFileChangeAllowed": false,
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "upstreamReferences": {
+    "activationPrerequisites": {
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "prerequisiteId": "ci_and_deterministic_validation",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activationStatus": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "productionApprovalAuthority": {
+      "artifactVersion": "wave-5.slice-10.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-10.diagnostic-production-approval-authority.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    },
+    "coverageGapClosure": {
+      "artifactVersion": "wave-5.slice-11.grade-7-9-math.v1",
+      "planVersion": "wave-5.slice-11.diagnostic-coverage-gap-closure-plan.placeholder.v1",
+      "planState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    },
+    "readinessIntegration": {
+      "artifactVersion": "wave-5.slice-12.grade-7-9-math.v1",
+      "planVersion": "wave-5.slice-12.diagnostic-readiness-integration-plan.placeholder.v1",
+      "planState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    },
+    "rollbackWithdrawal": {
+      "artifactVersion": "wave-5.slice-13.grade-7-9-math.v1",
+      "policyVersion": "wave-5.slice-13.diagnostic-rollback-and-withdrawal.placeholder.v1",
+      "policyState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    },
+    "ciActivationGatePlaceholder": {
+      "artifactVersion": "wave-5.slice-14.grade-7-9-math.v1",
+      "gateVersion": "wave-5.slice-14.diagnostic-ci-and-deterministic-validation-activation-gate.placeholder.v1",
+      "gateState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    },
+    "slice11RollbackWithdrawalProposal": {
+      "artifactVersion": "wave-6.slice-11.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-11.diagnostic-rollback-withdrawal-policy.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    }
+  },
+  "baseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": {
+      "status": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "ciAndDeterministicValidationPrerequisite": {
+      "prerequisiteId": "ci_and_deterministic_validation",
+      "status": "UNSATISFIED_DEFERRED",
+      "ownerPlaceholderId": "UNASSIGNED_OWNER_PLACEHOLDER",
+      "evidenceRecordRefs": []
+    },
+    "prerequisiteCounts": {
+      "total": 12,
+      "unsatisfied": 12,
+      "satisfied": 0
+    },
+    "blockerCounts": {
+      "total": 2,
+      "open": 2,
+      "closed": 0
+    },
+    "approvedCandidateCount": 0,
+    "productionApprovalCount": 0
+  },
+  "ciJobGraphPlaceholder": {
+    "state": "UNRESOLVED_DEFERRED",
+    "jobPlaceholderIds": [
+      "STATIC_GOVERNANCE_VALIDATION_JOB_PLACEHOLDER",
+      "APPLICATION_QUALITY_VALIDATION_JOB_PLACEHOLDER",
+      "DATABASE_CONTRACT_VALIDATION_JOB_PLACEHOLDER",
+      "INFRASTRUCTURE_AVAILABILITY_VALIDATION_JOB_PLACEHOLDER",
+      "SAFETY_PRIVACY_VALIDATION_JOB_PLACEHOLDER",
+      "MANUAL_APPROVAL_HANDOFF_JOB_PLACEHOLDER"
+    ],
+    "dependencyEdges": [],
+    "activeRuleReferences": [],
+    "workflowMutationRecorded": false,
+    "executionAllowed": false,
+    "gateContributionAllowed": false
+  },
+  "deterministicValidatorMatrixPlaceholder": {
+    "state": "UNRESOLVED_DEFERRED",
+    "validatorPlaceholderIds": [
+      "EXACT_UPSTREAM_VERSION_PINS_VALIDATOR_PLACEHOLDER",
+      "CLOSED_WORLD_ARTIFACT_SCHEMA_VALIDATOR_PLACEHOLDER",
+      "EXACT_WORKTREE_SCOPE_VALIDATOR_PLACEHOLDER",
+      "GOVERNANCE_ARTIFACT_CONSISTENCY_VALIDATOR_PLACEHOLDER",
+      "NO_ANSWER_NO_SCORING_SAFETY_VALIDATOR_PLACEHOLDER",
+      "PRIVACY_PII_SCAN_VALIDATOR_PLACEHOLDER",
+      "RUNTIME_INTERFACE_CHANGE_BOUNDARY_VALIDATOR_PLACEHOLDER",
+      "MIGRATION_SCHEMA_DRIFT_VALIDATOR_PLACEHOLDER",
+      "DOCKER_INFRASTRUCTURE_AVAILABILITY_VALIDATOR_PLACEHOLDER",
+      "RERUN_REPRODUCIBILITY_VALIDATOR_PLACEHOLDER"
+    ],
+    "activeRuleReferences": [],
+    "matrixExecutionAllowed": false,
+    "gateContributionAllowed": false
+  },
+  "syntheticFixturePolicyPlaceholder": {
+    "requirementId": "validator_ownership_and_fixture_policy",
+    "state": "UNRESOLVED_DEFERRED",
+    "fixtureTaxonomyReference": null,
+    "negativeCasePolicyReference": null,
+    "fixtureReferences": [],
+    "executionAllowed": false,
+    "gateContributionAllowed": false
+  },
+  "negativeAuthorizationCasePolicyPlaceholder": {
+    "requirementId": "validator_ownership_and_fixture_policy",
+    "state": "UNRESOLVED_DEFERRED",
+    "caseTaxonomyReference": null,
+    "authorizationPolicyReference": null,
+    "caseReferences": [],
+    "executionAllowed": false,
+    "gateContributionAllowed": false
+  },
+  "reproducibilityVectorPolicyPlaceholder": {
+    "requirementId": "rerun_flakiness_thresholds_and_reproducibility",
+    "state": "UNRESOLVED_DEFERRED",
+    "vectorPolicyReference": null,
+    "rerunLimitReference": null,
+    "vectorReferences": [],
+    "executionAllowed": false,
+    "gateContributionAllowed": false
+  },
+  "retentionTestPolicyPlaceholder": {
+    "requirementId": "independent_release_evidence_and_retention_tests",
+    "state": "UNRESOLVED_DEFERRED",
+    "retentionPolicyReference": null,
+    "testReference": null,
+    "testRecordRefs": [],
+    "executionAllowed": false,
+    "gateContributionAllowed": false
+  },
+  "independentReleaseEvidencePolicyPlaceholder": {
+    "requirementId": "independent_release_evidence_and_retention_tests",
+    "state": "UNRESOLVED_DEFERRED",
+    "evidencePolicyReference": null,
+    "independentAuthorityReference": null,
+    "evidenceRecordRefs": [],
+    "approvalAllowed": false,
+    "gateContributionAllowed": false
+  },
+  "decisionRequirements": [
+    {
+      "decisionId": "ci_job_graph_and_dependency_order",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "validator_ownership_and_fixture_policy",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "governance_and_safety_privacy_rule_versions",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "runtime_interface_change_review_routing",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "migration_schema_drift_policy",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "docker_infrastructure_failure_classification",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "rerun_flakiness_thresholds_and_reproducibility",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "independent_release_evidence_and_retention_tests",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    }
+  ],
+  "activationBoundary": {
+    "status": "BLOCKED",
+    "workflowStatus": "INACTIVE",
+    "gateActivationAllowed": false,
+    "workflowMutationAllowed": false,
+    "gateEvaluationAllowed": false,
+    "gateDecisionRecordingAllowed": false,
+    "manualApprovalAllowed": false,
+    "prerequisiteSatisfactionAllowed": false,
+    "activationTransitionAllowed": false,
+    "readinessTransitionAllowed": false,
+    "productionApprovalAllowed": false
+  },
+  "recordBoundary": {
+    "ciExecutionRecordsAllowed": false,
+    "validatorExecutionRecordsAllowed": false,
+    "fixtureExecutionRecordsAllowed": false,
+    "negativeCaseExecutionRecordsAllowed": false,
+    "reproducibilityRecordsAllowed": false,
+    "retentionTestRecordsAllowed": false,
+    "releaseEvidenceRecordsAllowed": false,
+    "workflowMutationRecordsAllowed": false,
+    "activationDecisionRecordsAllowed": false,
+    "readinessTransitionRecordsAllowed": false,
+    "productionApprovalRecordsAllowed": false
+  },
+  "operationalRecords": {
+    "ciExecutionRecords": [],
+    "validatorExecutionRecords": [],
+    "fixtureExecutionRecords": [],
+    "negativeCaseExecutionRecords": [],
+    "reproducibilityRecords": [],
+    "retentionTestRecords": [],
+    "releaseEvidenceRecords": [],
+    "workflowMutationRecords": [],
+    "activationDecisionRecords": [],
+    "readinessTransitionRecords": [],
+    "candidateRecords": [],
+    "evidenceRecords": [],
+    "identityRecords": [],
+    "productionApprovalRecords": []
+  },
+  "aggregate": {
+    "ciJobPlaceholderCount": 6,
+    "validatorMatrixPlaceholderCount": 10,
+    "decisionRequirementCount": 8,
+    "unresolvedDecisionCount": 8,
+    "prerequisiteCount": 12,
+    "unsatisfiedPrerequisiteCount": 12,
+    "satisfiedPrerequisiteCount": 0,
+    "openBlockingReasonCount": 2,
+    "closedBlockingReasonCount": 0,
+    "ciExecutionCount": 0,
+    "validatorExecutionCount": 0,
+    "fixtureExecutionCount": 0,
+    "negativeCaseExecutionCount": 0,
+    "reproducibilityRecordCount": 0,
+    "retentionTestRecordCount": 0,
+    "releaseEvidenceRecordCount": 0,
+    "activationDecisionCount": 0,
+    "readinessTransitionCount": 0,
+    "approvedCandidateCount": 0,
+    "productionApprovalCount": 0
+  }
+}

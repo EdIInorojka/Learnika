@@ -246,6 +246,19 @@ const wave6Slice11ChangedPaths = [
   ...wave6Slice11PrimaryPaths,
 ];
 const wave6Slice11ChangedPathSet = new Set(wave6Slice11ChangedPaths);
+const wave6Slice12PrimaryPaths = [
+  "docs/wave-6/diagnostic-ci-validation-activation-gate-decision-proposal.md",
+  "docs/wave-6/slice-12-implementation-note.md",
+  "packages/curriculum/diagnostic-ci-validation-activation-gate-decision-proposal/grade-7-9-math.ci-validation-activation-gate-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+];
+const wave6Slice12ChangedPaths = [
+  ...wave6Slice11ChangedPaths.filter((value) => !new Set(wave6Slice11PrimaryPaths).has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  ...wave6Slice12PrimaryPaths,
+];
+const wave6Slice12ChangedPathSet = new Set(wave6Slice12ChangedPaths);
 const ciRemediationPathSet = new Set([
   "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -1345,6 +1358,12 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
 
   if (
+    paths.length === wave6Slice12ChangedPaths.length &&
+    paths.every((value) => wave6Slice12ChangedPathSet.has(value))
+  ) {
+    return paths;
+  }
+  if (
     paths.length === wave6Slice11ChangedPaths.length &&
     paths.every((value) => wave6Slice11ChangedPathSet.has(value))
   ) {
@@ -1435,6 +1454,14 @@ export function validateSeparationOfDutiesDecisionProposalWorktreeScope(
 ) {
   const inGitHubActions = String(env.GITHUB_ACTIONS ?? "").toLowerCase() === "true";
   if (!inGitHubActions && Array.isArray(paths) && paths.length === 0) return [];
+  if (
+    Array.isArray(paths) &&
+    paths.length === wave6Slice12ChangedPaths.length &&
+    new Set(paths).size === paths.length &&
+    paths.every((value) => wave6Slice12ChangedPathSet.has(String(value).replaceAll("\\", "/")))
+  ) {
+    return paths;
+  }
   if (
     Array.isArray(paths) &&
     paths.length === wave6Slice11ChangedPaths.length &&

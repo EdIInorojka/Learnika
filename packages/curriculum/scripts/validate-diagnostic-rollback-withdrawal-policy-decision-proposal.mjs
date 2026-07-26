@@ -184,6 +184,19 @@ const changedPaths = [
   ...slice11PrimaryPaths,
 ];
 const changedPathSet = new Set(changedPaths);
+const slice12PrimaryPaths = [
+  "docs/wave-6/diagnostic-ci-validation-activation-gate-decision-proposal.md",
+  "docs/wave-6/slice-12-implementation-note.md",
+  "packages/curriculum/diagnostic-ci-validation-activation-gate-decision-proposal/grade-7-9-math.ci-validation-activation-gate-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+];
+const slice12ChangedPaths = [
+  ...changedPaths.filter((value) => !new Set(slice11PrimaryPaths).has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  ...slice12PrimaryPaths,
+];
+const slice12ChangedPathSet = new Set(slice12ChangedPaths);
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "../../..");
 export const defaultProposalPath = path.resolve(
@@ -786,12 +799,30 @@ export function validateDiagnosticRollbackWithdrawalPolicyDecisionProposalChange
   return normalized;
 }
 
+function validateSlice12ChangedPaths(paths) {
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (new Set(normalized).size !== normalized.length)
+    fail("Changed paths must not contain duplicates.");
+  const unexpected = normalized.filter((value) => !slice12ChangedPathSet.has(value));
+  if (unexpected.length > 0) fail(`Wave 6 Slice 12 out-of-scope path changed: ${unexpected[0]}.`);
+  if (normalized.length !== slice12ChangedPaths.length)
+    fail(`Wave 6 Slice 12 requires exactly ${slice12ChangedPaths.length} changed paths.`);
+  return normalized;
+}
+
 export function validateDiagnosticRollbackWithdrawalPolicyDecisionProposalWorktreeScope(
   paths,
   { ci = false } = {},
 ) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   if (!ci && paths.length === 0) return [];
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === slice12ChangedPaths.length &&
+    normalized.every((value) => slice12ChangedPathSet.has(value))
+  ) {
+    return validateSlice12ChangedPaths(normalized);
+  }
   return validateDiagnosticRollbackWithdrawalPolicyDecisionProposalChangedPaths(paths);
 }
 

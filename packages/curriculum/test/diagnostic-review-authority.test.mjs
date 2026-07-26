@@ -1217,6 +1217,11 @@ test("all governance scope guards retain exact cumulative admission through Wave
     "packages/curriculum/diagnostic-rollback-withdrawal-policy-decision-proposal/grade-7-9-math.rollback-withdrawal-policy-decision-proposal.v1.json",
     "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
     "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
+    "docs/wave-6/diagnostic-ci-validation-activation-gate-decision-proposal.md",
+    "docs/wave-6/slice-12-implementation-note.md",
+    "packages/curriculum/diagnostic-ci-validation-activation-gate-decision-proposal/grade-7-9-math.ci-validation-activation-gate-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
     "package.json",
     "packages/curriculum/diagnostic-canonicalization-digest-policy-decision-proposal/grade-7-9-math.canonicalization-digest-policy-decision-proposal.v1.json",
     "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -1258,7 +1263,9 @@ test("all governance scope guards retain exact cumulative admission through Wave
       !value.includes("readiness-integration-plan-decision-proposal") &&
       !value.includes("slice-10-implementation-note") &&
       !value.includes("rollback-withdrawal-policy-decision-proposal") &&
-      !value.includes("slice-11-implementation-note"),
+      !value.includes("slice-11-implementation-note") &&
+      !value.includes("ci-validation-activation-gate-decision-proposal") &&
+      !value.includes("slice-12-implementation-note"),
   );
   assert.equal(approvedPathsThroughSlice8.length, 66);
   const validators = [
