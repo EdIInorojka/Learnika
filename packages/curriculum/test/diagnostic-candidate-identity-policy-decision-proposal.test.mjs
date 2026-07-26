@@ -138,6 +138,11 @@ const approvedWave6Slice1ChangedPaths = [
   "packages/curriculum/diagnostic-ci-validation-activation-gate-decision-proposal/grade-7-9-math.ci-validation-activation-gate-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+  "docs/wave-6/slice-13-implementation-note.md",
+  "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ];

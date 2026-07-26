@@ -214,6 +214,21 @@ const slice12ChangedPaths = [
   ...slice12PrimaryPaths,
 ];
 const slice12ChangedPathSet = new Set(slice12ChangedPaths);
+const slice13PrimaryPaths = [
+  "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+  "docs/wave-6/slice-13-implementation-note.md",
+  "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+];
+const slice13PrimaryPathSet = new Set(slice12PrimaryPaths);
+const slice13ChangedPaths = [
+  ...slice12ChangedPaths.filter((value) => !slice13PrimaryPathSet.has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+  ...slice13PrimaryPaths,
+];
+const slice13ChangedPathSet = new Set(slice13ChangedPaths);
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "../../..");
 export const defaultProposalPath = path.resolve(
@@ -886,6 +901,14 @@ export function validateDiagnosticProductionApprovalAuthorityDecisionProposalWor
 ) {
   if (String(env.GITHUB_ACTIONS ?? "").toLowerCase() !== "true" && paths.length === 0) return [];
   const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === slice13ChangedPaths.length &&
+    normalized.every((value) => slice13ChangedPathSet.has(value))
+  ) {
+    if (new Set(normalized).size !== normalized.length)
+      fail("Changed paths must not contain duplicates.");
+    return normalized;
+  }
   if (
     normalized.length === slice12ChangedPaths.length &&
     normalized.every((value) => slice12ChangedPathSet.has(value))

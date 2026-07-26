@@ -44,6 +44,11 @@ const staticDocumentationPathsThroughWave6Slice2 = [
   "packages/curriculum/diagnostic-ci-validation-activation-gate-decision-proposal/grade-7-9-math.ci-validation-activation-gate-decision-proposal.v1.json",
   "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+  "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+  "docs/wave-6/slice-13-implementation-note.md",
+  "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
   "docs/wave-5/closure-gate.md",
   "docs/wave-5/diagnostic-audit-identity-policy-contract.md",
   "docs/wave-5/diagnostic-canonicalization-digest-policy-contract.md",
@@ -200,6 +205,11 @@ test("scope guard permits only forty-eight exact documentation paths through Wav
         "packages/curriculum/diagnostic-ci-validation-activation-gate-decision-proposal/grade-7-9-math.ci-validation-activation-gate-decision-proposal.v1.json",
         "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
         "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+        "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+        "docs/wave-6/slice-13-implementation-note.md",
+        "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+        "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+        "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
       ].includes(value),
   );
   assert.deepEqual(validateSkillGraphChangedPaths(slice8Only), slice8Only);

@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "schemaVersion": "learnika.diagnosticActivationSliceBoundaryDecisionProposal.v1",
+    "proposalArtifactVersion": "wave-6.slice-13.grade-7-9-math.v1",
+    "proposalVersion": "wave-6.slice-13.diagnostic-activation-slice-boundary.proposal.v1",
+    "status": "PROPOSED_DEFERRED",
+    "artifactKind": "diagnostic_activation_slice_boundary_decision_proposal",
+    "subject": "math",
+    "locale": "ru-RU",
+    "audienceGrades": [7, 8, 9],
+    "sourceDecisionId": "W5-OD-ACTIVATION-SLICE",
+    "sourceDecisionDocument": "docs/wave-5/open-decisions.md",
+    "activationPrerequisitesContract": "docs/wave-5/diagnostic-review-activation-prerequisites-contract.md",
+    "ciActivationGateContract": "docs/wave-5/diagnostic-ci-validation-activation-gate-contract.md",
+    "closureGateDocument": "docs/wave-5/closure-gate.md",
+    "workflowSourcePath": ".github/workflows/ci.yml",
+    "workflowFileChangeAllowed": false,
+    "productionUseAllowed": false,
+    "runtimeUseAllowed": false,
+    "storageAllowed": false
+  },
+  "upstreamReferences": {
+    "activationPrerequisites": {
+      "artifactVersion": "wave-5.slice-2.grade-7-9-math.v1",
+      "totalPrerequisiteCount": 12,
+      "unsatisfiedPrerequisiteCount": 12,
+      "satisfiedPrerequisiteCount": 0,
+      "activationStatus": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "ciActivationGatePlaceholder": {
+      "artifactVersion": "wave-5.slice-14.grade-7-9-math.v1",
+      "gateVersion": "wave-5.slice-14.diagnostic-ci-and-deterministic-validation-activation-gate.placeholder.v1",
+      "gateState": "UNRESOLVED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED"
+    },
+    "slice12CiActivationGateProposal": {
+      "artifactVersion": "wave-6.slice-12.grade-7-9-math.v1",
+      "proposalVersion": "wave-6.slice-12.diagnostic-ci-validation-activation-gate.proposal.v1",
+      "proposalStatus": "PROPOSED_DEFERRED",
+      "prerequisiteStatus": "UNSATISFIED_DEFERRED",
+      "activationStatus": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    }
+  },
+  "baseline": {
+    "readiness": {
+      "policyVersion": "wave-3-slice-11-diagnostic-readiness-policy-v1",
+      "status": "NOT_READY",
+      "blockingReasons": ["INCOMPLETE_COVERAGE", "NON_PRODUCTION_FIXTURES"]
+    },
+    "activation": {
+      "status": "BLOCKED",
+      "workflowStatus": "INACTIVE"
+    },
+    "prerequisiteCounts": {
+      "total": 12,
+      "unsatisfied": 12,
+      "satisfied": 0
+    },
+    "blockerCounts": {
+      "total": 2,
+      "open": 2,
+      "closed": 0
+    },
+    "approvedCandidateCount": 0,
+    "productionApprovalCount": 0
+  },
+  "futureBoundaryPlaceholder": {
+    "state": "UNRESOLVED_DEFERRED",
+    "capabilityPlaceholderIds": [
+      "ENTRY_SNAPSHOT_PLACEHOLDER",
+      "MINIMAL_CAPABILITY_SET_PLACEHOLDER",
+      "EXACT_FILE_ALLOWLIST_PLACEHOLDER",
+      "PREREQUISITE_HANDOFF_PLACEHOLDER",
+      "INDEPENDENT_ACTIVATION_AUTHORITY_PLACEHOLDER",
+      "EXPLICIT_WORKFLOW_TRANSITION_PLACEHOLDER",
+      "READINESS_SEPARATION_GUARD_PLACEHOLDER",
+      "LEARNER_SURFACE_EXCLUSION_GUARD_PLACEHOLDER",
+      "CI_RELEASE_EVIDENCE_HANDOFF_PLACEHOLDER",
+      "ROLLBACK_RECOVERY_PRECONDITION_PLACEHOLDER"
+    ],
+    "approvedCapabilityReferences": [],
+    "approvedPathReferences": [],
+    "activeRuleReferences": [],
+    "boundaryDecisionRecorded": false,
+    "implementationAllowed": false,
+    "gateEvaluationAllowed": false
+  },
+  "decisionRequirements": [
+    {
+      "decisionId": "entry_criteria_snapshot",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "minimal_capability_boundary",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "exact_file_boundary",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "prerequisite_satisfaction_handoff",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "independent_activation_authority",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "explicit_workflow_transition",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "readiness_and_blocker_separation",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "learner_surface_separation",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "ci_release_evidence_handoff",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    },
+    {
+      "decisionId": "rollback_suspension_recovery_preconditions",
+      "state": "UNRESOLVED_DEFERRED",
+      "decisionReference": null,
+      "policyReference": null,
+      "activeRuleReferences": [],
+      "decisionRecorded": false
+    }
+  ],
+  "activationBoundary": {
+    "status": "BLOCKED",
+    "workflowStatus": "INACTIVE",
+    "prerequisiteSatisfactionAllowed": false,
+    "activationEvaluationAllowed": false,
+    "activationDecisionAllowed": false,
+    "workflowTransitionAllowed": false,
+    "readinessEvaluationAllowed": false,
+    "readinessTransitionAllowed": false,
+    "blockerClosureAllowed": false,
+    "learnerDiagnosticAllowed": false,
+    "runtimeChangeAllowed": false,
+    "publicInterfaceChangeAllowed": false,
+    "persistenceChangeAllowed": false,
+    "featureFlagChangeAllowed": false,
+    "productionApprovalAllowed": false,
+    "rollbackExecutionAllowed": false,
+    "ciGateExecutionAllowed": false
+  },
+  "recordBoundary": {
+    "activationEventRecordsAllowed": false,
+    "prerequisiteSatisfactionRecordsAllowed": false,
+    "readinessTransitionRecordsAllowed": false,
+    "workflowTransitionRecordsAllowed": false,
+    "learnerDiagnosticRecordsAllowed": false,
+    "reviewerAssignmentRecordsAllowed": false,
+    "evidenceRecordsAllowed": false,
+    "approvalRecordsAllowed": false,
+    "identityRecordsAllowed": false,
+    "digestRecordsAllowed": false,
+    "rollbackRecordsAllowed": false,
+    "ciGateExecutionRecordsAllowed": false
+  },
+  "operationalRecords": {
+    "activationEventRecords": [],
+    "prerequisiteSatisfactionRecords": [],
+    "readinessTransitionRecords": [],
+    "workflowTransitionRecords": [],
+    "learnerDiagnosticRecords": [],
+    "reviewerAssignmentRecords": [],
+    "evidenceRecords": [],
+    "approvalRecords": [],
+    "identityRecords": [],
+    "digestRecords": [],
+    "rollbackRecords": [],
+    "ciGateExecutionRecords": []
+  },
+  "aggregate": {
+    "capabilityPlaceholderCount": 10,
+    "decisionRequirementCount": 10,
+    "unresolvedDecisionCount": 10,
+    "prerequisiteCount": 12,
+    "unsatisfiedPrerequisiteCount": 12,
+    "satisfiedPrerequisiteCount": 0,
+    "openBlockingReasonCount": 2,
+    "closedBlockingReasonCount": 0,
+    "activationEventCount": 0,
+    "prerequisiteSatisfactionRecordCount": 0,
+    "readinessTransitionCount": 0,
+    "workflowTransitionCount": 0,
+    "learnerDiagnosticRecordCount": 0,
+    "reviewerAssignmentCount": 0,
+    "evidenceRecordCount": 0,
+    "approvalRecordCount": 0,
+    "identityRecordCount": 0,
+    "digestRecordCount": 0,
+    "rollbackRecordCount": 0,
+    "ciGateExecutionCount": 0,
+    "approvedCandidateCount": 0,
+    "productionApprovalCount": 0
+  }
+}

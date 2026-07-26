@@ -274,6 +274,21 @@ const wave6Slice12ChangedPaths = [
   ...wave6Slice12PrimaryPaths,
 ];
 const wave6Slice12ChangedPathSet = new Set(wave6Slice12ChangedPaths);
+const wave6Slice13PrimaryPaths = [
+  "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+  "docs/wave-6/slice-13-implementation-note.md",
+  "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+];
+const wave6Slice13PrimaryPathSet = new Set(wave6Slice12PrimaryPaths);
+const wave6Slice13ChangedPaths = [
+  ...wave6Slice12ChangedPaths.filter((value) => !wave6Slice13PrimaryPathSet.has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+  ...wave6Slice13PrimaryPaths,
+];
+const wave6Slice13ChangedPathSet = new Set(wave6Slice13ChangedPaths);
 const slice4CiRemediationPathSet = new Set([
   "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -962,6 +977,14 @@ export function validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
     : paths;
   if (
     Array.isArray(normalized) &&
+    normalized.length === wave6Slice13ChangedPaths.length &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave6Slice13ChangedPathSet.has(value))
+  ) {
+    return normalized;
+  }
+  if (
+    Array.isArray(normalized) &&
     normalized.length === wave6Slice12ChangedPaths.length &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => wave6Slice12ChangedPathSet.has(value))
@@ -1205,6 +1228,12 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   let cumulativeBase = base;
   let paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
   if (
+    paths.length === wave6Slice13ChangedPaths.length &&
+    new Set(paths).size === paths.length &&
+    paths.every((value) => wave6Slice13ChangedPathSet.has(value))
+  )
+    return paths;
+  if (
     paths.length === wave6Slice12ChangedPaths.length &&
     paths.every((value) => wave6Slice12ChangedPathSet.has(value))
   )
@@ -1265,6 +1294,12 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
     requireCommitObject(ancestor, "baseline ancestor", { cwd, runGit });
     cumulativeBase = ancestor;
     paths = diffPaths({ cwd, base: cumulativeBase, head, runGit });
+    if (
+      paths.length === wave6Slice13ChangedPaths.length &&
+      new Set(paths).size === paths.length &&
+      paths.every((value) => wave6Slice13ChangedPathSet.has(value))
+    )
+      return paths;
     if (
       paths.length === wave6Slice12ChangedPaths.length &&
       paths.every((value) => wave6Slice12ChangedPathSet.has(value))

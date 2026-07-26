@@ -163,6 +163,21 @@ const slice12ChangedPaths = [
   ...slice12PrimaryPaths,
 ];
 const slice12ChangedPathSet = new Set(slice12ChangedPaths);
+const slice13PrimaryPaths = [
+  "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+  "docs/wave-6/slice-13-implementation-note.md",
+  "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+];
+const slice13PrimaryPathSet = new Set(slice12PrimaryPaths);
+const slice13ChangedPaths = [
+  ...slice12ChangedPaths.filter((value) => !slice13PrimaryPathSet.has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+  ...slice13PrimaryPaths,
+];
+const slice13ChangedPathSet = new Set(slice13ChangedPaths);
 const changedPathSet = new Set(changedPaths);
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "../../..");
@@ -845,6 +860,13 @@ export function validateDiagnosticReadinessIntegrationPlanDecisionProposalWorktr
     normalized.length === slice12ChangedPaths.length &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => slice12ChangedPathSet.has(value))
+  ) {
+    return normalized;
+  }
+  if (
+    normalized.length === slice13ChangedPaths.length &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => slice13ChangedPathSet.has(value))
   ) {
     return normalized;
   }

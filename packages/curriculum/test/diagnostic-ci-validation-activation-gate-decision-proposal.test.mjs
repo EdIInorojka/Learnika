@@ -171,6 +171,22 @@ test("exact cumulative scope is duplicate-safe, narrow and clean-checkout tolera
   );
 });
 
+test("Slice 12 base guard keeps the separate Slice 13 primary boundary explicit", () => {
+  const slice13PrimaryPaths = [
+    "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+    "docs/wave-6/slice-13-implementation-note.md",
+    "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+  ];
+  assert.equal(new Set(slice13PrimaryPaths).size, 5);
+  assert.throws(
+    () =>
+      validateDiagnosticCiValidationActivationGateDecisionProposalChangedPaths(slice13PrimaryPaths),
+    /out-of-scope/,
+  );
+});
+
 test("root registration and validator scope remain exact without broad allowlists", async () => {
   const packageJson = JSON.parse(
     await readFile(new URL("../../../package.json", import.meta.url), "utf8"),

@@ -131,6 +131,21 @@ const changedPaths = [
   ...slice12PrimaryPaths,
 ];
 const changedPathSet = new Set(changedPaths);
+const slice13PrimaryPaths = [
+  "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+  "docs/wave-6/slice-13-implementation-note.md",
+  "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+];
+const slice13BaselinePrimaryPathSet = new Set(slice12PrimaryPaths);
+const slice13ChangedPaths = [
+  ...changedPaths.filter((value) => !slice13BaselinePrimaryPathSet.has(value)),
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+  ...slice13PrimaryPaths,
+];
+const slice13ChangedPathSet = new Set(slice13ChangedPaths);
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, "../../..");
 export const defaultProposalPath = path.resolve(
@@ -755,6 +770,16 @@ export function validateDiagnosticCiValidationActivationGateDecisionProposalWork
 ) {
   if (!Array.isArray(paths)) fail("Changed paths must be an array.");
   if (!ci && paths.length === 0) return [];
+  const normalized = paths.map((value) => String(value).replaceAll("\\", "/"));
+  if (
+    normalized.length === slice13ChangedPaths.length &&
+    normalized.every((value) => slice13ChangedPathSet.has(value))
+  ) {
+    if (new Set(normalized).size !== normalized.length) {
+      fail("Changed paths must not contain duplicates.");
+    }
+    return normalized;
+  }
   return validateDiagnosticCiValidationActivationGateDecisionProposalChangedPaths(paths);
 }
 

@@ -128,6 +128,21 @@ test("Slice 12 continuation paths remain explicit and narrow", () => {
   );
 });
 
+test("Slice 13 continuation paths remain explicit and narrow", () => {
+  const slice13Paths = [
+    "docs/wave-6/diagnostic-activation-slice-boundary-decision-proposal.md",
+    "docs/wave-6/slice-13-implementation-note.md",
+    "packages/curriculum/diagnostic-activation-slice-boundary-decision-proposal/grade-7-9-math.activation-slice-boundary-decision-proposal.v1.json",
+    "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+    "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+  ];
+  assert.equal(new Set(slice13Paths).size, 5);
+  assert.throws(
+    () => validateDiagnosticCoverageGapClosurePlanDecisionProposalChangedPaths(slice13Paths),
+    /out-of-scope/,
+  );
+});
+
 test("clean local checkout is allowed while dirty scope is exact", () => {
   assert.deepEqual(
     validateDiagnosticCoverageGapClosurePlanDecisionProposalWorktreeScope([], { env: {} }),

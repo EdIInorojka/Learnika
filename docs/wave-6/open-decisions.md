@@ -537,3 +537,30 @@ evaluates a release, satisfies a prerequisite or authorizes activation:
   reproducibility vectors;
 - `W6-S12-OD-MANUAL-HANDOFF-SEQUENCING` — independent release evidence,
   manual approval handoff and activation sequencing.
+
+## W6-S13 — diagnostic activation-slice boundary decision proposal
+
+The following decisions remain unresolved and deferred; none satisfies a
+prerequisite, activates review, transitions readiness or exposes a learner
+diagnostic:
+
+- `W6-S13-OD-ENTRY-CRITERIA` — exact version-pinned entry snapshot, freshness,
+  invalidation and fail-closed requirements;
+- `W6-S13-OD-CAPABILITY-BOUNDARY` — smallest capability set allowed in a
+  separately approved future activation slice;
+- `W6-S13-OD-FILE-BOUNDARY` — exact file allowlist and explicit exclusion of
+  workflow, runtime, interface, persistence and learner surfaces;
+- `W6-S13-OD-PREREQUISITE-HANDOFF` — separation between prerequisite
+  satisfaction evidence and an independent activation decision;
+- `W6-S13-OD-ACTIVATION-AUTHORITY` — authority, quorum, expiry, revocation and
+  evidence for the future activation decision;
+- `W6-S13-OD-WORKFLOW-TRANSITION` — exact explicit workflow transition and
+  deterministic denial behavior;
+- `W6-S13-OD-READINESS-SEPARATION` — separation from readiness evaluation,
+  blocker closure and readiness transition authority;
+- `W6-S13-OD-LEARNER-SURFACE-SEPARATION` — prohibition on learner-facing
+  diagnostic exposure as an activation side effect;
+- `W6-S13-OD-CI-RELEASE-HANDOFF` — independent CI/release evidence handoff and
+  prohibition on CI-derived authority;
+- `W6-S13-OD-ROLLBACK-RECOVERY-BOUNDARY` — suspension, rollback, recovery and
+  partial-failure preconditions required before activation.
