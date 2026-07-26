@@ -116,6 +116,60 @@ const allowedChangedPaths = new Set([
 ]);
 export const wave6ClosureContinuationPaths = new Set([
   "docs/wave-6/closure-gate.md",
+  "docs/wave-7-prep/school-demo-foundation-gate.md",
+  "docs/wave-7-prep/school-demo-scope-and-non-goals.md",
+  "docs/wave-7-prep/school-demo-domain-plan.md",
+  "docs/wave-7-prep/school-demo-slice-plan.md",
+  "docs/wave-7-prep/school-demo-data-boundary.md",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-canonicalization-digest-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
+export const wave7PrepFoundationPaths = new Set([
+  "docs/wave-7-prep/school-demo-foundation-gate.md",
+  "docs/wave-7-prep/school-demo-scope-and-non-goals.md",
+  "docs/wave-7-prep/school-demo-domain-plan.md",
+  "docs/wave-7-prep/school-demo-slice-plan.md",
+  "docs/wave-7-prep/school-demo-data-boundary.md",
+]);
+export const wave7PrepContinuationPaths = new Set([
+  ...wave7PrepFoundationPaths,
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -418,6 +472,7 @@ export function validateSkillGraphChangedPaths(changedPaths) {
     requireString(changedPath, "changedPath");
     const isStaticSlicePath =
       allowedChangedPaths.has(changedPath) ||
+      wave7PrepFoundationPaths.has(changedPath) ||
       allowedChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix));
     const isApprovedSlice7Path =
       approvedSlice7ChangedPaths.has(changedPath) ||
@@ -449,6 +504,7 @@ export function validateSkillGraphChangedPaths(changedPaths) {
   return changedPaths.filter(
     (changedPath) =>
       allowedChangedPaths.has(changedPath) ||
+      wave7PrepFoundationPaths.has(changedPath) ||
       allowedChangedPathPrefixes.some((prefix) => changedPath.startsWith(prefix)),
   );
 }

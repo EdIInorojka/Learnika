@@ -1,3 +1,4 @@
+import { wave7PrepFoundationPaths } from "./validate-skill-graph.mjs";
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -963,6 +964,7 @@ export function validateCandidateIdentityDecisionProposalChangedPaths(changedPat
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
     if (
+      !wave7PrepFoundationPaths.has(changedPath) &&
       !wave6Slice1ChangedPaths.has(changedPath) &&
       !wave6Slice2ScopeUnblockPaths.has(changedPath)
     ) {

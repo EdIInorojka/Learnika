@@ -6,6 +6,8 @@ import {
   validateChangedPathScope,
   validateSkillGraphChangedPaths,
   validateSkillGraph,
+  wave6ClosureContinuationPaths,
+  wave7PrepFoundationPaths,
 } from "../scripts/validate-skill-graph.mjs";
 
 const staticDocumentationPathsThroughWave6Slice2 = [
@@ -177,12 +179,28 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
     assert.equal(
       isLegacyStaticPath ||
         staticDocumentationPathsThroughWave6Slice2.includes(changedPath) ||
+        wave7PrepFoundationPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,
       changedPath,
     );
   }
+});
+
+test("scope guard permits exactly the five Wave 7 prep foundation documents", () => {
+  const prepPaths = [...wave7PrepFoundationPaths];
+  assert.equal(prepPaths.length, 5);
+  assert.equal(
+    prepPaths.every((path) => wave6ClosureContinuationPaths.has(path)),
+    true,
+  );
+  assert.deepEqual(validateSkillGraphChangedPaths(prepPaths), prepPaths);
+  assert.throws(
+    () =>
+      validateSkillGraphChangedPaths(["docs/wave-7-prep/archive/school-demo-foundation-gate.md"]),
+    /Runtime or out-of-scope path changed/,
+  );
 });
 
 test("scope guard permits only forty-eight exact documentation paths through Wave 6 Slice 8", () => {

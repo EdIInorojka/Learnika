@@ -2,7 +2,11 @@ import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { wave6ClosureContinuationPaths } from "./validate-skill-graph.mjs";
+import {
+  wave6ClosureContinuationPaths,
+  wave7PrepContinuationPaths,
+  wave7PrepFoundationPaths,
+} from "./validate-skill-graph.mjs";
 
 const expectedArtifactVersion = "wave-6.slice-11.grade-7-9-math.v1";
 const expectedProposalVersion = "wave-6.slice-11.diagnostic-rollback-withdrawal-policy.proposal.v1";
@@ -837,6 +841,18 @@ export function validateDiagnosticRollbackWithdrawalPolicyDecisionProposalWorktr
     normalized.length === wave6ClosureContinuationPaths.size &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => wave6ClosureContinuationPaths.has(value))
+  )
+    return normalized;
+  if (
+    normalized.length === wave7PrepFoundationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave7PrepFoundationPaths.has(value))
+  )
+    return normalized;
+  if (
+    normalized.length === wave7PrepContinuationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave7PrepContinuationPaths.has(value))
   )
     return normalized;
   if (

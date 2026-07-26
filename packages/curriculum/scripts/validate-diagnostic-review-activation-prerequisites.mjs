@@ -1,3 +1,4 @@
+import { wave7PrepFoundationPaths } from "./validate-skill-graph.mjs";
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -794,6 +795,7 @@ export function validateActivationPrerequisitesChangedPaths(changedPaths) {
       !wave5Slice12ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice13ScopeUnblockPaths.has(changedPath) &&
       !wave5Slice14ScopeUnblockPaths.has(changedPath) &&
+      !wave7PrepFoundationPaths.has(changedPath) &&
       !wave5ClosureScopeUnblockPaths.has(changedPath) &&
       !wave6Slice1ScopeUnblockPaths.has(changedPath) &&
       !wave6Slice2ScopeUnblockPaths.has(changedPath)

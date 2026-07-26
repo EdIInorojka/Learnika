@@ -1,3 +1,4 @@
+import { wave7PrepFoundationPaths } from "./validate-skill-graph.mjs";
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -990,7 +991,7 @@ export function validateCanonicalizationDigestDecisionProposalChangedPaths(chang
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
-    if (!wave6Slice2ChangedPaths.has(changedPath)) {
+    if (!wave7PrepFoundationPaths.has(changedPath) && !wave6Slice2ChangedPaths.has(changedPath)) {
       fail(`Wave 6 Slice 2 out-of-scope path changed: ${changedPath}.`);
     }
   }

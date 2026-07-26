@@ -3,7 +3,11 @@ import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { wave6ClosureContinuationPaths } from "./validate-skill-graph.mjs";
+import {
+  wave6ClosureContinuationPaths,
+  wave7PrepContinuationPaths,
+  wave7PrepFoundationPaths,
+} from "./validate-skill-graph.mjs";
 
 const expectedProposalArtifactVersion = "wave-6.slice-4.grade-7-9-math.v1";
 const expectedProposalVersion = "wave-6.slice-4.diagnostic-separation-of-duties-policy.proposal.v1";
@@ -1485,6 +1489,22 @@ export function validateSeparationOfDutiesDecisionProposalWorktreeScope(
     normalized.length === wave6ClosureContinuationPaths.size &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => wave6ClosureContinuationPaths.has(value))
+  ) {
+    return normalized;
+  }
+  if (
+    Array.isArray(normalized) &&
+    normalized.length === wave7PrepFoundationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave7PrepFoundationPaths.has(value))
+  ) {
+    return normalized;
+  }
+  if (
+    Array.isArray(normalized) &&
+    normalized.length === wave7PrepContinuationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave7PrepContinuationPaths.has(value))
   ) {
     return normalized;
   }

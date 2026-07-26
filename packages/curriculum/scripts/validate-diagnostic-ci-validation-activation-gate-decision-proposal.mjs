@@ -13,7 +13,11 @@ import {
   readDiagnosticRollbackWithdrawalPolicyDecisionProposal,
   validateDiagnosticRollbackWithdrawalPolicyDecisionProposal,
 } from "./validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs";
-import { wave6ClosureContinuationPaths } from "./validate-skill-graph.mjs";
+import {
+  wave6ClosureContinuationPaths,
+  wave7PrepContinuationPaths,
+  wave7PrepFoundationPaths,
+} from "./validate-skill-graph.mjs";
 
 const expectedArtifactVersion = "wave-6.slice-12.grade-7-9-math.v1";
 const expectedProposalVersion =
@@ -776,6 +780,18 @@ export function validateDiagnosticCiValidationActivationGateDecisionProposalWork
     normalized.length === wave6ClosureContinuationPaths.size &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => wave6ClosureContinuationPaths.has(value))
+  )
+    return normalized;
+  if (
+    normalized.length === wave7PrepFoundationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave7PrepFoundationPaths.has(value))
+  )
+    return normalized;
+  if (
+    normalized.length === wave7PrepContinuationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave7PrepContinuationPaths.has(value))
   )
     return normalized;
   if (

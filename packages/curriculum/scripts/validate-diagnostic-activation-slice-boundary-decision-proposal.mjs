@@ -9,7 +9,11 @@ import {
   readDiagnosticCiValidationActivationGateDecisionProposalUpstreamArtifacts,
   validateDiagnosticCiValidationActivationGateDecisionProposal,
 } from "./validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs";
-import { wave6ClosureContinuationPaths } from "./validate-skill-graph.mjs";
+import {
+  wave6ClosureContinuationPaths,
+  wave7PrepContinuationPaths,
+  wave7PrepFoundationPaths,
+} from "./validate-skill-graph.mjs";
 
 const expectedArtifactVersion = "wave-6.slice-13.grade-7-9-math.v1";
 const expectedProposalVersion = "wave-6.slice-13.diagnostic-activation-slice-boundary.proposal.v1";
@@ -630,6 +634,18 @@ export function validateDiagnosticActivationSliceBoundaryDecisionProposalWorktre
     normalized.length === wave6ClosureContinuationPaths.size &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => wave6ClosureContinuationPaths.has(value))
+  )
+    return normalized;
+  if (
+    normalized.length === wave7PrepFoundationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave7PrepFoundationPaths.has(value))
+  )
+    return normalized;
+  if (
+    normalized.length === wave7PrepContinuationPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => wave7PrepContinuationPaths.has(value))
   )
     return normalized;
   if (normalized.length === 1 && normalized[0] === wave6ClosureGatePath) return normalized;
