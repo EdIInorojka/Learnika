@@ -1,5 +1,6 @@
 import {
   preWave7Slice1ChangedPaths,
+  preWave7Slice2ChangedPaths,
   matchesExactPathSet,
   wave7PrepFoundationPaths,
 } from "./validate-skill-graph.mjs";
@@ -993,7 +994,10 @@ export function validateCanonicalizationDigestDecisionProposalChangedPaths(chang
   if (!Array.isArray(changedPaths)) {
     fail("Changed paths must be an array.");
   }
-  if (matchesExactPathSet(changedPaths, preWave7Slice1ChangedPaths)) {
+  if (
+    matchesExactPathSet(changedPaths, preWave7Slice1ChangedPaths) ||
+    matchesExactPathSet(changedPaths, preWave7Slice2ChangedPaths)
+  ) {
     return [...changedPaths];
   }
   for (const changedPath of changedPaths) {

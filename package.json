@@ -15,6 +15,7 @@
     "db:migrate:deploy": "pnpm.cmd --filter @learnika/api db:migrate:deploy",
     "db:migrate:dev": "pnpm.cmd --filter @learnika/api db:migrate:dev",
     "db:reset": "pnpm.cmd --filter @learnika/api db:reset",
+    "db:seed": "pnpm.cmd --filter @learnika/api db:seed",
     "db:studio": "pnpm.cmd --filter @learnika/api db:studio",
     "db:validate": "pnpm.cmd --filter @learnika/api db:validate",
     "dev:api": "pnpm.cmd --filter @learnika/api dev",

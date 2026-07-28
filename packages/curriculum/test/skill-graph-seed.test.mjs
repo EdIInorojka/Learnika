@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   readSkillGraph,
   preWave7Slice1ChangedPaths,
+  preWave7Slice2ChangedPaths,
   validateChangedPathScope,
   validateSkillGraphChangedPaths,
   validateSkillGraph,
@@ -182,12 +183,28 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
         staticDocumentationPathsThroughWave6Slice2.includes(changedPath) ||
         wave7PrepFoundationPaths.has(changedPath) ||
         preWave7Slice1ChangedPaths.has(changedPath) ||
+        preWave7Slice2ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,
       changedPath,
     );
   }
+});
+
+test("scope guard admits only the exact Pre-Wave 7 Slice 2 seed-data worktree", () => {
+  const slice2Paths = [...preWave7Slice2ChangedPaths];
+
+  assert.equal(slice2Paths.length, 44);
+  assert.deepEqual(validateSkillGraphChangedPaths(slice2Paths), slice2Paths);
+  assert.throws(
+    () => validateSkillGraphChangedPaths(slice2Paths.slice(1)),
+    /Runtime or out-of-scope path changed/,
+  );
+  assert.throws(
+    () => validateSkillGraphChangedPaths([...slice2Paths, "apps/api/src/school/school.module.ts"]),
+    /Runtime or out-of-scope path changed/,
+  );
 });
 
 test("scope guard permits exactly the five Wave 7 prep foundation documents", () => {

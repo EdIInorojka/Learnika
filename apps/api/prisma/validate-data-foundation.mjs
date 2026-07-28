@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const prismaDir = path.dirname(fileURLToPath(import.meta.url));
 const schema = fs.readFileSync(path.join(prismaDir, "schema.prisma"), "utf8");
+const seedPath = path.join(prismaDir, "seed.mjs");
 
 const requiredModels = [
   "User",
@@ -172,11 +173,38 @@ if (fs.existsSync(openapiPath)) {
   }
 }
 
-assert(
-  !fs.existsSync(path.join(prismaDir, "seed.mjs")),
-  "Seed script exists; the current foundation uses no seed data.",
-);
+assert(fs.existsSync(seedPath), "Missing approved synthetic demo school seed entrypoint.");
+
+const seedSource = fs.readFileSync(seedPath, "utf8");
+const requiredSeedSnippets = [
+  "SYNTHETIC_DEMO_SCHOOL_SEED",
+  'marker: "SYNTHETIC_NON_PRODUCTION"',
+  'locale: "ru-RU"',
+  "export async function seedSyntheticDemoSchool",
+  "isApprovedSyntheticSeedDatabase",
+  'parsed.pathname === "/learnika_local"',
+  ".upsert(",
+  'status: "PLANNED"',
+  "synthetic-demo-school-ru-ru",
+  'code: "7А"',
+  'code: "8А"',
+  'code: "9А"',
+];
+const forbiddenSeedPatterns = [
+  [/\brandomUUID\b|\bMath\.random\b|\bDate\.now\b/, "random or time-derived seed data"],
+  [/\.(?:user|family|childProfile)\.(?:create|upsert|update)/, "family tenant mutation"],
+  [/\b(?:email|phone|address|userId|familyId|childProfileId)\s*:/, "PII or family field"],
+  [/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|https?:\/\//, "email or URL-like value"],
+];
+
+for (const snippet of requiredSeedSnippets) {
+  assert(seedSource.includes(snippet), `Missing synthetic seed safety snippet: ${snippet}`);
+}
+
+for (const [pattern, label] of forbiddenSeedPatterns) {
+  assert(!pattern.test(seedSource), `Forbidden ${label} exists in synthetic seed.`);
+}
 
 console.log(
-  "[db] Prisma schema includes family and school tenancy, auth-session and homework/media metadata constraints.",
+  "[db] Prisma schema and local-only synthetic school seed preserve family/school tenancy and homework/media constraints.",
 );

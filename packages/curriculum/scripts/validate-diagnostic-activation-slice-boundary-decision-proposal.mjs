@@ -12,6 +12,7 @@ import {
 import {
   wave6ClosureContinuationPaths,
   preWave7Slice1ChangedPaths,
+  preWave7Slice2ChangedPaths,
   wave7PrepContinuationPaths,
   wave7PrepFoundationPaths,
 } from "./validate-skill-graph.mjs";
@@ -647,6 +648,12 @@ export function validateDiagnosticActivationSliceBoundaryDecisionProposalWorktre
     normalized.length === wave7PrepContinuationPaths.size &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => wave7PrepContinuationPaths.has(value))
+  )
+    return normalized;
+  if (
+    normalized.length === preWave7Slice2ChangedPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => preWave7Slice2ChangedPaths.has(value))
   )
     return normalized;
   if (
