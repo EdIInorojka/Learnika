@@ -285,5 +285,5 @@ test("Slice 15 creates no persistence object access or provider route expansion"
   const migrations = fs
     .readdirSync(path.join(process.cwd(), "prisma", "migrations"), { withFileTypes: true })
     .filter((entry) => entry.isDirectory());
-  assert.equal(migrations.length, 3);
+  assert.equal(migrations.length, 4);
 });

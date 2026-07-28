@@ -17,6 +17,17 @@ const requiredModels = [
   "HomeworkAttempt",
   "MediaAsset",
   "AuditLog",
+  "SchoolOrganization",
+  "School",
+  "AcademicYear",
+  "SchoolClass",
+  "SchoolSubjectGroup",
+  "SchoolTeacher",
+  "SchoolStudent",
+  "TeacherAssignment",
+  "StudentEnrollment",
+  "SchoolLicense",
+  "SchoolEntitlement",
 ];
 const requiredEnums = [
   "UserRole",
@@ -29,10 +40,10 @@ const requiredEnums = [
   "HomeworkAttemptStatus",
   "MediaAssetKind",
   "MediaRetentionStatus",
+  "SchoolLicenseStatus",
 ];
 const forbiddenModels = [
   "Organization",
-  "SchoolClass",
   "Enrollment",
   "HomeworkUpload",
   "HomeworkAsset",
@@ -91,6 +102,28 @@ const requiredSnippets = [
   "retentionUntil",
   "deletedAt",
   "model AuditLog",
+  "model SchoolOrganization",
+  "model School",
+  "organizationId",
+  "model AcademicYear",
+  "startsOn",
+  "endsOn",
+  "model SchoolClass",
+  "gradeLevel",
+  "model SchoolSubjectGroup",
+  "subjectCode",
+  "model SchoolTeacher",
+  "demoCode",
+  "model SchoolStudent",
+  "model TeacherAssignment",
+  "schoolClassId",
+  "schoolTeacherId",
+  "model StudentEnrollment",
+  "schoolStudentId",
+  "model SchoolLicense",
+  "licenseCode",
+  "model SchoolEntitlement",
+  "capabilityCode",
 ];
 
 function assert(condition, message) {
@@ -145,5 +178,5 @@ assert(
 );
 
 console.log(
-  "[db] Prisma schema includes family tenant, auth-session and homework/media metadata constraints.",
+  "[db] Prisma schema includes family and school tenancy, auth-session and homework/media metadata constraints.",
 );

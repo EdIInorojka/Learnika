@@ -168,8 +168,97 @@ export const wave7PrepFoundationPaths = new Set([
   "docs/wave-7-prep/school-demo-slice-plan.md",
   "docs/wave-7-prep/school-demo-data-boundary.md",
 ]);
+export const preWave7Slice1Paths = new Set([
+  "apps/api/package.json",
+  "apps/api/prisma/schema.prisma",
+  "apps/api/prisma/validate-data-foundation.mjs",
+  "apps/api/prisma/migrations/20260726120000_school_tenancy_foundation/migration.sql",
+  "apps/api/test/school-tenancy-foundation.test.mjs",
+]);
+export const preWave7Slice1ChangedPaths = new Set([
+  ...preWave7Slice1Paths,
+  "apps/api/test/diagnostic-catalog.test.mjs",
+  "apps/api/test/diagnostic-readiness-policy.test.mjs",
+  "apps/api/test/diagnostic-session-draft.test.mjs",
+  "apps/api/test/diagnostic-session-plan.test.mjs",
+  "apps/api/test/diagnostic-session-state.test.mjs",
+  "apps/api/test/media-lifecycle.test.mjs",
+  "apps/api/test/media-processing-readiness.test.mjs",
+  "apps/api/test/mock-ocr-processing.test.mjs",
+  "apps/api/test/safety-harness.test.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-canonicalization-digest-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
+export function matchesExactPathSet(paths, expectedPaths) {
+  return (
+    Array.isArray(paths) &&
+    paths.length === expectedPaths.size &&
+    new Set(paths).size === paths.length &&
+    paths.every((value) => expectedPaths.has(value))
+  );
+}
 export const wave7PrepContinuationPaths = new Set([
   ...wave7PrepFoundationPaths,
+  ...preWave7Slice1Paths,
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-canonicalization-digest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-identity-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-candidate-digest.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-canonicalization-digest-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-activation-prerequisites.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-authority.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-coverage.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-evidence.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-gate-rubric.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-review-workflow-state.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy.mjs",
@@ -467,6 +556,9 @@ function normalizeStatusPath(statusLine) {
 export function validateSkillGraphChangedPaths(changedPaths) {
   if (!Array.isArray(changedPaths)) {
     fail("Changed paths must be an array.");
+  }
+  if (matchesExactPathSet(changedPaths, preWave7Slice1ChangedPaths)) {
+    return changedPaths;
   }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");

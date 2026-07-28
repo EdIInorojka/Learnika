@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   readSkillGraph,
+  preWave7Slice1ChangedPaths,
   validateChangedPathScope,
   validateSkillGraphChangedPaths,
   validateSkillGraph,
@@ -180,6 +181,7 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
       isLegacyStaticPath ||
         staticDocumentationPathsThroughWave6Slice2.includes(changedPath) ||
         wave7PrepFoundationPaths.has(changedPath) ||
+        preWave7Slice1ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,

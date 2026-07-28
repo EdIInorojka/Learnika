@@ -9,7 +9,11 @@ import {
   validateDiagnosticSessionLifecycleFixtures,
   validateDiagnosticSessionLifecycleWorktreeScope,
 } from "../scripts/validate-diagnostic-session-lifecycle.mjs";
-import { readSkillGraph, wave7PrepFoundationPaths } from "../scripts/validate-skill-graph.mjs";
+import {
+  preWave7Slice1ChangedPaths,
+  readSkillGraph,
+  wave7PrepFoundationPaths,
+} from "../scripts/validate-skill-graph.mjs";
 
 const wave5DocumentationPathsThroughSlice10 = new Set([
   "docs/wave-6/diagnostic-canonicalization-digest-policy-decision-proposal.md",
@@ -328,6 +332,7 @@ test("slice scope guard rejects API OpenAPI Prisma web and other runtime paths",
       isLegacyStaticPath ||
         wave5DocumentationPathsThroughSlice10.has(changedPath) ||
         wave7PrepFoundationPaths.has(changedPath) ||
+        preWave7Slice1ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,

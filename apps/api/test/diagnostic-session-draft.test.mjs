@@ -232,6 +232,7 @@ test("Slice 10 remains internal read-only and exactly scope-guarded", () => {
     "20260708173051_initial_data_foundation",
     "20260708181231_auth_session_foundation",
     "20260710082038_homework_media_domain_foundation",
+    "20260726120000_school_tenancy_foundation",
   ]);
 
   const serviceSource = fs.readFileSync(

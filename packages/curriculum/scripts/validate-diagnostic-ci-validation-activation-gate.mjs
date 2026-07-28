@@ -1,4 +1,8 @@
-import { wave7PrepFoundationPaths } from "./validate-skill-graph.mjs";
+import {
+  preWave7Slice1ChangedPaths,
+  matchesExactPathSet,
+  wave7PrepFoundationPaths,
+} from "./validate-skill-graph.mjs";
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -943,6 +947,9 @@ export function normalizeCiValidationActivationGateStatusPaths(statusLine) {
 
 export function validateCiValidationActivationGateChangedPaths(changedPaths) {
   if (!Array.isArray(changedPaths)) fail("Changed paths must be an array.");
+  if (matchesExactPathSet(changedPaths, preWave7Slice1ChangedPaths)) {
+    return [...changedPaths];
+  }
   for (const changedPath of changedPaths) {
     requireString(changedPath, "changedPath");
     if (
