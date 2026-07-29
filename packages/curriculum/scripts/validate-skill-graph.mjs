@@ -155,8 +155,10 @@ export const wave6ClosureContinuationPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy.mjs",
   "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-blueprint.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
@@ -319,7 +321,9 @@ export const preWave7Slice4ChangedPaths = new Set([
   "apps/web/lib/school-demo-view.ts",
   "apps/web/test/school-demo-foundation.test.mjs",
   "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
   "packages/curriculum/test/diagnostic-items.test.mjs",
   "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
@@ -360,6 +364,26 @@ export const preWave7Slice7ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+export const preWave7Slice8ChangedPaths = new Set([
+  "apps/web/app/school-demo/page.tsx",
+  "apps/web/app/school-demo/classes/[classCode]/page.tsx",
+  "apps/web/lib/school-demo-view.ts",
+  "apps/web/test/school-demo-foundation.test.mjs",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-ci-validation-activation-gate-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-readiness-integration-plan-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-rollback-withdrawal-policy-decision-proposal.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
@@ -367,6 +391,12 @@ export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-skill-graph.mjs",
 ]);
 export function matchesExactPathSet(paths, expectedPaths) {
+  const slice8ExactMatch =
+    Array.isArray(paths) &&
+    paths.length === preWave7Slice8ChangedPaths.size &&
+    new Set(paths).size === paths.length &&
+    paths.every((value) => preWave7Slice8ChangedPaths.has(value));
+  if (slice8ExactMatch) return true;
   const exactMatch =
     Array.isArray(paths) &&
     paths.length === expectedPaths.size &&
@@ -670,7 +700,8 @@ export function validateSkillGraphChangedPaths(changedPaths) {
     matchesExactPathSet(changedPaths, preWave7Slice4ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice5ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice6ChangedPaths) ||
-    matchesExactPathSet(changedPaths, preWave7Slice7ChangedPaths)
+    matchesExactPathSet(changedPaths, preWave7Slice7ChangedPaths) ||
+    matchesExactPathSet(changedPaths, preWave7Slice8ChangedPaths)
   ) {
     return changedPaths;
   }

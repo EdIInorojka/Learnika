@@ -160,40 +160,34 @@ test("school demo contract rejects unsafe identifiers and contact data", () => {
 
 test("school demo dashboard and drilldown render the synthetic school overview", () => {
   const snapshot = snapshotFixtureForContract();
-  const dashboardHtml = renderToStaticMarkup(createElement(SchoolDemoDashboardView, { snapshot }));
-  const drilldownHtml = renderToStaticMarkup(
-    createElement(SchoolDemoClassDetailView, {
-      classCode: snapshot.classes[0].code,
+  const guidedDashboardHtml = renderToStaticMarkup(
+    createElement(SchoolDemoDashboardView, {
+      presentationStep: "teacher-assignments",
       snapshot,
     }),
   );
-  const combinedHtml = `${dashboardHtml}\n${drilldownHtml}`;
+  const guidedDrilldownHtml = renderToStaticMarkup(
+    createElement(SchoolDemoClassDetailView, {
+      classCode: snapshot.classes[0].code,
+      presentationStep: "class-drilldown",
+      snapshot,
+    }),
+  );
+  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}`;
 
   for (const phrase of [
-    "Демо школы",
-    "Сводка школы",
-    "Учительский обзор",
-    "Классы и drilldown",
-    "Список учеников",
-    "Назначения учителей",
-    "Границы и лицензия",
-    "Лицензия",
-    "Права",
-    "Строгий read-only обзор",
-    "Read-only карточка класса",
-    "Тема демо",
-    "Светлая",
-    "Маршрут показа школе",
-    "Синтетические демо-данные",
+    "Presentation route",
+    "Guided mode",
+    "Read-only boundary",
     "Overview",
     "Classes",
     "Teacher assignments",
     "License / entitlements",
     "Class drilldown",
-    "overview → classes → teacher assignments → license/entitlements → class drilldown",
   ]) {
     assert.equal(combinedHtml.includes(phrase), true, phrase);
   }
+  assert.equal(combinedHtml.includes("Guided mode"), true);
   for (const className of [
     "school-demo-shell",
     "school-demo-page-header",
@@ -214,15 +208,27 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(combinedHtml, /aria-current="step"/);
   assert.match(combinedHtml, /<table/);
   assert.match(combinedHtml, /<th scope="col"/);
-  assert.match(dashboardHtml, /href="#school-demo-summary"/);
-  assert.match(dashboardHtml, /href="#school-demo-classes"/);
-  assert.match(dashboardHtml, /href="#school-demo-teachers"/);
-  assert.match(dashboardHtml, /href="#school-demo-boundary"/);
-  assert.match(dashboardHtml, /href="\/school-demo\/classes\//);
-  assert.match(drilldownHtml, /href="\/school-demo#school-demo-summary"/);
-  assert.match(drilldownHtml, /href="#school-demo-class-roster"/);
-  assert.match(drilldownHtml, /href="#school-demo-class-assignments"/);
-  assert.match(drilldownHtml, /href="#school-demo-class-boundary"/);
+  assert.match(guidedDashboardHtml, /href="\/school-demo\?step=overview#school-demo-summary"/);
+  assert.match(guidedDashboardHtml, /href="\/school-demo\?step=classes#school-demo-classes"/);
+  assert.match(
+    guidedDashboardHtml,
+    /href="\/school-demo\?step=teacher-assignments#school-demo-teachers"/,
+  );
+  assert.match(guidedDashboardHtml, /href="\/school-demo\?step=license#school-demo-boundary"/);
+  assert.match(
+    guidedDashboardHtml,
+    /href="\/school-demo\/classes\/[^"]+\?step=class-drilldown#school-demo-class-roster"/,
+  );
+  assert.match(guidedDrilldownHtml, /href="\/school-demo\?step=overview#school-demo-summary"/);
+  assert.match(
+    guidedDrilldownHtml,
+    /href="\/school-demo\/classes\/[^"]+\?step=class-drilldown#school-demo-class-roster"/,
+  );
+  assert.match(
+    guidedDrilldownHtml,
+    /href="\/school-demo\?step=teacher-assignments#school-demo-teachers"/,
+  );
+  assert.match(guidedDrilldownHtml, /href="\/school-demo\?step=license#school-demo-boundary"/);
   assert.match(combinedHtml, /aria-labelledby="school-demo-summary-title"/);
   assert.match(combinedHtml, /aria-labelledby="school-demo-class-roster-title"/);
   assert.match(combinedHtml, /\/school-demo\/classes\//);
@@ -255,15 +261,25 @@ test("school demo route is read-only and display-only", async () => {
 
   assert.equal(appSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(appSource.includes("SchoolDemoDashboardView"), true);
+  assert.equal(appSource.includes("searchParams"), true);
+  assert.equal(appSource.includes("presentationStep"), true);
+  assert.equal(appSource.includes("normalizeSchoolDemoPresentationStep"), true);
   assert.equal(appSource.includes('href="/"'), true);
   assert.equal(classPageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(classPageSource.includes("SchoolDemoClassDetailView"), true);
+  assert.equal(classPageSource.includes("searchParams"), true);
+  assert.equal(classPageSource.includes("presentationStep"), true);
+  assert.equal(classPageSource.includes("normalizeSchoolDemoPresentationStep"), true);
   assert.equal(classPageSource.includes("notFound()"), true);
   assert.equal(serviceSource.includes('"/demo/school-snapshot"'), true);
   assert.equal(viewSource.includes("SchoolDemoThemeToggle"), true);
   assert.equal(viewSource.includes("renderPresentationFlow"), true);
   assert.equal(viewSource.includes("school-demo-presentation-flow"), true);
+  assert.equal(viewSource.includes("school-demo-presentation-state"), true);
+  assert.equal(viewSource.includes("Guided mode"), true);
   assert.equal(viewSource.includes("aria-current"), true);
+  assert.equal(viewSource.includes("step=overview#school-demo-summary"), true);
+  assert.equal(viewSource.includes("step=class-drilldown#school-demo-class-roster"), true);
   assert.equal(cssSource.includes(".school-demo-shell"), true);
   assert.equal(cssSource.includes(".school-demo-presentation-flow"), true);
   assert.equal(cssSource.includes(".school-demo-step-nav"), true);

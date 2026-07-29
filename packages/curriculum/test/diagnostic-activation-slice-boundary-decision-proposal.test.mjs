@@ -11,7 +11,10 @@ import {
   validateDiagnosticActivationSliceBoundaryDecisionProposalChangedPaths,
   validateDiagnosticActivationSliceBoundaryDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs";
-import { preWave7Slice3ChangedPaths } from "../scripts/validate-skill-graph.mjs";
+import {
+  preWave7Slice3ChangedPaths,
+  preWave7Slice8ChangedPaths,
+} from "../scripts/validate-skill-graph.mjs";
 
 async function loadFixture() {
   return Promise.all([
@@ -148,6 +151,12 @@ test("exact cumulative scope is duplicate-safe, narrow and clean-checkout tolera
       ...preWave7Slice3ChangedPaths,
     ]),
     [...preWave7Slice3ChangedPaths],
+  );
+  assert.deepEqual(
+    validateDiagnosticActivationSliceBoundaryDecisionProposalWorktreeScope([
+      ...preWave7Slice8ChangedPaths,
+    ]),
+    [...preWave7Slice8ChangedPaths],
   );
   assert.throws(
     () =>

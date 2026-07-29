@@ -9,6 +9,7 @@ import {
   validateDiagnosticReadinessIntegrationPlanDecisionProposalChangedPaths,
   validateDiagnosticReadinessIntegrationPlanDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs";
+import { preWave7Slice8ChangedPaths } from "../scripts/validate-skill-graph.mjs";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
@@ -121,6 +122,13 @@ test("exact cumulative scope is duplicate-safe, narrow and clean-checkout tolera
   assert.deepEqual(
     validateDiagnosticReadinessIntegrationPlanDecisionProposalChangedPaths(changedPaths),
     changedPaths,
+  );
+  assert.deepEqual(
+    validateDiagnosticReadinessIntegrationPlanDecisionProposalWorktreeScope(
+      [...preWave7Slice8ChangedPaths],
+      { ci: false },
+    ),
+    [...preWave7Slice8ChangedPaths],
   );
   assert.deepEqual(
     validateDiagnosticReadinessIntegrationPlanDecisionProposalWorktreeScope([], { ci: false }),

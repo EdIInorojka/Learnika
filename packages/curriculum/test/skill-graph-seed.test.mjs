@@ -10,7 +10,9 @@ import {
   preWave7Slice5ChangedPaths,
   preWave7Slice6ChangedPaths,
   preWave7Slice7ChangedPaths,
+  preWave7Slice8ChangedPaths,
   validateChangedPathScope,
+  matchesExactPathSet,
   validateSkillGraphChangedPaths,
   validateSkillGraph,
   wave6ClosureContinuationPaths,
@@ -194,6 +196,7 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
         preWave7Slice5ChangedPaths.has(changedPath) ||
         preWave7Slice6ChangedPaths.has(changedPath) ||
         preWave7Slice7ChangedPaths.has(changedPath) ||
+        preWave7Slice8ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,
@@ -277,6 +280,25 @@ test("scope guard permits only the exact Pre-Wave 7 Slice 7 presentation-flow wo
       validateSkillGraphChangedPaths([
         ...slice7Paths,
         "apps/web/app/school-demo/presentation-action.ts",
+      ]),
+    /Runtime or out-of-scope path changed/,
+  );
+});
+
+test("scope guard permits only the exact Pre-Wave 7 Slice 8 guided-presentation worktree", () => {
+  const slice8Paths = [...preWave7Slice8ChangedPaths];
+
+  assert.equal(slice8Paths.length, preWave7Slice8ChangedPaths.size);
+  assert.equal(matchesExactPathSet(slice8Paths, preWave7Slice1ChangedPaths), true);
+  assert.deepEqual(validateSkillGraphChangedPaths(slice8Paths), slice8Paths);
+  assert.equal(slice8Paths.includes("apps/web/app/school-demo/page.tsx"), true);
+  assert.equal(slice8Paths.includes("apps/web/app/school-demo/classes/[classCode]/page.tsx"), true);
+  assert.equal(slice8Paths.includes("apps/web/lib/school-demo-view.ts"), true);
+  assert.throws(
+    () =>
+      validateSkillGraphChangedPaths([
+        ...slice8Paths,
+        "apps/web/app/school-demo/classes/should-not-exist/page.tsx",
       ]),
     /Runtime or out-of-scope path changed/,
   );

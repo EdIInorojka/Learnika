@@ -11,11 +11,13 @@ const transitionResetMs = 700;
 
 interface SchoolDemoDashboardViewProps {
   snapshot: SchoolDemoSnapshot;
+  presentationStep?: SchoolDemoPresentationStepKey;
 }
 
 interface SchoolDemoClassDetailViewProps {
   classCode: string;
   snapshot: SchoolDemoSnapshot;
+  presentationStep?: SchoolDemoPresentationStepKey;
 }
 
 interface SchoolDemoClassOverview {
@@ -35,6 +37,33 @@ interface SchoolDemoTeacherOverview {
 
 type SchoolDemoPresentationStepKey =
   "overview" | "classes" | "teacher-assignments" | "license" | "class-drilldown";
+
+const schoolDemoPresentationStepOrder: SchoolDemoPresentationStepKey[] = [
+  "overview",
+  "classes",
+  "teacher-assignments",
+  "license",
+  "class-drilldown",
+];
+
+function getSchoolDemoPresentationStepIndex(step: SchoolDemoPresentationStepKey): number {
+  return schoolDemoPresentationStepOrder.indexOf(step) + 1;
+}
+
+function getSchoolDemoPresentationStepLabel(step: SchoolDemoPresentationStepKey): string {
+  switch (step) {
+    case "overview":
+      return "Overview";
+    case "classes":
+      return "Classes";
+    case "teacher-assignments":
+      return "Teacher assignments";
+    case "license":
+      return "License / entitlements";
+    case "class-drilldown":
+      return "Class drilldown";
+  }
+}
 
 interface SchoolDemoPresentationStep {
   href: string;
@@ -107,7 +136,11 @@ function SchoolDemoThemeToggle() {
   return createElement(
     "div",
     { className: "school-demo-theme-control" },
-    createElement("span", { className: "school-demo-theme-title", id: labelId }, "Тема демо"),
+    createElement(
+      "span",
+      { className: "school-demo-theme-title", id: labelId },
+      "РўРµРјР° РґРµРјРѕ",
+    ),
     createElement(
       "button",
       {
@@ -126,10 +159,14 @@ function SchoolDemoThemeToggle() {
       createElement(
         "span",
         { className: "school-demo-theme-label" },
-        isDark ? "Графит" : "Светлая",
+        isDark ? "Р“СЂР°С„РёС‚" : "РЎРІРµС‚Р»Р°СЏ",
       ),
     ),
-    createElement("span", { className: "school-demo-theme-note" }, "Локально в браузере"),
+    createElement(
+      "span",
+      { className: "school-demo-theme-note" },
+      "Р›РѕРєР°Р»СЊРЅРѕ РІ Р±СЂР°СѓР·РµСЂРµ",
+    ),
   );
 }
 
@@ -229,7 +266,7 @@ function buildClassDetail(
 }
 
 function joinValues(values: string[]): string {
-  return values.length > 0 ? values.join(", ") : "—";
+  return values.length > 0 ? values.join(", ") : "вЂ”";
 }
 
 function listSummaryItems(items: Array<[string, ReactNode]>) {
@@ -248,7 +285,7 @@ function listSummaryItems(items: Array<[string, ReactNode]>) {
 }
 
 function renderChips(values: string[], tone = "neutral") {
-  if (values.length === 0) return createElement("span", { className: "school-demo-muted" }, "—");
+  if (values.length === 0) return createElement("span", { className: "school-demo-muted" }, "вЂ”");
   return createElement(
     "span",
     { className: "school-demo-chip-list" },
@@ -275,9 +312,9 @@ function renderMetric(label: string, value: string | number, note: string) {
 function renderStatusStrip(snapshot: SchoolDemoSnapshot) {
   return createElement(
     "section",
-    { "aria-label": "Статус демо-контура", className: "school-demo-status-strip" },
+    { "aria-label": "РЎС‚Р°С‚СѓСЃ РґРµРјРѕ-РєРѕРЅС‚СѓСЂР°", className: "school-demo-status-strip" },
     [
-      ["Маркер", snapshot.marker],
+      ["РњР°СЂРєРµСЂ", snapshot.marker],
       ["Readiness", snapshot.boundary.readiness],
       ["Activation", snapshot.boundary.activation],
       ["Production data", snapshot.boundary.productionDataCount],
@@ -298,42 +335,44 @@ function buildPresentationSteps(
   selectedClassCode?: string,
 ): SchoolDemoPresentationStep[] {
   const drilldownClassCode = selectedClassCode ?? snapshot.classes[0]?.code;
-  const dashboardHref = (fragment: string) =>
-    selectedClassCode ? `/school-demo${fragment}` : fragment;
+  const dashboardHref = (step: SchoolDemoPresentationStepKey, fragment: string) =>
+    `/school-demo?step=${step}${fragment}`;
   const drilldownHref = drilldownClassCode
-    ? `/school-demo/classes/${encodeURIComponent(drilldownClassCode)}#school-demo-class-roster`
+    ? `/school-demo/classes/${encodeURIComponent(drilldownClassCode)}?step=class-drilldown#school-demo-class-roster`
     : "#school-demo-classes";
 
   return [
     {
-      href: dashboardHref("#school-demo-summary"),
+      href: dashboardHref("overview", "#school-demo-summary"),
       key: "overview",
       label: "Overview",
-      note: "контекст организации, школы и учебного года",
+      note: "РєРѕРЅС‚РµРєСЃС‚ РѕСЂРіР°РЅРёР·Р°С†РёРё, С€РєРѕР»С‹ Рё СѓС‡РµР±РЅРѕРіРѕ РіРѕРґР°",
     },
     {
-      href: dashboardHref("#school-demo-classes"),
+      href: dashboardHref("classes", "#school-demo-classes"),
       key: "classes",
       label: "Classes",
-      note: "7–9 классы и быстрый переход в drilldown",
+      note: "7вЂ“9 РєР»Р°СЃСЃС‹ Рё Р±С‹СЃС‚СЂС‹Р№ РїРµСЂРµС…РѕРґ РІ drilldown",
     },
     {
-      href: selectedClassCode ? "#school-demo-class-assignments" : "#school-demo-teachers",
+      href: dashboardHref("teacher-assignments", "#school-demo-teachers"),
       key: "teacher-assignments",
       label: "Teacher assignments",
-      note: "синтетические роли и предметные группы",
+      note: "СЃРёРЅС‚РµС‚РёС‡РµСЃРєРёРµ СЂРѕР»Рё Рё РїСЂРµРґРјРµС‚РЅС‹Рµ РіСЂСѓРїРїС‹",
     },
     {
-      href: selectedClassCode ? "#school-demo-class-boundary" : "#school-demo-boundary",
+      href: dashboardHref("license", "#school-demo-boundary"),
       key: "license",
       label: "License / entitlements",
-      note: "read-only права демо-контура",
+      note: "read-only РїСЂР°РІР° РґРµРјРѕ-РєРѕРЅС‚СѓСЂР°",
     },
     {
-      href: selectedClassCode ? "#school-demo-class-roster" : drilldownHref,
+      href: drilldownHref,
       key: "class-drilldown",
       label: "Class drilldown",
-      note: drilldownClassCode ? `карточка класса ${drilldownClassCode}` : "доступен после seed",
+      note: drilldownClassCode
+        ? `РєР°СЂС‚РѕС‡РєР° РєР»Р°СЃСЃР° ${drilldownClassCode}`
+        : "РґРѕСЃС‚СѓРїРµРЅ РїРѕСЃР»Рµ seed",
     },
   ];
 }
@@ -348,6 +387,9 @@ function renderPresentationFlow({
   snapshot: SchoolDemoSnapshot;
 }) {
   const steps = buildPresentationSteps(snapshot, classCode);
+  const activeStepIndex = steps.findIndex((step) => step.key === activeStep);
+  const currentStep = steps[activeStepIndex] ?? steps[0]!;
+  const guidedSurface = classCode ? "class page" : "overview";
 
   return createElement(
     "section",
@@ -360,18 +402,27 @@ function renderPresentationFlow({
       "div",
       { className: "school-demo-presentation-copy" },
       createElement("span", { className: "school-demo-eyebrow" }, "Presentation route"),
-      createElement("h2", { id: "school-demo-presentation-title" }, "Маршрут показа школе"),
+      createElement(
+        "h2",
+        { id: "school-demo-presentation-title" },
+        "РњР°СЂС€СЂСѓС‚ РїРѕРєР°Р·Р° С€РєРѕР»Рµ",
+      ),
+      createElement(
+        "p",
+        { className: "school-demo-presentation-state" },
+        `Guided mode - ${guidedSurface} - step ${getSchoolDemoPresentationStepIndex(currentStep.key)} of ${steps.length} - ${getSchoolDemoPresentationStepLabel(currentStep.key)}`,
+      ),
       createElement(
         "p",
         null,
-        "Последовательность для живой демонстрации: overview → classes → teacher assignments → license/entitlements → class drilldown.",
+        "РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РґР»СЏ Р¶РёРІРѕР№ РґРµРјРѕРЅСЃС‚СЂР°С†РёРё: overview в†’ classes в†’ teacher assignments в†’ license/entitlements в†’ class drilldown.",
       ),
     ),
     createElement(
       "aside",
       { className: "school-demo-boundary-card" },
       createElement("span", null, "Read-only boundary"),
-      createElement("strong", null, "Синтетические демо-данные"),
+      createElement("strong", null, "РЎРёРЅС‚РµС‚РёС‡РµСЃРєРёРµ РґРµРјРѕ-РґР°РЅРЅС‹Рµ"),
       createElement(
         "p",
         null,
@@ -380,7 +431,10 @@ function renderPresentationFlow({
     ),
     createElement(
       "nav",
-      { "aria-label": "Маршрут презентации school demo", className: "school-demo-step-nav" },
+      {
+        "aria-label": "РњР°СЂС€СЂСѓС‚ РїСЂРµР·РµРЅС‚Р°С†РёРё school demo",
+        className: "school-demo-step-nav",
+      },
       steps.map((step, index) =>
         createElement(
           "a",
@@ -417,13 +471,16 @@ function renderHeader({
     createElement(
       "div",
       { className: "school-demo-heading" },
-      createElement("span", { className: "school-demo-eyebrow" }, "Pre-Wave 7 · synthetic demo"),
+      createElement("span", { className: "school-demo-eyebrow" }, "Pre-Wave 7 В· synthetic demo"),
       createElement("h1", null, title),
       createElement("p", null, subtitle),
     ),
     createElement(
       "nav",
-      { "aria-label": "Навигация демо школы", className: "school-demo-header-actions" },
+      {
+        "aria-label": "РќР°РІРёРіР°С†РёСЏ РґРµРјРѕ С€РєРѕР»С‹",
+        className: "school-demo-header-actions",
+      },
       createElement(SchoolDemoThemeToggle),
       createElement(
         "a",
@@ -492,7 +549,10 @@ function renderTable({
   );
 }
 
-export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewProps) {
+export function SchoolDemoDashboardView({
+  presentationStep,
+  snapshot,
+}: SchoolDemoDashboardViewProps) {
   const classOverviews = buildClassOverviews(snapshot);
   const teacherOverviews = buildTeacherOverviews(snapshot);
 
@@ -505,59 +565,83 @@ export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewPro
     },
     renderHeader({
       actionHref: "/",
-      actionLabel: "На главную",
+      actionLabel: "РќР° РіР»Р°РІРЅСѓСЋ",
       subtitle:
-        "Строгий read-only обзор синтетической школьной ветки: организация, классы, назначения и лицензия без реальных данных.",
-      title: "Демо школы",
+        "РЎС‚СЂРѕРіРёР№ read-only РѕР±Р·РѕСЂ СЃРёРЅС‚РµС‚РёС‡РµСЃРєРѕР№ С€РєРѕР»СЊРЅРѕР№ РІРµС‚РєРё: РѕСЂРіР°РЅРёР·Р°С†РёСЏ, РєР»Р°СЃСЃС‹, РЅР°Р·РЅР°С‡РµРЅРёСЏ Рё Р»РёС†РµРЅР·РёСЏ Р±РµР· СЂРµР°Р»СЊРЅС‹С… РґР°РЅРЅС‹С….",
+      title: "Р”РµРјРѕ С€РєРѕР»С‹",
     }),
     renderStatusStrip(snapshot),
-    renderPresentationFlow({ activeStep: "overview", snapshot }),
+    renderPresentationFlow({
+      activeStep: presentationStep ?? "overview",
+      snapshot,
+    }),
     createElement(
       "section",
-      { "aria-label": "Ключевые показатели демо школы", className: "school-demo-kpi-grid" },
+      {
+        "aria-label": "РљР»СЋС‡РµРІС‹Рµ РїРѕРєР°Р·Р°С‚РµР»Рё РґРµРјРѕ С€РєРѕР»С‹",
+        className: "school-demo-kpi-grid",
+      },
       renderMetric(
-        "Организация",
+        "РћСЂРіР°РЅРёР·Р°С†РёСЏ",
         snapshot.organization.code,
-        `${snapshot.organization.schoolCount} школа`,
+        `${snapshot.organization.schoolCount} С€РєРѕР»Р°`,
       ),
       renderMetric(
-        "Учебный год",
+        "РЈС‡РµР±РЅС‹Р№ РіРѕРґ",
         snapshot.academicYear.code,
-        `${snapshot.academicYear.startsOn} — ${snapshot.academicYear.endsOn}`,
+        `${snapshot.academicYear.startsOn} вЂ” ${snapshot.academicYear.endsOn}`,
       ),
       renderMetric(
-        "Классы",
+        "РљР»Р°СЃСЃС‹",
         classOverviews.length,
         joinValues(classOverviews.map((item) => item.code)),
       ),
-      renderMetric("Учителя", teacherOverviews.length, "синтетические demo-коды"),
-      renderMetric("Ученики", snapshot.students.length, "без ФИО и контактов"),
-      renderMetric("Права", snapshot.entitlements.length, "плановые entitlement-коды"),
+      renderMetric(
+        "РЈС‡РёС‚РµР»СЏ",
+        teacherOverviews.length,
+        "СЃРёРЅС‚РµС‚РёС‡РµСЃРєРёРµ demo-РєРѕРґС‹",
+      ),
+      renderMetric(
+        "РЈС‡РµРЅРёРєРё",
+        snapshot.students.length,
+        "Р±РµР· Р¤РРћ Рё РєРѕРЅС‚Р°РєС‚РѕРІ",
+      ),
+      renderMetric(
+        "РџСЂР°РІР°",
+        snapshot.entitlements.length,
+        "РїР»Р°РЅРѕРІС‹Рµ entitlement-РєРѕРґС‹",
+      ),
     ),
     createElement(
       "div",
       { className: "school-demo-grid" },
       renderPanel(
         "school-demo-summary",
-        "Сводка школы",
+        "РЎРІРѕРґРєР° С€РєРѕР»С‹",
         listSummaryItems([
-          ["Организация", snapshot.organization.code],
-          ["Школа", snapshot.school.code],
-          ["Локаль", snapshot.locale],
-          ["Учебный год", `${snapshot.academicYear.startsOn} — ${snapshot.academicYear.endsOn}`],
-          ["Предметные группы", joinValues(snapshot.subjectGroups.map((item) => item.code))],
-          ["Зачисления", snapshot.studentEnrollments.length],
+          ["РћСЂРіР°РЅРёР·Р°С†РёСЏ", snapshot.organization.code],
+          ["РЁРєРѕР»Р°", snapshot.school.code],
+          ["Р›РѕРєР°Р»СЊ", snapshot.locale],
+          [
+            "РЈС‡РµР±РЅС‹Р№ РіРѕРґ",
+            `${snapshot.academicYear.startsOn} вЂ” ${snapshot.academicYear.endsOn}`,
+          ],
+          [
+            "РџСЂРµРґРјРµС‚РЅС‹Рµ РіСЂСѓРїРїС‹",
+            joinValues(snapshot.subjectGroups.map((item) => item.code)),
+          ],
+          ["Р—Р°С‡РёСЃР»РµРЅРёСЏ", snapshot.studentEnrollments.length],
         ]),
       ),
       renderPanel(
         "school-demo-boundary",
-        "Границы и лицензия",
+        "Р“СЂР°РЅРёС†С‹ Рё Р»РёС†РµРЅР·РёСЏ",
         listSummaryItems([
-          ["Маркер", snapshot.marker],
-          ["Лицензия", snapshot.license.licenseCode],
-          ["Статус лицензии", snapshot.license.status],
+          ["РњР°СЂРєРµСЂ", snapshot.marker],
+          ["Р›РёС†РµРЅР·РёСЏ", snapshot.license.licenseCode],
+          ["РЎС‚Р°С‚СѓСЃ Р»РёС†РµРЅР·РёРё", snapshot.license.status],
           [
-            "Права",
+            "РџСЂР°РІР°",
             renderChips(
               snapshot.entitlements.map((item) => item.capabilityCode),
               "blue",
@@ -569,10 +653,17 @@ export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewPro
       ),
       renderPanel(
         "school-demo-classes",
-        "Классы и drilldown",
+        "РљР»Р°СЃСЃС‹ Рё drilldown",
         renderTable({
-          emptyLabel: "Классов пока нет.",
-          headers: ["Класс", "Уровень", "Ученики", "Предметные группы", "Учителя", "Действие"],
+          emptyLabel: "РљР»Р°СЃСЃРѕРІ РїРѕРєР° РЅРµС‚.",
+          headers: [
+            "РљР»Р°СЃСЃ",
+            "РЈСЂРѕРІРµРЅСЊ",
+            "РЈС‡РµРЅРёРєРё",
+            "РџСЂРµРґРјРµС‚РЅС‹Рµ РіСЂСѓРїРїС‹",
+            "РЈС‡РёС‚РµР»СЏ",
+            "Р”РµР№СЃС‚РІРёРµ",
+          ],
           rows: classOverviews.map((schoolClass) => ({
             cells: [
               createElement("strong", { key: "code" }, schoolClass.code),
@@ -587,7 +678,7 @@ export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewPro
                   href: `/school-demo/classes/${encodeURIComponent(schoolClass.code)}`,
                   key: "link",
                 },
-                "Открыть класс",
+                "РћС‚РєСЂС‹С‚СЊ РєР»Р°СЃСЃ",
               ),
             ],
             key: schoolClass.code,
@@ -597,10 +688,15 @@ export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewPro
       ),
       renderPanel(
         "school-demo-teachers",
-        "Учительский обзор",
+        "РЈС‡РёС‚РµР»СЊСЃРєРёР№ РѕР±Р·РѕСЂ",
         renderTable({
-          emptyLabel: "Учительских назначений пока нет.",
-          headers: ["Учитель", "Назначения", "Классы", "Предметные группы"],
+          emptyLabel: "РЈС‡РёС‚РµР»СЊСЃРєРёС… РЅР°Р·РЅР°С‡РµРЅРёР№ РїРѕРєР° РЅРµС‚.",
+          headers: [
+            "РЈС‡РёС‚РµР»СЊ",
+            "РќР°Р·РЅР°С‡РµРЅРёСЏ",
+            "РљР»Р°СЃСЃС‹",
+            "РџСЂРµРґРјРµС‚РЅС‹Рµ РіСЂСѓРїРїС‹",
+          ],
           rows: teacherOverviews.map((teacher) => ({
             cells: [
               createElement("strong", { key: "teacher" }, teacher.demoCode),
@@ -617,7 +713,11 @@ export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewPro
   );
 }
 
-export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoClassDetailViewProps) {
+export function SchoolDemoClassDetailView({
+  classCode,
+  presentationStep,
+  snapshot,
+}: SchoolDemoClassDetailViewProps) {
   const detail = buildClassDetail(snapshot, classCode);
 
   if (!detail) {
@@ -629,14 +729,18 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
         "data-school-demo-transition": "idle",
       },
       renderHeader({
-        actionHref: "/school-demo",
-        actionLabel: "К обзору школы",
+        actionHref: "/school-demo?step=overview#school-demo-summary",
+        actionLabel: "Рљ РѕР±Р·РѕСЂСѓ С€РєРѕР»С‹",
         subtitle:
-          "Запрошенный drilldown недоступен в синтетической демо-выборке. Реальные классы не подключены.",
-        title: "Класс не найден",
+          "Р—Р°РїСЂРѕС€РµРЅРЅС‹Р№ drilldown РЅРµРґРѕСЃС‚СѓРїРµРЅ РІ СЃРёРЅС‚РµС‚РёС‡РµСЃРєРѕР№ РґРµРјРѕ-РІС‹Р±РѕСЂРєРµ. Р РµР°Р»СЊРЅС‹Рµ РєР»Р°СЃСЃС‹ РЅРµ РїРѕРґРєР»СЋС‡РµРЅС‹.",
+        title: "РљР»Р°СЃСЃ РЅРµ РЅР°Р№РґРµРЅ",
       }),
       renderStatusStrip(snapshot),
-      renderPresentationFlow({ activeStep: "class-drilldown", classCode, snapshot }),
+      renderPresentationFlow({
+        activeStep: presentationStep ?? "class-drilldown",
+        classCode,
+        snapshot,
+      }),
     );
   }
 
@@ -654,22 +758,37 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
       "data-school-demo-transition": "idle",
     },
     renderHeader({
-      actionHref: "/school-demo",
-      actionLabel: "К обзору школы",
+      actionHref: "/school-demo?step=overview#school-demo-summary",
+      actionLabel: "Рљ РѕР±Р·РѕСЂСѓ С€РєРѕР»С‹",
       subtitle:
-        "Read-only карточка класса: состав, назначения и границы демо-лицензии без персональных данных.",
-      title: `Класс ${detail.code}`,
+        "Read-only РєР°СЂС‚РѕС‡РєР° РєР»Р°СЃСЃР°: СЃРѕСЃС‚Р°РІ, РЅР°Р·РЅР°С‡РµРЅРёСЏ Рё РіСЂР°РЅРёС†С‹ РґРµРјРѕ-Р»РёС†РµРЅР·РёРё Р±РµР· РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹С… РґР°РЅРЅС‹С….",
+      title: `РљР»Р°СЃСЃ ${detail.code}`,
     }),
     renderStatusStrip(snapshot),
-    renderPresentationFlow({ activeStep: "class-drilldown", classCode: detail.code, snapshot }),
+    renderPresentationFlow({
+      activeStep: presentationStep ?? "class-drilldown",
+      classCode: detail.code,
+      snapshot,
+    }),
     createElement(
       "section",
-      { "aria-label": "Ключевые показатели класса", className: "school-demo-kpi-grid" },
-      renderMetric("Уровень", detail.gradeLevel, "7–9 классы"),
-      renderMetric("Ученики", detail.studentCount, "синтетические demo-коды"),
-      renderMetric("Учителя", detail.teacherDemoCodes.length, joinValues(detail.teacherDemoCodes)),
+      {
+        "aria-label": "РљР»СЋС‡РµРІС‹Рµ РїРѕРєР°Р·Р°С‚РµР»Рё РєР»Р°СЃСЃР°",
+        className: "school-demo-kpi-grid",
+      },
+      renderMetric("РЈСЂРѕРІРµРЅСЊ", detail.gradeLevel, "7вЂ“9 РєР»Р°СЃСЃС‹"),
       renderMetric(
-        "Предметные группы",
+        "РЈС‡РµРЅРёРєРё",
+        detail.studentCount,
+        "СЃРёРЅС‚РµС‚РёС‡РµСЃРєРёРµ demo-РєРѕРґС‹",
+      ),
+      renderMetric(
+        "РЈС‡РёС‚РµР»СЏ",
+        detail.teacherDemoCodes.length,
+        joinValues(detail.teacherDemoCodes),
+      ),
+      renderMetric(
+        "РџСЂРµРґРјРµС‚РЅС‹Рµ РіСЂСѓРїРїС‹",
         detail.subjectGroupCodes.length,
         joinValues(detail.subjectGroupCodes),
       ),
@@ -679,27 +798,27 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
       { className: "school-demo-grid" },
       renderPanel(
         "school-demo-class-summary",
-        "Сводка класса",
+        "РЎРІРѕРґРєР° РєР»Р°СЃСЃР°",
         listSummaryItems([
-          ["Класс", detail.code],
-          ["Уровень", detail.gradeLevel],
-          ["Ученики", detail.studentCount],
-          ["Зачисления", enrollments.length],
-          ["Предметные группы", renderChips(detail.subjectGroupCodes)],
-          ["Учителя", renderChips(detail.teacherDemoCodes, "blue")],
+          ["РљР»Р°СЃСЃ", detail.code],
+          ["РЈСЂРѕРІРµРЅСЊ", detail.gradeLevel],
+          ["РЈС‡РµРЅРёРєРё", detail.studentCount],
+          ["Р—Р°С‡РёСЃР»РµРЅРёСЏ", enrollments.length],
+          ["РџСЂРµРґРјРµС‚РЅС‹Рµ РіСЂСѓРїРїС‹", renderChips(detail.subjectGroupCodes)],
+          ["РЈС‡РёС‚РµР»СЏ", renderChips(detail.teacherDemoCodes, "blue")],
         ]),
       ),
       renderPanel(
         "school-demo-class-boundary",
-        "Границы и лицензия",
+        "Р“СЂР°РЅРёС†С‹ Рё Р»РёС†РµРЅР·РёСЏ",
         listSummaryItems([
           ["Readiness", snapshot.boundary.readiness],
           ["Activation", snapshot.boundary.activation],
           ["Production data", snapshot.boundary.productionDataCount],
           ["Real schools", snapshot.boundary.realSchoolCount],
-          ["Лицензия", snapshot.license.licenseCode],
+          ["Р›РёС†РµРЅР·РёСЏ", snapshot.license.licenseCode],
           [
-            "Права",
+            "РџСЂР°РІР°",
             renderChips(
               snapshot.entitlements.map((item) => item.capabilityCode),
               "blue",
@@ -709,10 +828,14 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
       ),
       renderPanel(
         "school-demo-class-roster",
-        "Список учеников",
+        "РЎРїРёСЃРѕРє СѓС‡РµРЅРёРєРѕРІ",
         renderTable({
-          emptyLabel: "Учеников в этом классе пока нет.",
-          headers: ["Demo-код ученика", "Статус зачисления", "Класс"],
+          emptyLabel: "РЈС‡РµРЅРёРєРѕРІ РІ СЌС‚РѕРј РєР»Р°СЃСЃРµ РїРѕРєР° РЅРµС‚.",
+          headers: [
+            "Demo-РєРѕРґ СѓС‡РµРЅРёРєР°",
+            "РЎС‚Р°С‚СѓСЃ Р·Р°С‡РёСЃР»РµРЅРёСЏ",
+            "РљР»Р°СЃСЃ",
+          ],
           rows: roster.map((student) => ({
             cells: [
               createElement("strong", { key: "student" }, student.demoCode),
@@ -730,10 +853,10 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
       ),
       renderPanel(
         "school-demo-class-assignments",
-        "Назначения учителей",
+        "РќР°Р·РЅР°С‡РµРЅРёСЏ СѓС‡РёС‚РµР»РµР№",
         renderTable({
-          emptyLabel: "Назначений пока нет.",
-          headers: ["Учитель", "Предметная группа", "Режим"],
+          emptyLabel: "РќР°Р·РЅР°С‡РµРЅРёР№ РїРѕРєР° РЅРµС‚.",
+          headers: ["РЈС‡РёС‚РµР»СЊ", "РџСЂРµРґРјРµС‚РЅР°СЏ РіСЂСѓРїРїР°", "Р РµР¶РёРј"],
           rows: teacherAssignments.map((assignment) => ({
             cells: [
               createElement("strong", { key: "teacher" }, assignment.teacherDemoCode),

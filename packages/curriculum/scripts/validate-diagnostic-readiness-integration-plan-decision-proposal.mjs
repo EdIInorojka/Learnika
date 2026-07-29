@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   wave6ClosureContinuationPaths,
   preWave7Slice1ChangedPaths,
+  preWave7Slice8ChangedPaths,
   preWave7Slice2ChangedPaths,
   matchesExactPathSet,
   wave7PrepContinuationPaths,
@@ -875,6 +876,7 @@ export function validateDiagnosticReadinessIntegrationPlanDecisionProposalWorktr
     normalized.every((value) => wave7PrepContinuationPaths.has(value))
   )
     return normalized;
+  if (matchesExactPathSet(normalized, preWave7Slice8ChangedPaths)) return normalized;
   if (matchesExactPathSet(normalized, preWave7Slice2ChangedPaths)) return normalized;
   if (
     normalized.length === preWave7Slice1ChangedPaths.size &&

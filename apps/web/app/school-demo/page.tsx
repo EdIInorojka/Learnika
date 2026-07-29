@@ -3,9 +3,41 @@ import { SchoolDemoDashboardView } from "../../lib/school-demo-view";
 
 export const dynamic = "force-dynamic";
 
-export default async function SchoolDemoPage() {
+type SchoolDemoPresentationStepKey =
+  "overview" | "classes" | "teacher-assignments" | "license" | "class-drilldown";
+
+function normalizeSchoolDemoPresentationStep(
+  value: string | string[] | undefined,
+  fallback: SchoolDemoPresentationStepKey,
+): SchoolDemoPresentationStepKey {
+  const rawValue = Array.isArray(value) ? value[0] : value;
+  if (
+    rawValue === "overview" ||
+    rawValue === "classes" ||
+    rawValue === "teacher-assignments" ||
+    rawValue === "license" ||
+    rawValue === "class-drilldown"
+  ) {
+    return rawValue;
+  }
+  return fallback;
+}
+
+interface SchoolDemoPageProps {
+  searchParams: Promise<{ step?: string | string[] }>;
+}
+
+export default async function SchoolDemoPage({ searchParams }: SchoolDemoPageProps) {
+  const query = await searchParams;
+  const presentationStep = normalizeSchoolDemoPresentationStep(query.step, "overview");
+
   try {
-    return <SchoolDemoDashboardView snapshot={await readSchoolDemoSnapshot()} />;
+    return (
+      <SchoolDemoDashboardView
+        presentationStep={presentationStep}
+        snapshot={await readSchoolDemoSnapshot()}
+      />
+    );
   } catch {
     return (
       <main className="app-shell">

@@ -16,6 +16,7 @@ import {
   matchesExactPathSet,
   preWave7Slice3ChangedPaths,
   preWave7Slice2FollowUpPaths,
+  preWave7Slice8ChangedPaths,
   wave7PrepContinuationPaths,
   wave7PrepFoundationPaths,
 } from "./validate-skill-graph.mjs";
@@ -659,6 +660,7 @@ export function validateDiagnosticActivationSliceBoundaryDecisionProposalWorktre
     normalized.every((value) => preWave7Slice2FollowUpPaths.has(value))
   )
     return normalized;
+  if (matchesExactPathSet(normalized, preWave7Slice8ChangedPaths)) return normalized;
   if (matchesExactPathSet(normalized, preWave7Slice3ChangedPaths)) return normalized;
   if (matchesExactPathSet(normalized, preWave7Slice2ChangedPaths)) return normalized;
   if (

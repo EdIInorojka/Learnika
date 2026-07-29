@@ -9,6 +9,7 @@ import {
   validateDiagnosticRollbackWithdrawalPolicyDecisionProposalChangedPaths,
   validateDiagnosticRollbackWithdrawalPolicyDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs";
+import { preWave7Slice8ChangedPaths } from "../scripts/validate-skill-graph.mjs";
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
@@ -122,6 +123,13 @@ test("exact cumulative scope is duplicate-safe, narrow and clean-checkout tolera
   assert.deepEqual(
     validateDiagnosticRollbackWithdrawalPolicyDecisionProposalChangedPaths(changedPaths),
     changedPaths,
+  );
+  assert.deepEqual(
+    validateDiagnosticRollbackWithdrawalPolicyDecisionProposalWorktreeScope(
+      [...preWave7Slice8ChangedPaths],
+      { ci: false },
+    ),
+    [...preWave7Slice8ChangedPaths],
   );
   assert.deepEqual(
     validateDiagnosticRollbackWithdrawalPolicyDecisionProposalWorktreeScope([], { ci: false }),
