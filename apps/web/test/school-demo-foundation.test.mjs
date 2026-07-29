@@ -183,6 +183,14 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Read-only карточка класса",
     "Тема демо",
     "Светлая",
+    "Маршрут показа школе",
+    "Синтетические демо-данные",
+    "Overview",
+    "Classes",
+    "Teacher assignments",
+    "License / entitlements",
+    "Class drilldown",
+    "overview → classes → teacher assignments → license/entitlements → class drilldown",
   ]) {
     assert.equal(combinedHtml.includes(phrase), true, phrase);
   }
@@ -190,6 +198,9 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "school-demo-shell",
     "school-demo-page-header",
     "school-demo-status-strip",
+    "school-demo-presentation-flow",
+    "school-demo-step-nav",
+    "school-demo-step-link",
     "school-demo-kpi-grid",
     "school-demo-panel",
     "school-demo-table",
@@ -200,8 +211,18 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(combinedHtml, /data-school-demo-theme="light"/);
   assert.match(combinedHtml, /data-school-demo-transition="idle"/);
   assert.match(combinedHtml, /aria-pressed="false"/);
+  assert.match(combinedHtml, /aria-current="step"/);
   assert.match(combinedHtml, /<table/);
   assert.match(combinedHtml, /<th scope="col"/);
+  assert.match(dashboardHtml, /href="#school-demo-summary"/);
+  assert.match(dashboardHtml, /href="#school-demo-classes"/);
+  assert.match(dashboardHtml, /href="#school-demo-teachers"/);
+  assert.match(dashboardHtml, /href="#school-demo-boundary"/);
+  assert.match(dashboardHtml, /href="\/school-demo\/classes\//);
+  assert.match(drilldownHtml, /href="\/school-demo#school-demo-summary"/);
+  assert.match(drilldownHtml, /href="#school-demo-class-roster"/);
+  assert.match(drilldownHtml, /href="#school-demo-class-assignments"/);
+  assert.match(drilldownHtml, /href="#school-demo-class-boundary"/);
   assert.match(combinedHtml, /aria-labelledby="school-demo-summary-title"/);
   assert.match(combinedHtml, /aria-labelledby="school-demo-class-roster-title"/);
   assert.match(combinedHtml, /\/school-demo\/classes\//);
@@ -240,7 +261,13 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(classPageSource.includes("notFound()"), true);
   assert.equal(serviceSource.includes('"/demo/school-snapshot"'), true);
   assert.equal(viewSource.includes("SchoolDemoThemeToggle"), true);
+  assert.equal(viewSource.includes("renderPresentationFlow"), true);
+  assert.equal(viewSource.includes("school-demo-presentation-flow"), true);
+  assert.equal(viewSource.includes("aria-current"), true);
   assert.equal(cssSource.includes(".school-demo-shell"), true);
+  assert.equal(cssSource.includes(".school-demo-presentation-flow"), true);
+  assert.equal(cssSource.includes(".school-demo-step-nav"), true);
+  assert.equal(cssSource.includes(".school-demo-step-link"), true);
   assert.equal(cssSource.includes("#1d4ed8"), true);
   assert.equal(cssSource.includes("#f8fafc"), true);
   assert.equal(cssSource.includes("#ffffff"), true);
@@ -286,5 +313,44 @@ test("school demo route is read-only and display-only", async () => {
     /\bmarketing-hero\b/i,
   ]) {
     assert.equal(forbiddenVisual.test(visualSource), false, forbiddenVisual.source);
+  }
+});
+
+test("school demo presentation note stays local-only and synthetic", () => {
+  const noteSource = fs.readFileSync(
+    path.resolve(
+      process.cwd(),
+      "..",
+      "..",
+      "docs",
+      "wave-7-prep",
+      "school-demo-presentation-flow.md",
+    ),
+    "utf8",
+  );
+
+  for (const expected of [
+    "pnpm.cmd run infra:validate",
+    "pnpm.cmd run db:migrate:deploy",
+    "pnpm.cmd run db:seed",
+    "/school-demo",
+    "overview",
+    "classes",
+    "teacher assignments",
+    "license/entitlements",
+    "class drilldown",
+    "synthetic demo codes",
+    "do not change diagnostic readiness",
+  ]) {
+    assert.equal(noteSource.includes(expected), true, expected);
+  }
+
+  for (const forbidden of [
+    "APPROVE WAVE 7",
+    "real school beta is ready",
+    "production records are authorized",
+    "design partner approved",
+  ]) {
+    assert.equal(noteSource.includes(forbidden), false, forbidden);
   }
 });
