@@ -79,6 +79,7 @@ const allowedMediaPaths = new Set([
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/retention",
   "/homework/sessions/{homeworkSessionId}/media-assets/{mediaAssetId}/upload",
 ]);
+const allowedDemoPaths = new Set(["/demo/school-snapshot"]);
 const forbiddenContractTerms = [
   "AUTH_TOKEN_SECRET",
   "base64Content",
@@ -131,6 +132,10 @@ for (const requiredPath of requiredPaths) {
 
 for (const pathName of Object.keys(spec.paths ?? {})) {
   const normalized = pathName.toLowerCase();
+
+  if (allowedDemoPaths.has(pathName)) {
+    continue;
+  }
 
   if (normalized.startsWith("/homework") && !allowedHomeworkPaths.has(pathName)) {
     fail(`Forbidden future-scope homework path is documented: ${pathName}`);

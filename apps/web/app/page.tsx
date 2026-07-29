@@ -34,6 +34,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <h1 className="brand">Learnika</h1>
         <span className="muted">Кабинет родителя</span>
       </header>
+      <div className="session-actions">
+        <Link className="button-link" href="/school-demo">
+          Демо школы
+        </Link>
+      </div>
 
       {errorMessage ? (
         <p className="auth-error" role="alert">

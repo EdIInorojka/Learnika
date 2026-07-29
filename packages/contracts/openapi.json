@@ -1146,6 +1146,30 @@
         "summary": "Upload one homework media file to local development storage.",
         "tags": ["local media upload"]
       }
+    },
+    "/demo/school-snapshot": {
+      "get": {
+        "operationId": "getSchoolSnapshot",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SchoolDemoSnapshotResponseDto" }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorDto" } }
+            }
+          }
+        },
+        "summary": "Read the synthetic non-production school demo snapshot.",
+        "tags": ["school demo"]
+      }
     }
   },
   "info": {
@@ -1758,6 +1782,187 @@
           }
         },
         "required": ["file"]
+      },
+      "SchoolDemoAcademicYearDto": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "maxLength": 20 },
+          "endsOn": { "type": "string", "format": "date" },
+          "startsOn": { "type": "string", "format": "date" }
+        },
+        "required": ["code", "endsOn", "startsOn"]
+      },
+      "SchoolDemoBoundaryDto": {
+        "type": "object",
+        "properties": {
+          "activation": { "type": "string", "enum": ["BLOCKED"] },
+          "familyLinkCount": { "type": "number", "enum": [0] },
+          "mutationAllowed": { "type": "boolean", "enum": [false] },
+          "productionDataCount": { "type": "number", "enum": [0] },
+          "readiness": { "type": "string", "enum": ["NOT_READY"] },
+          "realSchoolCount": { "type": "number", "enum": [0] },
+          "workflow": { "type": "string", "enum": ["INACTIVE"] }
+        },
+        "required": [
+          "activation",
+          "familyLinkCount",
+          "mutationAllowed",
+          "productionDataCount",
+          "readiness",
+          "realSchoolCount",
+          "workflow"
+        ]
+      },
+      "SchoolDemoClassDto": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "maxLength": 40 },
+          "gradeLevel": { "type": "number", "maximum": 9, "minimum": 7 },
+          "studentCount": { "type": "number", "minimum": 0 },
+          "subjectGroupCodes": { "type": "array", "items": { "type": "string" } },
+          "teacherDemoCodes": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["code", "gradeLevel", "studentCount", "subjectGroupCodes", "teacherDemoCodes"]
+      },
+      "SchoolDemoEntitlementDto": {
+        "type": "object",
+        "properties": { "capabilityCode": { "type": "string", "maxLength": 80 } },
+        "required": ["capabilityCode"]
+      },
+      "SchoolDemoLicenseDto": {
+        "type": "object",
+        "properties": {
+          "entitlementCount": { "type": "number", "minimum": 0 },
+          "licenseCode": { "type": "string", "maxLength": 80 },
+          "status": { "type": "string", "enum": ["PLANNED"] },
+          "validFrom": { "type": "string", "format": "date", "nullable": true },
+          "validUntil": { "type": "string", "format": "date", "nullable": true }
+        },
+        "required": ["entitlementCount", "licenseCode", "status", "validFrom", "validUntil"]
+      },
+      "SchoolDemoOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "enum": ["synthetic-demo-organization-ru-ru"] },
+          "schoolCount": { "type": "number", "minimum": 0 }
+        },
+        "required": ["code", "schoolCount"]
+      },
+      "SchoolDemoSchoolDto": {
+        "type": "object",
+        "properties": { "code": { "type": "string", "enum": ["synthetic-demo-school-ru-ru"] } },
+        "required": ["code"]
+      },
+      "SchoolDemoStudentEnrollmentDto": {
+        "type": "object",
+        "properties": {
+          "classCode": { "type": "string", "maxLength": 40 },
+          "state": { "type": "string", "enum": ["ENROLLED", "WITHDRAWN"] },
+          "studentDemoCode": { "type": "string", "maxLength": 40 }
+        },
+        "required": ["classCode", "state", "studentDemoCode"]
+      },
+      "SchoolDemoStudentDto": {
+        "type": "object",
+        "properties": {
+          "classCode": { "type": "string", "maxLength": 40 },
+          "demoCode": { "type": "string", "maxLength": 40 },
+          "enrollmentState": { "type": "string", "enum": ["ENROLLED", "WITHDRAWN"] }
+        },
+        "required": ["classCode", "demoCode", "enrollmentState"]
+      },
+      "SchoolDemoSubjectGroupDto": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string", "maxLength": 40 },
+          "subjectCode": { "type": "string", "enum": ["math"] }
+        },
+        "required": ["code", "subjectCode"]
+      },
+      "SchoolDemoTeacherAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "classCode": { "type": "string", "maxLength": 40 },
+          "subjectGroupCode": { "type": "string", "maxLength": 40 },
+          "teacherDemoCode": { "type": "string", "maxLength": 40 }
+        },
+        "required": ["classCode", "subjectGroupCode", "teacherDemoCode"]
+      },
+      "SchoolDemoTeacherDto": {
+        "type": "object",
+        "properties": {
+          "assignmentCount": { "type": "number", "minimum": 0 },
+          "demoCode": { "type": "string", "maxLength": 40 }
+        },
+        "required": ["assignmentCount", "demoCode"]
+      },
+      "SchoolDemoSnapshotDto": {
+        "type": "object",
+        "properties": {
+          "academicYear": { "$ref": "#/components/schemas/SchoolDemoAcademicYearDto" },
+          "boundary": { "$ref": "#/components/schemas/SchoolDemoBoundaryDto" },
+          "classes": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SchoolDemoClassDto" }
+          },
+          "entitlements": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SchoolDemoEntitlementDto" }
+          },
+          "license": { "$ref": "#/components/schemas/SchoolDemoLicenseDto" },
+          "locale": { "type": "string", "enum": ["ru-RU"] },
+          "marker": { "type": "string", "enum": ["SYNTHETIC_NON_PRODUCTION"] },
+          "organization": { "$ref": "#/components/schemas/SchoolDemoOrganizationDto" },
+          "school": { "$ref": "#/components/schemas/SchoolDemoSchoolDto" },
+          "studentEnrollments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SchoolDemoStudentEnrollmentDto" }
+          },
+          "students": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SchoolDemoStudentDto" }
+          },
+          "subjectGroups": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SchoolDemoSubjectGroupDto" }
+          },
+          "teacherAssignments": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SchoolDemoTeacherAssignmentDto" }
+          },
+          "teachers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SchoolDemoTeacherDto" }
+          }
+        },
+        "required": [
+          "academicYear",
+          "boundary",
+          "classes",
+          "entitlements",
+          "license",
+          "locale",
+          "marker",
+          "organization",
+          "school",
+          "studentEnrollments",
+          "students",
+          "subjectGroups",
+          "teacherAssignments",
+          "teachers"
+        ]
+      },
+      "SchoolDemoSnapshotResponseDataDto": {
+        "type": "object",
+        "properties": { "snapshot": { "$ref": "#/components/schemas/SchoolDemoSnapshotDto" } },
+        "required": ["snapshot"]
+      },
+      "SchoolDemoSnapshotResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": { "$ref": "#/components/schemas/SchoolDemoSnapshotResponseDataDto" }
+        },
+        "required": ["data"]
       }
     }
   }

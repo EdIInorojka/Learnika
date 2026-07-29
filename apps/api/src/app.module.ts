@@ -5,8 +5,16 @@ import { FamilySetupModule } from "./family-setup/family-setup.module";
 import { HealthModule } from "./health/health.module";
 import { HomeworkModule } from "./homework/homework.module";
 import { MediaAssetsModule } from "./media-assets/media-assets.module";
+import { SchoolDemoModule } from "./school-demo/school-demo.module";
 
 @Module({
-  imports: [HealthModule, AuthModule, FamilySetupModule, HomeworkModule, MediaAssetsModule],
+  imports: [
+    HealthModule,
+    AuthModule,
+    FamilySetupModule,
+    HomeworkModule,
+    MediaAssetsModule,
+    SchoolDemoModule,
+  ],
 })
 export class AppModule {}

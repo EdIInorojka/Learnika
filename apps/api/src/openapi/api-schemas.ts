@@ -16,6 +16,195 @@ export class HealthResponseDto {
   declare status: "ok";
 }
 
+export class SchoolDemoBoundaryDto {
+  @ApiProperty({ enum: ["BLOCKED"] })
+  declare activation: "BLOCKED";
+
+  @ApiProperty({ enum: [0] })
+  declare familyLinkCount: 0;
+
+  @ApiProperty({ enum: [false] })
+  declare mutationAllowed: false;
+
+  @ApiProperty({ enum: [0] })
+  declare productionDataCount: 0;
+
+  @ApiProperty({ enum: ["NOT_READY"] })
+  declare readiness: "NOT_READY";
+
+  @ApiProperty({ enum: [0] })
+  declare realSchoolCount: 0;
+
+  @ApiProperty({ enum: ["INACTIVE"] })
+  declare workflow: "INACTIVE";
+}
+
+export class SchoolDemoOrganizationDto {
+  @ApiProperty({ enum: ["synthetic-demo-organization-ru-ru"] })
+  declare code: "synthetic-demo-organization-ru-ru";
+
+  @ApiProperty({ minimum: 0 })
+  declare schoolCount: number;
+}
+
+export class SchoolDemoSchoolDto {
+  @ApiProperty({ enum: ["synthetic-demo-school-ru-ru"] })
+  declare code: "synthetic-demo-school-ru-ru";
+}
+
+export class SchoolDemoAcademicYearDto {
+  @ApiProperty({ maxLength: 20 })
+  declare code: string;
+
+  @ApiProperty({ format: "date" })
+  declare endsOn: string;
+
+  @ApiProperty({ format: "date" })
+  declare startsOn: string;
+}
+
+export class SchoolDemoClassDto {
+  @ApiProperty({ maxLength: 40 })
+  declare code: string;
+
+  @ApiProperty({ maximum: 9, minimum: 7 })
+  declare gradeLevel: number;
+
+  @ApiProperty({ minimum: 0 })
+  declare studentCount: number;
+
+  @ApiProperty({ type: () => [String] })
+  declare subjectGroupCodes: string[];
+
+  @ApiProperty({ type: () => [String] })
+  declare teacherDemoCodes: string[];
+}
+
+export class SchoolDemoSubjectGroupDto {
+  @ApiProperty({ maxLength: 40 })
+  declare code: string;
+
+  @ApiProperty({ enum: ["math"] })
+  declare subjectCode: "math";
+}
+
+export class SchoolDemoTeacherDto {
+  @ApiProperty({ minimum: 0 })
+  declare assignmentCount: number;
+
+  @ApiProperty({ maxLength: 40 })
+  declare demoCode: string;
+}
+
+export class SchoolDemoStudentDto {
+  @ApiProperty({ maxLength: 40 })
+  declare classCode: string;
+
+  @ApiProperty({ maxLength: 40 })
+  declare demoCode: string;
+
+  @ApiProperty({ enum: ["ENROLLED", "WITHDRAWN"] })
+  declare enrollmentState: "ENROLLED" | "WITHDRAWN";
+}
+
+export class SchoolDemoTeacherAssignmentDto {
+  @ApiProperty({ maxLength: 40 })
+  declare classCode: string;
+
+  @ApiProperty({ maxLength: 40 })
+  declare subjectGroupCode: string;
+
+  @ApiProperty({ maxLength: 40 })
+  declare teacherDemoCode: string;
+}
+
+export class SchoolDemoStudentEnrollmentDto {
+  @ApiProperty({ maxLength: 40 })
+  declare classCode: string;
+
+  @ApiProperty({ enum: ["ENROLLED", "WITHDRAWN"] })
+  declare state: "ENROLLED" | "WITHDRAWN";
+
+  @ApiProperty({ maxLength: 40 })
+  declare studentDemoCode: string;
+}
+
+export class SchoolDemoLicenseDto {
+  @ApiProperty({ minimum: 0 })
+  declare entitlementCount: number;
+
+  @ApiProperty({ maxLength: 80 })
+  declare licenseCode: string;
+
+  @ApiProperty({ enum: ["PLANNED"] })
+  declare status: "PLANNED";
+
+  @ApiProperty({ format: "date", nullable: true, type: String })
+  declare validFrom: string | null;
+
+  @ApiProperty({ format: "date", nullable: true, type: String })
+  declare validUntil: string | null;
+}
+
+export class SchoolDemoEntitlementDto {
+  @ApiProperty({ maxLength: 80 })
+  declare capabilityCode: string;
+}
+
+export class SchoolDemoSnapshotDto {
+  @ApiProperty({ type: () => SchoolDemoAcademicYearDto })
+  declare academicYear: SchoolDemoAcademicYearDto;
+
+  @ApiProperty({ type: () => SchoolDemoBoundaryDto })
+  declare boundary: SchoolDemoBoundaryDto;
+
+  @ApiProperty({ type: () => [SchoolDemoClassDto] })
+  declare classes: SchoolDemoClassDto[];
+
+  @ApiProperty({ type: () => [SchoolDemoEntitlementDto] })
+  declare entitlements: SchoolDemoEntitlementDto[];
+
+  @ApiProperty({ type: () => SchoolDemoLicenseDto })
+  declare license: SchoolDemoLicenseDto;
+
+  @ApiProperty({ enum: ["ru-RU"] })
+  declare locale: "ru-RU";
+
+  @ApiProperty({ enum: ["SYNTHETIC_NON_PRODUCTION"] })
+  declare marker: "SYNTHETIC_NON_PRODUCTION";
+
+  @ApiProperty({ type: () => SchoolDemoOrganizationDto })
+  declare organization: SchoolDemoOrganizationDto;
+
+  @ApiProperty({ type: () => SchoolDemoSchoolDto })
+  declare school: SchoolDemoSchoolDto;
+
+  @ApiProperty({ type: () => [SchoolDemoStudentEnrollmentDto] })
+  declare studentEnrollments: SchoolDemoStudentEnrollmentDto[];
+
+  @ApiProperty({ type: () => [SchoolDemoStudentDto] })
+  declare students: SchoolDemoStudentDto[];
+
+  @ApiProperty({ type: () => [SchoolDemoSubjectGroupDto] })
+  declare subjectGroups: SchoolDemoSubjectGroupDto[];
+
+  @ApiProperty({ type: () => [SchoolDemoTeacherAssignmentDto] })
+  declare teacherAssignments: SchoolDemoTeacherAssignmentDto[];
+
+  @ApiProperty({ type: () => [SchoolDemoTeacherDto] })
+  declare teachers: SchoolDemoTeacherDto[];
+}
+
+export class SchoolDemoSnapshotResponseDataDto {
+  @ApiProperty({ type: () => SchoolDemoSnapshotDto })
+  declare snapshot: SchoolDemoSnapshotDto;
+}
+
+export class SchoolDemoSnapshotResponseDto {
+  @ApiProperty({ type: () => SchoolDemoSnapshotResponseDataDto })
+  declare data: SchoolDemoSnapshotResponseDataDto;
+}
+
 export class CredentialsRequestDto {
   @ApiProperty({ format: "email", maxLength: 320 })
   declare email: string;

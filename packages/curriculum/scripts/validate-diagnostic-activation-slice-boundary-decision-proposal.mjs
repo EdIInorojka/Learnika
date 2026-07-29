@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -13,6 +13,8 @@ import {
   wave6ClosureContinuationPaths,
   preWave7Slice1ChangedPaths,
   preWave7Slice2ChangedPaths,
+  matchesExactPathSet,
+  preWave7Slice3ChangedPaths,
   preWave7Slice2FollowUpPaths,
   wave7PrepContinuationPaths,
   wave7PrepFoundationPaths,
@@ -657,12 +659,8 @@ export function validateDiagnosticActivationSliceBoundaryDecisionProposalWorktre
     normalized.every((value) => preWave7Slice2FollowUpPaths.has(value))
   )
     return normalized;
-  if (
-    normalized.length === preWave7Slice2ChangedPaths.size &&
-    new Set(normalized).size === normalized.length &&
-    normalized.every((value) => preWave7Slice2ChangedPaths.has(value))
-  )
-    return normalized;
+  if (matchesExactPathSet(normalized, preWave7Slice3ChangedPaths)) return normalized;
+  if (matchesExactPathSet(normalized, preWave7Slice2ChangedPaths)) return normalized;
   if (
     normalized.length === preWave7Slice1ChangedPaths.size &&
     new Set(normalized).size === normalized.length &&

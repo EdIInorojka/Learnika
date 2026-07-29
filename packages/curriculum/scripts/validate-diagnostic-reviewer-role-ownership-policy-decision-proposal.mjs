@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+﻿import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -7,6 +7,7 @@ import {
   wave6ClosureContinuationPaths,
   preWave7Slice1ChangedPaths,
   preWave7Slice2ChangedPaths,
+  matchesExactPathSet,
   preWave7Slice2FollowUpPaths,
   wave7PrepContinuationPaths,
   wave7PrepFoundationPaths,
@@ -1007,12 +1008,7 @@ export function validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
   ) {
     return normalized;
   }
-  if (
-    Array.isArray(normalized) &&
-    normalized.length === preWave7Slice2ChangedPaths.size &&
-    new Set(normalized).size === normalized.length &&
-    normalized.every((value) => preWave7Slice2ChangedPaths.has(value))
-  ) {
+  if (matchesExactPathSet(normalized, preWave7Slice2ChangedPaths)) {
     return normalized;
   }
   if (
@@ -1295,12 +1291,7 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
     paths.every((value) => preWave7Slice2FollowUpPaths.has(value))
   )
     return paths;
-  if (
-    paths.length === preWave7Slice2ChangedPaths.size &&
-    new Set(paths).size === paths.length &&
-    paths.every((value) => preWave7Slice2ChangedPaths.has(value))
-  )
-    return paths;
+  if (matchesExactPathSet(paths, preWave7Slice2ChangedPaths)) return paths;
   if (
     paths.length === wave6Slice12ChangedPaths.length &&
     paths.every((value) => wave6Slice12ChangedPathSet.has(value))
@@ -1368,12 +1359,7 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
       paths.every((value) => wave6Slice13ChangedPathSet.has(value))
     )
       return paths;
-    if (
-      paths.length === preWave7Slice2ChangedPaths.size &&
-      new Set(paths).size === paths.length &&
-      paths.every((value) => preWave7Slice2ChangedPaths.has(value))
-    )
-      return paths;
+    if (matchesExactPathSet(paths, preWave7Slice2ChangedPaths)) return paths;
     if (
       paths.length === wave6Slice12ChangedPaths.length &&
       paths.every((value) => wave6Slice12ChangedPathSet.has(value))

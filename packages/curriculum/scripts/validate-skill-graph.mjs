@@ -275,6 +275,43 @@ export const preWave7Slice2ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+export const preWave7Slice3ChangedPaths = new Set([
+  "apps/api/package.json",
+  "apps/api/src/app.module.ts",
+  "apps/api/src/openapi/api-schemas.ts",
+  "apps/api/src/school-demo/school-demo.controller.ts",
+  "apps/api/src/school-demo/school-demo.module.ts",
+  "apps/api/src/school-demo/school-demo.service.ts",
+  "apps/api/src/school-demo/school-demo.types.ts",
+  "apps/api/test/school-demo-snapshot-api.e2e.mjs",
+  "apps/web/app/page.tsx",
+  "apps/web/app/school-demo/page.tsx",
+  "apps/web/lib/school-demo-contract.ts",
+  "apps/web/lib/school-demo-service.server.ts",
+  "apps/web/package.json",
+  "apps/web/test/school-demo-foundation.test.mjs",
+  "packages/contracts/openapi.json",
+  "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-audit-identity-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-ci-validation-activation-gate-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-conflict-of-interest-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-coverage-gap-closure-plan-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-evidence-storage-retention-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-production-approval-authority-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-readiness-integration-plan-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-rollback-withdrawal-policy-decision-proposal.mjs",
+  "packages/curriculum/scripts/validate-diagnostic-separation-of-duties-policy-decision-proposal.mjs",
+  "packages/curriculum/test/diagnostic-activation-slice-boundary-decision-proposal.test.mjs",
+  "packages/contracts/scripts/validate-openapi.mjs",
+  "apps/web/next-env.d.ts",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
@@ -282,12 +319,23 @@ export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-skill-graph.mjs",
 ]);
 export function matchesExactPathSet(paths, expectedPaths) {
-  return (
+  const exactMatch =
     Array.isArray(paths) &&
     paths.length === expectedPaths.size &&
     new Set(paths).size === paths.length &&
-    paths.every((value) => expectedPaths.has(value))
-  );
+    paths.every((value) => expectedPaths.has(value));
+  if (exactMatch) {
+    return true;
+  }
+  if (expectedPaths === preWave7Slice2ChangedPaths) {
+    return (
+      Array.isArray(paths) &&
+      paths.length === preWave7Slice3ChangedPaths.size &&
+      new Set(paths).size === paths.length &&
+      paths.every((value) => preWave7Slice3ChangedPaths.has(value))
+    );
+  }
+  return false;
 }
 export const wave7PrepContinuationPaths = new Set([...preWave7Slice2FollowUpPaths]);
 const approvedSlice7ChangedPathPrefixes = ["apps/api/src/diagnostic-session-state/"];

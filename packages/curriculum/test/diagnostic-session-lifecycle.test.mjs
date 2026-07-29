@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import test from "node:test";
 
 import { readDiagnosticBlueprint } from "../scripts/validate-diagnostic-blueprint.mjs";
@@ -12,6 +12,7 @@ import {
 import {
   preWave7Slice1ChangedPaths,
   preWave7Slice2ChangedPaths,
+  preWave7Slice3ChangedPaths,
   readSkillGraph,
   wave7PrepFoundationPaths,
 } from "../scripts/validate-skill-graph.mjs";
@@ -335,6 +336,7 @@ test("slice scope guard rejects API OpenAPI Prisma web and other runtime paths",
         wave7PrepFoundationPaths.has(changedPath) ||
         preWave7Slice1ChangedPaths.has(changedPath) ||
         preWave7Slice2ChangedPaths.has(changedPath) ||
+        preWave7Slice3ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,
