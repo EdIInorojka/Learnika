@@ -1,6 +1,13 @@
-import { createElement, type ReactNode } from "react";
+"use client";
+
+import { createElement, useEffect, useId, useState, type ReactNode } from "react";
 
 import type { SchoolDemoSnapshot } from "./school-demo-contract";
+
+type SchoolDemoTheme = "light" | "dark";
+
+const schoolDemoThemeStorageKey = "learnika.schoolDemo.theme.v1";
+const transitionResetMs = 700;
 
 interface SchoolDemoDashboardViewProps {
   snapshot: SchoolDemoSnapshot;
@@ -35,6 +42,85 @@ interface SchoolDemoClassDetail extends SchoolDemoClassOverview {
     subjectGroupCode: string;
     teacherDemoCode: string;
   }>;
+}
+
+function isSchoolDemoTheme(value: string | null): value is SchoolDemoTheme {
+  return value === "light" || value === "dark";
+}
+
+function readStoredTheme(): SchoolDemoTheme {
+  if (typeof window === "undefined") return "light";
+
+  const storedTheme = window.localStorage.getItem(schoolDemoThemeStorageKey);
+  return isSchoolDemoTheme(storedTheme) ? storedTheme : "light";
+}
+
+function applyTheme(theme: SchoolDemoTheme, shouldAnimate: boolean): void {
+  document.documentElement.dataset.schoolDemoTheme = theme;
+
+  for (const shell of document.querySelectorAll<HTMLElement>(".school-demo-shell")) {
+    shell.dataset.schoolDemoTheme = theme;
+    shell.dataset.schoolDemoTransition = shouldAnimate ? "radiate" : "idle";
+
+    if (shouldAnimate) {
+      window.setTimeout(() => {
+        if (shell.dataset.schoolDemoTransition === "radiate") {
+          shell.dataset.schoolDemoTransition = "idle";
+        }
+      }, transitionResetMs);
+    }
+  }
+}
+
+function SchoolDemoThemeToggle() {
+  const labelId = useId();
+  const [theme, setTheme] = useState<SchoolDemoTheme>("light");
+  const isDark = theme === "dark";
+
+  useEffect(() => {
+    const storedTheme = readStoredTheme();
+    setTheme(storedTheme);
+    applyTheme(storedTheme, false);
+
+    return () => {
+      delete document.documentElement.dataset.schoolDemoTheme;
+    };
+  }, []);
+
+  function handleToggle() {
+    const nextTheme: SchoolDemoTheme = isDark ? "light" : "dark";
+    setTheme(nextTheme);
+    window.localStorage.setItem(schoolDemoThemeStorageKey, nextTheme);
+    applyTheme(nextTheme, true);
+  }
+
+  return createElement(
+    "div",
+    { className: "school-demo-theme-control" },
+    createElement("span", { className: "school-demo-theme-title", id: labelId }, "Тема демо"),
+    createElement(
+      "button",
+      {
+        "aria-labelledby": labelId,
+        "aria-pressed": isDark,
+        className: "school-demo-theme-toggle",
+        "data-theme-state": theme,
+        onClick: handleToggle,
+        type: "button",
+      },
+      createElement(
+        "span",
+        { "aria-hidden": "true", className: "school-demo-theme-track" },
+        createElement("span", { className: "school-demo-theme-thumb" }),
+      ),
+      createElement(
+        "span",
+        { className: "school-demo-theme-label" },
+        isDark ? "Графит" : "Светлая",
+      ),
+    ),
+    createElement("span", { className: "school-demo-theme-note" }, "Локально в браузере"),
+  );
 }
 
 function uniqueSorted(values: string[]): string[] {
@@ -221,6 +307,7 @@ function renderHeader({
     createElement(
       "nav",
       { "aria-label": "Навигация демо школы", className: "school-demo-header-actions" },
+      createElement(SchoolDemoThemeToggle),
       createElement(
         "a",
         { className: "button-link school-demo-secondary-link", href: actionHref },
@@ -293,7 +380,11 @@ export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewPro
 
   return createElement(
     "main",
-    { className: "app-shell school-demo-shell" },
+    {
+      className: "app-shell school-demo-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
     renderHeader({
       actionHref: "/",
       actionLabel: "На главную",
@@ -413,7 +504,11 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
   if (!detail) {
     return createElement(
       "main",
-      { className: "app-shell school-demo-shell" },
+      {
+        className: "app-shell school-demo-shell",
+        "data-school-demo-theme": "light",
+        "data-school-demo-transition": "idle",
+      },
       renderHeader({
         actionHref: "/school-demo",
         actionLabel: "К обзору школы",
@@ -433,7 +528,11 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
 
   return createElement(
     "main",
-    { className: "app-shell school-demo-shell" },
+    {
+      className: "app-shell school-demo-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
     renderHeader({
       actionHref: "/school-demo",
       actionLabel: "К обзору школы",

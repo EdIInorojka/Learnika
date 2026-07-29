@@ -122,9 +122,17 @@ test("web auth foundation keeps tokens server-side and scope-limited", () => {
       .filter((fileName) => fileName.endsWith(".ts"))
       .map((fileName) => path.join(libDir, fileName)),
   ];
-  const source = sourceFiles.map((fileName) => fs.readFileSync(fileName, "utf8")).join("\n");
+  const sourceEntries = sourceFiles.map((fileName) => ({
+    fileName,
+    source: fs.readFileSync(fileName, "utf8"),
+  }));
+  const source = sourceEntries.map((entry) => entry.source).join("\n");
+  const localStorageFiles = sourceEntries
+    .filter((entry) => entry.source.includes("localStorage"))
+    .map((entry) => path.relative(process.cwd(), entry.fileName).replaceAll("\\", "/"));
+  assert.deepEqual(localStorageFiles, ["lib/school-demo-view.ts"]);
+  assert.equal(source.includes("learnika.schoolDemo.theme.v1"), true);
   for (const forbidden of [
-    "localStorage",
     "sessionStorage",
     "document.cookie",
     "console.log",

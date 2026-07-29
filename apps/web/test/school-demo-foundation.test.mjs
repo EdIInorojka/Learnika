@@ -181,6 +181,8 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Права",
     "Строгий read-only обзор",
     "Read-only карточка класса",
+    "Тема демо",
+    "Светлая",
   ]) {
     assert.equal(combinedHtml.includes(phrase), true, phrase);
   }
@@ -191,9 +193,13 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "school-demo-kpi-grid",
     "school-demo-panel",
     "school-demo-table",
+    "school-demo-theme-toggle",
   ]) {
     assert.equal(combinedHtml.includes(className), true, className);
   }
+  assert.match(combinedHtml, /data-school-demo-theme="light"/);
+  assert.match(combinedHtml, /data-school-demo-transition="idle"/);
+  assert.match(combinedHtml, /aria-pressed="false"/);
   assert.match(combinedHtml, /<table/);
   assert.match(combinedHtml, /<th scope="col"/);
   assert.match(combinedHtml, /aria-labelledby="school-demo-summary-title"/);
@@ -233,10 +239,22 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(classPageSource.includes("SchoolDemoClassDetailView"), true);
   assert.equal(classPageSource.includes("notFound()"), true);
   assert.equal(serviceSource.includes('"/demo/school-snapshot"'), true);
+  assert.equal(viewSource.includes("SchoolDemoThemeToggle"), true);
   assert.equal(cssSource.includes(".school-demo-shell"), true);
   assert.equal(cssSource.includes("#1d4ed8"), true);
   assert.equal(cssSource.includes("#f8fafc"), true);
   assert.equal(cssSource.includes("#ffffff"), true);
+  assert.equal(cssSource.includes('data-school-demo-theme="dark"'), true);
+  assert.equal(cssSource.includes("radial-gradient"), true);
+  assert.equal(cssSource.includes("prefers-reduced-motion"), true);
+  assert.equal(viewSource.includes('"use client"'), true);
+  assert.equal(viewSource.includes("learnika.schoolDemo.theme.v1"), true);
+  assert.equal(viewSource.includes("localStorage"), true);
+  assert.equal(viewSource.includes("schoolDemoTheme"), true);
+  assert.equal(viewSource.includes("aria-pressed"), true);
+  assert.equal(viewSource.includes("data-theme-state"), true);
+  assert.equal(viewSource.includes("document.cookie"), false);
+  assert.equal(viewSource.includes("fetch("), false);
 
   for (const forbidden of [
     "POST",
