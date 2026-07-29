@@ -16,6 +16,11 @@ import {
   validateReviewerRoleOwnershipDecisionProposalSlice8ChangedPaths,
   validateReviewerRoleOwnershipDecisionProposalWorktreeScope,
 } from "../scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs";
+import {
+  preWave7Slice2ChangedPaths,
+  preWave7Slice2FollowUpPaths,
+  wave7PrepContinuationPaths,
+} from "../scripts/validate-skill-graph.mjs";
 
 const expectedMarkers = {
   SYNTHETIC_EXAMPLE_ONLY: true,
@@ -647,6 +652,47 @@ test("changed-path collection uses the clean GitHub current-commit parent range"
     },
   });
   assert.deepEqual(paths, approvedWave6Slice3ChangedPaths);
+});
+
+test("changed-path collection uses the exact Pre-Wave 7 Slice 2 CI range", () => {
+  const base = "6".repeat(40);
+  const head = "7".repeat(40);
+  const expected = [...preWave7Slice2ChangedPaths];
+  const paths = collectReviewerRoleOwnershipDecisionProposalChangedPaths({
+    cwd: "fixture-repo",
+    env: {
+      GITHUB_ACTIONS: "true",
+      GITHUB_EVENT_NAME: "push",
+      GITHUB_EVENT_PATH: "event.json",
+      GITHUB_SHA: head,
+    },
+    readEvent: () => ({ before: base, after: head }),
+    runGit: (args) => {
+      if (args[0] === "cat-file") return { status: 0, stdout: "", stderr: "" };
+      if (args[0] === "diff")
+        return {
+          status: 0,
+          stdout: nameStatusOutput(expected),
+          stderr: "",
+        };
+      return { status: 0, stdout: "", stderr: "" };
+    },
+  });
+  assert.deepEqual(paths, expected);
+});
+
+test("pre-wave 7 slice 2 follow-up is exactly the current 4-file chain", () => {
+  const expected = [
+    "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
+    "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
+    "packages/curriculum/scripts/validate-skill-graph.mjs",
+    "packages/curriculum/test/diagnostic-reviewer-role-ownership-policy-decision-proposal.test.mjs",
+  ];
+  assert.deepEqual([...preWave7Slice2FollowUpPaths].sort(), expected.sort());
+  assert.equal(
+    expected.every((path) => wave7PrepContinuationPaths.has(path)),
+    true,
+  );
 });
 
 test("follow-up CI range validates the cumulative original 38-path baseline", () => {

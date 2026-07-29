@@ -7,6 +7,7 @@ import {
   wave6ClosureContinuationPaths,
   preWave7Slice1ChangedPaths,
   preWave7Slice2ChangedPaths,
+  preWave7Slice2FollowUpPaths,
   wave7PrepContinuationPaths,
   wave7PrepFoundationPaths,
 } from "./validate-skill-graph.mjs";
@@ -1016,6 +1017,14 @@ export function validateReviewerRoleOwnershipDecisionProposalWorktreeScope(
   }
   if (
     Array.isArray(normalized) &&
+    normalized.length === preWave7Slice2FollowUpPaths.size &&
+    new Set(normalized).size === normalized.length &&
+    normalized.every((value) => preWave7Slice2FollowUpPaths.has(value))
+  ) {
+    return normalized;
+  }
+  if (
+    Array.isArray(normalized) &&
     normalized.length === preWave7Slice1ChangedPaths.size &&
     new Set(normalized).size === normalized.length &&
     normalized.every((value) => preWave7Slice1ChangedPaths.has(value))
@@ -1281,6 +1290,18 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
   )
     return paths;
   if (
+    paths.length === preWave7Slice2FollowUpPaths.size &&
+    new Set(paths).size === paths.length &&
+    paths.every((value) => preWave7Slice2FollowUpPaths.has(value))
+  )
+    return paths;
+  if (
+    paths.length === preWave7Slice2ChangedPaths.size &&
+    new Set(paths).size === paths.length &&
+    paths.every((value) => preWave7Slice2ChangedPaths.has(value))
+  )
+    return paths;
+  if (
     paths.length === wave6Slice12ChangedPaths.length &&
     paths.every((value) => wave6Slice12ChangedPathSet.has(value))
   )
@@ -1345,6 +1366,12 @@ function ciChangedPaths({ cwd, env, runGit, readEvent }) {
       paths.length === wave6Slice13ChangedPaths.length &&
       new Set(paths).size === paths.length &&
       paths.every((value) => wave6Slice13ChangedPathSet.has(value))
+    )
+      return paths;
+    if (
+      paths.length === preWave7Slice2ChangedPaths.size &&
+      new Set(paths).size === paths.length &&
+      paths.every((value) => preWave7Slice2ChangedPaths.has(value))
     )
       return paths;
     if (
