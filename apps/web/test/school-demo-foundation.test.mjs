@@ -179,9 +179,25 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Границы и лицензия",
     "Лицензия",
     "Права",
+    "Строгий read-only обзор",
+    "Read-only карточка класса",
   ]) {
     assert.equal(combinedHtml.includes(phrase), true, phrase);
   }
+  for (const className of [
+    "school-demo-shell",
+    "school-demo-page-header",
+    "school-demo-status-strip",
+    "school-demo-kpi-grid",
+    "school-demo-panel",
+    "school-demo-table",
+  ]) {
+    assert.equal(combinedHtml.includes(className), true, className);
+  }
+  assert.match(combinedHtml, /<table/);
+  assert.match(combinedHtml, /<th scope="col"/);
+  assert.match(combinedHtml, /aria-labelledby="school-demo-summary-title"/);
+  assert.match(combinedHtml, /aria-labelledby="school-demo-class-roster-title"/);
   assert.match(combinedHtml, /\/school-demo\/classes\//);
   assert.match(combinedHtml, new RegExp(escapeRegExp(snapshot.classes[0].code)));
   assert.equal(combinedHtml.includes("form"), false);
@@ -208,6 +224,7 @@ test("school demo route is read-only and display-only", async () => {
     path.join(process.cwd(), "lib", "school-demo-view.ts"),
     "utf8",
   );
+  const cssSource = fs.readFileSync(path.join(process.cwd(), "app", "globals.css"), "utf8");
 
   assert.equal(appSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(appSource.includes("SchoolDemoDashboardView"), true);
@@ -216,6 +233,10 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(classPageSource.includes("SchoolDemoClassDetailView"), true);
   assert.equal(classPageSource.includes("notFound()"), true);
   assert.equal(serviceSource.includes('"/demo/school-snapshot"'), true);
+  assert.equal(cssSource.includes(".school-demo-shell"), true);
+  assert.equal(cssSource.includes("#1d4ed8"), true);
+  assert.equal(cssSource.includes("#f8fafc"), true);
+  assert.equal(cssSource.includes("#ffffff"), true);
 
   for (const forbidden of [
     "POST",
@@ -236,5 +257,16 @@ test("school demo route is read-only and display-only", async () => {
       false,
       forbidden,
     );
+  }
+  const visualSource = `${viewSource}\n${cssSource}`;
+  for (const forbiddenVisual of [
+    /linear-gradient/i,
+    /\bpurple\b/i,
+    /\bblob\b/i,
+    /\borb\b/i,
+    /\bhero\b/i,
+    /\bmarketing-hero\b/i,
+  ]) {
+    assert.equal(forbiddenVisual.test(visualSource), false, forbiddenVisual.source);
   }
 });

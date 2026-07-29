@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { createElement, type ReactNode } from "react";
 
 import type { SchoolDemoSnapshot } from "./school-demo-contract";
 
@@ -132,10 +132,14 @@ function buildClassDetail(
   };
 }
 
-function listSummaryItems(items: Array<[string, string | number]>) {
+function joinValues(values: string[]): string {
+  return values.length > 0 ? values.join(", ") : "—";
+}
+
+function listSummaryItems(items: Array<[string, ReactNode]>) {
   return createElement(
     "dl",
-    { className: "metadata-list" },
+    { className: "school-demo-definition-grid" },
     items.map(([label, value]) =>
       createElement(
         "div",
@@ -147,15 +151,140 @@ function listSummaryItems(items: Array<[string, string | number]>) {
   );
 }
 
-function listCards<T>(
-  items: T[],
-  renderItem: (item: T) => ReturnType<typeof createElement>,
-  emptyLabel: string,
-) {
-  if (items.length === 0) {
+function renderChips(values: string[], tone = "neutral") {
+  if (values.length === 0) return createElement("span", { className: "school-demo-muted" }, "—");
+  return createElement(
+    "span",
+    { className: "school-demo-chip-list" },
+    values.map((value) =>
+      createElement(
+        "span",
+        { className: `school-demo-chip school-demo-chip-${tone}`, key: value },
+        value,
+      ),
+    ),
+  );
+}
+
+function renderMetric(label: string, value: string | number, note: string) {
+  return createElement(
+    "article",
+    { className: "school-demo-kpi-card" },
+    createElement("span", { className: "school-demo-kpi-label" }, label),
+    createElement("strong", null, value),
+    createElement("span", { className: "school-demo-kpi-note" }, note),
+  );
+}
+
+function renderStatusStrip(snapshot: SchoolDemoSnapshot) {
+  return createElement(
+    "section",
+    { "aria-label": "Статус демо-контура", className: "school-demo-status-strip" },
+    [
+      ["Маркер", snapshot.marker],
+      ["Readiness", snapshot.boundary.readiness],
+      ["Activation", snapshot.boundary.activation],
+      ["Production data", snapshot.boundary.productionDataCount],
+      ["Real schools", snapshot.boundary.realSchoolCount],
+    ].map(([label, value]) =>
+      createElement(
+        "div",
+        { className: "school-demo-status-item", key: label },
+        createElement("span", null, label),
+        createElement("strong", null, value),
+      ),
+    ),
+  );
+}
+
+function renderHeader({
+  actionHref,
+  actionLabel,
+  subtitle,
+  title,
+}: {
+  actionHref: string;
+  actionLabel: string;
+  subtitle: string;
+  title: string;
+}) {
+  return createElement(
+    "header",
+    { className: "school-demo-page-header" },
+    createElement(
+      "div",
+      { className: "school-demo-heading" },
+      createElement("span", { className: "school-demo-eyebrow" }, "Pre-Wave 7 · synthetic demo"),
+      createElement("h1", null, title),
+      createElement("p", null, subtitle),
+    ),
+    createElement(
+      "nav",
+      { "aria-label": "Навигация демо школы", className: "school-demo-header-actions" },
+      createElement(
+        "a",
+        { className: "button-link school-demo-secondary-link", href: actionHref },
+        actionLabel,
+      ),
+    ),
+  );
+}
+
+function renderPanel(id: string, title: string, children: ReactNode, wide = false) {
+  return createElement(
+    "section",
+    {
+      "aria-labelledby": `${id}-title`,
+      className: wide ? "school-demo-panel school-demo-panel-wide" : "school-demo-panel",
+    },
+    createElement("h2", { id: `${id}-title` }, title),
+    children,
+  );
+}
+
+function renderTable({
+  emptyLabel,
+  headers,
+  rows,
+}: {
+  emptyLabel: string;
+  headers: string[];
+  rows: Array<{ cells: ReactNode[]; key: string }>;
+}) {
+  if (rows.length === 0) {
     return createElement("p", { className: "empty-state" }, emptyLabel);
   }
-  return createElement("ul", { className: "session-list" }, items.map(renderItem));
+
+  return createElement(
+    "div",
+    { className: "school-demo-table-scroll" },
+    createElement(
+      "table",
+      { className: "school-demo-table" },
+      createElement(
+        "thead",
+        null,
+        createElement(
+          "tr",
+          null,
+          headers.map((header) => createElement("th", { key: header, scope: "col" }, header)),
+        ),
+      ),
+      createElement(
+        "tbody",
+        null,
+        rows.map((row) =>
+          createElement(
+            "tr",
+            { key: row.key },
+            row.cells.map((cell, index) =>
+              createElement("td", { "data-label": headers[index], key: headers[index] }, cell),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewProps) {
@@ -164,139 +293,115 @@ export function SchoolDemoDashboardView({ snapshot }: SchoolDemoDashboardViewPro
 
   return createElement(
     "main",
-    { className: "app-shell" },
+    { className: "app-shell school-demo-shell" },
+    renderHeader({
+      actionHref: "/",
+      actionLabel: "На главную",
+      subtitle:
+        "Строгий read-only обзор синтетической школьной ветки: организация, классы, назначения и лицензия без реальных данных.",
+      title: "Демо школы",
+    }),
+    renderStatusStrip(snapshot),
     createElement(
-      "header",
-      { className: "app-header" },
-      createElement(
-        "div",
-        null,
-        createElement("h1", { className: "brand" }, "Демо школы"),
-        createElement(
-          "p",
-          { className: "page-context" },
-          "Синтетический непроизводственный контур для показа школьной ветки.",
-        ),
+      "section",
+      { "aria-label": "Ключевые показатели демо школы", className: "school-demo-kpi-grid" },
+      renderMetric(
+        "Организация",
+        snapshot.organization.code,
+        `${snapshot.organization.schoolCount} школа`,
       ),
-      createElement("a", { className: "button-link", href: "/" }, "Назад"),
-    ),
-    createElement(
-      "section",
-      { className: "metadata-section", "aria-labelledby": "demo-boundary-title" },
-      createElement("h2", { id: "demo-boundary-title" }, "Границы и статус"),
-      listSummaryItems([
-        ["Marker", snapshot.marker],
-        ["Readiness", snapshot.boundary.readiness],
-        ["Activation", snapshot.boundary.activation],
-        ["Workflow", snapshot.boundary.workflow],
-        ["Production data", snapshot.boundary.productionDataCount],
-        ["Real schools", snapshot.boundary.realSchoolCount],
-        ["Family links", snapshot.boundary.familyLinkCount],
-      ]),
-    ),
-    createElement(
-      "section",
-      { className: "metadata-section", "aria-labelledby": "demo-summary-title" },
-      createElement("h2", { id: "demo-summary-title" }, "Сводка школы"),
-      createElement(
-        "p",
-        { className: "attempt-metadata-note" },
-        `Organization ${snapshot.organization.code} · School ${snapshot.school.code} · ${snapshot.academicYear.code}`,
+      renderMetric(
+        "Учебный год",
+        snapshot.academicYear.code,
+        `${snapshot.academicYear.startsOn} — ${snapshot.academicYear.endsOn}`,
       ),
-      listSummaryItems([
-        ["Учебный год", `${snapshot.academicYear.startsOn} — ${snapshot.academicYear.endsOn}`],
-        ["Классы", classOverviews.map((item) => item.code).join(", ")],
-        ["Учителя", teacherOverviews.map((item) => item.demoCode).join(", ")],
-        ["Ученики", snapshot.students.map((item) => item.demoCode).join(", ")],
-        ["Назначения", snapshot.teacherAssignments.length],
-        ["Зачисления", snapshot.studentEnrollments.length],
-        ["Лицензия", snapshot.license.licenseCode],
-        ["Права", snapshot.entitlements.map((item) => item.capabilityCode).join(", ")],
-      ]),
+      renderMetric(
+        "Классы",
+        classOverviews.length,
+        joinValues(classOverviews.map((item) => item.code)),
+      ),
+      renderMetric("Учителя", teacherOverviews.length, "синтетические demo-коды"),
+      renderMetric("Ученики", snapshot.students.length, "без ФИО и контактов"),
+      renderMetric("Права", snapshot.entitlements.length, "плановые entitlement-коды"),
     ),
     createElement(
-      "section",
-      { className: "metadata-section", "aria-labelledby": "demo-teachers-title" },
-      createElement("h2", { id: "demo-teachers-title" }, "Учительский обзор"),
-      listCards(
-        teacherOverviews,
-        (teacher) =>
-          createElement(
-            "li",
-            { key: teacher.demoCode },
-            createElement(
-              "div",
-              { className: "session-row" },
-              createElement(
-                "div",
-                null,
-                createElement("strong", null, teacher.demoCode),
-                createElement(
-                  "span",
-                  { className: "session-meta" },
-                  `Назначения: ${teacher.assignmentCount}`,
-                ),
-                createElement(
-                  "span",
-                  { className: "session-meta" },
-                  `Классы: ${teacher.classCodes.join(", ")}`,
-                ),
-                createElement(
-                  "span",
-                  { className: "session-meta" },
-                  `Предметные группы: ${teacher.subjectGroupCodes.join(", ")}`,
-                ),
-              ),
-              createElement("span", { className: "status-label" }, "Read only"),
+      "div",
+      { className: "school-demo-grid" },
+      renderPanel(
+        "school-demo-summary",
+        "Сводка школы",
+        listSummaryItems([
+          ["Организация", snapshot.organization.code],
+          ["Школа", snapshot.school.code],
+          ["Локаль", snapshot.locale],
+          ["Учебный год", `${snapshot.academicYear.startsOn} — ${snapshot.academicYear.endsOn}`],
+          ["Предметные группы", joinValues(snapshot.subjectGroups.map((item) => item.code))],
+          ["Зачисления", snapshot.studentEnrollments.length],
+        ]),
+      ),
+      renderPanel(
+        "school-demo-boundary",
+        "Границы и лицензия",
+        listSummaryItems([
+          ["Маркер", snapshot.marker],
+          ["Лицензия", snapshot.license.licenseCode],
+          ["Статус лицензии", snapshot.license.status],
+          [
+            "Права",
+            renderChips(
+              snapshot.entitlements.map((item) => item.capabilityCode),
+              "blue",
             ),
-          ),
-        "Учительских назначений пока нет.",
+          ],
+          ["Family links", snapshot.boundary.familyLinkCount],
+          ["Workflow", snapshot.boundary.workflow],
+        ]),
       ),
-    ),
-    createElement(
-      "section",
-      { className: "metadata-section", "aria-labelledby": "demo-classes-title" },
-      createElement("h2", { id: "demo-classes-title" }, "Классы и drilldown"),
-      listCards(
-        classOverviews,
-        (schoolClass) =>
-          createElement(
-            "li",
-            { key: schoolClass.code },
-            createElement(
-              "div",
-              { className: "session-row" },
+      renderPanel(
+        "school-demo-classes",
+        "Классы и drilldown",
+        renderTable({
+          emptyLabel: "Классов пока нет.",
+          headers: ["Класс", "Уровень", "Ученики", "Предметные группы", "Учителя", "Действие"],
+          rows: classOverviews.map((schoolClass) => ({
+            cells: [
+              createElement("strong", { key: "code" }, schoolClass.code),
+              schoolClass.gradeLevel,
+              schoolClass.studentCount,
+              renderChips(schoolClass.subjectGroupCodes),
+              renderChips(schoolClass.teacherDemoCodes, "blue"),
               createElement(
-                "div",
-                null,
-                createElement(
-                  "strong",
-                  null,
-                  `${schoolClass.code} · grade ${schoolClass.gradeLevel}`,
-                ),
-                createElement(
-                  "span",
-                  { className: "session-meta" },
-                  `Students: ${schoolClass.studentCount} · Subjects: ${schoolClass.subjectGroupCodes.join(", ")}`,
-                ),
-                createElement(
-                  "span",
-                  { className: "session-meta" },
-                  `Teachers: ${schoolClass.teacherDemoCodes.join(", ")}`,
-                ),
-                createElement(
-                  "a",
-                  {
-                    className: "button-link",
-                    href: `/school-demo/classes/${encodeURIComponent(schoolClass.code)}`,
-                  },
-                  "Open class drilldown",
-                ),
+                "a",
+                {
+                  className: "button-link school-demo-table-link",
+                  href: `/school-demo/classes/${encodeURIComponent(schoolClass.code)}`,
+                  key: "link",
+                },
+                "Открыть класс",
               ),
-              createElement("span", { className: "status-label" }, "Read only"),
-            ),
-          ),
-        "Классов пока нет.",
+            ],
+            key: schoolClass.code,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-teachers",
+        "Учительский обзор",
+        renderTable({
+          emptyLabel: "Учительских назначений пока нет.",
+          headers: ["Учитель", "Назначения", "Классы", "Предметные группы"],
+          rows: teacherOverviews.map((teacher) => ({
+            cells: [
+              createElement("strong", { key: "teacher" }, teacher.demoCode),
+              teacher.assignmentCount,
+              renderChips(teacher.classCodes),
+              renderChips(teacher.subjectGroupCodes, "blue"),
+            ],
+            key: teacher.demoCode,
+          })),
+        }),
+        true,
       ),
     ),
   );
@@ -308,32 +413,15 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
   if (!detail) {
     return createElement(
       "main",
-      { className: "app-shell" },
-      createElement(
-        "header",
-        { className: "app-header" },
-        createElement(
-          "div",
-          null,
-          createElement("h1", { className: "brand" }, "Демо школы"),
-          createElement(
-            "p",
-            { className: "page-context" },
-            "Синтетический непроизводственный контур для показа школьной ветки.",
-          ),
-        ),
-        createElement("a", { className: "button-link", href: "/school-demo" }, "Назад"),
-      ),
-      createElement(
-        "section",
-        { className: "metadata-section", "aria-labelledby": "demo-class-missing-title" },
-        createElement("h2", { id: "demo-class-missing-title" }, "Класс не найден"),
-        createElement(
-          "p",
-          { className: "attempt-metadata-note" },
-          "Запрошенный drilldown недоступен в синтетической демо-выборке.",
-        ),
-      ),
+      { className: "app-shell school-demo-shell" },
+      renderHeader({
+        actionHref: "/school-demo",
+        actionLabel: "К обзору школы",
+        subtitle:
+          "Запрошенный drilldown недоступен в синтетической демо-выборке. Реальные классы не подключены.",
+        title: "Класс не найден",
+      }),
+      renderStatusStrip(snapshot),
     );
   }
 
@@ -345,108 +433,102 @@ export function SchoolDemoClassDetailView({ classCode, snapshot }: SchoolDemoCla
 
   return createElement(
     "main",
-    { className: "app-shell" },
+    { className: "app-shell school-demo-shell" },
+    renderHeader({
+      actionHref: "/school-demo",
+      actionLabel: "К обзору школы",
+      subtitle:
+        "Read-only карточка класса: состав, назначения и границы демо-лицензии без персональных данных.",
+      title: `Класс ${detail.code}`,
+    }),
+    renderStatusStrip(snapshot),
     createElement(
-      "header",
-      { className: "app-header" },
-      createElement(
-        "div",
-        null,
-        createElement("h1", { className: "brand" }, "Демо школы"),
-        createElement(
-          "p",
-          { className: "page-context" },
-          "Синтетический непроизводственный контур для показа школьной ветки.",
-        ),
+      "section",
+      { "aria-label": "Ключевые показатели класса", className: "school-demo-kpi-grid" },
+      renderMetric("Уровень", detail.gradeLevel, "7–9 классы"),
+      renderMetric("Ученики", detail.studentCount, "синтетические demo-коды"),
+      renderMetric("Учителя", detail.teacherDemoCodes.length, joinValues(detail.teacherDemoCodes)),
+      renderMetric(
+        "Предметные группы",
+        detail.subjectGroupCodes.length,
+        joinValues(detail.subjectGroupCodes),
       ),
-      createElement("a", { className: "button-link", href: "/school-demo" }, "Назад"),
     ),
     createElement(
-      "section",
-      { className: "metadata-section", "aria-labelledby": "demo-class-summary-title" },
-      createElement("h2", { id: "demo-class-summary-title" }, `Класс ${detail.code}`),
-      listSummaryItems([
-        ["Уровень", detail.gradeLevel],
-        ["Ученики", detail.studentCount],
-        ["Предметные группы", detail.subjectGroupCodes.join(", ")],
-        ["Учителя", detail.teacherDemoCodes.join(", ")],
-        ["Зачисления", enrollments.length],
-      ]),
-    ),
-    createElement(
-      "section",
-      { className: "metadata-section", "aria-labelledby": "demo-class-roster-title" },
-      createElement("h2", { id: "demo-class-roster-title" }, "Список учеников"),
-      listCards(
-        roster,
-        (student) =>
-          createElement(
-            "li",
-            { key: student.demoCode },
-            createElement(
-              "div",
-              { className: "session-row" },
-              createElement(
-                "div",
-                null,
-                createElement("strong", null, student.demoCode),
-                createElement(
-                  "span",
-                  { className: "session-meta" },
-                  `Статус зачисления: ${student.enrollmentState}`,
-                ),
-              ),
-              createElement("span", { className: "status-label" }, "Synthetic"),
+      "div",
+      { className: "school-demo-grid" },
+      renderPanel(
+        "school-demo-class-summary",
+        "Сводка класса",
+        listSummaryItems([
+          ["Класс", detail.code],
+          ["Уровень", detail.gradeLevel],
+          ["Ученики", detail.studentCount],
+          ["Зачисления", enrollments.length],
+          ["Предметные группы", renderChips(detail.subjectGroupCodes)],
+          ["Учителя", renderChips(detail.teacherDemoCodes, "blue")],
+        ]),
+      ),
+      renderPanel(
+        "school-demo-class-boundary",
+        "Границы и лицензия",
+        listSummaryItems([
+          ["Readiness", snapshot.boundary.readiness],
+          ["Activation", snapshot.boundary.activation],
+          ["Production data", snapshot.boundary.productionDataCount],
+          ["Real schools", snapshot.boundary.realSchoolCount],
+          ["Лицензия", snapshot.license.licenseCode],
+          [
+            "Права",
+            renderChips(
+              snapshot.entitlements.map((item) => item.capabilityCode),
+              "blue",
             ),
-          ),
-        "Учеников в этом классе пока нет.",
+          ],
+        ]),
       ),
-    ),
-    createElement(
-      "section",
-      { className: "metadata-section", "aria-labelledby": "demo-class-assignments-title" },
-      createElement("h2", { id: "demo-class-assignments-title" }, "Назначения учителей"),
-      listCards(
-        teacherAssignments,
-        (assignment) =>
-          createElement(
-            "li",
-            {
-              key: `${assignment.teacherDemoCode}:${assignment.subjectGroupCode}`,
-            },
-            createElement(
-              "div",
-              { className: "session-row" },
+      renderPanel(
+        "school-demo-class-roster",
+        "Список учеников",
+        renderTable({
+          emptyLabel: "Учеников в этом классе пока нет.",
+          headers: ["Demo-код ученика", "Статус зачисления", "Класс"],
+          rows: roster.map((student) => ({
+            cells: [
+              createElement("strong", { key: "student" }, student.demoCode),
               createElement(
-                "div",
-                null,
-                createElement("strong", null, assignment.teacherDemoCode),
-                createElement(
-                  "span",
-                  { className: "session-meta" },
-                  `Предметная группа: ${assignment.subjectGroupCode}`,
-                ),
+                "span",
+                { className: "school-demo-chip", key: "status" },
+                student.enrollmentState,
               ),
-              createElement("span", { className: "status-label" }, "Read only"),
-            ),
-          ),
-        "Назначений пока нет.",
+              detail.code,
+            ],
+            key: student.demoCode,
+          })),
+        }),
+        true,
       ),
-    ),
-    createElement(
-      "section",
-      { className: "metadata-section", "aria-labelledby": "demo-class-boundary-title" },
-      createElement("h2", { id: "demo-class-boundary-title" }, "Границы и лицензия"),
-      listSummaryItems([
-        ["Marker", snapshot.marker],
-        ["Readiness", snapshot.boundary.readiness],
-        ["Activation", snapshot.boundary.activation],
-        ["Workflow", snapshot.boundary.workflow],
-        ["Production data", snapshot.boundary.productionDataCount],
-        ["Real schools", snapshot.boundary.realSchoolCount],
-        ["Лицензия", snapshot.license.licenseCode],
-        ["Права", snapshot.entitlements.map((item) => item.capabilityCode).join(", ")],
-      ]),
+      renderPanel(
+        "school-demo-class-assignments",
+        "Назначения учителей",
+        renderTable({
+          emptyLabel: "Назначений пока нет.",
+          headers: ["Учитель", "Предметная группа", "Режим"],
+          rows: teacherAssignments.map((assignment) => ({
+            cells: [
+              createElement("strong", { key: "teacher" }, assignment.teacherDemoCode),
+              assignment.subjectGroupCode,
+              createElement(
+                "span",
+                { className: "school-demo-chip school-demo-chip-blue", key: "mode" },
+                "Read only",
+              ),
+            ],
+            key: `${assignment.teacherDemoCode}:${assignment.subjectGroupCode}`,
+          })),
+        }),
+        true,
+      ),
     ),
   );
 }
