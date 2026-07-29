@@ -12,6 +12,7 @@ import {
   preWave7Slice1ChangedPaths,
   preWave7Slice2ChangedPaths,
   preWave7Slice3ChangedPaths,
+  preWave7Slice4ChangedPaths,
   readSkillGraph,
   wave7PrepFoundationPaths,
 } from "../scripts/validate-skill-graph.mjs";
@@ -363,6 +364,7 @@ test("slice scope guard rejects API OpenAPI Prisma web and other runtime paths",
         preWave7Slice1ChangedPaths.has(changedPath) ||
         preWave7Slice2ChangedPaths.has(changedPath) ||
         preWave7Slice3ChangedPaths.has(changedPath) ||
+        preWave7Slice4ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,

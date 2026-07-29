@@ -131,6 +131,31 @@ test("synthetic school demo snapshot is public read-only and boundary-safe", asy
   assert.equal(snapshot.studentEnrollments.length, 6);
   assert.equal(snapshot.license.entitlementCount, 3);
 
+  for (const schoolClass of snapshot.classes) {
+    const classAssignments = snapshot.teacherAssignments.filter(
+      (assignment) => assignment.classCode === schoolClass.code,
+    );
+    const classEnrollments = snapshot.studentEnrollments.filter(
+      (enrollment) => enrollment.classCode === schoolClass.code,
+    );
+    assert.equal(classAssignments.length, 1, schoolClass.code);
+    assert.equal(classEnrollments.length, 2, schoolClass.code);
+    assert.equal(schoolClass.studentCount, classEnrollments.length);
+    assert.equal(schoolClass.teacherDemoCodes.length, classAssignments.length);
+    assert.equal(schoolClass.subjectGroupCodes.length, classAssignments.length);
+  }
+  for (const teacher of snapshot.teachers) {
+    assert.equal(teacher.assignmentCount, 1, teacher.demoCode);
+  }
+  assert.equal(
+    snapshot.students.every((student) => student.enrollmentState === "ENROLLED"),
+    true,
+  );
+  assert.equal(
+    snapshot.studentEnrollments.every((enrollment) => enrollment.state === "ENROLLED"),
+    true,
+  );
+
   const forbidden = JSON.stringify(snapshot).toLowerCase();
   for (const term of ["email", "phone", "address", "userid", "familyid", "childprofileid"]) {
     assert.equal(forbidden.includes(term), false, term);
