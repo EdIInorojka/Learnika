@@ -193,12 +193,21 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   for (const phrase of [
     "Presentation route",
     "Guided mode",
+    "Guided walkthrough",
+    "Presentation script",
     "Compact summary",
     "School demo compact summary",
     "Teacher handoff pack",
     "What the demo shows",
     "Synthetic boundary",
     "School rollout checklist",
+    "Current page",
+    "Overview",
+    "Classes",
+    "Teacher assignments",
+    "License / entitlements",
+    "Compact summary",
+    "Handoff pack",
     "Class counts / roster snapshot",
     "Read-only boundary",
     "Overview",
@@ -214,6 +223,11 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "school-demo-shell",
     "school-demo-page-header",
     "school-demo-status-strip",
+    "school-demo-guided-walkthrough",
+    "school-demo-guided-list",
+    "school-demo-guided-step",
+    "school-demo-guided-step-surface",
+    "school-demo-guided-footnote",
     "school-demo-presentation-flow",
     "school-demo-step-nav",
     "school-demo-step-link",
@@ -225,6 +239,9 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "school-demo-panel",
     "school-demo-table",
     "school-demo-theme-toggle",
+    "school-demo-guided-copy",
+    "school-demo-guided-lead",
+    "school-demo-guided-boundary",
     "school-demo-handoff-teaser",
     "school-demo-note-list",
   ]) {
@@ -250,12 +267,16 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   );
   assert.match(compactSummaryHtml, /href="\/school-demo\?step=overview#school-demo-summary"/);
   assert.match(compactSummaryHtml, /href="\/school-demo\/handoff"/);
+  assert.match(compactSummaryHtml, /Guided walkthrough/);
+  assert.match(compactSummaryHtml, /Presentation script/);
   assert.match(compactSummaryHtml, /Full walkthrough/);
   assert.match(compactSummaryHtml, /Synthetic boundary/);
   assert.match(compactSummaryHtml, /Mutations/);
   assert.match(handoffPackHtml, /href="\/school-demo\/summary"/);
   assert.match(handoffPackHtml, /href="\/school-demo\?step=overview#school-demo-summary"/);
   assert.match(handoffPackHtml, /School demo handoff pack/);
+  assert.match(handoffPackHtml, /Guided walkthrough/);
+  assert.match(handoffPackHtml, /Presentation script/);
   assert.match(handoffPackHtml, /What the demo shows/);
   assert.match(handoffPackHtml, /Synthetic boundary/);
   assert.match(handoffPackHtml, /School rollout checklist/);
@@ -341,16 +362,32 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(cssSource.includes(".school-demo-note-list"), true);
   assert.equal(viewSource.includes("Compact one-screen read-only snapshot"), true);
   assert.equal(viewSource.includes("renderPresentationFlow"), true);
+  assert.equal(viewSource.includes("renderGuidedWalkthrough"), true);
+  assert.equal(viewSource.includes("buildGuidedWalkthroughSteps"), true);
   assert.equal(viewSource.includes("school-demo-presentation-flow"), true);
   assert.equal(viewSource.includes("school-demo-presentation-state"), true);
   assert.equal(viewSource.includes("Guided mode"), true);
+  assert.equal(viewSource.includes("Guided walkthrough"), true);
+  assert.equal(viewSource.includes("Presentation script"), true);
   assert.equal(viewSource.includes("aria-current"), true);
   assert.equal(viewSource.includes("step=overview#school-demo-summary"), true);
   assert.equal(viewSource.includes("step=class-drilldown#school-demo-class-roster"), true);
+  assert.equal(viewSource.includes("school-demo-guided-walkthrough"), true);
+  assert.equal(viewSource.includes("school-demo-guided-list"), true);
+  assert.equal(viewSource.includes("school-demo-guided-step"), true);
+  assert.equal(viewSource.includes("school-demo-guided-step-surface"), true);
+  assert.equal(viewSource.includes("school-demo-guided-boundary"), true);
+  assert.equal(viewSource.includes("school-demo-guided-footnote"), true);
   assert.equal(cssSource.includes(".school-demo-shell"), true);
   assert.equal(cssSource.includes(".school-demo-presentation-flow"), true);
   assert.equal(cssSource.includes(".school-demo-step-nav"), true);
   assert.equal(cssSource.includes(".school-demo-step-link"), true);
+  assert.equal(cssSource.includes(".school-demo-guided-list"), true);
+  assert.equal(cssSource.includes(".school-demo-guided-step"), true);
+  assert.equal(cssSource.includes(".school-demo-guided-lead"), true);
+  assert.equal(cssSource.includes(".school-demo-guided-step-surface"), true);
+  assert.equal(cssSource.includes(".school-demo-guided-boundary"), true);
+  assert.equal(cssSource.includes(".school-demo-guided-footnote"), true);
   assert.equal(cssSource.includes(".school-demo-summary-shell"), true);
   assert.equal(cssSource.includes(".school-demo-summary-status-strip"), true);
   assert.equal(cssSource.includes(".school-demo-compact-kpi-grid"), true);

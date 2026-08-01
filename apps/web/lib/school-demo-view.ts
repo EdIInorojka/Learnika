@@ -80,6 +80,27 @@ interface SchoolDemoPresentationStep {
   note: string;
 }
 
+type SchoolDemoGuidedWalkthroughStepKey =
+  "overview" | "classes" | "teacher-assignments" | "license" | "summary" | "handoff";
+
+const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[] = [
+  "overview",
+  "classes",
+  "teacher-assignments",
+  "license",
+  "summary",
+  "handoff",
+];
+
+interface SchoolDemoGuidedWalkthroughStep {
+  actionLabel: string;
+  href: string;
+  key: SchoolDemoGuidedWalkthroughStepKey;
+  label: string;
+  note: string;
+  surface: string;
+}
+
 interface SchoolDemoClassDetail extends SchoolDemoClassOverview {
   roster: Array<{
     demoCode: string;
@@ -470,6 +491,149 @@ function renderPresentationFlow({
   );
 }
 
+function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthroughStepKey): string {
+  switch (step) {
+    case "overview":
+      return "Overview";
+    case "classes":
+      return "Classes";
+    case "teacher-assignments":
+      return "Teacher assignments";
+    case "license":
+      return "License / entitlements";
+    case "summary":
+      return "Compact summary";
+    case "handoff":
+      return "Handoff pack";
+  }
+}
+
+function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
+  return [
+    {
+      actionLabel: "Open dashboard",
+      href: "/school-demo?step=overview#school-demo-summary",
+      key: "overview",
+      label: "Overview",
+      note: "Start with the synthetic organization, school and academic year. The boundary strip keeps the read-only, non-production status visible.",
+      surface: "/school-demo",
+    },
+    {
+      actionLabel: "Open classes",
+      href: "/school-demo?step=classes#school-demo-classes",
+      key: "classes",
+      label: "Classes",
+      note: "Show the grade 7-9 classes, class counts and drilldown entry points before moving to the school-facing views.",
+      surface: "/school-demo",
+    },
+    {
+      actionLabel: "Open teachers",
+      href: "/school-demo?step=teacher-assignments#school-demo-teachers",
+      key: "teacher-assignments",
+      label: "Teacher assignments",
+      note: "Walk through synthetic teacher roles, class assignments and subject groups without exposing real people or school records.",
+      surface: "/school-demo",
+    },
+    {
+      actionLabel: "Open license",
+      href: "/school-demo?step=license#school-demo-boundary",
+      key: "license",
+      label: "License / entitlements",
+      note: "Keep the entitlement plan visible as read-only metadata so the demo stays grounded in a school rollout discussion.",
+      surface: "/school-demo",
+    },
+    {
+      actionLabel: "Open summary",
+      href: "/school-demo/summary",
+      key: "summary",
+      label: "Compact summary",
+      note: "Switch to the one-screen school-facing overview for a live meeting, screenshot or print-style discussion.",
+      surface: "/school-demo/summary",
+    },
+    {
+      actionLabel: "Open handoff",
+      href: "/school-demo/handoff",
+      key: "handoff",
+      label: "Handoff pack",
+      note: "Open the teacher and admin handoff pack with the synthetic boundary and rollout checklist.",
+      surface: "/school-demo/handoff",
+    },
+  ];
+}
+
+function renderGuidedWalkthrough({
+  activeStep,
+  classCode,
+  snapshot,
+}: {
+  activeStep: SchoolDemoGuidedWalkthroughStepKey;
+  classCode: string | undefined;
+  snapshot: SchoolDemoSnapshot;
+}) {
+  const steps = buildGuidedWalkthroughSteps();
+  const drilldownClassCode = classCode ?? snapshot.classes[0]?.code;
+  const currentStep = steps.find((step) => step.key === activeStep) ?? steps[0]!;
+  const currentStepIndex = schoolDemoGuidedWalkthroughStepOrder.indexOf(currentStep.key) + 1;
+
+  return renderPanel(
+    "school-demo-guided-walkthrough",
+    "Guided walkthrough",
+    createElement(
+      "div",
+      { className: "school-demo-guided-copy" },
+      createElement(
+        "p",
+        { className: "school-demo-guided-lead" },
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary and handoff pack.",
+      ),
+      createElement(
+        "p",
+        { className: "school-demo-guided-boundary" },
+        `Current page: ${getSchoolDemoGuidedWalkthroughStepLabel(currentStep.key)} (${currentStepIndex} of ${steps.length}). The demo stays ${snapshot.boundary.readiness} / ${snapshot.boundary.activation}, with production data ${snapshot.boundary.productionDataCount}, real schools ${snapshot.boundary.realSchoolCount} and no mutations.`,
+      ),
+      createElement(
+        "ol",
+        { className: "school-demo-guided-list" },
+        steps.map((step, index) =>
+          createElement(
+            "li",
+            {
+              "aria-current": step.key === activeStep ? "step" : undefined,
+              className: "school-demo-guided-step",
+              "data-guided-state": step.key === activeStep ? "current" : "available",
+              key: step.key,
+            },
+            createElement("span", { className: "school-demo-step-index" }, String(index + 1)),
+            createElement("strong", null, step.label),
+            createElement("span", { className: "school-demo-guided-step-surface" }, step.surface),
+            createElement("p", null, step.note),
+            createElement(
+              "a",
+              { className: "button-link school-demo-secondary-link", href: step.href },
+              step.actionLabel,
+            ),
+          ),
+        ),
+      ),
+      createElement(
+        "p",
+        { className: "school-demo-guided-footnote" },
+        drilldownClassCode
+          ? createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: `/school-demo/classes/${encodeURIComponent(drilldownClassCode)}?step=class-drilldown#school-demo-class-roster`,
+              },
+              `Optional drilldown: open ${drilldownClassCode}`,
+            )
+          : "Optional drilldown is available from the classes table when a demo class exists.",
+      ),
+    ),
+    true,
+  );
+}
+
 function renderHeader({
   actionHref,
   actionLabel,
@@ -582,6 +746,7 @@ export function SchoolDemoDashboardView({
 }: SchoolDemoDashboardViewProps) {
   const classOverviews = buildClassOverviews(snapshot);
   const teacherOverviews = buildTeacherOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
 
   return createElement(
     "main",
@@ -600,6 +765,24 @@ export function SchoolDemoDashboardView({
       title: "Р”РµРјРѕ С€РєРѕР»С‹",
     }),
     renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: (() => {
+        switch (presentationStep ?? "overview") {
+          case "overview":
+            return "overview";
+          case "classes":
+            return "classes";
+          case "teacher-assignments":
+            return "teacher-assignments";
+          case "license":
+            return "license";
+          case "class-drilldown":
+            return "classes";
+        }
+      })(),
+      classCode: guidedClassCode,
+      snapshot,
+    }),
     renderPresentationFlow({
       activeStep: presentationStep ?? "overview",
       snapshot,
@@ -745,6 +928,7 @@ export function SchoolDemoDashboardView({
 export function SchoolDemoCompactSummaryView({ snapshot }: SchoolDemoCompactSummaryViewProps) {
   const classOverviews = buildClassOverviews(snapshot);
   const teacherOverviews = buildTeacherOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
   const rosterPreview = [...snapshot.students]
     .sort(
       (left, right) =>
@@ -795,6 +979,11 @@ export function SchoolDemoCompactSummaryView({ snapshot }: SchoolDemoCompactSumm
         ),
       ),
     ),
+    renderGuidedWalkthrough({
+      activeStep: "summary",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
     createElement(
       "section",
       {
@@ -946,6 +1135,7 @@ export function SchoolDemoCompactSummaryView({ snapshot }: SchoolDemoCompactSumm
 export function SchoolDemoHandoffPackView({ snapshot }: SchoolDemoHandoffPackViewProps) {
   const classOverviews = buildClassOverviews(snapshot);
   const teacherOverviews = buildTeacherOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
   const demoShowPoints = [
     "organization, school and academic year context",
     "classes 7-9 with teacher assignments and roster snapshot",
@@ -982,6 +1172,11 @@ export function SchoolDemoHandoffPackView({ snapshot }: SchoolDemoHandoffPackVie
       title: "School demo handoff pack",
     }),
     renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "handoff",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
     createElement(
       "section",
       {
