@@ -32,6 +32,10 @@ interface SchoolDemoPilotChecklistViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoPilotConfigViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -85,7 +89,14 @@ interface SchoolDemoPresentationStep {
 }
 
 type SchoolDemoGuidedWalkthroughStepKey =
-  "overview" | "classes" | "teacher-assignments" | "license" | "summary" | "handoff" | "pilot";
+  | "overview"
+  | "classes"
+  | "teacher-assignments"
+  | "license"
+  | "summary"
+  | "handoff"
+  | "pilot"
+  | "pilot-config";
 
 const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[] = [
   "overview",
@@ -95,6 +106,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "summary",
   "handoff",
   "pilot",
+  "pilot-config",
 ];
 
 interface SchoolDemoGuidedWalkthroughStep {
@@ -512,6 +524,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Handoff pack";
     case "pilot":
       return "Pilot checklist";
+    case "pilot-config":
+      return "Pilot config preview";
   }
 }
 
@@ -573,6 +587,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       note: "Discuss future pilot prerequisites, data boundaries, FAQ objections and the next-step checklist without collecting real school data.",
       surface: "/school-demo/pilot",
     },
+    {
+      actionLabel: "Open pilot config preview",
+      href: "/school-demo/pilot-config",
+      key: "pilot-config",
+      label: "Pilot config preview",
+      note: "Preview school profile placeholders, class and subject layout, teacher roles and boundary notes without any operational intake.",
+      surface: "/school-demo/pilot-config",
+    },
   ];
 }
 
@@ -599,7 +621,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack and pilot checklist.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist and pilot config preview.",
       ),
       createElement(
         "p",
@@ -1144,6 +1166,18 @@ export function SchoolDemoCompactSummaryView({ snapshot }: SchoolDemoCompactSumm
               "Open pilot checklist",
             ),
           ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/pilot-config",
+              },
+              "Open pilot config preview",
+            ),
+          ),
           renderList(
             ["What the demo shows", "What stays synthetic", "Pilot checklist and FAQ objections"],
             false,
@@ -1263,6 +1297,18 @@ export function SchoolDemoHandoffPackView({ snapshot }: SchoolDemoHandoffPackVie
               "Open pilot checklist",
             ),
           ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/pilot-config",
+              },
+              "Open pilot config preview",
+            ),
+          ),
         ),
         true,
       ),
@@ -1303,6 +1349,7 @@ export function SchoolDemoPilotChecklistView({ snapshot }: SchoolDemoPilotCheckl
   const nextStepChecklist = [
     "Select the audience: teacher, director or admin.",
     "Open summary, handoff and pilot pages in that order.",
+    "Open the pilot config preview when discussing future intake fields.",
     "Confirm which classes and subject groups would be in a future pilot.",
     "Capture objections outside the product and keep real data out of the demo.",
     "Return to the business gate before any school beta activation.",
@@ -1412,7 +1459,172 @@ export function SchoolDemoPilotChecklistView({ snapshot }: SchoolDemoPilotCheckl
       renderPanel(
         "school-demo-pilot-next-steps",
         "Next-step checklist",
-        renderList(nextStepChecklist, true),
+        createElement(
+          "div",
+          null,
+          renderList(nextStepChecklist, true),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/pilot-config",
+              },
+              "Open pilot config preview",
+            ),
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoPilotConfigView({ snapshot }: SchoolDemoPilotConfigViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const teacherOverviews = buildTeacherOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const teacherRoles = ["class lead", "subject teacher", "school admin", "import reviewer"];
+  const rolloutAssumptions = [
+    "One organization, one school and one academic year are enough for the first synthetic pilot preview.",
+    "Grade 7-9 classes can be shown with one subject group per class until a later scheduling slice exists.",
+    "CSV/XLSX intake stays preview-only until the legal basis, consent path and tenant owner are approved.",
+    "Teacher roles remain placeholders until named school staff and access boundaries are approved.",
+  ];
+  const configurableLater = [
+    "school profile labels and tenant codes",
+    "class count, class labels and grade-band mapping",
+    "subject groups and teacher role mapping",
+    "schedule assumptions and import options",
+    "retention, deletion and preview confirmation rules",
+  ];
+  const demoOnly = [
+    "synthetic organization and school codes only",
+    "no real names or contact details",
+    "no writes, no auth/session changes and no real imports",
+    "no production activation, approvals or family links",
+  ];
+  const readinessChecklist = [
+    "Confirm the school is a named future design partner, not a real live tenant.",
+    "Confirm the class count, grade bands and subject layout before any later intake.",
+    "Confirm teacher role placeholders and pilot ownership before any future import.",
+    "Confirm data boundary, retention and deletion expectations before activation.",
+  ];
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/pilot",
+      actionLabel: "Back to pilot",
+      secondaryActionHref: "/school-demo/handoff",
+      secondaryActionLabel: "Back to handoff",
+      subtitle:
+        "Read-only school pilot intake and configuration preview. It stays synthetic, non-operational and local-only.",
+      title: "School demo pilot config preview",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "pilot-config",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Pilot config preview metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Preview mode", "Read-only", "Synthetic pilot intake only"),
+      renderMetric("Grade bands", "7-9", "Russian school demo layout"),
+      renderMetric(
+        "Class count",
+        classOverviews.length,
+        joinValues(classOverviews.map((item) => item.code)),
+      ),
+      renderMetric(
+        "Teachers shown",
+        teacherOverviews.length,
+        joinValues(teacherOverviews.map((item) => item.demoCode)),
+      ),
+      renderMetric("Teacher roles", teacherRoles.length, joinValues(teacherRoles)),
+      renderMetric(
+        "Subject groups",
+        snapshot.subjectGroups.length,
+        joinValues(snapshot.subjectGroups.map((item) => item.code)),
+      ),
+      renderMetric("Writes", "0", "No operational intake"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid" },
+      renderPanel(
+        "school-demo-pilot-config-profile",
+        "School profile schema preview",
+        listSummaryItems([
+          ["Organization placeholder", snapshot.organization.code],
+          ["School placeholder", snapshot.school.code],
+          ["Academic year", snapshot.academicYear.code],
+          ["Locale", snapshot.locale],
+          ["Class count", classOverviews.length],
+          ["Grade bands", "7-9"],
+          ["Teacher role placeholders", renderChips(teacherRoles, "blue")],
+          ["Data boundary", "synthetic / read-only / non-operational"],
+        ]),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-config-layout",
+        "Supported class / subject layout",
+        renderTable({
+          emptyLabel: "No synthetic classes are available.",
+          headers: ["Class", "Grade", "Subject groups", "Teacher preview"],
+          rows: classOverviews.map((schoolClass) => ({
+            cells: [
+              createElement("strong", { key: "code" }, schoolClass.code),
+              schoolClass.gradeLevel,
+              renderChips(schoolClass.subjectGroupCodes),
+              renderChips(schoolClass.teacherDemoCodes, "blue"),
+            ],
+            key: schoolClass.code,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-config-roles",
+        "Teacher role placeholders",
+        renderList(teacherRoles),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-config-rollout",
+        "Rollout assumptions",
+        renderList(rolloutAssumptions),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-config-later",
+        "What will be configurable later",
+        renderList(configurableLater),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-config-boundary",
+        "What stays demo-only",
+        renderList(demoOnly),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-config-checklist",
+        "Pilot readiness checklist",
+        renderList(readinessChecklist, true),
         true,
       ),
     ),

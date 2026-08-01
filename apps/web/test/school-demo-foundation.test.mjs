@@ -13,6 +13,7 @@ import {
   SchoolDemoDashboardView,
   SchoolDemoHandoffPackView,
   SchoolDemoPilotChecklistView,
+  SchoolDemoPilotConfigView,
 } from "../lib/school-demo-view.ts";
 
 function buildSnapshotFixture() {
@@ -194,7 +195,12 @@ test("school demo dashboard and drilldown render the synthetic school overview",
       snapshot,
     }),
   );
-  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}\n${pilotChecklistHtml}`;
+  const pilotConfigHtml = renderToStaticMarkup(
+    createElement(SchoolDemoPilotConfigView, {
+      snapshot,
+    }),
+  );
+  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}\n${pilotChecklistHtml}\n${pilotConfigHtml}`;
 
   for (const phrase of [
     "Presentation route",
@@ -205,6 +211,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "School demo compact summary",
     "Teacher handoff pack",
     "School demo pilot checklist",
+    "School demo pilot config preview",
     "What the demo shows",
     "Synthetic boundary",
     "School rollout checklist",
@@ -213,6 +220,13 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "What remains synthetic",
     "FAQ and objections",
     "Next-step checklist",
+    "School profile schema preview",
+    "Supported class / subject layout",
+    "Teacher role placeholders",
+    "Rollout assumptions",
+    "What will be configurable later",
+    "What stays demo-only",
+    "Pilot readiness checklist",
     "Current page",
     "Overview",
     "Classes",
@@ -221,6 +235,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Compact summary",
     "Handoff pack",
     "Pilot checklist",
+    "Pilot config preview",
     "Class counts / roster snapshot",
     "Read-only boundary",
     "Overview",
@@ -289,6 +304,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(compactSummaryHtml, /Mutations/);
   assert.match(handoffPackHtml, /href="\/school-demo\/summary"/);
   assert.match(handoffPackHtml, /href="\/school-demo\/pilot"/);
+  assert.match(handoffPackHtml, /href="\/school-demo\/pilot-config"/);
   assert.match(handoffPackHtml, /School demo handoff pack/);
   assert.match(handoffPackHtml, /Guided walkthrough/);
   assert.match(handoffPackHtml, /Presentation script/);
@@ -297,6 +313,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(handoffPackHtml, /School rollout checklist/);
   assert.match(pilotChecklistHtml, /href="\/school-demo\/handoff"/);
   assert.match(pilotChecklistHtml, /href="\/school-demo\/summary"/);
+  assert.match(pilotChecklistHtml, /href="\/school-demo\/pilot-config"/);
   assert.match(pilotChecklistHtml, /School demo pilot checklist/);
   assert.match(pilotChecklistHtml, /Pilot prerequisites/);
   assert.match(pilotChecklistHtml, /What a school would later provide/);
@@ -304,6 +321,16 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(pilotChecklistHtml, /What remains synthetic/);
   assert.match(pilotChecklistHtml, /FAQ and objections/);
   assert.match(pilotChecklistHtml, /Next-step checklist/);
+  assert.match(pilotConfigHtml, /href="\/school-demo\/pilot"/);
+  assert.match(pilotConfigHtml, /href="\/school-demo\/handoff"/);
+  assert.match(pilotConfigHtml, /School demo pilot config preview/);
+  assert.match(pilotConfigHtml, /School profile schema preview/);
+  assert.match(pilotConfigHtml, /Supported class \/ subject layout/);
+  assert.match(pilotConfigHtml, /Teacher role placeholders/);
+  assert.match(pilotConfigHtml, /Rollout assumptions/);
+  assert.match(pilotConfigHtml, /What will be configurable later/);
+  assert.match(pilotConfigHtml, /What stays demo-only/);
+  assert.match(pilotConfigHtml, /Pilot readiness checklist/);
   assert.match(pilotChecklistHtml, /Named design partners/);
   assert.match(pilotChecklistHtml, /Legal basis/);
   assert.match(pilotChecklistHtml, /CSV\/XLSX/);
@@ -349,6 +376,10 @@ test("school demo route is read-only and display-only", async () => {
     path.join(process.cwd(), "app", "school-demo", "pilot", "page.tsx"),
     "utf8",
   );
+  const pilotConfigPageSource = fs.readFileSync(
+    path.join(process.cwd(), "app", "school-demo", "pilot-config", "page.tsx"),
+    "utf8",
+  );
   const serviceSource = fs.readFileSync(
     path.join(process.cwd(), "lib", "school-demo-service.server.ts"),
     "utf8",
@@ -381,11 +412,15 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(pilotPageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(pilotPageSource.includes("SchoolDemoPilotChecklistView"), true);
   assert.equal(pilotPageSource.includes('dynamic = "force-dynamic"'), true);
+  assert.equal(pilotConfigPageSource.includes("readSchoolDemoSnapshot"), true);
+  assert.equal(pilotConfigPageSource.includes("SchoolDemoPilotConfigView"), true);
+  assert.equal(pilotConfigPageSource.includes('dynamic = "force-dynamic"'), true);
   assert.equal(serviceSource.includes('"/demo/school-snapshot"'), true);
   assert.equal(viewSource.includes("SchoolDemoThemeToggle"), true);
   assert.equal(viewSource.includes("SchoolDemoCompactSummaryView"), true);
   assert.equal(viewSource.includes("SchoolDemoHandoffPackView"), true);
   assert.equal(viewSource.includes("SchoolDemoPilotChecklistView"), true);
+  assert.equal(viewSource.includes("SchoolDemoPilotConfigView"), true);
   assert.equal(viewSource.includes("school-demo-summary-shell"), true);
   assert.equal(viewSource.includes("school-demo-summary-status-strip"), true);
   assert.equal(viewSource.includes("school-demo-compact-kpi-grid"), true);
@@ -399,6 +434,13 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("school-demo-pilot-synthetic"), true);
   assert.equal(viewSource.includes("school-demo-pilot-faq"), true);
   assert.equal(viewSource.includes("school-demo-pilot-next-steps"), true);
+  assert.equal(viewSource.includes("school-demo-pilot-config-profile"), true);
+  assert.equal(viewSource.includes("school-demo-pilot-config-layout"), true);
+  assert.equal(viewSource.includes("school-demo-pilot-config-roles"), true);
+  assert.equal(viewSource.includes("school-demo-pilot-config-rollout"), true);
+  assert.equal(viewSource.includes("school-demo-pilot-config-later"), true);
+  assert.equal(viewSource.includes("school-demo-pilot-config-boundary"), true);
+  assert.equal(viewSource.includes("school-demo-pilot-config-checklist"), true);
   assert.equal(cssSource.includes(".school-demo-handoff-teaser"), true);
   assert.equal(cssSource.includes(".school-demo-note-list"), true);
   assert.equal(viewSource.includes("Compact one-screen read-only snapshot"), true);
@@ -413,6 +455,7 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("aria-current"), true);
   assert.equal(viewSource.includes("step=overview#school-demo-summary"), true);
   assert.equal(viewSource.includes("step=class-drilldown#school-demo-class-roster"), true);
+  assert.equal(viewSource.includes("/school-demo/pilot-config"), true);
   assert.equal(viewSource.includes("school-demo-guided-walkthrough"), true);
   assert.equal(viewSource.includes("school-demo-guided-list"), true);
   assert.equal(viewSource.includes("school-demo-guided-step"), true);
@@ -447,6 +490,7 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("data-theme-state"), true);
   assert.equal(viewSource.includes("/school-demo/handoff"), true);
   assert.equal(viewSource.includes("/school-demo/pilot"), true);
+  assert.equal(viewSource.includes("/school-demo/pilot-config"), true);
   assert.equal(viewSource.includes("document.cookie"), false);
   assert.equal(viewSource.includes("fetch("), false);
 
@@ -465,7 +509,7 @@ test("school demo route is read-only and display-only", async () => {
     "address",
   ]) {
     assert.equal(
-      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${pilotPageSource}\n${viewSource}`.includes(
+      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${pilotPageSource}\n${pilotConfigPageSource}\n${viewSource}`.includes(
         forbidden,
       ),
       false,
