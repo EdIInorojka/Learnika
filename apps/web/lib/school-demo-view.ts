@@ -28,6 +28,10 @@ interface SchoolDemoHandoffPackViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoPilotChecklistViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -81,7 +85,7 @@ interface SchoolDemoPresentationStep {
 }
 
 type SchoolDemoGuidedWalkthroughStepKey =
-  "overview" | "classes" | "teacher-assignments" | "license" | "summary" | "handoff";
+  "overview" | "classes" | "teacher-assignments" | "license" | "summary" | "handoff" | "pilot";
 
 const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[] = [
   "overview",
@@ -90,6 +94,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "license",
   "summary",
   "handoff",
+  "pilot",
 ];
 
 interface SchoolDemoGuidedWalkthroughStep {
@@ -505,6 +510,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Compact summary";
     case "handoff":
       return "Handoff pack";
+    case "pilot":
+      return "Pilot checklist";
   }
 }
 
@@ -558,6 +565,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       note: "Open the teacher and admin handoff pack with the synthetic boundary and rollout checklist.",
       surface: "/school-demo/handoff",
     },
+    {
+      actionLabel: "Open pilot checklist",
+      href: "/school-demo/pilot",
+      key: "pilot",
+      label: "Pilot checklist",
+      note: "Discuss future pilot prerequisites, data boundaries, FAQ objections and the next-step checklist without collecting real school data.",
+      surface: "/school-demo/pilot",
+    },
   ];
 }
 
@@ -584,7 +599,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary and handoff pack.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack and pilot checklist.",
       ),
       createElement(
         "p",
@@ -1120,8 +1135,17 @@ export function SchoolDemoCompactSummaryView({ snapshot }: SchoolDemoCompactSumm
               "Open handoff pack",
             ),
           ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              { className: "button-link school-demo-secondary-link", href: "/school-demo/pilot" },
+              "Open pilot checklist",
+            ),
+          ),
           renderList(
-            ["What the demo shows", "What stays synthetic", "Short school rollout checklist"],
+            ["What the demo shows", "What stays synthetic", "Pilot checklist and FAQ objections"],
             false,
             "school-demo-note-list",
           ),
@@ -1165,8 +1189,8 @@ export function SchoolDemoHandoffPackView({ snapshot }: SchoolDemoHandoffPackVie
     renderHeader({
       actionHref: "/school-demo/summary",
       actionLabel: "Back to summary",
-      secondaryActionHref: "/school-demo?step=overview#school-demo-summary",
-      secondaryActionLabel: "Full walkthrough",
+      secondaryActionHref: "/school-demo/pilot",
+      secondaryActionLabel: "Pilot checklist",
       subtitle:
         "Compact read-only handoff pack for teachers and school admins. It uses only synthetic demo data and stays local-only.",
       title: "School demo handoff pack",
@@ -1223,10 +1247,172 @@ export function SchoolDemoHandoffPackView({ snapshot }: SchoolDemoHandoffPackVie
         "school-demo-handoff-notes",
         "Presentation notes",
         createElement(
-          "p",
+          "div",
           null,
-          "Use the compact summary for the live walkthrough, then open this page when the audience wants a printable handoff artifact.",
+          createElement(
+            "p",
+            null,
+            "Use the compact summary for the live walkthrough, then open this page when the audience wants a printable handoff artifact.",
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              { className: "button-link school-demo-secondary-link", href: "/school-demo/pilot" },
+              "Open pilot checklist",
+            ),
+          ),
         ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoPilotChecklistView({ snapshot }: SchoolDemoPilotChecklistViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const teacherOverviews = buildTeacherOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const pilotPrerequisites = [
+    "Named design partners and business gate approval remain outside this synthetic demo.",
+    "Legal basis, consent path and school tenant owner must be approved before any real roster data.",
+    "Pilot scope must name grades, classes, teacher roles and allowed subject groups before activation.",
+    "CSV/XLSX roster intake must pass a separate preview, review and deletion gate before real use.",
+  ];
+  const laterSchoolData = [
+    "organization and school codes approved for the pilot tenant",
+    "academic year and class labels for grades 7-9",
+    "teacher role mapping and subject group mapping",
+    "minimal roster codes after legal basis and consent review",
+    "license and entitlement plan for the pilot window",
+  ];
+  const demoAlreadyShows = [
+    "synthetic organization, school and academic year",
+    "classes 7A, 8A and 9A with roster snapshots",
+    "teacher assignments and subject groups",
+    "license / entitlements and read-only boundary markers",
+    "summary, handoff and class drilldown views",
+  ];
+  const remainsSynthetic = [
+    "no real school names, people, contacts or identifiers",
+    "no auth/session changes and no writes",
+    "no production records, approvals or activation events",
+    "no family-domain links or learner diagnostic readiness change",
+  ];
+  const nextStepChecklist = [
+    "Select the audience: teacher, director or admin.",
+    "Open summary, handoff and pilot pages in that order.",
+    "Confirm which classes and subject groups would be in a future pilot.",
+    "Capture objections outside the product and keep real data out of the demo.",
+    "Return to the business gate before any school beta activation.",
+  ];
+  const faqRows = [
+    {
+      answer:
+        "No. The current page is read-only and synthetic. It explains a future pilot path without approving real school use.",
+      question: "Does this start a real pilot?",
+    },
+    {
+      answer:
+        "No. This demo uses synthetic codes only. Real roster data stays behind a later legal, consent and tenant gate.",
+      question: "Can a school send roster data now?",
+    },
+    {
+      answer:
+        "The current demo shows tenant structure, class snapshots, teacher assignments and entitlement boundaries.",
+      question: "What can a director evaluate today?",
+    },
+    {
+      answer:
+        "Named design partners, data basis, import preview, access rules, retention and independent review remain open.",
+      question: "What blocks the next beta step?",
+    },
+  ];
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/handoff",
+      actionLabel: "Back to handoff",
+      secondaryActionHref: "/school-demo/summary",
+      secondaryActionLabel: "Compact summary",
+      subtitle:
+        "Read-only school pilot checklist and FAQ for teacher, director and admin conversations. It uses only synthetic demo data.",
+      title: "School demo pilot checklist",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "pilot",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Pilot checklist metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Pilot status", "BLOCKED", "Requires business gate and named design partners"),
+      renderMetric("Data mode", "Synthetic", "No real school records"),
+      renderMetric(
+        "Classes shown",
+        classOverviews.length,
+        joinValues(classOverviews.map((item) => item.code)),
+      ),
+      renderMetric("Teachers shown", teacherOverviews.length, "Synthetic demo codes only"),
+      renderMetric("Writes", "0", "Read-only school demo surface"),
+      renderMetric("FAQ", faqRows.length, "Teacher, director and admin objections"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid" },
+      renderPanel(
+        "school-demo-pilot-prerequisites",
+        "Pilot prerequisites",
+        renderList(pilotPrerequisites, true),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-later-data",
+        "What a school would later provide",
+        renderList(laterSchoolData),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-demo-shows",
+        "What the demo already shows",
+        renderList(demoAlreadyShows),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-synthetic",
+        "What remains synthetic",
+        renderList(remainsSynthetic),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-faq",
+        "FAQ and objections",
+        renderTable({
+          emptyLabel: "No pilot FAQ items are available.",
+          headers: ["Question", "Read-only answer"],
+          rows: faqRows.map((item) => ({
+            cells: [createElement("strong", { key: "question" }, item.question), item.answer],
+            key: item.question,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-pilot-next-steps",
+        "Next-step checklist",
+        renderList(nextStepChecklist, true),
         true,
       ),
     ),
