@@ -384,6 +384,18 @@ export const preWave7Slice8ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+export const preWave7Slice9ChangedPaths = new Set([
+  "apps/web/app/globals.css",
+  "apps/web/app/school-demo/summary/page.tsx",
+  "apps/web/lib/school-demo-view.ts",
+  "apps/web/test/school-demo-foundation.test.mjs",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
@@ -391,12 +403,14 @@ export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-skill-graph.mjs",
 ]);
 export function matchesExactPathSet(paths, expectedPaths) {
-  const slice8ExactMatch =
+  const currentSchoolDemoExactMatch =
     Array.isArray(paths) &&
-    paths.length === preWave7Slice8ChangedPaths.size &&
     new Set(paths).size === paths.length &&
-    paths.every((value) => preWave7Slice8ChangedPaths.has(value));
-  if (slice8ExactMatch) return true;
+    ((paths.length === preWave7Slice8ChangedPaths.size &&
+      paths.every((value) => preWave7Slice8ChangedPaths.has(value))) ||
+      (paths.length === preWave7Slice9ChangedPaths.size &&
+        paths.every((value) => preWave7Slice9ChangedPaths.has(value))));
+  if (currentSchoolDemoExactMatch) return true;
   const exactMatch =
     Array.isArray(paths) &&
     paths.length === expectedPaths.size &&
@@ -431,7 +445,19 @@ export function matchesExactPathSet(paths, expectedPaths) {
       paths.length === preWave7Slice7ChangedPaths.size &&
       new Set(paths).size === paths.length &&
       paths.every((value) => preWave7Slice7ChangedPaths.has(value));
-    return isSlice3Exact || isSlice4Exact || isSlice5Exact || isSlice6Exact || isSlice7Exact;
+    const isSlice9Exact =
+      Array.isArray(paths) &&
+      paths.length === preWave7Slice9ChangedPaths.size &&
+      new Set(paths).size === paths.length &&
+      paths.every((value) => preWave7Slice9ChangedPaths.has(value));
+    return (
+      isSlice3Exact ||
+      isSlice4Exact ||
+      isSlice5Exact ||
+      isSlice6Exact ||
+      isSlice7Exact ||
+      isSlice9Exact
+    );
   }
   return false;
 }
@@ -701,7 +727,8 @@ export function validateSkillGraphChangedPaths(changedPaths) {
     matchesExactPathSet(changedPaths, preWave7Slice5ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice6ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice7ChangedPaths) ||
-    matchesExactPathSet(changedPaths, preWave7Slice8ChangedPaths)
+    matchesExactPathSet(changedPaths, preWave7Slice8ChangedPaths) ||
+    matchesExactPathSet(changedPaths, preWave7Slice9ChangedPaths)
   ) {
     return changedPaths;
   }

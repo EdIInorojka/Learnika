@@ -20,6 +20,10 @@ interface SchoolDemoClassDetailViewProps {
   presentationStep?: SchoolDemoPresentationStepKey;
 }
 
+interface SchoolDemoCompactSummaryViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -457,11 +461,15 @@ function renderPresentationFlow({
 function renderHeader({
   actionHref,
   actionLabel,
+  secondaryActionHref,
+  secondaryActionLabel,
   subtitle,
   title,
 }: {
   actionHref: string;
   actionLabel: string;
+  secondaryActionHref?: string;
+  secondaryActionLabel?: string;
   subtitle: string;
   title: string;
 }) {
@@ -487,6 +495,13 @@ function renderHeader({
         { className: "button-link school-demo-secondary-link", href: actionHref },
         actionLabel,
       ),
+      secondaryActionHref && secondaryActionLabel
+        ? createElement(
+            "a",
+            { className: "button-link school-demo-secondary-link", href: secondaryActionHref },
+            secondaryActionLabel,
+          )
+        : null,
     ),
   );
 }
@@ -565,6 +580,8 @@ export function SchoolDemoDashboardView({
     },
     renderHeader({
       actionHref: "/",
+      secondaryActionHref: "/school-demo/summary",
+      secondaryActionLabel: "Compact summary",
       actionLabel: "РќР° РіР»Р°РІРЅСѓСЋ",
       subtitle:
         "РЎС‚СЂРѕРіРёР№ read-only РѕР±Р·РѕСЂ СЃРёРЅС‚РµС‚РёС‡РµСЃРєРѕР№ С€РєРѕР»СЊРЅРѕР№ РІРµС‚РєРё: РѕСЂРіР°РЅРёР·Р°С†РёСЏ, РєР»Р°СЃСЃС‹, РЅР°Р·РЅР°С‡РµРЅРёСЏ Рё Р»РёС†РµРЅР·РёСЏ Р±РµР· СЂРµР°Р»СЊРЅС‹С… РґР°РЅРЅС‹С….",
@@ -705,6 +722,179 @@ export function SchoolDemoDashboardView({
               renderChips(teacher.subjectGroupCodes, "blue"),
             ],
             key: teacher.demoCode,
+          })),
+        }),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoCompactSummaryView({ snapshot }: SchoolDemoCompactSummaryViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const teacherOverviews = buildTeacherOverviews(snapshot);
+  const rosterPreview = [...snapshot.students]
+    .sort(
+      (left, right) =>
+        left.classCode.localeCompare(right.classCode) ||
+        left.demoCode.localeCompare(right.demoCode),
+    )
+    .slice(0, 9);
+  const totalAssignments = snapshot.teacherAssignments.length;
+  const classCountsByGrade = uniqueSorted(
+    classOverviews.map((schoolClass) => `Grade ${schoolClass.gradeLevel}: ${schoolClass.code}`),
+  );
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo?step=overview#school-demo-summary",
+      actionLabel: "Full walkthrough",
+      secondaryActionHref: "/",
+      secondaryActionLabel: "Home",
+      subtitle:
+        "Compact one-screen read-only snapshot for a live school meeting, screenshot or print-style export. Uses only synthetic demo data.",
+      title: "School demo compact summary",
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Compact synthetic demo status",
+        className: "school-demo-summary-status-strip",
+      },
+      [
+        ["Synthetic boundary", snapshot.marker],
+        ["Readiness", snapshot.boundary.readiness],
+        ["Activation", snapshot.boundary.activation],
+        ["Production data", snapshot.boundary.productionDataCount],
+        ["Real schools", snapshot.boundary.realSchoolCount],
+        ["Mutations", snapshot.boundary.mutationAllowed ? "ALLOWED" : "BLOCKED"],
+      ].map(([label, value]) =>
+        createElement(
+          "div",
+          { className: "school-demo-status-item", key: label },
+          createElement("span", null, label),
+          createElement("strong", null, String(value)),
+        ),
+      ),
+    ),
+    createElement(
+      "section",
+      {
+        "aria-label": "Compact school demo metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("School", snapshot.school.code, snapshot.organization.code),
+      renderMetric(
+        "Academic year",
+        snapshot.academicYear.code,
+        `${snapshot.academicYear.startsOn} - ${snapshot.academicYear.endsOn}`,
+      ),
+      renderMetric(
+        "Classes",
+        classOverviews.length,
+        joinValues(classOverviews.map((item) => item.code)),
+      ),
+      renderMetric("Students", snapshot.students.length, "Synthetic demo codes only"),
+      renderMetric(
+        "Teachers",
+        teacherOverviews.length,
+        `${totalAssignments} read-only assignments`,
+      ),
+      renderMetric("Entitlements", snapshot.entitlements.length, snapshot.license.licenseCode),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid" },
+      renderPanel(
+        "school-demo-compact-school",
+        "School summary",
+        listSummaryItems([
+          ["Organization", snapshot.organization.code],
+          ["School", snapshot.school.code],
+          ["Locale", snapshot.locale],
+          ["Class groups", renderChips(classCountsByGrade, "blue")],
+          ["Subject groups", renderChips(snapshot.subjectGroups.map((item) => item.code))],
+          ["Family links", snapshot.boundary.familyLinkCount],
+        ]),
+      ),
+      renderPanel(
+        "school-demo-compact-license",
+        "License / entitlements",
+        listSummaryItems([
+          ["License", snapshot.license.licenseCode],
+          ["Status", snapshot.license.status],
+          ["Entitlement count", snapshot.license.entitlementCount],
+          [
+            "Capability codes",
+            renderChips(
+              snapshot.entitlements.map((item) => item.capabilityCode),
+              "blue",
+            ),
+          ],
+          ["Workflow", snapshot.boundary.workflow],
+          ["Mutation allowed", String(snapshot.boundary.mutationAllowed)],
+        ]),
+      ),
+      renderPanel(
+        "school-demo-compact-classes",
+        "Class counts / roster snapshot",
+        renderTable({
+          emptyLabel: "No synthetic classes are available.",
+          headers: ["Class", "Grade", "Students", "Subject groups", "Teachers"],
+          rows: classOverviews.map((schoolClass) => ({
+            cells: [
+              createElement("strong", { key: "code" }, schoolClass.code),
+              schoolClass.gradeLevel,
+              schoolClass.studentCount,
+              renderChips(schoolClass.subjectGroupCodes),
+              renderChips(schoolClass.teacherDemoCodes, "blue"),
+            ],
+            key: schoolClass.code,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-compact-teachers",
+        "Teacher assignments",
+        renderTable({
+          emptyLabel: "No synthetic teacher assignments are available.",
+          headers: ["Teacher", "Assignments", "Classes", "Subject groups"],
+          rows: teacherOverviews.map((teacher) => ({
+            cells: [
+              createElement("strong", { key: "teacher" }, teacher.demoCode),
+              teacher.assignmentCount,
+              renderChips(teacher.classCodes),
+              renderChips(teacher.subjectGroupCodes, "blue"),
+            ],
+            key: teacher.demoCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-compact-roster",
+        "Roster preview",
+        renderTable({
+          emptyLabel: "No synthetic students are available.",
+          headers: ["Demo student code", "Class", "Enrollment"],
+          rows: rosterPreview.map((student) => ({
+            cells: [
+              createElement("strong", { key: "student" }, student.demoCode),
+              student.classCode,
+              createElement(
+                "span",
+                { className: "school-demo-chip", key: "state" },
+                student.enrollmentState,
+              ),
+            ],
+            key: student.demoCode,
           })),
         }),
         true,
