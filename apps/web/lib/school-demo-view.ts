@@ -24,6 +24,10 @@ interface SchoolDemoCompactSummaryViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoHandoffPackViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -310,6 +314,14 @@ function renderMetric(label: string, value: string | number, note: string) {
     createElement("span", { className: "school-demo-kpi-label" }, label),
     createElement("strong", null, value),
     createElement("span", { className: "school-demo-kpi-note" }, note),
+  );
+}
+
+function renderList(items: ReactNode[], ordered = false, className = "school-demo-note-list") {
+  return createElement(
+    ordered ? "ol" : "ul",
+    { className },
+    items.map((item, index) => createElement("li", { key: index }, item)),
   );
 }
 
@@ -897,6 +909,129 @@ export function SchoolDemoCompactSummaryView({ snapshot }: SchoolDemoCompactSumm
             key: student.demoCode,
           })),
         }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-compact-handoff",
+        "Teacher handoff pack",
+        createElement(
+          "div",
+          { className: "school-demo-handoff-teaser" },
+          createElement(
+            "p",
+            null,
+            "Printable one-pager for teachers and school admins. It stays read-only, synthetic and local-only.",
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              { className: "button-link school-demo-secondary-link", href: "/school-demo/handoff" },
+              "Open handoff pack",
+            ),
+          ),
+          renderList(
+            ["What the demo shows", "What stays synthetic", "Short school rollout checklist"],
+            false,
+            "school-demo-note-list",
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoHandoffPackView({ snapshot }: SchoolDemoHandoffPackViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const teacherOverviews = buildTeacherOverviews(snapshot);
+  const demoShowPoints = [
+    "organization, school and academic year context",
+    "classes 7-9 with teacher assignments and roster snapshot",
+    "license / entitlements and read-only boundary markers",
+    "class drilldown links for a live walkthrough",
+  ];
+  const syntheticBoundaryPoints = [
+    "all values are synthetic demo codes",
+    "no real school names, people, contacts or identifiers",
+    "no mutations, auth/session changes or production data",
+    "no family tenant links or school approvals",
+  ];
+  const rolloutChecklistPoints = [
+    "Confirm the teacher or admin audience and the class level in scope.",
+    "Walk the summary page first, then open the handoff pack for the one-pager.",
+    "Review overview, classes, teacher assignments, license and class drilldown in that order.",
+    "Keep real data, CSV/XLSX imports and named design-partner approvals behind a later gate.",
+  ];
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/summary",
+      actionLabel: "Back to summary",
+      secondaryActionHref: "/school-demo?step=overview#school-demo-summary",
+      secondaryActionLabel: "Full walkthrough",
+      subtitle:
+        "Compact read-only handoff pack for teachers and school admins. It uses only synthetic demo data and stays local-only.",
+      title: "School demo handoff pack",
+    }),
+    renderStatusStrip(snapshot),
+    createElement(
+      "section",
+      {
+        "aria-label": "Handoff pack metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Audience", "Teachers + admins", "Read-only school presentation"),
+      renderMetric("Focus", "What the demo shows", "Synthetic snapshot only"),
+      renderMetric(
+        "Classes",
+        classOverviews.length,
+        joinValues(classOverviews.map((item) => item.code)),
+      ),
+      renderMetric(
+        "Teachers",
+        teacherOverviews.length,
+        `${snapshot.teacherAssignments.length} assignments`,
+      ),
+      renderMetric("Students", snapshot.students.length, "Synthetic demo codes only"),
+      renderMetric("Theme", "Light / dark", "Local-only toggle"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid" },
+      renderPanel(
+        "school-demo-handoff-demo",
+        "What the demo shows",
+        renderList(demoShowPoints),
+        true,
+      ),
+      renderPanel(
+        "school-demo-handoff-boundary",
+        "Synthetic boundary",
+        renderList(syntheticBoundaryPoints),
+        true,
+      ),
+      renderPanel(
+        "school-demo-handoff-checklist",
+        "School rollout checklist",
+        renderList(rolloutChecklistPoints, true),
+        true,
+      ),
+      renderPanel(
+        "school-demo-handoff-notes",
+        "Presentation notes",
+        createElement(
+          "p",
+          null,
+          "Use the compact summary for the live walkthrough, then open this page when the audience wants a printable handoff artifact.",
+        ),
         true,
       ),
     ),

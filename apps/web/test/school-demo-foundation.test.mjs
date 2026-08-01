@@ -11,6 +11,7 @@ import {
   SchoolDemoClassDetailView,
   SchoolDemoCompactSummaryView,
   SchoolDemoDashboardView,
+  SchoolDemoHandoffPackView,
 } from "../lib/school-demo-view.ts";
 
 function buildSnapshotFixture() {
@@ -182,13 +183,22 @@ test("school demo dashboard and drilldown render the synthetic school overview",
       snapshot,
     }),
   );
-  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}`;
+  const handoffPackHtml = renderToStaticMarkup(
+    createElement(SchoolDemoHandoffPackView, {
+      snapshot,
+    }),
+  );
+  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}`;
 
   for (const phrase of [
     "Presentation route",
     "Guided mode",
     "Compact summary",
     "School demo compact summary",
+    "Teacher handoff pack",
+    "What the demo shows",
+    "Synthetic boundary",
+    "School rollout checklist",
     "Class counts / roster snapshot",
     "Read-only boundary",
     "Overview",
@@ -215,6 +225,8 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "school-demo-panel",
     "school-demo-table",
     "school-demo-theme-toggle",
+    "school-demo-handoff-teaser",
+    "school-demo-note-list",
   ]) {
     assert.equal(combinedHtml.includes(className), true, className);
   }
@@ -237,9 +249,16 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     /href="\/school-demo\/classes\/[^"]+\?step=class-drilldown#school-demo-class-roster"/,
   );
   assert.match(compactSummaryHtml, /href="\/school-demo\?step=overview#school-demo-summary"/);
+  assert.match(compactSummaryHtml, /href="\/school-demo\/handoff"/);
   assert.match(compactSummaryHtml, /Full walkthrough/);
   assert.match(compactSummaryHtml, /Synthetic boundary/);
   assert.match(compactSummaryHtml, /Mutations/);
+  assert.match(handoffPackHtml, /href="\/school-demo\/summary"/);
+  assert.match(handoffPackHtml, /href="\/school-demo\?step=overview#school-demo-summary"/);
+  assert.match(handoffPackHtml, /School demo handoff pack/);
+  assert.match(handoffPackHtml, /What the demo shows/);
+  assert.match(handoffPackHtml, /Synthetic boundary/);
+  assert.match(handoffPackHtml, /School rollout checklist/);
   assert.match(guidedDrilldownHtml, /href="\/school-demo\?step=overview#school-demo-summary"/);
   assert.match(
     guidedDrilldownHtml,
@@ -274,6 +293,10 @@ test("school demo route is read-only and display-only", async () => {
     path.join(process.cwd(), "app", "school-demo", "summary", "page.tsx"),
     "utf8",
   );
+  const handoffPageSource = fs.readFileSync(
+    path.join(process.cwd(), "app", "school-demo", "handoff", "page.tsx"),
+    "utf8",
+  );
   const serviceSource = fs.readFileSync(
     path.join(process.cwd(), "lib", "school-demo-service.server.ts"),
     "utf8",
@@ -300,12 +323,22 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(summaryPageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(summaryPageSource.includes("SchoolDemoCompactSummaryView"), true);
   assert.equal(summaryPageSource.includes('dynamic = "force-dynamic"'), true);
+  assert.equal(handoffPageSource.includes("readSchoolDemoSnapshot"), true);
+  assert.equal(handoffPageSource.includes("SchoolDemoHandoffPackView"), true);
+  assert.equal(handoffPageSource.includes('dynamic = "force-dynamic"'), true);
   assert.equal(serviceSource.includes('"/demo/school-snapshot"'), true);
   assert.equal(viewSource.includes("SchoolDemoThemeToggle"), true);
   assert.equal(viewSource.includes("SchoolDemoCompactSummaryView"), true);
+  assert.equal(viewSource.includes("SchoolDemoHandoffPackView"), true);
   assert.equal(viewSource.includes("school-demo-summary-shell"), true);
   assert.equal(viewSource.includes("school-demo-summary-status-strip"), true);
   assert.equal(viewSource.includes("school-demo-compact-kpi-grid"), true);
+  assert.equal(viewSource.includes("school-demo-handoff-teaser"), true);
+  assert.equal(viewSource.includes("school-demo-handoff-demo"), true);
+  assert.equal(viewSource.includes("school-demo-handoff-boundary"), true);
+  assert.equal(viewSource.includes("school-demo-handoff-checklist"), true);
+  assert.equal(cssSource.includes(".school-demo-handoff-teaser"), true);
+  assert.equal(cssSource.includes(".school-demo-note-list"), true);
   assert.equal(viewSource.includes("Compact one-screen read-only snapshot"), true);
   assert.equal(viewSource.includes("renderPresentationFlow"), true);
   assert.equal(viewSource.includes("school-demo-presentation-flow"), true);
@@ -334,6 +367,7 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("schoolDemoTheme"), true);
   assert.equal(viewSource.includes("aria-pressed"), true);
   assert.equal(viewSource.includes("data-theme-state"), true);
+  assert.equal(viewSource.includes("/school-demo/handoff"), true);
   assert.equal(viewSource.includes("document.cookie"), false);
   assert.equal(viewSource.includes("fetch("), false);
 
@@ -352,7 +386,9 @@ test("school demo route is read-only and display-only", async () => {
     "address",
   ]) {
     assert.equal(
-      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${viewSource}`.includes(forbidden),
+      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${viewSource}`.includes(
+        forbidden,
+      ),
       false,
       forbidden,
     );

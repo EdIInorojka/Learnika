@@ -872,6 +872,29 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   padding: 9px 10px;
 }
 
+.school-demo-handoff-teaser {
+  display: grid;
+  gap: 10px;
+}
+
+.school-demo-handoff-teaser p {
+  margin: 0;
+  color: var(--school-demo-muted);
+  line-height: 1.5;
+}
+
+.school-demo-note-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-inline-start: 20px;
+  color: var(--school-demo-text);
+}
+
+.school-demo-note-list li {
+  line-height: 1.45;
+}
+
 .school-demo-presentation-flow {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
