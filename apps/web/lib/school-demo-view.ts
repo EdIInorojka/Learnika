@@ -36,6 +36,10 @@ interface SchoolDemoPilotConfigViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoRolloutViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -96,7 +100,8 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "summary"
   | "handoff"
   | "pilot"
-  | "pilot-config";
+  | "pilot-config"
+  | "rollout";
 
 const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[] = [
   "overview",
@@ -107,6 +112,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "handoff",
   "pilot",
   "pilot-config",
+  "rollout",
 ];
 
 interface SchoolDemoGuidedWalkthroughStep {
@@ -526,6 +532,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Pilot checklist";
     case "pilot-config":
       return "Pilot config preview";
+    case "rollout":
+      return "Rollout preview";
   }
 }
 
@@ -595,6 +603,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       note: "Preview school profile placeholders, class and subject layout, teacher roles and boundary notes without any operational intake.",
       surface: "/school-demo/pilot-config",
     },
+    {
+      actionLabel: "Open rollout preview",
+      href: "/school-demo/rollout",
+      key: "rollout",
+      label: "Rollout preview",
+      note: "Review weekly rollout phases, responsibilities, import assumptions, fallback paths and success criteria before any future real-school gate.",
+      surface: "/school-demo/rollout",
+    },
   ];
 }
 
@@ -621,7 +637,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist and pilot config preview.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview and rollout preview.",
       ),
       createElement(
         "p",
@@ -1309,6 +1325,18 @@ export function SchoolDemoHandoffPackView({ snapshot }: SchoolDemoHandoffPackVie
               "Open pilot config preview",
             ),
           ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/rollout",
+              },
+              "Open rollout preview",
+            ),
+          ),
         ),
         true,
       ),
@@ -1475,6 +1503,18 @@ export function SchoolDemoPilotChecklistView({ snapshot }: SchoolDemoPilotCheckl
               "Open pilot config preview",
             ),
           ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/rollout",
+              },
+              "Open rollout preview",
+            ),
+          ),
         ),
         true,
       ),
@@ -1606,7 +1646,23 @@ export function SchoolDemoPilotConfigView({ snapshot }: SchoolDemoPilotConfigVie
       renderPanel(
         "school-demo-pilot-config-rollout",
         "Rollout assumptions",
-        renderList(rolloutAssumptions),
+        createElement(
+          "div",
+          null,
+          renderList(rolloutAssumptions),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/rollout",
+              },
+              "Open rollout preview",
+            ),
+          ),
+        ),
         true,
       ),
       renderPanel(
@@ -1625,6 +1681,253 @@ export function SchoolDemoPilotConfigView({ snapshot }: SchoolDemoPilotConfigVie
         "school-demo-pilot-config-checklist",
         "Pilot readiness checklist",
         renderList(readinessChecklist, true),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoRolloutView({ snapshot }: SchoolDemoRolloutViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const rolloutPhases = [
+    {
+      focus: "Kickoff and scope",
+      output: "Roles, classes and synthetic boundary are confirmed.",
+      week: "Week 1",
+    },
+    {
+      focus: "Data preview",
+      output: "Synthetic classes, subjects and teacher mappings are checked.",
+      week: "Week 2",
+    },
+    {
+      focus: "Manual rehearsal",
+      output: "Fallback path and school admin handoff are rehearsed.",
+      week: "Week 3",
+    },
+    {
+      focus: "Readout and review",
+      output: "Success criteria, escalation path and next gate are recorded.",
+      week: "Week 4",
+    },
+  ];
+  const onboardingRoles = [
+    {
+      responsibility: "Owns the pilot conversation and pilot intent.",
+      role: "School sponsor",
+    },
+    {
+      responsibility: "Checks classes, roles and rollout assumptions.",
+      role: "School admin",
+    },
+    {
+      responsibility: "Confirms class-level fit and teaching flow.",
+      role: "Class teacher",
+    },
+    {
+      responsibility: "Supports the demo and escalates issues.",
+      role: "Learnika support",
+    },
+  ];
+  const importAssumptions = [
+    "CSV/XLSX preview only, with no real-school ingestion in this slice.",
+    "Class, subject and teacher codes stay synthetic and local-only.",
+    "Grade 7-9 layout remains the supported pilot shape for now.",
+    "Any real import path waits for later legal, consent and tenant approval.",
+  ];
+  const manualFallbackPath = [
+    "Use the summary and handoff pages if the import preview is unavailable.",
+    "Continue with synthetic roster codes instead of real student records.",
+    "Keep the walkthrough read-only and stop on uncertainty.",
+    "Return to the business gate before any operational school use.",
+  ];
+  const supportEscalation = [
+    "Teacher records the issue during the demo and keeps real data out of the flow.",
+    "School admin routes the question to Learnika support.",
+    "Support captures the blocker without operational intake or writes.",
+    "Any real-school decision waits for the later approval gate.",
+  ];
+  const successCriteria = [
+    "The school understands the synthetic boundary and rollout steps.",
+    "Class, subject and teacher-role assumptions fit the conversation.",
+    "The manual fallback path is clear if preview data is unavailable.",
+    "No PII, writes or activation happen during the demo.",
+  ];
+  const demoOnlyVsRealLaterRows = [
+    {
+      cells: ["Synthetic organization, school and classes", "Named school tenant and approvals"],
+      key: "tenant",
+    },
+    {
+      cells: ["Preview-only CSV/XLSX assumptions", "Approved import and roster sync"],
+      key: "import",
+    },
+    {
+      cells: ["Read-only demo pages and static checks", "Operational school workflow and support"],
+      key: "workflow",
+    },
+    {
+      cells: ["No PII or real roster data", "Consent-backed real student and teacher records"],
+      key: "data",
+    },
+  ];
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/pilot-config",
+      actionLabel: "Back to pilot config",
+      secondaryActionHref: "/school-demo/handoff",
+      secondaryActionLabel: "Back to handoff",
+      subtitle:
+        "Read-only school pilot rollout and integration preview. It stays synthetic, non-operational and local-only.",
+      title: "School demo rollout preview",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "rollout",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Rollout preview metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Weeks", rolloutPhases.length, "Preview-only rollout horizon"),
+      renderMetric(
+        "Roles",
+        onboardingRoles.length,
+        joinValues(onboardingRoles.map((item) => item.role)),
+      ),
+      renderMetric("Import mode", "CSV/XLSX", "Preview only"),
+      renderMetric("Fallback", "Manual", "No hidden writes"),
+      renderMetric("Support", "Teacher + admin + support", "Escalation path"),
+      renderMetric("Success criteria", successCriteria.length, "Read-only checkpoints"),
+      renderMetric("Writes", "0", "No operational intake"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid" },
+      renderPanel(
+        "school-demo-rollout-phases",
+        "Pilot phases by week",
+        renderTable({
+          emptyLabel: "No rollout phases are available.",
+          headers: ["Week", "Focus", "Output"],
+          rows: rolloutPhases.map((phase) => ({
+            cells: [phase.week, phase.focus, phase.output],
+            key: phase.week,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-rollout-roles",
+        "Onboarding roles and responsibilities",
+        renderTable({
+          emptyLabel: "No onboarding roles are available.",
+          headers: ["Role", "Responsibility"],
+          rows: onboardingRoles.map((role) => ({
+            cells: [createElement("strong", null, role.role), role.responsibility],
+            key: role.role,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-rollout-imports",
+        "Synthetic data import assumptions",
+        renderList(importAssumptions),
+        true,
+      ),
+      renderPanel(
+        "school-demo-rollout-fallback",
+        "Manual fallback path",
+        renderList(manualFallbackPath),
+        true,
+      ),
+      renderPanel(
+        "school-demo-rollout-support",
+        "Support / escalation path",
+        renderList(supportEscalation),
+        true,
+      ),
+      renderPanel(
+        "school-demo-rollout-success",
+        "Pilot success criteria",
+        renderList(successCriteria),
+        true,
+      ),
+      renderPanel(
+        "school-demo-rollout-boundary",
+        "Demo-only versus real later",
+        renderTable({
+          emptyLabel: "No rollout boundary rows are available.",
+          headers: ["Demo-only", "Real later"],
+          rows: demoOnlyVsRealLaterRows,
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-rollout-checklist",
+        "Rollout readiness checklist",
+        createElement(
+          "div",
+          null,
+          renderList(
+            [
+              "Confirm the school remains synthetic for now.",
+              "Confirm weekly phases and owners before any future intake.",
+              "Confirm support and fallback paths are understood.",
+              "Confirm real data stays blocked until a later gate.",
+            ],
+            true,
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/pilot",
+              },
+              "Open pilot checklist",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/handoff",
+              },
+              "Open handoff pack",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/pilot-config",
+              },
+              "Open pilot config preview",
+            ),
+          ),
+        ),
         true,
       ),
     ),
