@@ -488,6 +488,15 @@ export const preWave7Slice18ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+export const preWave7Slice19ChangedPaths = new Set([
+  "docs/wave-7-prep/school-beta-teacher-workflow-validation-gate.md",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
@@ -519,7 +528,9 @@ export function matchesExactPathSet(paths, expectedPaths) {
       (paths.length === preWave7Slice17ChangedPaths.size &&
         paths.every((value) => preWave7Slice17ChangedPaths.has(value))) ||
       (paths.length === preWave7Slice18ChangedPaths.size &&
-        paths.every((value) => preWave7Slice18ChangedPaths.has(value))));
+        paths.every((value) => preWave7Slice18ChangedPaths.has(value))) ||
+      (paths.length === preWave7Slice19ChangedPaths.size &&
+        paths.every((value) => preWave7Slice19ChangedPaths.has(value))));
   if (currentSchoolDemoExactMatch) return true;
   const exactMatch =
     Array.isArray(paths) &&
@@ -847,7 +858,8 @@ export function validateSkillGraphChangedPaths(changedPaths) {
     matchesExactPathSet(changedPaths, preWave7Slice15ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice16ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice17ChangedPaths) ||
-    matchesExactPathSet(changedPaths, preWave7Slice18ChangedPaths)
+    matchesExactPathSet(changedPaths, preWave7Slice18ChangedPaths) ||
+    matchesExactPathSet(changedPaths, preWave7Slice19ChangedPaths)
   ) {
     return changedPaths;
   }
