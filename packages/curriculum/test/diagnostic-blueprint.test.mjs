@@ -23,6 +23,7 @@ import {
   preWave7Slice14ChangedPaths,
   preWave7Slice15ChangedPaths,
   preWave7Slice16ChangedPaths,
+  preWave7Slice17ChangedPaths,
   readSkillGraph,
   wave7PrepFoundationPaths,
 } from "../scripts/validate-skill-graph.mjs";
@@ -247,6 +248,7 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
         preWave7Slice14ChangedPaths.has(changedPath) ||
         preWave7Slice15ChangedPaths.has(changedPath) ||
         preWave7Slice16ChangedPaths.has(changedPath) ||
+        preWave7Slice17ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,
