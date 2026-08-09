@@ -40,6 +40,10 @@ interface SchoolDemoRolloutViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoImportPreviewViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -101,6 +105,7 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "handoff"
   | "pilot"
   | "pilot-config"
+  | "import-preview"
   | "rollout";
 
 const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[] = [
@@ -112,8 +117,33 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "handoff",
   "pilot",
   "pilot-config",
+  "import-preview",
   "rollout",
 ];
+
+interface SchoolDemoRosterPreviewAcceptedRow {
+  classCode: string;
+  demoCode: string;
+  lineNumber: number;
+  rowType: "student" | "teacher-assignment";
+  subjectGroupCode: string;
+}
+
+interface SchoolDemoRosterPreviewRejectedRow {
+  lineNumber: number;
+  reason: string;
+}
+
+export interface SchoolDemoRosterImportPreviewResult {
+  acceptedRows: SchoolDemoRosterPreviewAcceptedRow[];
+  classRows: Array<{
+    acceptedStudentRows: number;
+    classCode: string;
+  }>;
+  rejectedRows: SchoolDemoRosterPreviewRejectedRow[];
+  teacherAssignmentRows: number;
+  warnings: string[];
+}
 
 interface SchoolDemoGuidedWalkthroughStep {
   actionLabel: string;
@@ -275,6 +305,163 @@ function buildTeacherOverviews(snapshot: SchoolDemoSnapshot): SchoolDemoTeacherO
         ),
       };
     });
+}
+
+function buildSchoolDemoRosterImportSample(snapshot: SchoolDemoSnapshot): string {
+  const studentRows = [...snapshot.students]
+    .sort(
+      (left, right) =>
+        left.classCode.localeCompare(right.classCode) ||
+        left.demoCode.localeCompare(right.demoCode),
+    )
+    .slice(0, 6)
+    .map((student) => {
+      const subjectGroupCode =
+        snapshot.teacherAssignments.find((assignment) => assignment.classCode === student.classCode)
+          ?.subjectGroupCode ?? snapshot.subjectGroups[0]?.code;
+      return ["student", student.demoCode, student.classCode, subjectGroupCode].join(",");
+    });
+  const teacherRows = [...snapshot.teacherAssignments]
+    .sort(
+      (left, right) =>
+        left.classCode.localeCompare(right.classCode) ||
+        left.teacherDemoCode.localeCompare(right.teacherDemoCode),
+    )
+    .slice(0, 3)
+    .map((assignment) =>
+      [
+        "teacher-assignment",
+        assignment.teacherDemoCode,
+        assignment.classCode,
+        assignment.subjectGroupCode,
+      ].join(","),
+    );
+
+  return ["rowType,demoCode,classCode,subjectGroupCode", ...studentRows, ...teacherRows].join("\n");
+}
+
+function isBlockedRosterPreviewValue(value: string): boolean {
+  return (
+    value.length > 96 ||
+    value.includes("@") ||
+    /(?:https?|s3|minio|file):\/\//i.test(value) ||
+    /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{3,4}-[0-9a-f]{3,4}-[0-9a-f]{12}\b/i.test(value) ||
+    /\b[0-9a-f]{32,}\b/i.test(value) ||
+    /\s{2,}/.test(value)
+  );
+}
+
+export function parseSchoolDemoRosterImportPreview(
+  csvText: string,
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoRosterImportPreviewResult {
+  const classCodes = new Set(snapshot.classes.map((schoolClass) => schoolClass.code));
+  const subjectGroupCodes = new Set(
+    snapshot.subjectGroups.map((subjectGroup) => subjectGroup.code),
+  );
+  const teacherCodes = new Set(snapshot.teachers.map((teacher) => teacher.demoCode));
+  const studentCodes = new Set(snapshot.students.map((student) => student.demoCode));
+  const warnings: string[] = [];
+  const acceptedRows: SchoolDemoRosterPreviewAcceptedRow[] = [];
+  const rejectedRows: SchoolDemoRosterPreviewRejectedRow[] = [];
+  const lines = csvText
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const expectedHeader = "rowType,demoCode,classCode,subjectGroupCode";
+
+  if (lines.length === 0) {
+    return {
+      acceptedRows,
+      classRows: [],
+      rejectedRows: [{ lineNumber: 1, reason: "CSV preview is empty." }],
+      teacherAssignmentRows: 0,
+      warnings: ["Nothing was saved. Add synthetic demo rows to preview the import shape."],
+    };
+  }
+
+  if (lines[0] !== expectedHeader) {
+    return {
+      acceptedRows,
+      classRows: [],
+      rejectedRows: [{ lineNumber: 1, reason: "Header must match the approved demo CSV layout." }],
+      teacherAssignmentRows: 0,
+      warnings: ["Nothing was saved. This preview accepts only the fixed synthetic CSV layout."],
+    };
+  }
+
+  for (const [index, line] of lines.slice(1, 51).entries()) {
+    const lineNumber = index + 2;
+    const cells = line.split(",").map((cell) => cell.trim());
+    const [rowType, demoCode, classCode, subjectGroupCode] = cells;
+
+    if (cells.length !== 4 || !rowType || !demoCode || !classCode || !subjectGroupCode) {
+      rejectedRows.push({ lineNumber, reason: "Row must contain four non-empty cells." });
+      continue;
+    }
+
+    if (cells.some(isBlockedRosterPreviewValue)) {
+      rejectedRows.push({
+        lineNumber,
+        reason: "Row contains contact data, external reference, raw identity or unsupported text.",
+      });
+      continue;
+    }
+
+    if (rowType !== "student" && rowType !== "teacher-assignment") {
+      rejectedRows.push({ lineNumber, reason: "Row type must be student or teacher-assignment." });
+      continue;
+    }
+
+    if (!classCodes.has(classCode)) {
+      rejectedRows.push({ lineNumber, reason: "Class code is outside the synthetic snapshot." });
+      continue;
+    }
+
+    if (!subjectGroupCodes.has(subjectGroupCode)) {
+      rejectedRows.push({
+        lineNumber,
+        reason: "Subject group code is outside the synthetic snapshot.",
+      });
+      continue;
+    }
+
+    if (rowType === "student" && !studentCodes.has(demoCode)) {
+      rejectedRows.push({ lineNumber, reason: "Student demo code is not in the snapshot." });
+      continue;
+    }
+
+    if (rowType === "teacher-assignment" && !teacherCodes.has(demoCode)) {
+      rejectedRows.push({ lineNumber, reason: "Teacher demo code is not in the snapshot." });
+      continue;
+    }
+
+    acceptedRows.push({ classCode, demoCode, lineNumber, rowType, subjectGroupCode });
+  }
+
+  if (lines.length > 52) {
+    warnings.push("Only the first 50 data rows are previewed to keep the demo bounded.");
+  }
+
+  warnings.push(
+    "Preview only: no upload, no server save, no tenant write and no real school data.",
+  );
+
+  return {
+    acceptedRows,
+    classRows: [...classCodes]
+      .sort((left, right) => left.localeCompare(right))
+      .map((classCode) => ({
+        acceptedStudentRows: acceptedRows.filter(
+          (row) => row.rowType === "student" && row.classCode === classCode,
+        ).length,
+        classCode,
+      })),
+    rejectedRows,
+    teacherAssignmentRows: acceptedRows.filter((row) => row.rowType === "teacher-assignment")
+      .length,
+    warnings,
+  };
 }
 
 function buildClassDetail(
@@ -532,6 +719,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Pilot checklist";
     case "pilot-config":
       return "Pilot config preview";
+    case "import-preview":
+      return "Import preview";
     case "rollout":
       return "Rollout preview";
   }
@@ -604,6 +793,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       surface: "/school-demo/pilot-config",
     },
     {
+      actionLabel: "Open import preview",
+      href: "/school-demo/import-preview",
+      key: "import-preview",
+      label: "Import preview",
+      note: "Preview the future roster CSV shape locally with synthetic demo codes only. No upload and no saved records.",
+      surface: "/school-demo/import-preview",
+    },
+    {
       actionLabel: "Open rollout preview",
       href: "/school-demo/rollout",
       key: "rollout",
@@ -637,7 +834,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview and rollout preview.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, import preview and rollout preview.",
       ),
       createElement(
         "p",
@@ -1194,6 +1391,18 @@ export function SchoolDemoCompactSummaryView({ snapshot }: SchoolDemoCompactSumm
               "Open pilot config preview",
             ),
           ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/import-preview",
+              },
+              "Open import preview",
+            ),
+          ),
           renderList(
             ["What the demo shows", "What stays synthetic", "Pilot checklist and FAQ objections"],
             false,
@@ -1681,6 +1890,185 @@ export function SchoolDemoPilotConfigView({ snapshot }: SchoolDemoPilotConfigVie
         "school-demo-pilot-config-checklist",
         "Pilot readiness checklist",
         renderList(readinessChecklist, true),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoImportPreviewView({ snapshot }: SchoolDemoImportPreviewViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const sampleCsv = buildSchoolDemoRosterImportSample(snapshot);
+  const [csvText, setCsvText] = useState(sampleCsv);
+  const [preview, setPreview] = useState<SchoolDemoRosterImportPreviewResult>(() =>
+    parseSchoolDemoRosterImportPreview(sampleCsv, snapshot),
+  );
+
+  function handlePreview() {
+    setPreview(parseSchoolDemoRosterImportPreview(csvText, snapshot));
+  }
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/pilot-config",
+      actionLabel: "Back to pilot config",
+      secondaryActionHref: "/school-demo/summary",
+      secondaryActionLabel: "Compact summary",
+      subtitle:
+        "Read-only local roster import preview for synthetic demo codes. It parses CSV text in the browser and saves nothing.",
+      title: "School demo import preview",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "import-preview",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Import preview metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Preview mode", "Local", "Browser-only CSV text parse"),
+      renderMetric("Accepted rows", preview.acceptedRows.length, "Synthetic codes only"),
+      renderMetric("Rejected rows", preview.rejectedRows.length, "Fail-closed preview"),
+      renderMetric("Classes checked", preview.classRows.length, "Snapshot class codes"),
+      renderMetric("Teacher rows", preview.teacherAssignmentRows, "Assignment preview only"),
+      renderMetric("Writes", "0", "No upload, no server save"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid school-demo-import-preview-grid" },
+      renderPanel(
+        "school-demo-import-preview-input",
+        "Synthetic CSV preview",
+        createElement(
+          "div",
+          { className: "school-demo-import-preview-editor" },
+          createElement(
+            "p",
+            null,
+            "Use the fixed demo layout: rowType,demoCode,classCode,subjectGroupCode. Accepted values must already exist in the synthetic snapshot.",
+          ),
+          createElement("textarea", {
+            "aria-label": "Synthetic roster CSV preview text",
+            className: "school-demo-import-preview-textarea",
+            onChange: (event) => setCsvText((event.currentTarget as HTMLTextAreaElement).value),
+            spellCheck: false,
+            value: csvText,
+          }),
+          createElement(
+            "div",
+            { className: "school-demo-import-preview-actions" },
+            createElement(
+              "button",
+              {
+                className: "button-link",
+                onClick: handlePreview,
+                type: "button",
+              },
+              "Preview rows",
+            ),
+            createElement(
+              "button",
+              {
+                className: "button-link school-demo-secondary-link",
+                onClick: () => {
+                  setCsvText(sampleCsv);
+                  setPreview(parseSchoolDemoRosterImportPreview(sampleCsv, snapshot));
+                },
+                type: "button",
+              },
+              "Reset synthetic sample",
+            ),
+          ),
+        ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-import-preview-class-summary",
+        "Class row summary",
+        renderTable({
+          emptyLabel: "No class preview rows are available.",
+          headers: ["Class", "Accepted student rows"],
+          rows: preview.classRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "class" }, row.classCode),
+              row.acceptedStudentRows,
+            ],
+            key: row.classCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-import-preview-accepted",
+        "Accepted preview rows",
+        renderTable({
+          emptyLabel: "No rows are accepted.",
+          headers: ["Line", "Type", "Demo code", "Class", "Subject group"],
+          rows: preview.acceptedRows.map((row) => ({
+            cells: [
+              row.lineNumber,
+              row.rowType,
+              createElement("strong", { key: "demo" }, row.demoCode),
+              row.classCode,
+              row.subjectGroupCode,
+            ],
+            key: `${row.lineNumber}-${row.demoCode}`,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-import-preview-rejected",
+        "Rejected preview rows",
+        renderTable({
+          emptyLabel: "No rejected rows in the current preview.",
+          headers: ["Line", "Reason"],
+          rows: preview.rejectedRows.map((row) => ({
+            cells: [row.lineNumber, row.reason],
+            key: `${row.lineNumber}-${row.reason}`,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-import-preview-boundary",
+        "Import boundary",
+        createElement(
+          "div",
+          { className: "school-demo-import-preview-boundary" },
+          renderList([
+            "Client-only preview: no upload and no saved records.",
+            "Accepted rows must use synthetic snapshot class, teacher, student and subject group codes.",
+            "Contact data, URLs, raw identity-like values and unsupported free text are rejected.",
+            "Real roster intake remains blocked until business, legal, security and review gates are approved.",
+          ]),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              { className: "button-link school-demo-secondary-link", href: "/school-demo/rollout" },
+              "Open rollout preview",
+            ),
+          ),
+        ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-import-preview-warnings",
+        "Preview warnings",
+        renderList(preview.warnings),
         true,
       ),
     ),

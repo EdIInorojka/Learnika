@@ -1250,6 +1250,56 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   border-bottom: 0;
 }
 
+.school-demo-import-preview-grid {
+  align-items: start;
+}
+
+.school-demo-import-preview-editor {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-import-preview-editor p,
+.school-demo-import-preview-boundary p {
+  margin: 0;
+  color: var(--school-demo-muted);
+  line-height: 1.5;
+}
+
+.school-demo-import-preview-textarea {
+  min-height: 250px;
+  resize: vertical;
+  border: 1px solid var(--school-demo-border);
+  border-radius: 14px;
+  background: var(--school-demo-surface-muted);
+  color: var(--school-demo-text);
+  padding: 14px;
+  font:
+    13px/1.55 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    "Liberation Mono",
+    monospace;
+  transition: var(--school-demo-transition);
+}
+
+.school-demo-import-preview-textarea:focus {
+  outline: 2px solid var(--school-demo-primary);
+  outline-offset: 2px;
+}
+
+.school-demo-import-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.school-demo-import-preview-boundary {
+  display: grid;
+  gap: 12px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:has(.school-demo-shell),
   .school-demo-shell,
