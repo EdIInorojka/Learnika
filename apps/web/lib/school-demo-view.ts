@@ -64,6 +64,10 @@ interface SchoolDemoTeacherReviewRubricViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoClassAnalyticsViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -130,6 +134,7 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "student-preview"
   | "review-queue"
   | "review-rubric"
+  | "analytics"
   | "import-preview"
   | "rollout";
 
@@ -147,6 +152,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "student-preview",
   "review-queue",
   "review-rubric",
+  "analytics",
   "import-preview",
   "rollout",
 ];
@@ -325,6 +331,45 @@ export interface SchoolDemoTeacherReviewRubricPreview {
     rubricCriteria: number;
     scoreUpdates: 0;
     teacherDecisionWrites: 0;
+  };
+}
+
+export interface SchoolDemoClassAnalyticsPreview {
+  analyticsRows: Array<{
+    classCode: string;
+    enrolledStudents: number;
+    gradeLevel: number;
+    queueLoad: number;
+    signalState: "SYNTHETIC_READY" | "SYNTHETIC_EMPTY";
+    subjectGroupCount: number;
+    teacherAssignmentCount: number;
+  }>;
+  analyticsState: "ANALYTICS_PREVIEW_READY" | "ANALYTICS_PREVIEW_BLOCKED";
+  blockedReasons: string[];
+  safetyChecklist: string[];
+  signalRows: Array<{
+    label: string;
+    note: string;
+    state: "DISPLAY_ONLY" | "BLOCKED";
+  }>;
+  teacherLoadRows: Array<{
+    assignmentCount: number;
+    classCodes: string[];
+    demoCode: string;
+    subjectGroupCodes: string[];
+  }>;
+  totals: {
+    analyticsWrites: 0;
+    classCount: number;
+    enrolledStudents: number;
+    evidenceWrites: 0;
+    learnerRecordWrites: 0;
+    productionDataCount: 0;
+    queueRows: number;
+    realSchoolCount: 0;
+    scoreUpdates: 0;
+    subjectGroupCount: number;
+    teacherAssignmentCount: number;
   };
 }
 
@@ -1080,6 +1125,106 @@ export function buildSchoolDemoTeacherReviewRubricPreview(
   };
 }
 
+export function buildSchoolDemoClassAnalyticsPreview(
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoClassAnalyticsPreview {
+  const classOverviews = buildClassOverviews(snapshot);
+  const teacherOverviews = buildTeacherOverviews(snapshot);
+  const blockedReasons: string[] = [];
+
+  if (snapshot.boundary.readiness !== "NOT_READY") {
+    blockedReasons.push("Readiness boundary is not in the expected NOT_READY state.");
+  }
+  if (snapshot.boundary.activation !== "BLOCKED") {
+    blockedReasons.push("Activation boundary is not in the expected BLOCKED state.");
+  }
+  if (snapshot.boundary.workflow !== "INACTIVE") {
+    blockedReasons.push("Workflow boundary is not in the expected INACTIVE state.");
+  }
+  if (snapshot.boundary.productionDataCount !== 0 || snapshot.boundary.realSchoolCount !== 0) {
+    blockedReasons.push("Snapshot must contain zero production data and zero real schools.");
+  }
+  if (classOverviews.length === 0) {
+    blockedReasons.push("Synthetic class roster is empty.");
+  }
+
+  const analyticsRows = classOverviews.map((schoolClass) => ({
+    classCode: schoolClass.code,
+    enrolledStudents: schoolClass.studentCount,
+    gradeLevel: schoolClass.gradeLevel,
+    queueLoad: snapshot.students.filter((student) => student.classCode === schoolClass.code).length,
+    signalState:
+      schoolClass.studentCount > 0 ? ("SYNTHETIC_READY" as const) : ("SYNTHETIC_EMPTY" as const),
+    subjectGroupCount: schoolClass.subjectGroupCodes.length,
+    teacherAssignmentCount: snapshot.teacherAssignments.filter(
+      (assignment) => assignment.classCode === schoolClass.code,
+    ).length,
+  }));
+
+  return {
+    analyticsRows,
+    analyticsState:
+      blockedReasons.length === 0 ? "ANALYTICS_PREVIEW_READY" : "ANALYTICS_PREVIEW_BLOCKED",
+    blockedReasons,
+    safetyChecklist: [
+      "Class analytics preview uses synthetic class, teacher and student demo codes only.",
+      "Counts are derived from the local read-only school snapshot.",
+      "No grades, teacher decisions, evidence, learner records or score changes are created.",
+      "No learner work, answers, solutions, hints, raw media or copied textbook material is shown.",
+      "Real class analytics remains blocked until a later approved school beta gate.",
+    ],
+    signalRows: [
+      {
+        label: "Roster coverage",
+        note: "Shows synthetic enrolled-student counts by class only.",
+        state: "DISPLAY_ONLY",
+      },
+      {
+        label: "Teacher load",
+        note: "Shows synthetic assignment counts without naming real people.",
+        state: "DISPLAY_ONLY",
+      },
+      {
+        label: "Review queue load",
+        note: "Uses placeholder queue row counts; no learner work is visible.",
+        state: "DISPLAY_ONLY",
+      },
+      {
+        label: "License boundary",
+        note: "Shows planned demo entitlements only; no paid or production grant exists.",
+        state: "DISPLAY_ONLY",
+      },
+      {
+        label: "Stop gate",
+        note: "Readiness stays NOT_READY and activation stays BLOCKED.",
+        state: blockedReasons.length === 0 ? "DISPLAY_ONLY" : "BLOCKED",
+      },
+    ],
+    teacherLoadRows: teacherOverviews.map((teacher) => ({
+      assignmentCount: teacher.assignmentCount,
+      classCodes: teacher.classCodes,
+      demoCode: teacher.demoCode,
+      subjectGroupCodes: teacher.subjectGroupCodes,
+    })),
+    totals: {
+      analyticsWrites: 0,
+      classCount: classOverviews.length,
+      enrolledStudents: classOverviews.reduce(
+        (total, schoolClass) => total + schoolClass.studentCount,
+        0,
+      ),
+      evidenceWrites: 0,
+      learnerRecordWrites: 0,
+      productionDataCount: snapshot.boundary.productionDataCount,
+      queueRows: analyticsRows.reduce((total, row) => total + row.queueLoad, 0),
+      realSchoolCount: snapshot.boundary.realSchoolCount,
+      scoreUpdates: 0,
+      subjectGroupCount: snapshot.subjectGroups.length,
+      teacherAssignmentCount: snapshot.teacherAssignments.length,
+    },
+  };
+}
+
 function buildClassDetail(
   snapshot: SchoolDemoSnapshot,
   classCode: string,
@@ -1345,6 +1490,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Review queue";
     case "review-rubric":
       return "Review rubric";
+    case "analytics":
+      return "Class analytics";
     case "import-preview":
       return "Import preview";
     case "rollout":
@@ -1459,6 +1606,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       surface: "/school-demo/review-rubric",
     },
     {
+      actionLabel: "Open class analytics",
+      href: "/school-demo/analytics",
+      key: "analytics",
+      label: "Class analytics",
+      note: "Show synthetic class counts, teacher load and queue load without grades, learner work or production records.",
+      surface: "/school-demo/analytics",
+    },
+    {
       actionLabel: "Open import preview",
       href: "/school-demo/import-preview",
       key: "import-preview",
@@ -1500,7 +1655,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, review rubric, import preview and rollout preview.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, review rubric, class analytics, import preview and rollout preview.",
       ),
       createElement(
         "p",
@@ -3992,8 +4147,8 @@ export function SchoolDemoTeacherReviewRubricView({
     renderHeader({
       actionHref: "/school-demo/review-queue",
       actionLabel: "Back to review queue",
-      secondaryActionHref: "/school-demo/import-preview",
-      secondaryActionLabel: "Import preview",
+      secondaryActionHref: "/school-demo/analytics",
+      secondaryActionLabel: "Class analytics",
       subtitle:
         "Read-only teacher rubric preview for synthetic review rows. It explains the future check path without creating grades or decisions.",
       title: "School demo review rubric",
@@ -4219,6 +4374,195 @@ export function SchoolDemoTeacherReviewRubricView({
                 href: "/school-demo/review-queue",
               },
               "Open review queue",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/analytics",
+              },
+              "Open class analytics",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/summary",
+              },
+              "Open compact summary",
+            ),
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoClassAnalyticsView({ snapshot }: SchoolDemoClassAnalyticsViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const preview = buildSchoolDemoClassAnalyticsPreview(snapshot);
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/review-rubric",
+      actionLabel: "Back to review rubric",
+      secondaryActionHref: "/school-demo/import-preview",
+      secondaryActionLabel: "Import preview",
+      subtitle:
+        "Read-only class analytics preview for the synthetic school snapshot. It shows counts and load signals without grades, learner work or production records.",
+      title: "School demo class analytics",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "analytics",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Class analytics metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Analytics state", preview.analyticsState, "Display-only"),
+      renderMetric("Classes", preview.totals.classCount, "Grades 7-9"),
+      renderMetric("Enrolled demo students", preview.totals.enrolledStudents, "Synthetic codes"),
+      renderMetric("Teacher assignments", preview.totals.teacherAssignmentCount, "Demo roles"),
+      renderMetric("Queue rows", preview.totals.queueRows, "Placeholder load"),
+      renderMetric("Analytics writes", preview.totals.analyticsWrites, "Disabled"),
+      renderMetric("Score updates", preview.totals.scoreUpdates, "Disabled"),
+      renderMetric("Learner writes", preview.totals.learnerRecordWrites, "Disabled"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid school-demo-analytics-grid" },
+      renderPanel(
+        "school-demo-analytics-summary",
+        "Analytics summary",
+        renderTable({
+          emptyLabel: "No analytics summary rows are available.",
+          headers: ["Field", "Value"],
+          rows: [
+            ["State", preview.analyticsState],
+            ["Class count", preview.totals.classCount],
+            ["Subject groups", preview.totals.subjectGroupCount],
+            ["Teacher assignments", preview.totals.teacherAssignmentCount],
+            ["Production data", preview.totals.productionDataCount],
+            ["Real schools", preview.totals.realSchoolCount],
+            ["Evidence writes", preview.totals.evidenceWrites],
+            ["Learner record writes", preview.totals.learnerRecordWrites],
+          ].map(([label, value]) => ({
+            cells: [createElement("strong", { key: "label" }, label), value],
+            key: String(label),
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-analytics-class-table",
+        "Synthetic class analytics rows",
+        renderTable({
+          emptyLabel: "No synthetic class analytics rows are available.",
+          headers: [
+            "Class",
+            "Grade",
+            "Demo students",
+            "Subject groups",
+            "Teacher assignments",
+            "Queue load",
+            "State",
+          ],
+          rows: preview.analyticsRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "class" }, row.classCode),
+              row.gradeLevel,
+              row.enrolledStudents,
+              row.subjectGroupCount,
+              row.teacherAssignmentCount,
+              row.queueLoad,
+              row.signalState,
+            ],
+            key: row.classCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-analytics-teacher-load",
+        "Synthetic teacher load",
+        renderTable({
+          emptyLabel: "No synthetic teacher load rows are available.",
+          headers: ["Teacher demo code", "Classes", "Subject groups", "Assignments"],
+          rows: preview.teacherLoadRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "teacher" }, row.demoCode),
+              joinValues(row.classCodes),
+              joinValues(row.subjectGroupCodes),
+              row.assignmentCount,
+            ],
+            key: row.demoCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-analytics-signal-table",
+        "Display-only signal rows",
+        renderTable({
+          emptyLabel: "No signal rows are available.",
+          headers: ["Signal", "Note", "State"],
+          rows: preview.signalRows.map((row) => ({
+            cells: [createElement("strong", { key: "label" }, row.label), row.note, row.state],
+            key: row.label,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-analytics-blockers",
+        "Blocked reasons",
+        preview.blockedReasons.length > 0
+          ? renderList(preview.blockedReasons)
+          : createElement(
+              "p",
+              { className: "school-demo-muted" },
+              "No local analytics blockers. Real class analytics still waits for a later beta gate.",
+            ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-analytics-boundary",
+        "Analytics boundary",
+        createElement(
+          "div",
+          { className: "school-demo-analytics-boundary" },
+          renderList(preview.safetyChecklist),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/review-rubric",
+              },
+              "Open review rubric",
             ),
           ),
           createElement(

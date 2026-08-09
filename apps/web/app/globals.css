@@ -1436,6 +1436,26 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   font-weight: 800;
 }
 
+.school-demo-analytics-grid {
+  align-items: start;
+}
+
+.school-demo-analytics-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-analytics-boundary p {
+  margin: 0;
+}
+
+.school-demo-analytics-class-table .school-demo-table td:first-child,
+.school-demo-analytics-teacher-load .school-demo-table td:first-child,
+.school-demo-analytics-signal-table .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:has(.school-demo-shell),
   .school-demo-shell,
