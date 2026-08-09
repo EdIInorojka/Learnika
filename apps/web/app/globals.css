@@ -1348,6 +1348,28 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   margin: 0;
 }
 
+.school-demo-delivery-preview-grid {
+  align-items: start;
+}
+
+.school-demo-delivery-preview-controls {
+  align-items: end;
+}
+
+.school-demo-delivery-preview-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-delivery-preview-boundary p {
+  margin: 0;
+}
+
+.school-demo-delivery-preview-timeline .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:has(.school-demo-shell),
   .school-demo-shell,

@@ -48,6 +48,10 @@ interface SchoolDemoAssignmentPreviewViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoDeliveryPreviewViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -110,6 +114,7 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "pilot"
   | "pilot-config"
   | "assignment-preview"
+  | "delivery-preview"
   | "import-preview"
   | "rollout";
 
@@ -123,6 +128,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "pilot",
   "pilot-config",
   "assignment-preview",
+  "delivery-preview",
   "import-preview",
   "rollout",
 ];
@@ -177,6 +183,43 @@ export interface SchoolDemoAssignmentDraftPreview {
   };
   subjectGroupCode: string;
   teacherDemoCode: string;
+}
+
+export interface SchoolDemoDeliveryRehearsalPreview {
+  blockedReasons: string[];
+  channelRows: Array<{
+    channelCode: string;
+    note: string;
+    state: "READY_FOR_REHEARSAL" | "BLOCKED_FOR_REHEARSAL";
+  }>;
+  classCode: string;
+  deliveryMode: "online-preview" | "print-preview";
+  packageCode: string;
+  rehearsalState: "REHEARSAL_READY" | "REHEARSAL_BLOCKED";
+  rosterRows: Array<{
+    classCode: string;
+    note: string;
+    rehearsalState: "QUEUED_FOR_DEMO" | "BLOCKED_FOR_DEMO";
+    studentDemoCode: string;
+  }>;
+  safetyChecklist: string[];
+  settings: {
+    attemptLimit: number;
+    availabilityDays: number;
+    durationMinutes: number;
+  };
+  subjectGroupCode: string;
+  teacherDemoCode: string;
+  timelineRows: Array<{
+    note: string;
+    state: "READY" | "BLOCKED" | "STOPPED";
+    step: string;
+  }>;
+  totals: {
+    blockedRows: number;
+    queuedRows: number;
+    writeCount: 0;
+  };
 }
 
 interface SchoolDemoGuidedWalkthroughStep {
@@ -598,6 +641,109 @@ export function buildSchoolDemoAssignmentDraftPreview(
   };
 }
 
+export function buildSchoolDemoDeliveryRehearsalPreview(
+  input: SchoolDemoAssignmentDraftInput,
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoDeliveryRehearsalPreview {
+  const assignmentPreview = buildSchoolDemoAssignmentDraftPreview(input, snapshot);
+  const blockedReasons = [...assignmentPreview.blockedReasons];
+
+  if (snapshot.boundary.mutationAllowed !== false) {
+    blockedReasons.push("Mutation boundary must stay closed.");
+  }
+  if (snapshot.boundary.productionDataCount !== 0) {
+    blockedReasons.push("Production data count must stay zero.");
+  }
+  if (snapshot.boundary.realSchoolCount !== 0) {
+    blockedReasons.push("Real school count must stay zero.");
+  }
+  if (snapshot.boundary.activation !== "BLOCKED" || snapshot.boundary.readiness !== "NOT_READY") {
+    blockedReasons.push("Readiness and activation gates must stay closed.");
+  }
+
+  const classRoster = snapshot.students
+    .filter((student) => student.classCode === input.classCode)
+    .sort((left, right) => left.demoCode.localeCompare(right.demoCode));
+  const isReady = blockedReasons.length === 0;
+  const rosterRows: SchoolDemoDeliveryRehearsalPreview["rosterRows"] = classRoster.map(
+    (student) => ({
+      classCode: student.classCode,
+      note: isReady
+        ? "Queued in browser-only rehearsal; no learner delivery exists."
+        : "Blocked because the local rehearsal did not pass every gate.",
+      rehearsalState: isReady ? "QUEUED_FOR_DEMO" : "BLOCKED_FOR_DEMO",
+      studentDemoCode: student.demoCode,
+    }),
+  );
+  const channelRows = [
+    {
+      channelCode: "browser-demo",
+      note:
+        input.deliveryMode === "online-preview" && isReady
+          ? "Selected for local browser rehearsal only."
+          : "Available as preview metadata; no server delivery.",
+      state:
+        input.deliveryMode === "online-preview" && isReady
+          ? "READY_FOR_REHEARSAL"
+          : "BLOCKED_FOR_REHEARSAL",
+    },
+    {
+      channelCode: "paper-pack-demo",
+      note:
+        input.deliveryMode === "print-preview" && isReady
+          ? "Selected for paper-pack rehearsal only."
+          : "Available as preview metadata; no generated packet.",
+      state:
+        input.deliveryMode === "print-preview" && isReady
+          ? "READY_FOR_REHEARSAL"
+          : "BLOCKED_FOR_REHEARSAL",
+    },
+  ] satisfies SchoolDemoDeliveryRehearsalPreview["channelRows"];
+
+  return {
+    blockedReasons,
+    channelRows,
+    classCode: input.classCode,
+    deliveryMode: input.deliveryMode,
+    packageCode: input.packageCode,
+    rehearsalState: isReady ? "REHEARSAL_READY" : "REHEARSAL_BLOCKED",
+    rosterRows,
+    safetyChecklist: [
+      "Browser-only rehearsal: no assignment is saved.",
+      "No learner task, grading, delivery event or school record is created.",
+      "Roster rows use synthetic demo codes only.",
+      "Real school delivery remains blocked until a later approved beta gate.",
+    ],
+    settings: assignmentPreview.settings,
+    subjectGroupCode: input.subjectGroupCode,
+    teacherDemoCode: input.teacherDemoCode,
+    timelineRows: [
+      {
+        note: isReady ? "Synthetic draft passes local checks." : "Synthetic draft is blocked.",
+        state: isReady ? "READY" : "BLOCKED",
+        step: "Draft check",
+      },
+      {
+        note: isReady
+          ? `${rosterRows.length} synthetic roster rows queued for demo.`
+          : "Roster queue remains closed.",
+        state: isReady ? "READY" : "BLOCKED",
+        step: "Roster queue",
+      },
+      {
+        note: "No send, save, invite, notification or learner session is triggered.",
+        state: "STOPPED",
+        step: "Stop gate",
+      },
+    ],
+    totals: {
+      blockedRows: rosterRows.filter((row) => row.rehearsalState === "BLOCKED_FOR_DEMO").length,
+      queuedRows: rosterRows.filter((row) => row.rehearsalState === "QUEUED_FOR_DEMO").length,
+      writeCount: 0,
+    },
+  };
+}
+
 function buildClassDetail(
   snapshot: SchoolDemoSnapshot,
   classCode: string,
@@ -855,6 +1001,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Pilot config preview";
     case "assignment-preview":
       return "Assignment preview";
+    case "delivery-preview":
+      return "Delivery rehearsal";
     case "import-preview":
       return "Import preview";
     case "rollout":
@@ -937,6 +1085,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       surface: "/school-demo/assignment-preview",
     },
     {
+      actionLabel: "Open delivery rehearsal",
+      href: "/school-demo/delivery-preview",
+      key: "delivery-preview",
+      label: "Delivery rehearsal",
+      note: "Rehearse the local-only delivery plan, roster queue and stop gates without sending, saving or publishing anything.",
+      surface: "/school-demo/delivery-preview",
+    },
+    {
       actionLabel: "Open import preview",
       href: "/school-demo/import-preview",
       key: "import-preview",
@@ -978,7 +1134,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, import preview and rollout preview.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, import preview and rollout preview.",
       ),
       createElement(
         "p",
@@ -2111,8 +2267,8 @@ export function SchoolDemoAssignmentPreviewView({
     renderHeader({
       actionHref: "/school-demo/pilot-config",
       actionLabel: "Back to pilot config",
-      secondaryActionHref: "/school-demo/import-preview",
-      secondaryActionLabel: "Import preview",
+      secondaryActionHref: "/school-demo/delivery-preview",
+      secondaryActionLabel: "Delivery rehearsal",
       subtitle:
         "Local-only teacher assignment draft preview over synthetic demo classes. It creates no assignment, no delivery and no learner record.",
       title: "School demo assignment preview",
@@ -2388,9 +2544,33 @@ export function SchoolDemoAssignmentPreviewView({
               "a",
               {
                 className: "button-link school-demo-secondary-link",
-                href: "/school-demo/assignment-preview",
+                href: "/school-demo/delivery-preview",
               },
-              "Open assignment preview",
+              "Open delivery rehearsal",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/import-preview",
+              },
+              "Open import preview",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/delivery-preview",
+              },
+              "Open delivery rehearsal",
             ),
           ),
           createElement(
@@ -2399,6 +2579,359 @@ export function SchoolDemoAssignmentPreviewView({
             createElement(
               "a",
               { className: "button-link school-demo-secondary-link", href: "/school-demo/rollout" },
+              "Open rollout preview",
+            ),
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoDeliveryPreviewView({ snapshot }: SchoolDemoDeliveryPreviewViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const defaultDraft = buildDefaultSchoolDemoAssignmentInput(snapshot);
+  const [draft, setDraft] = useState<SchoolDemoAssignmentDraftInput>(defaultDraft);
+  const preview = buildSchoolDemoDeliveryRehearsalPreview(draft, snapshot);
+
+  function updateDraft(patch: Partial<SchoolDemoAssignmentDraftInput>) {
+    setDraft((current) => ({ ...current, ...patch }));
+  }
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/assignment-preview",
+      actionLabel: "Back to assignment preview",
+      secondaryActionHref: "/school-demo/import-preview",
+      secondaryActionLabel: "Import preview",
+      subtitle:
+        "Read-only delivery rehearsal for a synthetic teacher draft. It queues demo rows locally and stops before any real delivery.",
+      title: "School demo delivery rehearsal",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "delivery-preview",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Delivery rehearsal metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Rehearsal state", preview.rehearsalState, "Browser-only"),
+      renderMetric("Queued rows", preview.totals.queuedRows, "Synthetic roster"),
+      renderMetric("Blocked rows", preview.totals.blockedRows, "Fail-closed"),
+      renderMetric("Mode", preview.deliveryMode, "Preview channel"),
+      renderMetric("Window", `${preview.settings.availabilityDays} days`, "Local setting"),
+      renderMetric("Writes", preview.totals.writeCount, "No server mutation"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid school-demo-delivery-preview-grid" },
+      renderPanel(
+        "school-demo-delivery-preview-controls",
+        "Delivery rehearsal controls",
+        createElement(
+          "div",
+          {
+            className:
+              "school-demo-assignment-preview-controls school-demo-delivery-preview-controls",
+          },
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Class"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Synthetic class for delivery rehearsal",
+                onChange: (event) =>
+                  updateDraft({
+                    classCode: (event.currentTarget as HTMLSelectElement).value,
+                  }),
+                value: draft.classCode,
+              },
+              [...snapshot.classes]
+                .sort(compareClassRecords)
+                .map((schoolClass) =>
+                  createElement(
+                    "option",
+                    { key: schoolClass.code, value: schoolClass.code },
+                    `${schoolClass.code} / grade ${schoolClass.gradeLevel}`,
+                  ),
+                ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Teacher"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Synthetic teacher for delivery rehearsal",
+                onChange: (event) =>
+                  updateDraft({
+                    teacherDemoCode: (event.currentTarget as HTMLSelectElement).value,
+                  }),
+                value: draft.teacherDemoCode,
+              },
+              [...snapshot.teachers]
+                .sort((left, right) => left.demoCode.localeCompare(right.demoCode))
+                .map((teacher) =>
+                  createElement(
+                    "option",
+                    { key: teacher.demoCode, value: teacher.demoCode },
+                    teacher.demoCode,
+                  ),
+                ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Subject group"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Synthetic subject group for delivery rehearsal",
+                onChange: (event) =>
+                  updateDraft({
+                    subjectGroupCode: (event.currentTarget as HTMLSelectElement).value,
+                  }),
+                value: draft.subjectGroupCode,
+              },
+              snapshot.subjectGroups.map((subjectGroup) =>
+                createElement(
+                  "option",
+                  { key: subjectGroup.code, value: subjectGroup.code },
+                  subjectGroup.code,
+                ),
+              ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Package"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Synthetic package code for delivery rehearsal",
+                onChange: (event) =>
+                  updateDraft({
+                    packageCode: (event.currentTarget as HTMLSelectElement).value,
+                  }),
+                value: draft.packageCode,
+              },
+              schoolDemoAssignmentPackageOptions.map((packageCode) =>
+                createElement("option", { key: packageCode, value: packageCode }, packageCode),
+              ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Attempt limit"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Attempt limit for delivery rehearsal",
+                onChange: (event) =>
+                  updateDraft({
+                    attemptLimit: Number((event.currentTarget as HTMLSelectElement).value),
+                  }),
+                value: String(draft.attemptLimit),
+              },
+              [1, 2, 3].map((value) =>
+                createElement("option", { key: value, value: String(value) }, String(value)),
+              ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Duration"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Duration for delivery rehearsal",
+                onChange: (event) =>
+                  updateDraft({
+                    durationMinutes: Number((event.currentTarget as HTMLSelectElement).value),
+                  }),
+                value: String(draft.durationMinutes),
+              },
+              [30, 45, 60].map((value) =>
+                createElement("option", { key: value, value: String(value) }, `${value} minutes`),
+              ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Availability"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Availability window for delivery rehearsal",
+                onChange: (event) =>
+                  updateDraft({
+                    availabilityDays: Number((event.currentTarget as HTMLSelectElement).value),
+                  }),
+                value: String(draft.availabilityDays),
+              },
+              [3, 5, 7, 14].map((value) =>
+                createElement("option", { key: value, value: String(value) }, `${value} days`),
+              ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Mode"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Delivery rehearsal mode",
+                onChange: (event) =>
+                  updateDraft({
+                    deliveryMode: (event.currentTarget as HTMLSelectElement)
+                      .value as SchoolDemoAssignmentDraftInput["deliveryMode"],
+                  }),
+                value: draft.deliveryMode,
+              },
+              ["online-preview", "print-preview"].map((value) =>
+                createElement("option", { key: value, value }, value),
+              ),
+            ),
+          ),
+          createElement(
+            "button",
+            {
+              className: "button-link school-demo-secondary-link",
+              onClick: () => setDraft(defaultDraft),
+              type: "button",
+            },
+            "Reset rehearsal",
+          ),
+        ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-delivery-preview-summary",
+        "Rehearsal summary",
+        listSummaryItems([
+          ["State", preview.rehearsalState],
+          ["Teacher", preview.teacherDemoCode],
+          ["Class", preview.classCode],
+          ["Subject group", preview.subjectGroupCode],
+          ["Package", preview.packageCode],
+          ["Mode", preview.deliveryMode],
+          ["Queued rows", preview.totals.queuedRows],
+          ["Blocked rows", preview.totals.blockedRows],
+          ["Write count", preview.totals.writeCount],
+        ]),
+        true,
+      ),
+      renderPanel(
+        "school-demo-delivery-preview-channels",
+        "Delivery channels",
+        renderTable({
+          emptyLabel: "No delivery rehearsal channels are available.",
+          headers: ["Channel", "State", "Note"],
+          rows: preview.channelRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "channel" }, row.channelCode),
+              row.state,
+              row.note,
+            ],
+            key: row.channelCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-delivery-preview-roster",
+        "Roster queue rehearsal",
+        renderTable({
+          emptyLabel: "No synthetic roster rows are queued.",
+          headers: ["Demo student code", "Class", "State", "Note"],
+          rows: preview.rosterRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "student" }, row.studentDemoCode),
+              row.classCode,
+              row.rehearsalState,
+              row.note,
+            ],
+            key: row.studentDemoCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-delivery-preview-timeline",
+        "Stop-gated timeline",
+        renderTable({
+          emptyLabel: "No rehearsal timeline is available.",
+          headers: ["Step", "State", "Note"],
+          rows: preview.timelineRows.map((row) => ({
+            cells: [createElement("strong", { key: "step" }, row.step), row.state, row.note],
+            key: row.step,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-delivery-preview-blockers",
+        "Blocked reasons",
+        preview.blockedReasons.length > 0
+          ? renderList(preview.blockedReasons)
+          : createElement(
+              "p",
+              { className: "school-demo-muted" },
+              "No local rehearsal blockers. Real delivery still waits for a later beta gate.",
+            ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-delivery-preview-boundary",
+        "Delivery boundary",
+        createElement(
+          "div",
+          { className: "school-demo-delivery-preview-boundary" },
+          renderList(preview.safetyChecklist),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/summary",
+              },
+              "Open compact summary",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/rollout",
+              },
               "Open rollout preview",
             ),
           ),
