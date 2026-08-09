@@ -1370,6 +1370,28 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   font-weight: 800;
 }
 
+.school-demo-student-preview-grid {
+  align-items: start;
+}
+
+.school-demo-student-preview-controls {
+  align-items: end;
+}
+
+.school-demo-student-preview-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-student-preview-boundary p {
+  margin: 0;
+}
+
+.school-demo-student-preview-workspace .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:has(.school-demo-shell),
   .school-demo-shell,
