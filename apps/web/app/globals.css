@@ -1300,6 +1300,54 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   gap: 12px;
 }
 
+.school-demo-assignment-preview-grid {
+  align-items: start;
+}
+
+.school-demo-assignment-preview-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.school-demo-assignment-preview-controls label {
+  display: grid;
+  gap: 6px;
+}
+
+.school-demo-assignment-preview-controls label span {
+  color: var(--school-demo-muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.school-demo-assignment-preview-controls select {
+  width: 100%;
+  border: 1px solid var(--school-demo-border);
+  border-radius: 12px;
+  background: var(--school-demo-surface-muted);
+  color: var(--school-demo-text);
+  padding: 10px 12px;
+  font: inherit;
+  transition: var(--school-demo-transition);
+}
+
+.school-demo-assignment-preview-controls select:focus {
+  outline: 2px solid var(--school-demo-primary);
+  outline-offset: 2px;
+}
+
+.school-demo-assignment-preview-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-assignment-preview-boundary p {
+  margin: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:has(.school-demo-shell),
   .school-demo-shell,
@@ -1383,6 +1431,10 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   }
 
   .school-demo-guided-list {
+    grid-template-columns: 1fr;
+  }
+
+  .school-demo-assignment-preview-controls {
     grid-template-columns: 1fr;
   }
 
