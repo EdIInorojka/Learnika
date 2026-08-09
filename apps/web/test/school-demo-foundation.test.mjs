@@ -20,10 +20,12 @@ import {
   SchoolDemoRolloutView,
   SchoolDemoStudentPreviewView,
   SchoolDemoTeacherReviewQueueView,
+  SchoolDemoTeacherReviewRubricView,
   buildSchoolDemoAssignmentDraftPreview,
   buildSchoolDemoDeliveryRehearsalPreview,
   buildSchoolDemoStudentDeliveryPreview,
   buildSchoolDemoTeacherReviewQueuePreview,
+  buildSchoolDemoTeacherReviewRubricPreview,
   parseSchoolDemoRosterImportPreview,
 } from "../lib/school-demo-view.ts";
 
@@ -438,6 +440,61 @@ test("school demo teacher review queue stays synthetic and writes nothing", () =
   assert.match(blockedPreview.blockedReasons.join("\n"), /Class code is outside/);
 });
 
+test("school demo teacher review rubric stays display-only and writes nothing", () => {
+  const snapshot = snapshotFixtureForContract();
+  const assignment = snapshot.teacherAssignments[0];
+  const readyPreview = buildSchoolDemoTeacherReviewRubricPreview(
+    {
+      attemptLimit: 2,
+      availabilityDays: 7,
+      classCode: assignment.classCode,
+      deliveryMode: "online-preview",
+      durationMinutes: 45,
+      packageCode: "grade-7-linear-practice-demo",
+      subjectGroupCode: assignment.subjectGroupCode,
+      teacherDemoCode: assignment.teacherDemoCode,
+    },
+    snapshot,
+  );
+
+  assert.equal(readyPreview.rubricState, "RUBRIC_PREVIEW_READY");
+  assert.equal(readyPreview.blockedReasons.length, 0);
+  assert.equal(readyPreview.queueContextRows.length > 0, true);
+  assert.equal(readyPreview.totals.rubricCriteria, 5);
+  assert.equal(readyPreview.totals.evidenceWrites, 0);
+  assert.equal(readyPreview.totals.learnerRecordWrites, 0);
+  assert.equal(readyPreview.totals.scoreUpdates, 0);
+  assert.equal(readyPreview.totals.teacherDecisionWrites, 0);
+  assert.equal(
+    readyPreview.rubricRows.some((row) => row.state === "DISABLED_DEMO_ONLY"),
+    true,
+  );
+  assert.match(readyPreview.safetyChecklist.join("\n"), /No learner work/);
+  assert.match(
+    readyPreview.safetyChecklist.join("\n"),
+    /Real rubric-assisted review remains blocked/,
+  );
+
+  const blockedPreview = buildSchoolDemoTeacherReviewRubricPreview(
+    {
+      attemptLimit: 2,
+      availabilityDays: 7,
+      classCode: "real-class",
+      deliveryMode: "online-preview",
+      durationMinutes: 45,
+      packageCode: "grade-7-linear-practice-demo",
+      subjectGroupCode: assignment.subjectGroupCode,
+      teacherDemoCode: assignment.teacherDemoCode,
+    },
+    snapshot,
+  );
+
+  assert.equal(blockedPreview.rubricState, "RUBRIC_PREVIEW_BLOCKED");
+  assert.equal(blockedPreview.queueContextRows.length, 0);
+  assert.equal(blockedPreview.totals.teacherDecisionWrites, 0);
+  assert.match(blockedPreview.blockedReasons.join("\n"), /Class code is outside/);
+});
+
 test("school demo dashboard and drilldown render the synthetic school overview", () => {
   const snapshot = snapshotFixtureForContract();
   const guidedDashboardHtml = renderToStaticMarkup(
@@ -493,6 +550,11 @@ test("school demo dashboard and drilldown render the synthetic school overview",
       snapshot,
     }),
   );
+  const reviewRubricHtml = renderToStaticMarkup(
+    createElement(SchoolDemoTeacherReviewRubricView, {
+      snapshot,
+    }),
+  );
   const importPreviewHtml = renderToStaticMarkup(
     createElement(SchoolDemoImportPreviewView, {
       snapshot,
@@ -503,7 +565,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
       snapshot,
     }),
   );
-  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}\n${pilotChecklistHtml}\n${pilotConfigHtml}\n${assignmentPreviewHtml}\n${deliveryPreviewHtml}\n${studentPreviewHtml}\n${reviewQueueHtml}\n${importPreviewHtml}\n${rolloutHtml}`;
+  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}\n${pilotChecklistHtml}\n${pilotConfigHtml}\n${assignmentPreviewHtml}\n${deliveryPreviewHtml}\n${studentPreviewHtml}\n${reviewQueueHtml}\n${reviewRubricHtml}\n${importPreviewHtml}\n${rolloutHtml}`;
 
   for (const phrase of [
     "Presentation route",
@@ -553,6 +615,13 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Review policy shell",
     "Review queue boundary",
     "REVIEW_QUEUE_READY",
+    "School demo review rubric",
+    "Review rubric controls",
+    "Review rubric summary",
+    "Display-only rubric rows",
+    "Synthetic queue context",
+    "Review rubric boundary",
+    "RUBRIC_PREVIEW_READY",
     "School demo import preview",
     "Synthetic CSV preview",
     "Accepted preview rows",
@@ -584,6 +653,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Delivery rehearsal",
     "Student preview",
     "Review queue",
+    "Review rubric",
     "Import preview",
     "Class counts / roster snapshot",
     "Read-only boundary",
@@ -635,6 +705,10 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "school-demo-review-queue-controls",
     "school-demo-review-queue-boundary",
     "school-demo-review-queue-table",
+    "school-demo-review-rubric-grid",
+    "school-demo-review-rubric-controls",
+    "school-demo-review-rubric-boundary",
+    "school-demo-review-rubric-table",
     "school-demo-import-preview-grid",
     "school-demo-import-preview-editor",
     "school-demo-import-preview-textarea",
@@ -743,6 +817,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(studentPreviewHtml, /Real student access remains blocked/);
   assert.match(reviewQueueHtml, /href="\/school-demo\/student-preview"/);
   assert.match(reviewQueueHtml, /href="\/school-demo\/import-preview"/);
+  assert.match(reviewQueueHtml, /href="\/school-demo\/review-rubric"/);
   assert.match(reviewQueueHtml, /href="\/school-demo\/summary"/);
   assert.match(reviewQueueHtml, /School demo review queue/);
   assert.match(reviewQueueHtml, /Review queue controls/);
@@ -752,6 +827,17 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(reviewQueueHtml, /Review queue boundary/);
   assert.match(reviewQueueHtml, /REVIEW_QUEUE_READY/);
   assert.match(reviewQueueHtml, /Real teacher review remains blocked/);
+  assert.match(reviewRubricHtml, /href="\/school-demo\/review-queue"/);
+  assert.match(reviewRubricHtml, /href="\/school-demo\/import-preview"/);
+  assert.match(reviewRubricHtml, /href="\/school-demo\/summary"/);
+  assert.match(reviewRubricHtml, /School demo review rubric/);
+  assert.match(reviewRubricHtml, /Review rubric controls/);
+  assert.match(reviewRubricHtml, /Review rubric summary/);
+  assert.match(reviewRubricHtml, /Display-only rubric rows/);
+  assert.match(reviewRubricHtml, /Synthetic queue context/);
+  assert.match(reviewRubricHtml, /Review rubric boundary/);
+  assert.match(reviewRubricHtml, /RUBRIC_PREVIEW_READY/);
+  assert.match(reviewRubricHtml, /Real rubric-assisted review remains blocked/);
   assert.match(importPreviewHtml, /href="\/school-demo\/pilot-config"/);
   assert.match(importPreviewHtml, /href="\/school-demo\/assignment-preview"/);
   assert.match(importPreviewHtml, /href="\/school-demo\/delivery-preview"/);
@@ -841,6 +927,10 @@ test("school demo route is read-only and display-only", async () => {
     path.join(process.cwd(), "app", "school-demo", "review-queue", "page.tsx"),
     "utf8",
   );
+  const reviewRubricPageSource = fs.readFileSync(
+    path.join(process.cwd(), "app", "school-demo", "review-rubric", "page.tsx"),
+    "utf8",
+  );
   const importPreviewPageSource = fs.readFileSync(
     path.join(process.cwd(), "app", "school-demo", "import-preview", "page.tsx"),
     "utf8",
@@ -896,6 +986,9 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(reviewQueuePageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(reviewQueuePageSource.includes("SchoolDemoTeacherReviewQueueView"), true);
   assert.equal(reviewQueuePageSource.includes('dynamic = "force-dynamic"'), true);
+  assert.equal(reviewRubricPageSource.includes("readSchoolDemoSnapshot"), true);
+  assert.equal(reviewRubricPageSource.includes("SchoolDemoTeacherReviewRubricView"), true);
+  assert.equal(reviewRubricPageSource.includes('dynamic = "force-dynamic"'), true);
   assert.equal(importPreviewPageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(importPreviewPageSource.includes("SchoolDemoImportPreviewView"), true);
   assert.equal(importPreviewPageSource.includes('dynamic = "force-dynamic"'), true);
@@ -916,6 +1009,8 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("buildSchoolDemoStudentDeliveryPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoTeacherReviewQueueView"), true);
   assert.equal(viewSource.includes("buildSchoolDemoTeacherReviewQueuePreview"), true);
+  assert.equal(viewSource.includes("SchoolDemoTeacherReviewRubricView"), true);
+  assert.equal(viewSource.includes("buildSchoolDemoTeacherReviewRubricPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoImportPreviewView"), true);
   assert.equal(viewSource.includes("parseSchoolDemoRosterImportPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoRolloutView"), true);
@@ -962,6 +1057,12 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("school-demo-review-queue-policy"), true);
   assert.equal(viewSource.includes("school-demo-review-queue-blockers"), true);
   assert.equal(viewSource.includes("school-demo-review-queue-boundary"), true);
+  assert.equal(viewSource.includes("school-demo-review-rubric-controls"), true);
+  assert.equal(viewSource.includes("school-demo-review-rubric-summary"), true);
+  assert.equal(viewSource.includes("school-demo-review-rubric-table"), true);
+  assert.equal(viewSource.includes("school-demo-review-rubric-context"), true);
+  assert.equal(viewSource.includes("school-demo-review-rubric-blockers"), true);
+  assert.equal(viewSource.includes("school-demo-review-rubric-boundary"), true);
   assert.equal(viewSource.includes("school-demo-import-preview-input"), true);
   assert.equal(viewSource.includes("school-demo-import-preview-class-summary"), true);
   assert.equal(viewSource.includes("school-demo-import-preview-accepted"), true);
@@ -994,6 +1095,7 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("/school-demo/rollout"), true);
   assert.equal(viewSource.includes("/school-demo/student-preview"), true);
   assert.equal(viewSource.includes("/school-demo/review-queue"), true);
+  assert.equal(viewSource.includes("/school-demo/review-rubric"), true);
   assert.equal(viewSource.includes("school-demo-guided-walkthrough"), true);
   assert.equal(viewSource.includes("school-demo-guided-list"), true);
   assert.equal(viewSource.includes("school-demo-guided-step"), true);
@@ -1028,6 +1130,10 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(cssSource.includes(".school-demo-review-queue-controls"), true);
   assert.equal(cssSource.includes(".school-demo-review-queue-boundary"), true);
   assert.equal(cssSource.includes(".school-demo-review-queue-table"), true);
+  assert.equal(cssSource.includes(".school-demo-review-rubric-grid"), true);
+  assert.equal(cssSource.includes(".school-demo-review-rubric-controls"), true);
+  assert.equal(cssSource.includes(".school-demo-review-rubric-boundary"), true);
+  assert.equal(cssSource.includes(".school-demo-review-rubric-table"), true);
   assert.equal(cssSource.includes(".school-demo-import-preview-grid"), true);
   assert.equal(cssSource.includes(".school-demo-import-preview-textarea"), true);
   assert.equal(cssSource.includes(".school-demo-import-preview-actions"), true);
@@ -1051,6 +1157,7 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("/school-demo/delivery-preview"), true);
   assert.equal(viewSource.includes("/school-demo/student-preview"), true);
   assert.equal(viewSource.includes("/school-demo/review-queue"), true);
+  assert.equal(viewSource.includes("/school-demo/review-rubric"), true);
   assert.equal(viewSource.includes("/school-demo/import-preview"), true);
   assert.equal(viewSource.includes("document.cookie"), false);
   assert.equal(viewSource.includes("fetch("), false);
@@ -1070,7 +1177,7 @@ test("school demo route is read-only and display-only", async () => {
     "address",
   ]) {
     assert.equal(
-      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${pilotPageSource}\n${pilotConfigPageSource}\n${assignmentPreviewPageSource}\n${deliveryPreviewPageSource}\n${studentPreviewPageSource}\n${reviewQueuePageSource}\n${importPreviewPageSource}\n${rolloutPageSource}\n${viewSource}`.includes(
+      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${pilotPageSource}\n${pilotConfigPageSource}\n${assignmentPreviewPageSource}\n${deliveryPreviewPageSource}\n${studentPreviewPageSource}\n${reviewQueuePageSource}\n${reviewRubricPageSource}\n${importPreviewPageSource}\n${rolloutPageSource}\n${viewSource}`.includes(
         forbidden,
       ),
       false,

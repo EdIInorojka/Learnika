@@ -60,6 +60,10 @@ interface SchoolDemoTeacherReviewQueueViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoTeacherReviewRubricViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -125,6 +129,7 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "delivery-preview"
   | "student-preview"
   | "review-queue"
+  | "review-rubric"
   | "import-preview"
   | "rollout";
 
@@ -141,6 +146,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "delivery-preview",
   "student-preview",
   "review-queue",
+  "review-rubric",
   "import-preview",
   "rollout",
 ];
@@ -287,6 +293,36 @@ export interface SchoolDemoTeacherReviewQueuePreview {
   totals: {
     learnerRecordWrites: 0;
     queueItems: number;
+    scoreUpdates: 0;
+    teacherDecisionWrites: 0;
+  };
+}
+
+export type SchoolDemoTeacherReviewRubricInput = SchoolDemoAssignmentDraftInput;
+
+export interface SchoolDemoTeacherReviewRubricPreview {
+  blockedReasons: string[];
+  classCode: string;
+  packageCode: string;
+  queueContextRows: Array<{
+    classCode: string;
+    reviewState: "WAITING_SYNTHETIC_REVIEW" | "BLOCKED_FOR_DEMO";
+    studentDemoCode: string;
+  }>;
+  rubricRows: Array<{
+    area: string;
+    evidence: string;
+    reviewerAction: string;
+    state: "DISPLAY_ONLY" | "DISABLED_DEMO_ONLY";
+  }>;
+  rubricState: "RUBRIC_PREVIEW_READY" | "RUBRIC_PREVIEW_BLOCKED";
+  safetyChecklist: string[];
+  subjectGroupCode: string;
+  teacherDemoCode: string;
+  totals: {
+    evidenceWrites: 0;
+    learnerRecordWrites: 0;
+    rubricCriteria: number;
     scoreUpdates: 0;
     teacherDecisionWrites: 0;
   };
@@ -968,6 +1004,82 @@ export function buildSchoolDemoTeacherReviewQueuePreview(
   };
 }
 
+function buildDefaultSchoolDemoTeacherReviewRubricInput(
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoTeacherReviewRubricInput {
+  return buildDefaultSchoolDemoAssignmentInput(snapshot);
+}
+
+export function buildSchoolDemoTeacherReviewRubricPreview(
+  input: SchoolDemoTeacherReviewRubricInput,
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoTeacherReviewRubricPreview {
+  const queuePreview = buildSchoolDemoTeacherReviewQueuePreview(input, snapshot);
+  const rubricRows: SchoolDemoTeacherReviewRubricPreview["rubricRows"] = [
+    {
+      area: "Attempt presence",
+      evidence: "Synthetic queue row placeholder only; no learner work is available.",
+      reviewerAction: "Disabled until a future approved teacher review workflow exists.",
+      state: "DISPLAY_ONLY",
+    },
+    {
+      area: "Reasoning trace",
+      evidence: "No learner text or worked steps are shown in the demo.",
+      reviewerAction: "Disabled; teacher notes are not saved.",
+      state: "DISABLED_DEMO_ONLY",
+    },
+    {
+      area: "Mathematical check",
+      evidence: "No deterministic check is run from this preview page.",
+      reviewerAction: "Disabled; no grade or score update exists.",
+      state: "DISABLED_DEMO_ONLY",
+    },
+    {
+      area: "Manual review",
+      evidence: "Teacher confirmation is represented as a stop gate only.",
+      reviewerAction: "Disabled; no teacher decision record is created.",
+      state: "DISABLED_DEMO_ONLY",
+    },
+    {
+      area: "Escalation",
+      evidence: "Ambiguous work would require a future human-review path.",
+      reviewerAction: "Disabled; escalation remains outside this demo.",
+      state: "DISABLED_DEMO_ONLY",
+    },
+  ];
+
+  return {
+    blockedReasons: [...queuePreview.blockedReasons],
+    classCode: input.classCode,
+    packageCode: input.packageCode,
+    queueContextRows: queuePreview.queueRows.map((row) => ({
+      classCode: row.classCode,
+      reviewState: row.reviewState,
+      studentDemoCode: row.studentDemoCode,
+    })),
+    rubricRows,
+    rubricState:
+      queuePreview.queueState === "REVIEW_QUEUE_READY"
+        ? "RUBRIC_PREVIEW_READY"
+        : "RUBRIC_PREVIEW_BLOCKED",
+    safetyChecklist: [
+      "Rubric preview uses synthetic queue rows and demo codes only.",
+      "No learner work, teacher notes, grade, score or review decision is created.",
+      "No task body, worked steps, model text or copied textbook material is shown.",
+      "Real rubric-assisted review remains blocked until a later approved school beta gate.",
+    ],
+    subjectGroupCode: input.subjectGroupCode,
+    teacherDemoCode: input.teacherDemoCode,
+    totals: {
+      evidenceWrites: 0,
+      learnerRecordWrites: 0,
+      rubricCriteria: rubricRows.length,
+      scoreUpdates: 0,
+      teacherDecisionWrites: 0,
+    },
+  };
+}
+
 function buildClassDetail(
   snapshot: SchoolDemoSnapshot,
   classCode: string,
@@ -1231,6 +1343,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Student preview";
     case "review-queue":
       return "Review queue";
+    case "review-rubric":
+      return "Review rubric";
     case "import-preview":
       return "Import preview";
     case "rollout":
@@ -1337,6 +1451,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       surface: "/school-demo/review-queue",
     },
     {
+      actionLabel: "Open review rubric",
+      href: "/school-demo/review-rubric",
+      key: "review-rubric",
+      label: "Review rubric",
+      note: "Show the read-only teacher rubric shell with display-only criteria, disabled notes and no grade or score writes.",
+      surface: "/school-demo/review-rubric",
+    },
+    {
       actionLabel: "Open import preview",
       href: "/school-demo/import-preview",
       key: "import-preview",
@@ -1378,7 +1500,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, import preview and rollout preview.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, review rubric, import preview and rollout preview.",
       ),
       createElement(
         "p",
@@ -3590,8 +3712,8 @@ export function SchoolDemoTeacherReviewQueueView({
     renderHeader({
       actionHref: "/school-demo/student-preview",
       actionLabel: "Back to student preview",
-      secondaryActionHref: "/school-demo/import-preview",
-      secondaryActionLabel: "Import preview",
+      secondaryActionHref: "/school-demo/review-rubric",
+      secondaryActionLabel: "Review rubric",
       subtitle:
         "Read-only teacher review queue preview for synthetic class rows. It shows disabled teacher actions only.",
       title: "School demo review queue",
@@ -3814,6 +3936,289 @@ export function SchoolDemoTeacherReviewQueueView({
                 href: "/school-demo/student-preview",
               },
               "Open student preview",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/review-rubric",
+              },
+              "Open review rubric",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/summary",
+              },
+              "Open compact summary",
+            ),
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoTeacherReviewRubricView({
+  snapshot,
+}: SchoolDemoTeacherReviewRubricViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const defaultInput = buildDefaultSchoolDemoTeacherReviewRubricInput(snapshot);
+  const [input, setInput] = useState<SchoolDemoTeacherReviewRubricInput>(defaultInput);
+  const preview = buildSchoolDemoTeacherReviewRubricPreview(input, snapshot);
+
+  function updateInput(patch: Partial<SchoolDemoTeacherReviewRubricInput>) {
+    setInput((current) => ({ ...current, ...patch }));
+  }
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/review-queue",
+      actionLabel: "Back to review queue",
+      secondaryActionHref: "/school-demo/import-preview",
+      secondaryActionLabel: "Import preview",
+      subtitle:
+        "Read-only teacher rubric preview for synthetic review rows. It explains the future check path without creating grades or decisions.",
+      title: "School demo review rubric",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "review-rubric",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Review rubric metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Rubric state", preview.rubricState, "Browser-only"),
+      renderMetric("Criteria", preview.totals.rubricCriteria, "Display-only"),
+      renderMetric("Queue rows", preview.queueContextRows.length, "Synthetic context"),
+      renderMetric("Teacher decisions", preview.totals.teacherDecisionWrites, "Disabled"),
+      renderMetric("Evidence writes", preview.totals.evidenceWrites, "Disabled"),
+      renderMetric("Score updates", preview.totals.scoreUpdates, "Disabled"),
+      renderMetric("Learner writes", preview.totals.learnerRecordWrites, "Disabled"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid school-demo-review-rubric-grid" },
+      renderPanel(
+        "school-demo-review-rubric-controls",
+        "Review rubric controls",
+        createElement(
+          "div",
+          {
+            className: "school-demo-assignment-preview-controls school-demo-review-rubric-controls",
+          },
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Class"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Synthetic class for review rubric",
+                onChange: (event) =>
+                  updateInput({
+                    classCode: (event.currentTarget as HTMLSelectElement).value,
+                  }),
+                value: input.classCode,
+              },
+              [...snapshot.classes]
+                .sort(compareClassRecords)
+                .map((schoolClass) =>
+                  createElement(
+                    "option",
+                    { key: schoolClass.code, value: schoolClass.code },
+                    `${schoolClass.code} / grade ${schoolClass.gradeLevel}`,
+                  ),
+                ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Teacher"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Synthetic teacher for review rubric",
+                onChange: (event) =>
+                  updateInput({
+                    teacherDemoCode: (event.currentTarget as HTMLSelectElement).value,
+                  }),
+                value: input.teacherDemoCode,
+              },
+              [...snapshot.teachers]
+                .sort((left, right) => left.demoCode.localeCompare(right.demoCode))
+                .map((teacher) =>
+                  createElement(
+                    "option",
+                    { key: teacher.demoCode, value: teacher.demoCode },
+                    teacher.demoCode,
+                  ),
+                ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Subject group"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Synthetic subject group for review rubric",
+                onChange: (event) =>
+                  updateInput({
+                    subjectGroupCode: (event.currentTarget as HTMLSelectElement).value,
+                  }),
+                value: input.subjectGroupCode,
+              },
+              snapshot.subjectGroups.map((subjectGroup) =>
+                createElement(
+                  "option",
+                  { key: subjectGroup.code, value: subjectGroup.code },
+                  subjectGroup.code,
+                ),
+              ),
+            ),
+          ),
+          createElement(
+            "label",
+            null,
+            createElement("span", null, "Package"),
+            createElement(
+              "select",
+              {
+                "aria-label": "Synthetic package code for review rubric",
+                onChange: (event) =>
+                  updateInput({
+                    packageCode: (event.currentTarget as HTMLSelectElement).value,
+                  }),
+                value: input.packageCode,
+              },
+              schoolDemoAssignmentPackageOptions.map((packageCode) =>
+                createElement("option", { key: packageCode, value: packageCode }, packageCode),
+              ),
+            ),
+          ),
+          createElement(
+            "button",
+            {
+              className: "button-link school-demo-secondary-link",
+              onClick: () => setInput(defaultInput),
+              type: "button",
+            },
+            "Reset review rubric",
+          ),
+        ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-review-rubric-summary",
+        "Review rubric summary",
+        renderTable({
+          emptyLabel: "No review rubric summary rows are available.",
+          headers: ["Field", "Value"],
+          rows: [
+            ["State", preview.rubricState],
+            ["Class", preview.classCode],
+            ["Teacher", preview.teacherDemoCode],
+            ["Subject group", preview.subjectGroupCode],
+            ["Package", preview.packageCode],
+            ["Criteria", preview.totals.rubricCriteria],
+            ["Teacher decision writes", preview.totals.teacherDecisionWrites],
+            ["Evidence writes", preview.totals.evidenceWrites],
+          ].map(([label, value]) => ({
+            cells: [createElement("strong", { key: "label" }, label), value],
+            key: String(label),
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-review-rubric-table",
+        "Display-only rubric rows",
+        renderTable({
+          emptyLabel: "No rubric rows are available.",
+          headers: ["Area", "Evidence", "Reviewer action", "State"],
+          rows: preview.rubricRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "area" }, row.area),
+              row.evidence,
+              row.reviewerAction,
+              row.state,
+            ],
+            key: row.area,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-review-rubric-context",
+        "Synthetic queue context",
+        renderTable({
+          emptyLabel: "No synthetic queue context rows are available.",
+          headers: ["Demo student code", "Class", "State"],
+          rows: preview.queueContextRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "student" }, row.studentDemoCode),
+              row.classCode,
+              row.reviewState,
+            ],
+            key: row.studentDemoCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-review-rubric-blockers",
+        "Blocked reasons",
+        preview.blockedReasons.length > 0
+          ? renderList(preview.blockedReasons)
+          : createElement(
+              "p",
+              { className: "school-demo-muted" },
+              "No local rubric blockers. Real rubric-assisted review still waits for a later beta gate.",
+            ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-review-rubric-boundary",
+        "Review rubric boundary",
+        createElement(
+          "div",
+          { className: "school-demo-review-rubric-boundary" },
+          renderList(preview.safetyChecklist),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/review-queue",
+              },
+              "Open review queue",
             ),
           ),
           createElement(
