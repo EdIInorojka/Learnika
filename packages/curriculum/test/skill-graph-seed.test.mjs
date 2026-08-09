@@ -34,6 +34,7 @@ import {
   preWave7Slice29ChangedPaths,
   preWave7Slice30ChangedPaths,
   preWave7Slice31ChangedPaths,
+  preWave7Slice32ChangedPaths,
   validateChangedPathScope,
   matchesExactPathSet,
   validateSkillGraphChangedPaths,
@@ -243,6 +244,7 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
         preWave7Slice29ChangedPaths.has(changedPath) ||
         preWave7Slice30ChangedPaths.has(changedPath) ||
         preWave7Slice31ChangedPaths.has(changedPath) ||
+        preWave7Slice32ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,
@@ -795,6 +797,27 @@ test("scope guard permits only the exact Pre-Wave 7 Slice 31 school beta acceler
       validateSkillGraphChangedPaths([
         ...slice31Paths,
         "docs/wave-7-prep/school-beta-activation-approval-record.md",
+      ]),
+    /Runtime or out-of-scope path changed/,
+  );
+});
+
+test("scope guard permits only the exact Pre-Wave 7 Slice 32 external decision request worktree", () => {
+  const slice32Paths = [...preWave7Slice32ChangedPaths];
+
+  assert.equal(slice32Paths.length, 7);
+  assert.equal(slice32Paths.length, preWave7Slice32ChangedPaths.size);
+  assert.deepEqual(validateSkillGraphChangedPaths(slice32Paths), slice32Paths);
+  assert.equal(
+    slice32Paths.includes("docs/wave-7-prep/school-beta-external-decision-request.md"),
+    true,
+  );
+  assert.equal(slice32Paths.includes("packages/curriculum/scripts/validate-skill-graph.mjs"), true);
+  assert.throws(
+    () =>
+      validateSkillGraphChangedPaths([
+        ...slice32Paths,
+        "docs/wave-7-prep/school-beta-external-decision-answers.md",
       ]),
     /Runtime or out-of-scope path changed/,
   );
