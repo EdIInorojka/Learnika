@@ -1392,6 +1392,28 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   font-weight: 800;
 }
 
+.school-demo-review-queue-grid {
+  align-items: start;
+}
+
+.school-demo-review-queue-controls {
+  align-items: end;
+}
+
+.school-demo-review-queue-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-review-queue-boundary p {
+  margin: 0;
+}
+
+.school-demo-review-queue-table .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:has(.school-demo-shell),
   .school-demo-shell,
