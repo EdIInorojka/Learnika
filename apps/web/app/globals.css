@@ -1384,6 +1384,27 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   font-weight: 800;
 }
 
+.school-demo-assignment-planning-grid {
+  align-items: start;
+}
+
+.school-demo-assignment-planning-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-assignment-planning-boundary p {
+  margin: 0;
+}
+
+.school-demo-assignment-planning-class-board .school-demo-table td:first-child,
+.school-demo-assignment-planning-teacher-board .school-demo-table td:first-child,
+.school-demo-assignment-planning-draft-links .school-demo-table td:first-child,
+.school-demo-assignment-planning-timeline .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 .school-demo-delivery-preview-grid {
   align-items: start;
 }
