@@ -9,6 +9,7 @@ import { SYNTHETIC_DEMO_SCHOOL_SEED } from "../../api/prisma/seed.mjs";
 import { parseSchoolDemoSnapshotResponse } from "../lib/school-demo-contract.ts";
 import {
   SchoolDemoAssignmentPreviewView,
+  SchoolDemoAssignmentDraftDetailView,
   SchoolDemoAssignmentDraftsView,
   SchoolDemoClassAnalyticsView,
   SchoolDemoClassDetailView,
@@ -26,6 +27,7 @@ import {
   SchoolDemoTeacherReviewQueueView,
   SchoolDemoTeacherReviewRubricView,
   buildSchoolDemoAssignmentDraftPreview,
+  buildSchoolDemoPersistedAssignmentDraftDetailPreview,
   buildSchoolDemoPersistedAssignmentDraftsPreview,
   buildSchoolDemoClassAnalyticsPreview,
   buildSchoolDemoDeliveryRehearsalPreview,
@@ -337,6 +339,38 @@ test("school demo persisted assignment drafts project only synthetic rows", () =
   assert.equal(blockedPreview.totals.mutationWrites, 0);
   assert.match(blockedPreview.blockedReasons.join("\n"), /Mutation boundary/);
   assert.match(blockedPreview.blockedReasons.join("\n"), /Production data count/);
+});
+
+test("school demo assignment draft detail stays read-only and synthetic", () => {
+  const snapshot = snapshotFixtureForContract();
+  const draft = snapshot.assignmentDrafts[0];
+  const preview = buildSchoolDemoPersistedAssignmentDraftDetailPreview(
+    draft.assignmentCode,
+    snapshot,
+  );
+
+  assert.equal(preview.detailState, "ASSIGNMENT_DRAFT_DETAIL_READY");
+  assert.equal(preview.blockedReasons.length, 0);
+  assert.equal(preview.draft.assignmentCode, draft.assignmentCode);
+  assert.equal(preview.totals.detailWrites, 0);
+  assert.equal(preview.totals.targetCount, draft.targetCount);
+  assert.equal(preview.targetRows.length, draft.targetCount);
+  assert.equal(
+    preview.targetRows.every((row) => row.state === "DISPLAY_ONLY"),
+    true,
+  );
+  assert.match(preview.safetyChecklist.join("\n"), /seeded synthetic draft metadata/);
+  assert.match(preview.safetyChecklist.join("\n"), /cannot publish or deliver/);
+
+  const missingPreview = buildSchoolDemoPersistedAssignmentDraftDetailPreview(
+    "real-assignment-draft",
+    snapshot,
+  );
+
+  assert.equal(missingPreview.detailState, "ASSIGNMENT_DRAFT_DETAIL_BLOCKED");
+  assert.equal(missingPreview.draft, null);
+  assert.equal(missingPreview.totals.detailWrites, 0);
+  assert.match(missingPreview.blockedReasons.join("\n"), /outside the synthetic snapshot/);
 });
 
 test("school demo delivery rehearsal queues only synthetic rows and writes nothing", () => {
@@ -743,6 +777,12 @@ test("school demo dashboard and drilldown render the synthetic school overview",
       snapshot,
     }),
   );
+  const assignmentDraftDetailHtml = renderToStaticMarkup(
+    createElement(SchoolDemoAssignmentDraftDetailView, {
+      assignmentCode: snapshot.assignmentDrafts[0].assignmentCode,
+      snapshot,
+    }),
+  );
   const deliveryPreviewHtml = renderToStaticMarkup(
     createElement(SchoolDemoDeliveryPreviewView, {
       snapshot,
@@ -788,7 +828,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
       snapshot,
     }),
   );
-  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}\n${pilotChecklistHtml}\n${pilotConfigHtml}\n${assignmentPreviewHtml}\n${assignmentDraftsHtml}\n${deliveryPreviewHtml}\n${studentPreviewHtml}\n${reviewQueueHtml}\n${reviewRubricHtml}\n${analyticsHtml}\n${teacherDashboardHtml}\n${printPackHtml}\n${importPreviewHtml}\n${rolloutHtml}`;
+  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}\n${pilotChecklistHtml}\n${pilotConfigHtml}\n${assignmentPreviewHtml}\n${assignmentDraftsHtml}\n${assignmentDraftDetailHtml}\n${deliveryPreviewHtml}\n${studentPreviewHtml}\n${reviewQueueHtml}\n${reviewRubricHtml}\n${analyticsHtml}\n${teacherDashboardHtml}\n${printPackHtml}\n${importPreviewHtml}\n${rolloutHtml}`;
 
   for (const phrase of [
     "Presentation route",
@@ -813,13 +853,19 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Teacher role placeholders",
     "School demo assignment preview",
     "School demo assignment draft rows",
+    "School demo assignment draft detail",
     "Teacher draft controls",
     "Draft summary",
     "Draft rows",
     "Target snapshot",
     "Draft settings",
     "Zero-write boundary",
+    "Teacher planning detail",
+    "Planning settings",
+    "Target roster detail",
+    "Detail boundary",
     "ASSIGNMENT_DRAFTS_READY",
+    "ASSIGNMENT_DRAFT_DETAIL_READY",
     "Blocked reasons",
     "Eligible roster preview",
     "Preview boundary",
@@ -950,6 +996,8 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "school-demo-assignment-preview-boundary",
     "school-demo-assignment-drafts-grid",
     "school-demo-assignment-drafts-boundary",
+    "school-demo-assignment-draft-detail-grid",
+    "school-demo-assignment-draft-detail-boundary",
     "school-demo-delivery-preview-grid",
     "school-demo-delivery-preview-controls",
     "school-demo-delivery-preview-boundary",
@@ -1068,11 +1116,22 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(assignmentDraftsHtml, /href="\/school-demo\/delivery-preview"/);
   assert.match(assignmentDraftsHtml, /href="\/school-demo\/teacher-dashboard"/);
   assert.match(assignmentDraftsHtml, /href="\/school-demo\/print-pack"/);
+  assert.match(assignmentDraftsHtml, /href="\/school-demo\/assignment-drafts\/synthetic-draft-/);
   assert.match(assignmentDraftsHtml, /School demo assignment draft rows/);
   assert.match(assignmentDraftsHtml, /Draft rows/);
   assert.match(assignmentDraftsHtml, /Target snapshot/);
   assert.match(assignmentDraftsHtml, /ASSIGNMENT_DRAFTS_READY/);
   assert.match(assignmentDraftsHtml, /Zero-write boundary/);
+  assert.match(assignmentDraftDetailHtml, /href="\/school-demo\/assignment-drafts"/);
+  assert.match(assignmentDraftDetailHtml, /href="\/school-demo\/teacher-dashboard"/);
+  assert.match(assignmentDraftDetailHtml, /href="\/school-demo\/delivery-preview"/);
+  assert.match(assignmentDraftDetailHtml, /href="\/school-demo\/review-queue"/);
+  assert.match(assignmentDraftDetailHtml, /School demo assignment draft detail/);
+  assert.match(assignmentDraftDetailHtml, /Teacher planning detail/);
+  assert.match(assignmentDraftDetailHtml, /Planning settings/);
+  assert.match(assignmentDraftDetailHtml, /Target roster detail/);
+  assert.match(assignmentDraftDetailHtml, /ASSIGNMENT_DRAFT_DETAIL_READY/);
+  assert.match(assignmentDraftDetailHtml, /Detail boundary/);
   assert.match(deliveryPreviewHtml, /href="\/school-demo\/assignment-preview"/);
   assert.match(deliveryPreviewHtml, /href="\/school-demo\/student-preview"/);
   assert.match(deliveryPreviewHtml, /href="\/school-demo\/import-preview"/);
@@ -1240,6 +1299,17 @@ test("school demo route is read-only and display-only", async () => {
     path.join(process.cwd(), "app", "school-demo", "assignment-drafts", "page.tsx"),
     "utf8",
   );
+  const assignmentDraftDetailPageSource = fs.readFileSync(
+    path.join(
+      process.cwd(),
+      "app",
+      "school-demo",
+      "assignment-drafts",
+      "[assignmentCode]",
+      "page.tsx",
+    ),
+    "utf8",
+  );
   const deliveryPreviewPageSource = fs.readFileSync(
     path.join(process.cwd(), "app", "school-demo", "delivery-preview", "page.tsx"),
     "utf8",
@@ -1317,6 +1387,14 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(assignmentDraftsPageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(assignmentDraftsPageSource.includes("SchoolDemoAssignmentDraftsView"), true);
   assert.equal(assignmentDraftsPageSource.includes('dynamic = "force-dynamic"'), true);
+  assert.equal(assignmentDraftDetailPageSource.includes("readSchoolDemoSnapshot"), true);
+  assert.equal(
+    assignmentDraftDetailPageSource.includes("SchoolDemoAssignmentDraftDetailView"),
+    true,
+  );
+  assert.equal(assignmentDraftDetailPageSource.includes('dynamic = "force-dynamic"'), true);
+  assert.equal(assignmentDraftDetailPageSource.includes("notFound()"), true);
+  assert.equal(assignmentDraftDetailPageSource.includes("assignmentCode"), true);
   assert.equal(deliveryPreviewPageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(deliveryPreviewPageSource.includes("SchoolDemoDeliveryPreviewView"), true);
   assert.equal(deliveryPreviewPageSource.includes('dynamic = "force-dynamic"'), true);
@@ -1354,6 +1432,8 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("buildSchoolDemoAssignmentDraftPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoAssignmentDraftsView"), true);
   assert.equal(viewSource.includes("buildSchoolDemoPersistedAssignmentDraftsPreview"), true);
+  assert.equal(viewSource.includes("SchoolDemoAssignmentDraftDetailView"), true);
+  assert.equal(viewSource.includes("buildSchoolDemoPersistedAssignmentDraftDetailPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoDeliveryPreviewView"), true);
   assert.equal(viewSource.includes("buildSchoolDemoDeliveryRehearsalPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoStudentPreviewView"), true);
@@ -1401,6 +1481,11 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("school-demo-assignment-drafts-settings"), true);
   assert.equal(viewSource.includes("school-demo-assignment-drafts-blockers"), true);
   assert.equal(viewSource.includes("school-demo-assignment-drafts-boundary"), true);
+  assert.equal(viewSource.includes("school-demo-assignment-draft-detail-summary"), true);
+  assert.equal(viewSource.includes("school-demo-assignment-draft-detail-settings"), true);
+  assert.equal(viewSource.includes("school-demo-assignment-draft-detail-targets"), true);
+  assert.equal(viewSource.includes("school-demo-assignment-draft-detail-blockers"), true);
+  assert.equal(viewSource.includes("school-demo-assignment-draft-detail-boundary"), true);
   assert.equal(viewSource.includes("school-demo-delivery-preview-controls"), true);
   assert.equal(viewSource.includes("school-demo-delivery-preview-summary"), true);
   assert.equal(viewSource.includes("school-demo-delivery-preview-channels"), true);
@@ -1503,6 +1588,8 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(cssSource.includes(".school-demo-assignment-preview-boundary"), true);
   assert.equal(cssSource.includes(".school-demo-assignment-drafts-grid"), true);
   assert.equal(cssSource.includes(".school-demo-assignment-drafts-boundary"), true);
+  assert.equal(cssSource.includes(".school-demo-assignment-draft-detail-grid"), true);
+  assert.equal(cssSource.includes(".school-demo-assignment-draft-detail-boundary"), true);
   assert.equal(cssSource.includes(".school-demo-delivery-preview-grid"), true);
   assert.equal(cssSource.includes(".school-demo-delivery-preview-controls"), true);
   assert.equal(cssSource.includes(".school-demo-delivery-preview-boundary"), true);
@@ -1583,7 +1670,7 @@ test("school demo route is read-only and display-only", async () => {
     "address",
   ]) {
     assert.equal(
-      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${pilotPageSource}\n${pilotConfigPageSource}\n${assignmentPreviewPageSource}\n${assignmentDraftsPageSource}\n${deliveryPreviewPageSource}\n${studentPreviewPageSource}\n${reviewQueuePageSource}\n${reviewRubricPageSource}\n${analyticsPageSource}\n${teacherDashboardPageSource}\n${printPackPageSource}\n${importPreviewPageSource}\n${rolloutPageSource}\n${viewSource}`.includes(
+      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${pilotPageSource}\n${pilotConfigPageSource}\n${assignmentPreviewPageSource}\n${assignmentDraftsPageSource}\n${assignmentDraftDetailPageSource}\n${deliveryPreviewPageSource}\n${studentPreviewPageSource}\n${reviewQueuePageSource}\n${reviewRubricPageSource}\n${analyticsPageSource}\n${teacherDashboardPageSource}\n${printPackPageSource}\n${importPreviewPageSource}\n${rolloutPageSource}\n${viewSource}`.includes(
         forbidden,
       ),
       false,

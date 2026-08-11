@@ -767,6 +767,18 @@ export const preWave7Slice43ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+export const preWave7Slice44ChangedPaths = new Set([
+  "apps/web/app/globals.css",
+  "apps/web/app/school-demo/assignment-drafts/[assignmentCode]/page.tsx",
+  "apps/web/lib/school-demo-view.ts",
+  "apps/web/test/school-demo-foundation.test.mjs",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
@@ -848,7 +860,9 @@ export function matchesExactPathSet(paths, expectedPaths) {
       (paths.length === preWave7Slice42ChangedPaths.size &&
         paths.every((value) => preWave7Slice42ChangedPaths.has(value))) ||
       (paths.length === preWave7Slice43ChangedPaths.size &&
-        paths.every((value) => preWave7Slice43ChangedPaths.has(value))));
+        paths.every((value) => preWave7Slice43ChangedPaths.has(value))) ||
+      (paths.length === preWave7Slice44ChangedPaths.size &&
+        paths.every((value) => preWave7Slice44ChangedPaths.has(value))));
   if (currentSchoolDemoExactMatch) return true;
   const exactMatch =
     Array.isArray(paths) &&
@@ -1201,7 +1215,8 @@ export function validateSkillGraphChangedPaths(changedPaths) {
     matchesExactPathSet(changedPaths, preWave7Slice40ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice41ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice42ChangedPaths) ||
-    matchesExactPathSet(changedPaths, preWave7Slice43ChangedPaths)
+    matchesExactPathSet(changedPaths, preWave7Slice43ChangedPaths) ||
+    matchesExactPathSet(changedPaths, preWave7Slice44ChangedPaths)
   ) {
     return changedPaths;
   }
