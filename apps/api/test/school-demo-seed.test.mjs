@@ -89,6 +89,34 @@ async function readSeedSnapshot() {
           schoolTeacherId: true,
         },
       },
+      schoolAssignments: {
+        orderBy: { id: "asc" },
+        select: {
+          id: true,
+          schoolId: true,
+          academicYearId: true,
+          schoolClassId: true,
+          subjectGroupId: true,
+          schoolTeacherId: true,
+          assignmentCode: true,
+          packageCode: true,
+          status: true,
+          deliveryMode: true,
+          attemptLimit: true,
+          durationMinutes: true,
+          availabilityDays: true,
+        },
+      },
+      assignmentTargets: {
+        orderBy: { id: "asc" },
+        select: {
+          id: true,
+          schoolId: true,
+          schoolAssignmentId: true,
+          schoolStudentId: true,
+          state: true,
+        },
+      },
       enrollments: {
         orderBy: { id: "asc" },
         select: {
@@ -140,6 +168,16 @@ test("synthetic demo seed is deterministic, PII-safe and local-only", () => {
     ],
   );
   assert.equal(seed.license.status, "PLANNED");
+  assert.equal(seed.assignmentDrafts.length, 3);
+  assert.equal(seed.assignmentTargets.length, 6);
+  assert.deepEqual(
+    seed.assignmentDrafts.map((draft) => draft.assignmentCode),
+    [
+      "synthetic-draft-7a-linear-demo",
+      "synthetic-draft-8a-functions-demo",
+      "synthetic-draft-9a-geometry-demo",
+    ],
+  );
   assert.equal(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|https?:\/\/|\+7[\s()-]*\d/i.test(serialized), false);
   assert.equal(
     keys.some((key) =>
@@ -167,6 +205,8 @@ test("synthetic demo seed is idempotent and preserves school tenant isolation", 
   assert.equal(secondSnapshot.teachers.length, 3);
   assert.equal(secondSnapshot.students.length, 6);
   assert.equal(secondSnapshot.assignments.length, 3);
+  assert.equal(secondSnapshot.schoolAssignments.length, 3);
+  assert.equal(secondSnapshot.assignmentTargets.length, 6);
   assert.equal(secondSnapshot.enrollments.length, 6);
   assert.equal(secondSnapshot.licenses.length, 1);
   assert.equal(secondSnapshot.entitlements.length, 3);
@@ -178,6 +218,8 @@ test("synthetic demo seed is idempotent and preserves school tenant isolation", 
     ...secondSnapshot.teachers,
     ...secondSnapshot.students,
     ...secondSnapshot.assignments,
+    ...secondSnapshot.schoolAssignments,
+    ...secondSnapshot.assignmentTargets,
     ...secondSnapshot.enrollments,
     ...secondSnapshot.licenses,
     ...secondSnapshot.entitlements,
@@ -189,12 +231,26 @@ test("synthetic demo seed is idempotent and preserves school tenant isolation", 
   const subjectGroupIds = new Set(secondSnapshot.subjectGroups.map(({ id }) => id));
   const teacherIds = new Set(secondSnapshot.teachers.map(({ id }) => id));
   const studentIds = new Set(secondSnapshot.students.map(({ id }) => id));
+  const schoolAssignmentIds = new Set(secondSnapshot.schoolAssignments.map(({ id }) => id));
   const licenseIds = new Set(secondSnapshot.licenses.map(({ id }) => id));
 
   for (const assignment of secondSnapshot.assignments) {
     assert.equal(classIds.has(assignment.schoolClassId), true);
     assert.equal(subjectGroupIds.has(assignment.subjectGroupId), true);
     assert.equal(teacherIds.has(assignment.schoolTeacherId), true);
+  }
+  for (const assignmentDraft of secondSnapshot.schoolAssignments) {
+    assert.equal(assignmentDraft.academicYearId, seed.academicYear.id);
+    assert.equal(classIds.has(assignmentDraft.schoolClassId), true);
+    assert.equal(subjectGroupIds.has(assignmentDraft.subjectGroupId), true);
+    assert.equal(teacherIds.has(assignmentDraft.schoolTeacherId), true);
+    assert.equal(assignmentDraft.status, "DRAFT");
+    assert.equal(assignmentDraft.assignmentCode.startsWith("synthetic-draft-"), true);
+  }
+  for (const assignmentTarget of secondSnapshot.assignmentTargets) {
+    assert.equal(schoolAssignmentIds.has(assignmentTarget.schoolAssignmentId), true);
+    assert.equal(studentIds.has(assignmentTarget.schoolStudentId), true);
+    assert.equal(assignmentTarget.state, "INCLUDED");
   }
   for (const enrollment of secondSnapshot.enrollments) {
     assert.equal(classIds.has(enrollment.schoolClassId), true);

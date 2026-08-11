@@ -65,6 +65,23 @@ export interface SchoolDemoStudentEnrollmentSummary {
   studentDemoCode: string;
 }
 
+export interface SchoolDemoAssignmentDraftSummary {
+  assignmentCode: string;
+  classCode: string;
+  deliveryMode: "ONLINE_REHEARSAL" | "PRINT_REHEARSAL";
+  packageCode: string;
+  settings: {
+    attemptLimit: number;
+    availabilityDays: number;
+    durationMinutes: number;
+  };
+  status: "DRAFT" | "REHEARSAL_READY" | "ARCHIVED";
+  subjectGroupCode: string;
+  targetCount: number;
+  targetStudentDemoCodes: string[];
+  teacherDemoCode: string;
+}
+
 export interface SchoolDemoLicenseSummary {
   entitlementCount: number;
   licenseCode: string;
@@ -79,6 +96,7 @@ export interface SchoolDemoEntitlementSummary {
 
 export interface SchoolDemoSnapshot {
   academicYear: SchoolDemoAcademicYearSummary;
+  assignmentDrafts: SchoolDemoAssignmentDraftSummary[];
   boundary: SchoolDemoBoundary;
   classes: SchoolDemoClassSummary[];
   entitlements: SchoolDemoEntitlementSummary[];

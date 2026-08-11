@@ -45,6 +45,7 @@ import {
   preWave7Slice40ChangedPaths,
   preWave7Slice41ChangedPaths,
   preWave7Slice42ChangedPaths,
+  preWave7Slice43ChangedPaths,
   validateChangedPathScope,
   matchesExactPathSet,
   validateSkillGraphChangedPaths,
@@ -265,6 +266,7 @@ test("slice scope guard rejects runtime and out-of-scope worktree paths", () => 
         preWave7Slice40ChangedPaths.has(changedPath) ||
         preWave7Slice41ChangedPaths.has(changedPath) ||
         preWave7Slice42ChangedPaths.has(changedPath) ||
+        preWave7Slice43ChangedPaths.has(changedPath) ||
         changedPath === "docs/wave-6/closure-gate.md" ||
         changedPath === "apps/api/test/mock-ocr-candidate-api.e2e.mjs",
       true,
@@ -1027,6 +1029,33 @@ test("scope guard permits only the exact Pre-Wave 7 Slice 42 school assignment d
       validateSkillGraphChangedPaths([
         ...slice42Paths,
         "apps/api/src/school-assignments/school-assignment.controller.ts",
+      ]),
+    /Runtime or out-of-scope path changed/,
+  );
+});
+
+test("scope guard permits only the exact Pre-Wave 7 Slice 43 assignment draft projection worktree", () => {
+  const slice43Paths = [...preWave7Slice43ChangedPaths];
+
+  assert.equal(slice43Paths.length, 19);
+  assert.equal(slice43Paths.length, preWave7Slice43ChangedPaths.size);
+  assert.deepEqual(validateSkillGraphChangedPaths(slice43Paths), slice43Paths);
+  assert.equal(slice43Paths.includes("apps/api/prisma/seed.mjs"), true);
+  assert.equal(slice43Paths.includes("apps/web/app/school-demo/assignment-drafts/page.tsx"), true);
+  assert.equal(slice43Paths.includes("packages/contracts/openapi.json"), true);
+  assert.throws(
+    () =>
+      validateSkillGraphChangedPaths([
+        ...slice43Paths,
+        "apps/api/src/school-assignments/school-assignment.controller.ts",
+      ]),
+    /Runtime or out-of-scope path changed/,
+  );
+  assert.throws(
+    () =>
+      validateSkillGraphChangedPaths([
+        ...slice43Paths,
+        "apps/api/prisma/migrations/20260811130000_school_assignment_projection/migration.sql",
       ]),
     /Runtime or out-of-scope path changed/,
   );

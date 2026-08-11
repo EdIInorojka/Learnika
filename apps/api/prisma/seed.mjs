@@ -125,6 +125,85 @@ export const SYNTHETIC_DEMO_SCHOOL_SEED = Object.freeze({
       teacherId: "70000000-0000-4000-8000-000000000032",
     },
   ],
+  assignmentDrafts: [
+    {
+      id: "70000000-0000-4000-8000-000000000090",
+      assignmentCode: "synthetic-draft-7a-linear-demo",
+      availabilityDays: 7,
+      classId: "70000000-0000-4000-8000-000000000010",
+      deliveryMode: "ONLINE_REHEARSAL",
+      durationMinutes: 45,
+      packageCode: "synthetic-package-7a-linear-demo",
+      status: "DRAFT",
+      subjectGroupId: "70000000-0000-4000-8000-000000000020",
+      teacherId: "70000000-0000-4000-8000-000000000030",
+      attemptLimit: 2,
+    },
+    {
+      id: "70000000-0000-4000-8000-000000000091",
+      assignmentCode: "synthetic-draft-8a-functions-demo",
+      availabilityDays: 5,
+      classId: "70000000-0000-4000-8000-000000000011",
+      deliveryMode: "ONLINE_REHEARSAL",
+      durationMinutes: 45,
+      packageCode: "synthetic-package-8a-functions-demo",
+      status: "DRAFT",
+      subjectGroupId: "70000000-0000-4000-8000-000000000021",
+      teacherId: "70000000-0000-4000-8000-000000000031",
+      attemptLimit: 2,
+    },
+    {
+      id: "70000000-0000-4000-8000-000000000092",
+      assignmentCode: "synthetic-draft-9a-geometry-demo",
+      availabilityDays: 7,
+      classId: "70000000-0000-4000-8000-000000000012",
+      deliveryMode: "PRINT_REHEARSAL",
+      durationMinutes: 60,
+      packageCode: "synthetic-package-9a-geometry-demo",
+      status: "DRAFT",
+      subjectGroupId: "70000000-0000-4000-8000-000000000022",
+      teacherId: "70000000-0000-4000-8000-000000000032",
+      attemptLimit: 1,
+    },
+  ],
+  assignmentTargets: [
+    {
+      id: "70000000-0000-4000-8000-000000000100",
+      assignmentDraftId: "70000000-0000-4000-8000-000000000090",
+      studentId: "70000000-0000-4000-8000-000000000040",
+      state: "INCLUDED",
+    },
+    {
+      id: "70000000-0000-4000-8000-000000000101",
+      assignmentDraftId: "70000000-0000-4000-8000-000000000090",
+      studentId: "70000000-0000-4000-8000-000000000041",
+      state: "INCLUDED",
+    },
+    {
+      id: "70000000-0000-4000-8000-000000000102",
+      assignmentDraftId: "70000000-0000-4000-8000-000000000091",
+      studentId: "70000000-0000-4000-8000-000000000042",
+      state: "INCLUDED",
+    },
+    {
+      id: "70000000-0000-4000-8000-000000000103",
+      assignmentDraftId: "70000000-0000-4000-8000-000000000091",
+      studentId: "70000000-0000-4000-8000-000000000043",
+      state: "INCLUDED",
+    },
+    {
+      id: "70000000-0000-4000-8000-000000000104",
+      assignmentDraftId: "70000000-0000-4000-8000-000000000092",
+      studentId: "70000000-0000-4000-8000-000000000044",
+      state: "INCLUDED",
+    },
+    {
+      id: "70000000-0000-4000-8000-000000000105",
+      assignmentDraftId: "70000000-0000-4000-8000-000000000092",
+      studentId: "70000000-0000-4000-8000-000000000045",
+      state: "INCLUDED",
+    },
+  ],
   license: {
     id: "70000000-0000-4000-8000-000000000070",
     licenseCode: "synthetic-demo-license-ru-ru",
@@ -301,6 +380,60 @@ export async function seedSyntheticDemoSchool(prisma) {
       });
     }
 
+    for (const assignmentDraft of seed.assignmentDrafts) {
+      await tx.schoolAssignment.upsert({
+        where: { id: assignmentDraft.id },
+        create: {
+          id: assignmentDraft.id,
+          schoolId,
+          academicYearId,
+          schoolClassId: assignmentDraft.classId,
+          subjectGroupId: assignmentDraft.subjectGroupId,
+          schoolTeacherId: assignmentDraft.teacherId,
+          assignmentCode: assignmentDraft.assignmentCode,
+          packageCode: assignmentDraft.packageCode,
+          status: assignmentDraft.status,
+          deliveryMode: assignmentDraft.deliveryMode,
+          attemptLimit: assignmentDraft.attemptLimit,
+          durationMinutes: assignmentDraft.durationMinutes,
+          availabilityDays: assignmentDraft.availabilityDays,
+        },
+        update: {
+          schoolId,
+          academicYearId,
+          schoolClassId: assignmentDraft.classId,
+          subjectGroupId: assignmentDraft.subjectGroupId,
+          schoolTeacherId: assignmentDraft.teacherId,
+          assignmentCode: assignmentDraft.assignmentCode,
+          packageCode: assignmentDraft.packageCode,
+          status: assignmentDraft.status,
+          deliveryMode: assignmentDraft.deliveryMode,
+          attemptLimit: assignmentDraft.attemptLimit,
+          durationMinutes: assignmentDraft.durationMinutes,
+          availabilityDays: assignmentDraft.availabilityDays,
+        },
+      });
+    }
+
+    for (const assignmentTarget of seed.assignmentTargets) {
+      await tx.schoolAssignmentTarget.upsert({
+        where: { id: assignmentTarget.id },
+        create: {
+          id: assignmentTarget.id,
+          schoolId,
+          schoolAssignmentId: assignmentTarget.assignmentDraftId,
+          schoolStudentId: assignmentTarget.studentId,
+          state: assignmentTarget.state,
+        },
+        update: {
+          schoolId,
+          schoolAssignmentId: assignmentTarget.assignmentDraftId,
+          schoolStudentId: assignmentTarget.studentId,
+          state: assignmentTarget.state,
+        },
+      });
+    }
+
     await tx.schoolLicense.upsert({
       where: { id: seed.license.id },
       create: {
@@ -346,6 +479,8 @@ export async function seedSyntheticDemoSchool(prisma) {
     teacherCount: seed.teachers.length,
     studentCount: seed.students.length,
     assignmentCount: seed.assignments.length,
+    assignmentDraftCount: seed.assignmentDrafts.length,
+    assignmentTargetCount: seed.assignmentTargets.length,
     enrollmentCount: seed.students.length,
     licenseCount: 1,
     entitlementCount: seed.entitlements.length,

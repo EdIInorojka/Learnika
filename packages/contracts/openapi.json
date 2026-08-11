@@ -1792,6 +1792,42 @@
         },
         "required": ["code", "endsOn", "startsOn"]
       },
+      "SchoolDemoAssignmentDraftSettingsDto": {
+        "type": "object",
+        "properties": {
+          "attemptLimit": { "type": "number", "minimum": 1 },
+          "availabilityDays": { "type": "number", "minimum": 1 },
+          "durationMinutes": { "type": "number", "minimum": 1 }
+        },
+        "required": ["attemptLimit", "availabilityDays", "durationMinutes"]
+      },
+      "SchoolDemoAssignmentDraftDto": {
+        "type": "object",
+        "properties": {
+          "assignmentCode": { "type": "string", "maxLength": 80 },
+          "classCode": { "type": "string", "maxLength": 40 },
+          "deliveryMode": { "type": "string", "enum": ["ONLINE_REHEARSAL", "PRINT_REHEARSAL"] },
+          "packageCode": { "type": "string", "maxLength": 80 },
+          "settings": { "$ref": "#/components/schemas/SchoolDemoAssignmentDraftSettingsDto" },
+          "status": { "type": "string", "enum": ["ARCHIVED", "DRAFT", "REHEARSAL_READY"] },
+          "subjectGroupCode": { "type": "string", "maxLength": 40 },
+          "targetCount": { "type": "number", "minimum": 0 },
+          "targetStudentDemoCodes": { "type": "array", "items": { "type": "string" } },
+          "teacherDemoCode": { "type": "string", "maxLength": 40 }
+        },
+        "required": [
+          "assignmentCode",
+          "classCode",
+          "deliveryMode",
+          "packageCode",
+          "settings",
+          "status",
+          "subjectGroupCode",
+          "targetCount",
+          "targetStudentDemoCodes",
+          "teacherDemoCode"
+        ]
+      },
       "SchoolDemoBoundaryDto": {
         "type": "object",
         "properties": {
@@ -1900,6 +1936,10 @@
         "type": "object",
         "properties": {
           "academicYear": { "$ref": "#/components/schemas/SchoolDemoAcademicYearDto" },
+          "assignmentDrafts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SchoolDemoAssignmentDraftDto" }
+          },
           "boundary": { "$ref": "#/components/schemas/SchoolDemoBoundaryDto" },
           "classes": {
             "type": "array",
@@ -1937,6 +1977,7 @@
         },
         "required": [
           "academicYear",
+          "assignmentDrafts",
           "boundary",
           "classes",
           "entitlements",

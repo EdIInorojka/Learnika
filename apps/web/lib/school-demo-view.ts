@@ -48,6 +48,10 @@ interface SchoolDemoAssignmentPreviewViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoAssignmentDraftsViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoDeliveryPreviewViewProps {
   snapshot: SchoolDemoSnapshot;
 }
@@ -138,6 +142,7 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "pilot"
   | "pilot-config"
   | "assignment-preview"
+  | "assignment-drafts"
   | "delivery-preview"
   | "student-preview"
   | "review-queue"
@@ -158,6 +163,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "pilot",
   "pilot-config",
   "assignment-preview",
+  "assignment-drafts",
   "delivery-preview",
   "student-preview",
   "review-queue",
@@ -219,6 +225,35 @@ export interface SchoolDemoAssignmentDraftPreview {
   };
   subjectGroupCode: string;
   teacherDemoCode: string;
+}
+
+export interface SchoolDemoPersistedAssignmentDraftsPreview {
+  blockedReasons: string[];
+  draftRows: Array<{
+    assignmentCode: string;
+    classCode: string;
+    deliveryMode: "ONLINE_REHEARSAL" | "PRINT_REHEARSAL";
+    packageCode: string;
+    status: "DRAFT" | "REHEARSAL_READY" | "ARCHIVED";
+    subjectGroupCode: string;
+    targetCount: number;
+    teacherDemoCode: string;
+  }>;
+  previewState: "ASSIGNMENT_DRAFTS_READY" | "ASSIGNMENT_DRAFTS_BLOCKED";
+  safetyChecklist: string[];
+  targetRows: Array<{
+    assignmentCode: string;
+    classCode: string;
+    state: "DISPLAY_ONLY";
+    studentDemoCode: string;
+  }>;
+  totals: {
+    draftCount: number;
+    mutationWrites: 0;
+    productionDataCount: 0;
+    realSchoolCount: 0;
+    targetCount: number;
+  };
 }
 
 export interface SchoolDemoDeliveryRehearsalPreview {
@@ -871,6 +906,82 @@ export function buildSchoolDemoAssignmentDraftPreview(
     },
     subjectGroupCode: input.subjectGroupCode,
     teacherDemoCode: input.teacherDemoCode,
+  };
+}
+
+export function buildSchoolDemoPersistedAssignmentDraftsPreview(
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoPersistedAssignmentDraftsPreview {
+  const blockedReasons: string[] = [];
+
+  if (snapshot.boundary.mutationAllowed !== false) {
+    blockedReasons.push("Mutation boundary must stay closed.");
+  }
+  if (snapshot.boundary.productionDataCount !== 0) {
+    blockedReasons.push("Production data count must stay zero.");
+  }
+  if (snapshot.boundary.realSchoolCount !== 0) {
+    blockedReasons.push("Real school count must stay zero.");
+  }
+  if (snapshot.boundary.activation !== "BLOCKED" || snapshot.boundary.readiness !== "NOT_READY") {
+    blockedReasons.push("Readiness and activation gates must stay closed.");
+  }
+  if (snapshot.boundary.workflow !== "INACTIVE") {
+    blockedReasons.push("Diagnostic review state must stay inactive.");
+  }
+
+  const draftRows = [...snapshot.assignmentDrafts]
+    .sort(
+      (left, right) =>
+        left.classCode.localeCompare(right.classCode) ||
+        left.assignmentCode.localeCompare(right.assignmentCode),
+    )
+    .map((draft) => ({
+      assignmentCode: draft.assignmentCode,
+      classCode: draft.classCode,
+      deliveryMode: draft.deliveryMode,
+      packageCode: draft.packageCode,
+      status: draft.status,
+      subjectGroupCode: draft.subjectGroupCode,
+      targetCount: draft.targetCount,
+      teacherDemoCode: draft.teacherDemoCode,
+    }));
+  const targetRows = [...snapshot.assignmentDrafts]
+    .sort(
+      (left, right) =>
+        left.classCode.localeCompare(right.classCode) ||
+        left.assignmentCode.localeCompare(right.assignmentCode),
+    )
+    .flatMap((draft) =>
+      [...draft.targetStudentDemoCodes]
+        .sort((left, right) => left.localeCompare(right))
+        .map((studentDemoCode) => ({
+          assignmentCode: draft.assignmentCode,
+          classCode: draft.classCode,
+          state: "DISPLAY_ONLY" as const,
+          studentDemoCode,
+        })),
+    );
+
+  return {
+    blockedReasons,
+    draftRows,
+    previewState:
+      blockedReasons.length === 0 ? "ASSIGNMENT_DRAFTS_READY" : "ASSIGNMENT_DRAFTS_BLOCKED",
+    safetyChecklist: [
+      "Draft rows are seeded synthetic metadata only.",
+      "No task text, learner work, score or grade is stored here.",
+      "Targets reference demo student codes only and stay display-only.",
+      "Publishing and delivery remain blocked until a later approved school beta gate.",
+    ],
+    targetRows,
+    totals: {
+      draftCount: draftRows.length,
+      mutationWrites: 0,
+      productionDataCount: snapshot.boundary.productionDataCount,
+      realSchoolCount: snapshot.boundary.realSchoolCount,
+      targetCount: targetRows.length,
+    },
   };
 }
 
@@ -1786,6 +1897,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Pilot config preview";
     case "assignment-preview":
       return "Assignment preview";
+    case "assignment-drafts":
+      return "Assignment draft rows";
     case "delivery-preview":
       return "Delivery rehearsal";
     case "student-preview":
@@ -1880,6 +1993,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       label: "Assignment preview",
       note: "Build a local-only teacher draft from synthetic class, subject and timing options. It creates no assignment record.",
       surface: "/school-demo/assignment-preview",
+    },
+    {
+      actionLabel: "Open draft rows",
+      href: "/school-demo/assignment-drafts",
+      key: "assignment-drafts",
+      label: "Assignment draft rows",
+      note: "Show the persisted synthetic assignment draft rows and target counts without publishing, delivery or learner work.",
+      surface: "/school-demo/assignment-drafts",
     },
     {
       actionLabel: "Open delivery rehearsal",
@@ -1979,7 +2100,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, review rubric, class analytics, teacher dashboard, print pack, import preview and rollout preview.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, assignment draft rows, delivery rehearsal, student preview, review queue, review rubric, class analytics, teacher dashboard, print pack, import preview and rollout preview.",
       ),
       createElement(
         "p",
@@ -3389,6 +3510,18 @@ export function SchoolDemoAssignmentPreviewView({
               "a",
               {
                 className: "button-link school-demo-secondary-link",
+                href: "/school-demo/assignment-drafts",
+              },
+              "Open draft rows",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
                 href: "/school-demo/delivery-preview",
               },
               "Open delivery rehearsal",
@@ -3425,6 +3558,169 @@ export function SchoolDemoAssignmentPreviewView({
               "a",
               { className: "button-link school-demo-secondary-link", href: "/school-demo/rollout" },
               "Open rollout preview",
+            ),
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoAssignmentDraftsView({ snapshot }: SchoolDemoAssignmentDraftsViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const preview = buildSchoolDemoPersistedAssignmentDraftsPreview(snapshot);
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/assignment-preview",
+      actionLabel: "Back to assignment preview",
+      secondaryActionHref: "/school-demo/delivery-preview",
+      secondaryActionLabel: "Delivery rehearsal",
+      subtitle:
+        "Read-only persisted synthetic assignment draft rows. This view shows seeded draft metadata without publishing, delivery, learner work or teacher decisions.",
+      title: "School demo assignment draft rows",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "assignment-drafts",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Assignment draft row metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Draft state", preview.previewState, "Seeded read-only rows"),
+      renderMetric("Drafts", preview.totals.draftCount, "Synthetic rows"),
+      renderMetric("Targets", preview.totals.targetCount, "Demo student codes"),
+      renderMetric("Writes", preview.totals.mutationWrites, "No mutation"),
+      renderMetric("Production data", preview.totals.productionDataCount, "Must stay zero"),
+      renderMetric("Real schools", preview.totals.realSchoolCount, "Must stay zero"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid school-demo-assignment-drafts-grid" },
+      renderPanel(
+        "school-demo-assignment-drafts-rows",
+        "Draft rows",
+        renderTable({
+          emptyLabel: "No synthetic draft rows are seeded.",
+          headers: ["Draft code", "Class", "Teacher", "Subject", "Package", "Mode", "Status"],
+          rows: preview.draftRows.map((draft) => ({
+            cells: [
+              createElement("strong", { key: "draft" }, draft.assignmentCode),
+              draft.classCode,
+              draft.teacherDemoCode,
+              draft.subjectGroupCode,
+              draft.packageCode,
+              draft.deliveryMode,
+              createElement("span", { className: "school-demo-chip", key: "status" }, draft.status),
+            ],
+            key: draft.assignmentCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-assignment-drafts-targets",
+        "Target snapshot",
+        renderTable({
+          emptyLabel: "No target rows are available.",
+          headers: ["Draft code", "Class", "Student demo code", "State"],
+          rows: preview.targetRows.map((target) => ({
+            cells: [
+              target.assignmentCode,
+              target.classCode,
+              createElement("strong", { key: "student" }, target.studentDemoCode),
+              target.state,
+            ],
+            key: `${target.assignmentCode}:${target.studentDemoCode}`,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-assignment-drafts-settings",
+        "Draft settings",
+        renderTable({
+          emptyLabel: "No draft settings are available.",
+          headers: ["Draft code", "Attempts", "Duration", "Availability", "Target count"],
+          rows: snapshot.assignmentDrafts.map((draft) => ({
+            cells: [
+              draft.assignmentCode,
+              draft.settings.attemptLimit,
+              `${draft.settings.durationMinutes} min`,
+              `${draft.settings.availabilityDays} days`,
+              draft.targetCount,
+            ],
+            key: draft.assignmentCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-assignment-drafts-blockers",
+        "Blocked reasons",
+        preview.blockedReasons.length > 0
+          ? renderList(preview.blockedReasons)
+          : createElement(
+              "p",
+              { className: "school-demo-muted" },
+              "No projection blockers. This still does not authorize publishing or delivery.",
+            ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-assignment-drafts-boundary",
+        "Zero-write boundary",
+        createElement(
+          "div",
+          { className: "school-demo-assignment-drafts-boundary" },
+          renderList(preview.safetyChecklist),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/delivery-preview",
+              },
+              "Open delivery rehearsal",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/teacher-dashboard",
+              },
+              "Open teacher dashboard",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/print-pack",
+              },
+              "Open print pack",
             ),
           ),
         ),

@@ -128,6 +128,7 @@ test("synthetic school demo snapshot is public read-only and boundary-safe", asy
   assert.equal(snapshot.classes.length, 3);
   assert.equal(snapshot.students.length, 6);
   assert.equal(snapshot.teacherAssignments.length, 3);
+  assert.equal(snapshot.assignmentDrafts.length, 3);
   assert.equal(snapshot.studentEnrollments.length, 6);
   assert.equal(snapshot.license.entitlementCount, 3);
 
@@ -147,6 +148,23 @@ test("synthetic school demo snapshot is public read-only and boundary-safe", asy
   for (const teacher of snapshot.teachers) {
     assert.equal(teacher.assignmentCount, 1, teacher.demoCode);
   }
+  for (const assignmentDraft of snapshot.assignmentDrafts) {
+    const matchingClass = snapshot.classes.find(
+      (schoolClass) => schoolClass.code === assignmentDraft.classCode,
+    );
+    assert.ok(matchingClass, assignmentDraft.classCode);
+    assert.equal(assignmentDraft.assignmentCode.startsWith("synthetic-draft-"), true);
+    assert.equal(assignmentDraft.packageCode.startsWith("synthetic-package-"), true);
+    assert.equal(assignmentDraft.status, "DRAFT");
+    assert.equal(assignmentDraft.targetCount, 2);
+    assert.equal(assignmentDraft.targetStudentDemoCodes.length, 2);
+    assert.equal(
+      assignmentDraft.targetStudentDemoCodes.every((demoCode) =>
+        snapshot.students.some((student) => student.demoCode === demoCode),
+      ),
+      true,
+    );
+  }
   assert.equal(
     snapshot.students.every((student) => student.enrollmentState === "ENROLLED"),
     true,
@@ -160,6 +178,7 @@ test("synthetic school demo snapshot is public read-only and boundary-safe", asy
   for (const term of ["email", "phone", "address", "userid", "familyid", "childprofileid"]) {
     assert.equal(forbidden.includes(term), false, term);
   }
+  assert.equal(JSON.stringify(snapshot.assignmentDrafts).includes("70000000-"), false);
 
   for (const method of ["POST", "PUT", "PATCH", "DELETE"]) {
     assert.equal((await request("/demo/school-snapshot", { method })).status, 404, method);

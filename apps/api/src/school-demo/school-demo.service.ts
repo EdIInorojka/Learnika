@@ -7,6 +7,7 @@ import {
   SYNTHETIC_DEMO_ORGANIZATION_CODE,
   SYNTHETIC_DEMO_SCHOOL_CODE,
   type SchoolDemoAcademicYearSummary,
+  type SchoolDemoAssignmentDraftSummary,
   type SchoolDemoClassSummary,
   type SchoolDemoEntitlementSummary,
   type SchoolDemoLicenseSummary,
@@ -50,6 +51,18 @@ export class SchoolDemoService {
           include: {
             schools: {
               select: { code: true },
+            },
+          },
+        },
+        schoolAssignments: {
+          include: {
+            schoolClass: true,
+            schoolTeacher: true,
+            subjectGroup: true,
+            targets: {
+              include: {
+                schoolStudent: true,
+              },
             },
           },
         },
@@ -109,11 +122,17 @@ export class SchoolDemoService {
     const entitlements = [...school.entitlements].sort((left, right) =>
       left.capabilityCode.localeCompare(right.capabilityCode),
     );
+    const assignmentDrafts = [...school.schoolAssignments].sort((left, right) =>
+      `${left.schoolClass.gradeLevel}:${left.schoolClass.code}:${left.assignmentCode}`.localeCompare(
+        `${right.schoolClass.gradeLevel}:${right.schoolClass.code}:${right.assignmentCode}`,
+      ),
+    );
 
     return {
       data: {
         snapshot: {
           academicYear: toAcademicYearSummary(academicYear),
+          assignmentDrafts: assignmentDrafts.map(toAssignmentDraftSummary),
           boundary: {
             activation: "BLOCKED",
             familyLinkCount: 0,
@@ -237,6 +256,45 @@ function toStudentEnrollmentSummary(enrollment: {
     classCode: enrollment.schoolClass.code,
     state: enrollment.withdrawnAt ? "WITHDRAWN" : "ENROLLED",
     studentDemoCode: enrollment.schoolStudent.demoCode,
+  };
+}
+
+function toAssignmentDraftSummary(assignmentDraft: {
+  assignmentCode: string;
+  attemptLimit: number;
+  availabilityDays: number;
+  deliveryMode: "ONLINE_REHEARSAL" | "PRINT_REHEARSAL";
+  durationMinutes: number;
+  packageCode: string;
+  schoolClass: { code: string };
+  schoolTeacher: { demoCode: string };
+  status: "DRAFT" | "REHEARSAL_READY" | "ARCHIVED";
+  subjectGroup: { code: string };
+  targets: Array<{
+    schoolStudent: { demoCode: string };
+    state: "INCLUDED" | "REMOVED";
+  }>;
+}): SchoolDemoAssignmentDraftSummary {
+  const targetStudentDemoCodes = assignmentDraft.targets
+    .filter((target) => target.state === "INCLUDED")
+    .map((target) => target.schoolStudent.demoCode)
+    .sort((left, right) => left.localeCompare(right));
+
+  return {
+    assignmentCode: assignmentDraft.assignmentCode,
+    classCode: assignmentDraft.schoolClass.code,
+    deliveryMode: assignmentDraft.deliveryMode,
+    packageCode: assignmentDraft.packageCode,
+    settings: {
+      attemptLimit: assignmentDraft.attemptLimit,
+      availabilityDays: assignmentDraft.availabilityDays,
+      durationMinutes: assignmentDraft.durationMinutes,
+    },
+    status: assignmentDraft.status,
+    subjectGroupCode: assignmentDraft.subjectGroup.code,
+    targetCount: targetStudentDemoCodes.length,
+    targetStudentDemoCodes,
+    teacherDemoCode: assignmentDraft.schoolTeacher.demoCode,
   };
 }
 

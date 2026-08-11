@@ -151,9 +151,55 @@ export class SchoolDemoEntitlementDto {
   declare capabilityCode: string;
 }
 
+export class SchoolDemoAssignmentDraftSettingsDto {
+  @ApiProperty({ minimum: 1 })
+  declare attemptLimit: number;
+
+  @ApiProperty({ minimum: 1 })
+  declare availabilityDays: number;
+
+  @ApiProperty({ minimum: 1 })
+  declare durationMinutes: number;
+}
+
+export class SchoolDemoAssignmentDraftDto {
+  @ApiProperty({ maxLength: 80 })
+  declare assignmentCode: string;
+
+  @ApiProperty({ maxLength: 40 })
+  declare classCode: string;
+
+  @ApiProperty({ enum: ["ONLINE_REHEARSAL", "PRINT_REHEARSAL"] })
+  declare deliveryMode: "ONLINE_REHEARSAL" | "PRINT_REHEARSAL";
+
+  @ApiProperty({ maxLength: 80 })
+  declare packageCode: string;
+
+  @ApiProperty({ type: () => SchoolDemoAssignmentDraftSettingsDto })
+  declare settings: SchoolDemoAssignmentDraftSettingsDto;
+
+  @ApiProperty({ enum: ["ARCHIVED", "DRAFT", "REHEARSAL_READY"] })
+  declare status: "ARCHIVED" | "DRAFT" | "REHEARSAL_READY";
+
+  @ApiProperty({ maxLength: 40 })
+  declare subjectGroupCode: string;
+
+  @ApiProperty({ minimum: 0 })
+  declare targetCount: number;
+
+  @ApiProperty({ type: () => [String] })
+  declare targetStudentDemoCodes: string[];
+
+  @ApiProperty({ maxLength: 40 })
+  declare teacherDemoCode: string;
+}
+
 export class SchoolDemoSnapshotDto {
   @ApiProperty({ type: () => SchoolDemoAcademicYearDto })
   declare academicYear: SchoolDemoAcademicYearDto;
+
+  @ApiProperty({ type: () => [SchoolDemoAssignmentDraftDto] })
+  declare assignmentDrafts: SchoolDemoAssignmentDraftDto[];
 
   @ApiProperty({ type: () => SchoolDemoBoundaryDto })
   declare boundary: SchoolDemoBoundaryDto;

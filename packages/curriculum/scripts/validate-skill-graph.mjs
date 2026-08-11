@@ -746,6 +746,27 @@ export const preWave7Slice42ChangedPaths = new Set([
   "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
   "packages/curriculum/test/skill-graph-seed.test.mjs",
 ]);
+export const preWave7Slice43ChangedPaths = new Set([
+  "apps/api/prisma/seed.mjs",
+  "apps/api/prisma/validate-data-foundation.mjs",
+  "apps/api/src/openapi/api-schemas.ts",
+  "apps/api/src/school-demo/school-demo.service.ts",
+  "apps/api/src/school-demo/school-demo.types.ts",
+  "apps/api/test/school-demo-seed.test.mjs",
+  "apps/api/test/school-demo-snapshot-api.e2e.mjs",
+  "apps/web/app/globals.css",
+  "apps/web/app/school-demo/assignment-drafts/page.tsx",
+  "apps/web/lib/school-demo-contract.ts",
+  "apps/web/lib/school-demo-view.ts",
+  "apps/web/test/school-demo-foundation.test.mjs",
+  "packages/contracts/openapi.json",
+  "packages/curriculum/scripts/validate-skill-graph.mjs",
+  "packages/curriculum/test/diagnostic-blueprint.test.mjs",
+  "packages/curriculum/test/diagnostic-items.test.mjs",
+  "packages/curriculum/test/diagnostic-response-evidence.test.mjs",
+  "packages/curriculum/test/diagnostic-session-lifecycle.test.mjs",
+  "packages/curriculum/test/skill-graph-seed.test.mjs",
+]);
 export const preWave7Slice2FollowUpPaths = new Set([
   "packages/curriculum/scripts/validate-diagnostic-activation-slice-boundary-decision-proposal.mjs",
   "packages/curriculum/scripts/validate-diagnostic-reviewer-role-ownership-policy-decision-proposal.mjs",
@@ -825,7 +846,9 @@ export function matchesExactPathSet(paths, expectedPaths) {
       (paths.length === preWave7Slice41ChangedPaths.size &&
         paths.every((value) => preWave7Slice41ChangedPaths.has(value))) ||
       (paths.length === preWave7Slice42ChangedPaths.size &&
-        paths.every((value) => preWave7Slice42ChangedPaths.has(value))));
+        paths.every((value) => preWave7Slice42ChangedPaths.has(value))) ||
+      (paths.length === preWave7Slice43ChangedPaths.size &&
+        paths.every((value) => preWave7Slice43ChangedPaths.has(value))));
   if (currentSchoolDemoExactMatch) return true;
   const exactMatch =
     Array.isArray(paths) &&
@@ -1177,7 +1200,8 @@ export function validateSkillGraphChangedPaths(changedPaths) {
     matchesExactPathSet(changedPaths, preWave7Slice39ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice40ChangedPaths) ||
     matchesExactPathSet(changedPaths, preWave7Slice41ChangedPaths) ||
-    matchesExactPathSet(changedPaths, preWave7Slice42ChangedPaths)
+    matchesExactPathSet(changedPaths, preWave7Slice42ChangedPaths) ||
+    matchesExactPathSet(changedPaths, preWave7Slice43ChangedPaths)
   ) {
     return changedPaths;
   }

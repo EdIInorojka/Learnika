@@ -1348,6 +1348,24 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   margin: 0;
 }
 
+.school-demo-assignment-drafts-grid {
+  align-items: start;
+}
+
+.school-demo-assignment-drafts-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-assignment-drafts-boundary p {
+  margin: 0;
+}
+
+.school-demo-assignment-drafts-grid .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 .school-demo-delivery-preview-grid {
   align-items: start;
 }
