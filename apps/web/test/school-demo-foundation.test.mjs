@@ -20,12 +20,14 @@ import {
   SchoolDemoPilotConfigView,
   SchoolDemoRolloutView,
   SchoolDemoStudentPreviewView,
+  SchoolDemoTeacherDashboardView,
   SchoolDemoTeacherReviewQueueView,
   SchoolDemoTeacherReviewRubricView,
   buildSchoolDemoAssignmentDraftPreview,
   buildSchoolDemoClassAnalyticsPreview,
   buildSchoolDemoDeliveryRehearsalPreview,
   buildSchoolDemoStudentDeliveryPreview,
+  buildSchoolDemoTeacherDashboardPreview,
   buildSchoolDemoTeacherReviewQueuePreview,
   buildSchoolDemoTeacherReviewRubricPreview,
   parseSchoolDemoRosterImportPreview,
@@ -542,6 +544,54 @@ test("school demo class analytics stays synthetic and writes nothing", () => {
   assert.match(blockedPreview.blockedReasons.join("\n"), /Activation boundary/);
 });
 
+test("school demo teacher dashboard consolidates read-only surfaces and writes nothing", () => {
+  const snapshot = snapshotFixtureForContract();
+  const preview = buildSchoolDemoTeacherDashboardPreview(snapshot);
+
+  assert.equal(preview.dashboardState, "TEACHER_DASHBOARD_READY");
+  assert.equal(preview.blockedReasons.length, 0);
+  assert.equal(preview.classRows.length, snapshot.classes.length);
+  assert.equal(preview.surfaceRows.length, 8);
+  assert.equal(preview.totals.classCount, 3);
+  assert.equal(preview.totals.studentCount, snapshot.students.length);
+  assert.equal(preview.totals.teacherCount, snapshot.teachers.length);
+  assert.equal(preview.totals.subjectGroupCount, snapshot.subjectGroups.length);
+  assert.equal(preview.totals.queueItems > 0, true);
+  assert.equal(preview.totals.rubricCriteria, 5);
+  assert.equal(preview.totals.analyticsWrites, 0);
+  assert.equal(preview.totals.assignmentWrites, 0);
+  assert.equal(preview.totals.deliveryWrites, 0);
+  assert.equal(preview.totals.evidenceWrites, 0);
+  assert.equal(preview.totals.importWrites, 0);
+  assert.equal(preview.totals.learnerRecordWrites, 0);
+  assert.equal(preview.totals.scoreUpdates, 0);
+  assert.equal(preview.totals.teacherDecisionWrites, 0);
+  assert.equal(
+    preview.surfaceRows.some((row) => row.href === "/school-demo/analytics"),
+    true,
+  );
+  assert.equal(
+    preview.surfaceRows.some((row) => row.href === "/school-demo/import-preview"),
+    true,
+  );
+  assert.match(preview.safetyChecklist.join("\n"), /synthetic class/);
+  assert.match(preview.safetyChecklist.join("\n"), /No assignment/);
+  assert.match(preview.safetyChecklist.join("\n"), /Real teacher dashboard remains blocked/);
+
+  const blockedPreview = buildSchoolDemoTeacherDashboardPreview({
+    ...snapshot,
+    boundary: {
+      ...snapshot.boundary,
+      workflow: "ACTIVE",
+    },
+  });
+
+  assert.equal(blockedPreview.dashboardState, "TEACHER_DASHBOARD_BLOCKED");
+  assert.equal(blockedPreview.totals.assignmentWrites, 0);
+  assert.equal(blockedPreview.totals.teacherDecisionWrites, 0);
+  assert.match(blockedPreview.blockedReasons.join("\n"), /Workflow boundary/);
+});
+
 test("school demo dashboard and drilldown render the synthetic school overview", () => {
   const snapshot = snapshotFixtureForContract();
   const guidedDashboardHtml = renderToStaticMarkup(
@@ -607,6 +657,11 @@ test("school demo dashboard and drilldown render the synthetic school overview",
       snapshot,
     }),
   );
+  const teacherDashboardHtml = renderToStaticMarkup(
+    createElement(SchoolDemoTeacherDashboardView, {
+      snapshot,
+    }),
+  );
   const importPreviewHtml = renderToStaticMarkup(
     createElement(SchoolDemoImportPreviewView, {
       snapshot,
@@ -617,7 +672,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
       snapshot,
     }),
   );
-  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}\n${pilotChecklistHtml}\n${pilotConfigHtml}\n${assignmentPreviewHtml}\n${deliveryPreviewHtml}\n${studentPreviewHtml}\n${reviewQueueHtml}\n${reviewRubricHtml}\n${analyticsHtml}\n${importPreviewHtml}\n${rolloutHtml}`;
+  const combinedHtml = `${guidedDashboardHtml}\n${guidedDrilldownHtml}\n${compactSummaryHtml}\n${handoffPackHtml}\n${pilotChecklistHtml}\n${pilotConfigHtml}\n${assignmentPreviewHtml}\n${deliveryPreviewHtml}\n${studentPreviewHtml}\n${reviewQueueHtml}\n${reviewRubricHtml}\n${analyticsHtml}\n${teacherDashboardHtml}\n${importPreviewHtml}\n${rolloutHtml}`;
 
   for (const phrase of [
     "Presentation route",
@@ -681,6 +736,13 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Display-only signal rows",
     "Analytics boundary",
     "ANALYTICS_PREVIEW_READY",
+    "School demo teacher dashboard",
+    "Teacher dashboard overview",
+    "Surface map",
+    "Class dashboard rows",
+    "Operational write counters",
+    "Teacher dashboard boundary",
+    "TEACHER_DASHBOARD_READY",
     "School demo import preview",
     "Synthetic CSV preview",
     "Accepted preview rows",
@@ -714,6 +776,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "Review queue",
     "Review rubric",
     "Class analytics",
+    "Teacher dashboard",
     "Import preview",
     "Class counts / roster snapshot",
     "Read-only boundary",
@@ -774,6 +837,11 @@ test("school demo dashboard and drilldown render the synthetic school overview",
     "school-demo-analytics-class-table",
     "school-demo-analytics-teacher-load",
     "school-demo-analytics-signal-table",
+    "school-demo-teacher-dashboard-grid",
+    "school-demo-teacher-dashboard-boundary",
+    "school-demo-teacher-dashboard-surface-map",
+    "school-demo-teacher-dashboard-class-table",
+    "school-demo-teacher-dashboard-zero-writes",
     "school-demo-import-preview-grid",
     "school-demo-import-preview-editor",
     "school-demo-import-preview-textarea",
@@ -904,7 +972,7 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(reviewRubricHtml, /RUBRIC_PREVIEW_READY/);
   assert.match(reviewRubricHtml, /Real rubric-assisted review remains blocked/);
   assert.match(analyticsHtml, /href="\/school-demo\/review-rubric"/);
-  assert.match(analyticsHtml, /href="\/school-demo\/import-preview"/);
+  assert.match(analyticsHtml, /href="\/school-demo\/teacher-dashboard"/);
   assert.match(analyticsHtml, /href="\/school-demo\/summary"/);
   assert.match(analyticsHtml, /School demo class analytics/);
   assert.match(analyticsHtml, /Analytics summary/);
@@ -915,6 +983,17 @@ test("school demo dashboard and drilldown render the synthetic school overview",
   assert.match(analyticsHtml, /ANALYTICS_PREVIEW_READY/);
   assert.match(analyticsHtml, /No grades/);
   assert.match(analyticsHtml, /Real class analytics still waits/);
+  assert.match(teacherDashboardHtml, /href="\/school-demo\/analytics"/);
+  assert.match(teacherDashboardHtml, /href="\/school-demo\/import-preview"/);
+  assert.match(teacherDashboardHtml, /href="\/school-demo\/summary"/);
+  assert.match(teacherDashboardHtml, /School demo teacher dashboard/);
+  assert.match(teacherDashboardHtml, /Teacher dashboard overview/);
+  assert.match(teacherDashboardHtml, /Surface map/);
+  assert.match(teacherDashboardHtml, /Class dashboard rows/);
+  assert.match(teacherDashboardHtml, /Operational write counters/);
+  assert.match(teacherDashboardHtml, /Teacher dashboard boundary/);
+  assert.match(teacherDashboardHtml, /TEACHER_DASHBOARD_READY/);
+  assert.match(teacherDashboardHtml, /Real teacher dashboard remains blocked/);
   assert.match(importPreviewHtml, /href="\/school-demo\/pilot-config"/);
   assert.match(importPreviewHtml, /href="\/school-demo\/assignment-preview"/);
   assert.match(importPreviewHtml, /href="\/school-demo\/delivery-preview"/);
@@ -1012,6 +1091,10 @@ test("school demo route is read-only and display-only", async () => {
     path.join(process.cwd(), "app", "school-demo", "analytics", "page.tsx"),
     "utf8",
   );
+  const teacherDashboardPageSource = fs.readFileSync(
+    path.join(process.cwd(), "app", "school-demo", "teacher-dashboard", "page.tsx"),
+    "utf8",
+  );
   const importPreviewPageSource = fs.readFileSync(
     path.join(process.cwd(), "app", "school-demo", "import-preview", "page.tsx"),
     "utf8",
@@ -1073,6 +1156,9 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(analyticsPageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(analyticsPageSource.includes("SchoolDemoClassAnalyticsView"), true);
   assert.equal(analyticsPageSource.includes('dynamic = "force-dynamic"'), true);
+  assert.equal(teacherDashboardPageSource.includes("readSchoolDemoSnapshot"), true);
+  assert.equal(teacherDashboardPageSource.includes("SchoolDemoTeacherDashboardView"), true);
+  assert.equal(teacherDashboardPageSource.includes('dynamic = "force-dynamic"'), true);
   assert.equal(importPreviewPageSource.includes("readSchoolDemoSnapshot"), true);
   assert.equal(importPreviewPageSource.includes("SchoolDemoImportPreviewView"), true);
   assert.equal(importPreviewPageSource.includes('dynamic = "force-dynamic"'), true);
@@ -1097,6 +1183,8 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("buildSchoolDemoTeacherReviewRubricPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoClassAnalyticsView"), true);
   assert.equal(viewSource.includes("buildSchoolDemoClassAnalyticsPreview"), true);
+  assert.equal(viewSource.includes("SchoolDemoTeacherDashboardView"), true);
+  assert.equal(viewSource.includes("buildSchoolDemoTeacherDashboardPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoImportPreviewView"), true);
   assert.equal(viewSource.includes("parseSchoolDemoRosterImportPreview"), true);
   assert.equal(viewSource.includes("SchoolDemoRolloutView"), true);
@@ -1155,6 +1243,12 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("school-demo-analytics-signal-table"), true);
   assert.equal(viewSource.includes("school-demo-analytics-blockers"), true);
   assert.equal(viewSource.includes("school-demo-analytics-boundary"), true);
+  assert.equal(viewSource.includes("school-demo-teacher-dashboard-overview"), true);
+  assert.equal(viewSource.includes("school-demo-teacher-dashboard-surface-map"), true);
+  assert.equal(viewSource.includes("school-demo-teacher-dashboard-class-table"), true);
+  assert.equal(viewSource.includes("school-demo-teacher-dashboard-zero-writes"), true);
+  assert.equal(viewSource.includes("school-demo-teacher-dashboard-blockers"), true);
+  assert.equal(viewSource.includes("school-demo-teacher-dashboard-boundary"), true);
   assert.equal(viewSource.includes("school-demo-import-preview-input"), true);
   assert.equal(viewSource.includes("school-demo-import-preview-class-summary"), true);
   assert.equal(viewSource.includes("school-demo-import-preview-accepted"), true);
@@ -1188,6 +1282,8 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("/school-demo/student-preview"), true);
   assert.equal(viewSource.includes("/school-demo/review-queue"), true);
   assert.equal(viewSource.includes("/school-demo/review-rubric"), true);
+  assert.equal(viewSource.includes("/school-demo/analytics"), true);
+  assert.equal(viewSource.includes("/school-demo/teacher-dashboard"), true);
   assert.equal(viewSource.includes("school-demo-guided-walkthrough"), true);
   assert.equal(viewSource.includes("school-demo-guided-list"), true);
   assert.equal(viewSource.includes("school-demo-guided-step"), true);
@@ -1231,6 +1327,11 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(cssSource.includes(".school-demo-analytics-class-table"), true);
   assert.equal(cssSource.includes(".school-demo-analytics-teacher-load"), true);
   assert.equal(cssSource.includes(".school-demo-analytics-signal-table"), true);
+  assert.equal(cssSource.includes(".school-demo-teacher-dashboard-grid"), true);
+  assert.equal(cssSource.includes(".school-demo-teacher-dashboard-boundary"), true);
+  assert.equal(cssSource.includes(".school-demo-teacher-dashboard-surface-map"), true);
+  assert.equal(cssSource.includes(".school-demo-teacher-dashboard-class-table"), true);
+  assert.equal(cssSource.includes(".school-demo-teacher-dashboard-zero-writes"), true);
   assert.equal(cssSource.includes(".school-demo-import-preview-grid"), true);
   assert.equal(cssSource.includes(".school-demo-import-preview-textarea"), true);
   assert.equal(cssSource.includes(".school-demo-import-preview-actions"), true);
@@ -1256,6 +1357,7 @@ test("school demo route is read-only and display-only", async () => {
   assert.equal(viewSource.includes("/school-demo/review-queue"), true);
   assert.equal(viewSource.includes("/school-demo/review-rubric"), true);
   assert.equal(viewSource.includes("/school-demo/analytics"), true);
+  assert.equal(viewSource.includes("/school-demo/teacher-dashboard"), true);
   assert.equal(viewSource.includes("/school-demo/import-preview"), true);
   assert.equal(viewSource.includes("document.cookie"), false);
   assert.equal(viewSource.includes("fetch("), false);
@@ -1275,7 +1377,7 @@ test("school demo route is read-only and display-only", async () => {
     "address",
   ]) {
     assert.equal(
-      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${pilotPageSource}\n${pilotConfigPageSource}\n${assignmentPreviewPageSource}\n${deliveryPreviewPageSource}\n${studentPreviewPageSource}\n${reviewQueuePageSource}\n${reviewRubricPageSource}\n${analyticsPageSource}\n${importPreviewPageSource}\n${rolloutPageSource}\n${viewSource}`.includes(
+      `${appSource}\n${classPageSource}\n${summaryPageSource}\n${handoffPageSource}\n${pilotPageSource}\n${pilotConfigPageSource}\n${assignmentPreviewPageSource}\n${deliveryPreviewPageSource}\n${studentPreviewPageSource}\n${reviewQueuePageSource}\n${reviewRubricPageSource}\n${analyticsPageSource}\n${teacherDashboardPageSource}\n${importPreviewPageSource}\n${rolloutPageSource}\n${viewSource}`.includes(
         forbidden,
       ),
       false,

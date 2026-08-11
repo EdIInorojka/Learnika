@@ -68,6 +68,10 @@ interface SchoolDemoClassAnalyticsViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoTeacherDashboardViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -135,6 +139,7 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "review-queue"
   | "review-rubric"
   | "analytics"
+  | "teacher-dashboard"
   | "import-preview"
   | "rollout";
 
@@ -153,6 +158,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "review-queue",
   "review-rubric",
   "analytics",
+  "teacher-dashboard",
   "import-preview",
   "rollout",
 ];
@@ -370,6 +376,42 @@ export interface SchoolDemoClassAnalyticsPreview {
     scoreUpdates: 0;
     subjectGroupCount: number;
     teacherAssignmentCount: number;
+  };
+}
+
+export interface SchoolDemoTeacherDashboardPreview {
+  blockedReasons: string[];
+  classRows: Array<{
+    classCode: string;
+    enrolledStudents: number;
+    gradeLevel: number;
+    queueLoad: number;
+    state: "DISPLAY_ONLY" | "BLOCKED";
+    teacherDemoCodes: string[];
+  }>;
+  dashboardState: "TEACHER_DASHBOARD_READY" | "TEACHER_DASHBOARD_BLOCKED";
+  safetyChecklist: string[];
+  surfaceRows: Array<{
+    href: string;
+    note: string;
+    state: "DISPLAY_ONLY" | "STOP_GATED";
+    surface: string;
+  }>;
+  totals: {
+    analyticsWrites: 0;
+    assignmentWrites: 0;
+    classCount: number;
+    deliveryWrites: 0;
+    evidenceWrites: 0;
+    importWrites: 0;
+    learnerRecordWrites: 0;
+    queueItems: number;
+    rubricCriteria: number;
+    scoreUpdates: 0;
+    studentCount: number;
+    subjectGroupCount: number;
+    teacherCount: number;
+    teacherDecisionWrites: 0;
   };
 }
 
@@ -1225,6 +1267,113 @@ export function buildSchoolDemoClassAnalyticsPreview(
   };
 }
 
+export function buildSchoolDemoTeacherDashboardPreview(
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoTeacherDashboardPreview {
+  const classOverviews = buildClassOverviews(snapshot);
+  const defaultInput = buildDefaultSchoolDemoAssignmentInput(snapshot);
+  const assignmentPreview = buildSchoolDemoAssignmentDraftPreview(defaultInput, snapshot);
+  const deliveryPreview = buildSchoolDemoDeliveryRehearsalPreview(defaultInput, snapshot);
+  const reviewQueuePreview = buildSchoolDemoTeacherReviewQueuePreview(defaultInput, snapshot);
+  const reviewRubricPreview = buildSchoolDemoTeacherReviewRubricPreview(defaultInput, snapshot);
+  const analyticsPreview = buildSchoolDemoClassAnalyticsPreview(snapshot);
+  const blockedReasons = uniqueSorted([
+    ...assignmentPreview.blockedReasons,
+    ...deliveryPreview.blockedReasons,
+    ...reviewQueuePreview.blockedReasons,
+    ...reviewRubricPreview.blockedReasons,
+    ...analyticsPreview.blockedReasons,
+  ]);
+
+  return {
+    blockedReasons,
+    classRows: classOverviews.map((schoolClass) => ({
+      classCode: schoolClass.code,
+      enrolledStudents: schoolClass.studentCount,
+      gradeLevel: schoolClass.gradeLevel,
+      queueLoad: snapshot.students.filter((student) => student.classCode === schoolClass.code)
+        .length,
+      state: schoolClass.studentCount > 0 ? ("DISPLAY_ONLY" as const) : ("BLOCKED" as const),
+      teacherDemoCodes: schoolClass.teacherDemoCodes,
+    })),
+    dashboardState:
+      blockedReasons.length === 0 ? "TEACHER_DASHBOARD_READY" : "TEACHER_DASHBOARD_BLOCKED",
+    safetyChecklist: [
+      "Teacher dashboard uses synthetic class, teacher and student demo codes only.",
+      "Every linked surface is read-only and display-only.",
+      "No assignment, delivery, import, evidence, grade, score or teacher decision is created.",
+      "No learner work, answers, solutions, hints, raw media or copied textbook material is shown.",
+      "Real teacher dashboard remains blocked until a later approved school beta gate.",
+    ],
+    surfaceRows: [
+      {
+        href: "/school-demo/assignment-preview",
+        note: "Draft shell only; no saved assignment.",
+        state: "DISPLAY_ONLY",
+        surface: "Assignment preview",
+      },
+      {
+        href: "/school-demo/delivery-preview",
+        note: "Rehearsal shell only; no send or learner session.",
+        state: "DISPLAY_ONLY",
+        surface: "Delivery rehearsal",
+      },
+      {
+        href: "/school-demo/student-preview",
+        note: "Student view shell only; no learner input.",
+        state: "DISPLAY_ONLY",
+        surface: "Student preview",
+      },
+      {
+        href: "/school-demo/review-queue",
+        note: "Queue shell only; no teacher decision.",
+        state: "DISPLAY_ONLY",
+        surface: "Review queue",
+      },
+      {
+        href: "/school-demo/review-rubric",
+        note: "Rubric shell only; no notes, grades or scores.",
+        state: "DISPLAY_ONLY",
+        surface: "Review rubric",
+      },
+      {
+        href: "/school-demo/analytics",
+        note: "Count signals only; no learner analytics record.",
+        state: "DISPLAY_ONLY",
+        surface: "Class analytics",
+      },
+      {
+        href: "/school-demo/import-preview",
+        note: "Local CSV preview only; no upload.",
+        state: "DISPLAY_ONLY",
+        surface: "Import preview",
+      },
+      {
+        href: "/school-demo/rollout",
+        note: "Rollout discussion only; real beta gate remains closed.",
+        state: "STOP_GATED",
+        surface: "Rollout preview",
+      },
+    ],
+    totals: {
+      analyticsWrites: analyticsPreview.totals.analyticsWrites,
+      assignmentWrites: 0,
+      classCount: classOverviews.length,
+      deliveryWrites: deliveryPreview.totals.writeCount,
+      evidenceWrites: 0,
+      importWrites: 0,
+      learnerRecordWrites: 0,
+      queueItems: reviewQueuePreview.totals.queueItems,
+      rubricCriteria: reviewRubricPreview.totals.rubricCriteria,
+      scoreUpdates: 0,
+      studentCount: analyticsPreview.totals.enrolledStudents,
+      subjectGroupCount: analyticsPreview.totals.subjectGroupCount,
+      teacherCount: snapshot.teachers.length,
+      teacherDecisionWrites: 0,
+    },
+  };
+}
+
 function buildClassDetail(
   snapshot: SchoolDemoSnapshot,
   classCode: string,
@@ -1492,6 +1641,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Review rubric";
     case "analytics":
       return "Class analytics";
+    case "teacher-dashboard":
+      return "Teacher dashboard";
     case "import-preview":
       return "Import preview";
     case "rollout":
@@ -1614,6 +1765,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       surface: "/school-demo/analytics",
     },
     {
+      actionLabel: "Open teacher dashboard",
+      href: "/school-demo/teacher-dashboard",
+      key: "teacher-dashboard",
+      label: "Teacher dashboard",
+      note: "Use one consolidated teacher view to jump between classes, draft, delivery, review, analytics and import previews.",
+      surface: "/school-demo/teacher-dashboard",
+    },
+    {
       actionLabel: "Open import preview",
       href: "/school-demo/import-preview",
       key: "import-preview",
@@ -1655,7 +1814,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, review rubric, class analytics, import preview and rollout preview.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, review rubric, class analytics, teacher dashboard, import preview and rollout preview.",
       ),
       createElement(
         "p",
@@ -4422,8 +4581,8 @@ export function SchoolDemoClassAnalyticsView({ snapshot }: SchoolDemoClassAnalyt
     renderHeader({
       actionHref: "/school-demo/review-rubric",
       actionLabel: "Back to review rubric",
-      secondaryActionHref: "/school-demo/import-preview",
-      secondaryActionLabel: "Import preview",
+      secondaryActionHref: "/school-demo/teacher-dashboard",
+      secondaryActionLabel: "Teacher dashboard",
       subtitle:
         "Read-only class analytics preview for the synthetic school snapshot. It shows counts and load signals without grades, learner work or production records.",
       title: "School demo class analytics",
@@ -4563,6 +4722,198 @@ export function SchoolDemoClassAnalyticsView({ snapshot }: SchoolDemoClassAnalyt
                 href: "/school-demo/review-rubric",
               },
               "Open review rubric",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/teacher-dashboard",
+              },
+              "Open teacher dashboard",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/summary",
+              },
+              "Open compact summary",
+            ),
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoTeacherDashboardView({ snapshot }: SchoolDemoTeacherDashboardViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const preview = buildSchoolDemoTeacherDashboardPreview(snapshot);
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/analytics",
+      actionLabel: "Back to analytics",
+      secondaryActionHref: "/school-demo/import-preview",
+      secondaryActionLabel: "Import preview",
+      subtitle:
+        "Read-only consolidated teacher dashboard for the synthetic school demo. It links existing demo surfaces without creating assignments, delivery, review or analytics records.",
+      title: "School demo teacher dashboard",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "teacher-dashboard",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Teacher dashboard metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Dashboard state", preview.dashboardState, "Display-only"),
+      renderMetric("Classes", preview.totals.classCount, "Grades 7-9"),
+      renderMetric("Demo students", preview.totals.studentCount, "Synthetic codes"),
+      renderMetric("Teachers", preview.totals.teacherCount, "Demo roles"),
+      renderMetric("Queue items", preview.totals.queueItems, "Placeholder rows"),
+      renderMetric("Rubric criteria", preview.totals.rubricCriteria, "Display-only"),
+      renderMetric("Teacher decisions", preview.totals.teacherDecisionWrites, "Disabled"),
+      renderMetric("Writes", preview.totals.assignmentWrites, "Disabled"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid school-demo-teacher-dashboard-grid" },
+      renderPanel(
+        "school-demo-teacher-dashboard-overview",
+        "Teacher dashboard overview",
+        renderTable({
+          emptyLabel: "No teacher dashboard overview rows are available.",
+          headers: ["Field", "Value"],
+          rows: [
+            ["State", preview.dashboardState],
+            ["Class count", preview.totals.classCount],
+            ["Demo students", preview.totals.studentCount],
+            ["Teacher demo roles", preview.totals.teacherCount],
+            ["Subject groups", preview.totals.subjectGroupCount],
+            ["Queue items", preview.totals.queueItems],
+            ["Rubric criteria", preview.totals.rubricCriteria],
+            ["Learner record writes", preview.totals.learnerRecordWrites],
+          ].map(([label, value]) => ({
+            cells: [createElement("strong", { key: "label" }, label), value],
+            key: String(label),
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-teacher-dashboard-surface-map",
+        "Surface map",
+        renderTable({
+          emptyLabel: "No teacher dashboard surfaces are available.",
+          headers: ["Surface", "State", "Note", "Link"],
+          rows: preview.surfaceRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "surface" }, row.surface),
+              row.state,
+              row.note,
+              createElement(
+                "a",
+                { className: "button-link school-demo-table-link", href: row.href, key: "link" },
+                "Open",
+              ),
+            ],
+            key: row.surface,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-teacher-dashboard-class-table",
+        "Class dashboard rows",
+        renderTable({
+          emptyLabel: "No teacher dashboard class rows are available.",
+          headers: ["Class", "Grade", "Demo students", "Teachers", "Queue load", "State"],
+          rows: preview.classRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "class" }, row.classCode),
+              row.gradeLevel,
+              row.enrolledStudents,
+              joinValues(row.teacherDemoCodes),
+              row.queueLoad,
+              row.state,
+            ],
+            key: row.classCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-teacher-dashboard-zero-writes",
+        "Operational write counters",
+        renderTable({
+          emptyLabel: "No operational counters are available.",
+          headers: ["Counter", "Value"],
+          rows: [
+            ["Assignment writes", preview.totals.assignmentWrites],
+            ["Delivery writes", preview.totals.deliveryWrites],
+            ["Import writes", preview.totals.importWrites],
+            ["Evidence writes", preview.totals.evidenceWrites],
+            ["Learner record writes", preview.totals.learnerRecordWrites],
+            ["Score updates", preview.totals.scoreUpdates],
+            ["Teacher decision writes", preview.totals.teacherDecisionWrites],
+          ].map(([label, value]) => ({
+            cells: [createElement("strong", { key: "label" }, label), value],
+            key: String(label),
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-teacher-dashboard-blockers",
+        "Blocked reasons",
+        preview.blockedReasons.length > 0
+          ? renderList(preview.blockedReasons)
+          : createElement(
+              "p",
+              { className: "school-demo-muted" },
+              "No local teacher dashboard blockers. Real teacher workspace still waits for a later beta gate.",
+            ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-teacher-dashboard-boundary",
+        "Teacher dashboard boundary",
+        createElement(
+          "div",
+          { className: "school-demo-teacher-dashboard-boundary" },
+          renderList(preview.safetyChecklist),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/analytics",
+              },
+              "Open class analytics",
             ),
           ),
           createElement(

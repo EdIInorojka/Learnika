@@ -1456,6 +1456,26 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   font-weight: 800;
 }
 
+.school-demo-teacher-dashboard-grid {
+  align-items: start;
+}
+
+.school-demo-teacher-dashboard-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-teacher-dashboard-boundary p {
+  margin: 0;
+}
+
+.school-demo-teacher-dashboard-surface-map .school-demo-table td:first-child,
+.school-demo-teacher-dashboard-class-table .school-demo-table td:first-child,
+.school-demo-teacher-dashboard-zero-writes .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:has(.school-demo-shell),
   .school-demo-shell,
