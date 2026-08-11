@@ -81,6 +81,22 @@ enum SchoolLicenseStatus {
   EXPIRED
 }
 
+enum SchoolAssignmentStatus {
+  DRAFT
+  REHEARSAL_READY
+  ARCHIVED
+}
+
+enum SchoolAssignmentDeliveryMode {
+  ONLINE_REHEARSAL
+  PRINT_REHEARSAL
+}
+
+enum SchoolAssignmentTargetState {
+  INCLUDED
+  REMOVED
+}
+
 model User {
   id                       String             @id @default(uuid()) @db.Uuid
   accountRole              UserRole
@@ -153,6 +169,8 @@ model School {
   subjectGroups     SchoolSubjectGroup[]
   teachers          SchoolTeacher[]
   students          SchoolStudent[]
+  schoolAssignments SchoolAssignment[]
+  assignmentTargets SchoolAssignmentTarget[]
   assignments       TeacherAssignment[]
   enrollments       StudentEnrollment[]
   licenses          SchoolLicense[]
@@ -173,6 +191,7 @@ model AcademicYear {
   updatedAt DateTime     @updatedAt
   school    School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   classes   SchoolClass[]
+  schoolAssignments SchoolAssignment[]
 
   @@unique([id, schoolId])
   @@unique([schoolId, code])
@@ -189,6 +208,7 @@ model SchoolClass {
   updatedAt      DateTime           @updatedAt
   school         School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   academicYear   AcademicYear       @relation(fields: [academicYearId, schoolId], references: [id, schoolId], onDelete: Restrict)
+  schoolAssignments SchoolAssignment[]
   assignments    TeacherAssignment[]
   enrollments    StudentEnrollment[]
 
@@ -205,6 +225,7 @@ model SchoolSubjectGroup {
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
   school      School              @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolAssignments SchoolAssignment[]
   assignments TeacherAssignment[]
 
   @@unique([id, schoolId])
@@ -219,6 +240,7 @@ model SchoolTeacher {
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
   school      School              @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolAssignments SchoolAssignment[]
   assignments TeacherAssignment[]
 
   @@unique([id, schoolId])
@@ -233,6 +255,7 @@ model SchoolStudent {
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   school      School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  assignmentTargets SchoolAssignmentTarget[]
   enrollments StudentEnrollment[]
 
   @@unique([id, schoolId])
@@ -272,6 +295,54 @@ model StudentEnrollment {
 
   @@unique([schoolId, schoolClassId, schoolStudentId])
   @@index([schoolId, schoolStudentId])
+}
+
+model SchoolAssignment {
+  id              String                       @id @default(uuid()) @db.Uuid
+  schoolId        String                       @db.Uuid
+  academicYearId  String                       @db.Uuid
+  schoolClassId   String                       @db.Uuid
+  subjectGroupId  String                       @db.Uuid
+  schoolTeacherId String                       @db.Uuid
+  assignmentCode  String                       @db.VarChar(80)
+  packageCode     String                       @db.VarChar(80)
+  status          SchoolAssignmentStatus       @default(DRAFT)
+  deliveryMode    SchoolAssignmentDeliveryMode @default(ONLINE_REHEARSAL)
+  attemptLimit    Int
+  durationMinutes Int
+  availabilityDays Int
+  createdAt       DateTime                     @default(now())
+  updatedAt       DateTime                     @updatedAt
+  school          School                       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  academicYear    AcademicYear                 @relation(fields: [academicYearId, schoolId], references: [id, schoolId], onDelete: Restrict)
+  schoolClass     SchoolClass                  @relation(fields: [schoolClassId, schoolId], references: [id, schoolId], onDelete: Restrict)
+  subjectGroup    SchoolSubjectGroup           @relation(fields: [subjectGroupId, schoolId], references: [id, schoolId], onDelete: Restrict)
+  schoolTeacher   SchoolTeacher                @relation(fields: [schoolTeacherId, schoolId], references: [id, schoolId], onDelete: Restrict)
+  targets         SchoolAssignmentTarget[]
+
+  @@unique([id, schoolId])
+  @@unique([schoolId, assignmentCode])
+  @@index([schoolId, academicYearId])
+  @@index([schoolId, schoolClassId])
+  @@index([schoolId, schoolTeacherId])
+  @@index([schoolId, status])
+}
+
+model SchoolAssignmentTarget {
+  id                 String                      @id @default(uuid()) @db.Uuid
+  schoolId           String                      @db.Uuid
+  schoolAssignmentId String                      @db.Uuid
+  schoolStudentId    String                      @db.Uuid
+  state              SchoolAssignmentTargetState @default(INCLUDED)
+  createdAt          DateTime                    @default(now())
+  updatedAt          DateTime                    @updatedAt
+  school             School                      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolAssignment   SchoolAssignment            @relation(fields: [schoolAssignmentId, schoolId], references: [id, schoolId], onDelete: Cascade)
+  schoolStudent      SchoolStudent               @relation(fields: [schoolStudentId, schoolId], references: [id, schoolId], onDelete: Restrict)
+
+  @@unique([schoolId, schoolAssignmentId, schoolStudentId])
+  @@index([schoolId, schoolStudentId])
+  @@index([schoolId, state])
 }
 
 model SchoolLicense {
