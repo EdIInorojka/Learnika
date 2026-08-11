@@ -72,6 +72,10 @@ interface SchoolDemoTeacherDashboardViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoPrintPackViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoClassOverview {
   code: string;
   gradeLevel: number;
@@ -140,6 +144,7 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "review-rubric"
   | "analytics"
   | "teacher-dashboard"
+  | "print-pack"
   | "import-preview"
   | "rollout";
 
@@ -159,6 +164,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "review-rubric",
   "analytics",
   "teacher-dashboard",
+  "print-pack",
   "import-preview",
   "rollout",
 ];
@@ -412,6 +418,40 @@ export interface SchoolDemoTeacherDashboardPreview {
     subjectGroupCount: number;
     teacherCount: number;
     teacherDecisionWrites: 0;
+  };
+}
+
+export interface SchoolDemoPrintPackPreview {
+  boundaryRows: Array<{
+    label: string;
+    value: string | number;
+  }>;
+  checklistRows: Array<{
+    item: string;
+    state: "DISPLAY_ONLY" | "STOP_GATED";
+  }>;
+  classRows: Array<{
+    classCode: string;
+    enrolledStudents: number;
+    gradeLevel: number;
+    queueLoad: number;
+    teacherDemoCodes: string[];
+  }>;
+  packState: "PRINT_PACK_READY" | "PRINT_PACK_BLOCKED";
+  safetyChecklist: string[];
+  sectionRows: Array<{
+    href: string;
+    note: string;
+    section: string;
+    state: "PRINT_READY" | "STOP_GATED";
+  }>;
+  totals: {
+    generatedFiles: 0;
+    printJobWrites: 0;
+    productionDataCount: 0;
+    realSchoolCount: 0;
+    serverRenderJobs: 0;
+    storageObjects: 0;
   };
 }
 
@@ -1374,6 +1414,121 @@ export function buildSchoolDemoTeacherDashboardPreview(
   };
 }
 
+export function buildSchoolDemoPrintPackPreview(
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoPrintPackPreview {
+  const teacherDashboard = buildSchoolDemoTeacherDashboardPreview(snapshot);
+  const blockedReasons = [
+    snapshot.boundary.readiness !== "NOT_READY" ? "Readiness boundary must stay NOT_READY." : null,
+    snapshot.boundary.activation !== "BLOCKED" ? "Activation boundary must stay BLOCKED." : null,
+    snapshot.boundary.workflow !== "INACTIVE" ? "Workflow boundary must stay INACTIVE." : null,
+    teacherDashboard.dashboardState !== "TEACHER_DASHBOARD_READY"
+      ? "Teacher dashboard preview must be ready before the print pack is useful."
+      : null,
+  ].filter((item): item is string => item !== null);
+
+  return {
+    boundaryRows: [
+      { label: "Marker", value: snapshot.marker },
+      { label: "Readiness", value: snapshot.boundary.readiness },
+      { label: "Activation", value: snapshot.boundary.activation },
+      { label: "Workflow", value: snapshot.boundary.workflow },
+      { label: "Production data", value: snapshot.boundary.productionDataCount },
+      { label: "Real schools", value: snapshot.boundary.realSchoolCount },
+    ],
+    checklistRows: [
+      {
+        item: "Use browser print dialog only.",
+        state: "DISPLAY_ONLY",
+      },
+      {
+        item: "Keep synthetic boundary visible on every printed page.",
+        state: "DISPLAY_ONLY",
+      },
+      {
+        item: "Do not generate a server file or storage object.",
+        state: "DISPLAY_ONLY",
+      },
+      {
+        item: "Do not include learner work, grades, answers, solutions or hints.",
+        state: "DISPLAY_ONLY",
+      },
+      {
+        item: "Real school pilot materials wait for a later approved beta gate.",
+        state: "STOP_GATED",
+      },
+    ],
+    classRows: teacherDashboard.classRows.map((row) => ({
+      classCode: row.classCode,
+      enrolledStudents: row.enrolledStudents,
+      gradeLevel: row.gradeLevel,
+      queueLoad: row.queueLoad,
+      teacherDemoCodes: row.teacherDemoCodes,
+    })),
+    packState: blockedReasons.length === 0 ? "PRINT_PACK_READY" : "PRINT_PACK_BLOCKED",
+    safetyChecklist: [
+      "Print pack uses synthetic demo codes only.",
+      "Browser print is the only intended output path.",
+      "No generated file, server render job or storage object is created.",
+      "No learner work, grade, score, evidence or teacher decision is shown.",
+      "Real school pilot print materials remain blocked until a later approved school beta gate.",
+      ...blockedReasons,
+    ],
+    sectionRows: [
+      {
+        href: "/school-demo/summary",
+        note: "One-screen school summary for meeting context.",
+        section: "Compact summary",
+        state: "PRINT_READY",
+      },
+      {
+        href: "/school-demo/handoff",
+        note: "Teacher and admin handoff notes.",
+        section: "Handoff pack",
+        state: "PRINT_READY",
+      },
+      {
+        href: "/school-demo/teacher-dashboard",
+        note: "Consolidated teacher view and stop gates.",
+        section: "Teacher dashboard",
+        state: "PRINT_READY",
+      },
+      {
+        href: "/school-demo/analytics",
+        note: "Synthetic class counts and load signals.",
+        section: "Class analytics",
+        state: "PRINT_READY",
+      },
+      {
+        href: "/school-demo/pilot",
+        note: "Future pilot checklist and FAQ.",
+        section: "Pilot checklist",
+        state: "PRINT_READY",
+      },
+      {
+        href: "/school-demo/rollout",
+        note: "Pilot phases and rollout assumptions.",
+        section: "Rollout preview",
+        state: "PRINT_READY",
+      },
+      {
+        href: "/school-demo/import-preview",
+        note: "Local synthetic CSV preview; no upload.",
+        section: "Import preview",
+        state: "STOP_GATED",
+      },
+    ],
+    totals: {
+      generatedFiles: 0,
+      printJobWrites: 0,
+      productionDataCount: snapshot.boundary.productionDataCount,
+      realSchoolCount: snapshot.boundary.realSchoolCount,
+      serverRenderJobs: 0,
+      storageObjects: 0,
+    },
+  };
+}
+
 function buildClassDetail(
   snapshot: SchoolDemoSnapshot,
   classCode: string,
@@ -1643,6 +1798,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Class analytics";
     case "teacher-dashboard":
       return "Teacher dashboard";
+    case "print-pack":
+      return "Print pack";
     case "import-preview":
       return "Import preview";
     case "rollout":
@@ -1773,6 +1930,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       surface: "/school-demo/teacher-dashboard",
     },
     {
+      actionLabel: "Open print pack",
+      href: "/school-demo/print-pack",
+      key: "print-pack",
+      label: "Print pack",
+      note: "Open the browser-print pack for a meeting, screenshot or projector handoff without creating any generated file.",
+      surface: "/school-demo/print-pack",
+    },
+    {
       actionLabel: "Open import preview",
       href: "/school-demo/import-preview",
       key: "import-preview",
@@ -1814,7 +1979,7 @@ function renderGuidedWalkthrough({
       createElement(
         "p",
         { className: "school-demo-guided-lead" },
-        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, review rubric, class analytics, teacher dashboard, import preview and rollout preview.",
+        "Presentation script: use this sequence to present the synthetic school demo in order: overview, classes, teacher assignments, license / entitlements, compact summary, handoff pack, pilot checklist, pilot config preview, assignment preview, delivery rehearsal, student preview, review queue, review rubric, class analytics, teacher dashboard, print pack, import preview and rollout preview.",
       ),
       createElement(
         "p",
@@ -4770,8 +4935,8 @@ export function SchoolDemoTeacherDashboardView({ snapshot }: SchoolDemoTeacherDa
     renderHeader({
       actionHref: "/school-demo/analytics",
       actionLabel: "Back to analytics",
-      secondaryActionHref: "/school-demo/import-preview",
-      secondaryActionLabel: "Import preview",
+      secondaryActionHref: "/school-demo/print-pack",
+      secondaryActionLabel: "Print pack",
       subtitle:
         "Read-only consolidated teacher dashboard for the synthetic school demo. It links existing demo surfaces without creating assignments, delivery, review or analytics records.",
       title: "School demo teacher dashboard",
@@ -4914,6 +5079,189 @@ export function SchoolDemoTeacherDashboardView({ snapshot }: SchoolDemoTeacherDa
                 href: "/school-demo/analytics",
               },
               "Open class analytics",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/print-pack",
+              },
+              "Open print pack",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/summary",
+              },
+              "Open compact summary",
+            ),
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoPrintPackView({ snapshot }: SchoolDemoPrintPackViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const preview = buildSchoolDemoPrintPackPreview(snapshot);
+
+  return createElement(
+    "main",
+    {
+      className:
+        "app-shell school-demo-shell school-demo-summary-shell school-demo-print-pack-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/teacher-dashboard",
+      actionLabel: "Back to teacher dashboard",
+      secondaryActionHref: "/school-demo/summary",
+      secondaryActionLabel: "Compact summary",
+      subtitle:
+        "Browser-print pack for the synthetic school demo. It keeps the meeting view compact without creating files, storage objects or server render jobs.",
+      title: "School demo print pack",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "print-pack",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Print pack metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Pack state", preview.packState, "Browser print only"),
+      renderMetric("Sections", preview.sectionRows.length, "Meeting pack"),
+      renderMetric("Classes", preview.classRows.length, "Grades 7-9"),
+      renderMetric("Generated files", preview.totals.generatedFiles, "Disabled"),
+      renderMetric("Server render jobs", preview.totals.serverRenderJobs, "Disabled"),
+      renderMetric("Storage objects", preview.totals.storageObjects, "Disabled"),
+      renderMetric("Production data", preview.totals.productionDataCount, "0 required"),
+      renderMetric("Real schools", preview.totals.realSchoolCount, "0 required"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid school-demo-print-pack-grid" },
+      renderPanel(
+        "school-demo-print-pack-cover",
+        "Print pack cover",
+        renderTable({
+          emptyLabel: "No print pack cover rows are available.",
+          headers: ["Field", "Value"],
+          rows: preview.boundaryRows.map((row) => ({
+            cells: [createElement("strong", { key: "label" }, row.label), row.value],
+            key: row.label,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-print-pack-sections",
+        "Printable sections",
+        renderTable({
+          emptyLabel: "No printable sections are available.",
+          headers: ["Section", "State", "Note", "Link"],
+          rows: preview.sectionRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "section" }, row.section),
+              row.state,
+              row.note,
+              createElement(
+                "a",
+                { className: "button-link school-demo-table-link", href: row.href, key: "link" },
+                "Open",
+              ),
+            ],
+            key: row.section,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-print-pack-class-snapshot",
+        "Class snapshot",
+        renderTable({
+          emptyLabel: "No class snapshot rows are available.",
+          headers: ["Class", "Grade", "Demo students", "Teachers", "Queue load"],
+          rows: preview.classRows.map((row) => ({
+            cells: [
+              createElement("strong", { key: "class" }, row.classCode),
+              row.gradeLevel,
+              row.enrolledStudents,
+              joinValues(row.teacherDemoCodes),
+              row.queueLoad,
+            ],
+            key: row.classCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-print-pack-output-counters",
+        "Output counters",
+        renderTable({
+          emptyLabel: "No output counters are available.",
+          headers: ["Counter", "Value"],
+          rows: [
+            ["Generated files", preview.totals.generatedFiles],
+            ["Print job writes", preview.totals.printJobWrites],
+            ["Server render jobs", preview.totals.serverRenderJobs],
+            ["Storage objects", preview.totals.storageObjects],
+            ["Production data", preview.totals.productionDataCount],
+            ["Real schools", preview.totals.realSchoolCount],
+          ].map(([label, value]) => ({
+            cells: [createElement("strong", { key: "label" }, label), value],
+            key: String(label),
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-print-pack-checklist",
+        "Print checklist",
+        renderTable({
+          emptyLabel: "No print checklist rows are available.",
+          headers: ["Item", "State"],
+          rows: preview.checklistRows.map((row) => ({
+            cells: [createElement("strong", { key: "item" }, row.item), row.state],
+            key: row.item,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-print-pack-boundary",
+        "Print pack boundary",
+        createElement(
+          "div",
+          { className: "school-demo-print-pack-boundary" },
+          renderList(preview.safetyChecklist),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/teacher-dashboard",
+              },
+              "Open teacher dashboard",
             ),
           ),
           createElement(

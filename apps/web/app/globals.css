@@ -1476,6 +1476,31 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   font-weight: 800;
 }
 
+.school-demo-print-pack-shell {
+  max-width: 1120px;
+}
+
+.school-demo-print-pack-grid {
+  align-items: start;
+}
+
+.school-demo-print-pack-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-print-pack-boundary p {
+  margin: 0;
+}
+
+.school-demo-print-pack-sections .school-demo-table td:first-child,
+.school-demo-print-pack-class-snapshot .school-demo-table td:first-child,
+.school-demo-print-pack-output-counters .school-demo-table td:first-child,
+.school-demo-print-pack-checklist .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:has(.school-demo-shell),
   .school-demo-shell,
@@ -1658,5 +1683,16 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
 
   .school-demo-summary-shell .school-demo-table {
     min-width: 0;
+  }
+
+  .school-demo-print-pack-shell .school-demo-theme-control,
+  .school-demo-print-pack-shell .school-demo-header-actions a,
+  .school-demo-print-pack-shell .school-demo-guided-walkthrough,
+  .school-demo-print-pack-shell .button-link {
+    display: none;
+  }
+
+  .school-demo-print-pack-shell {
+    max-width: none;
   }
 }
