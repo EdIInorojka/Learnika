@@ -1405,6 +1405,26 @@ body:has(.school-demo-shell[data-school-demo-theme="dark"]) {
   font-weight: 800;
 }
 
+.school-demo-assignment-readiness-grid {
+  align-items: start;
+}
+
+.school-demo-assignment-readiness-boundary {
+  display: grid;
+  gap: 12px;
+}
+
+.school-demo-assignment-readiness-boundary p {
+  margin: 0;
+}
+
+.school-demo-assignment-readiness-board .school-demo-table td:first-child,
+.school-demo-assignment-readiness-stop-gates .school-demo-table td:first-child,
+.school-demo-assignment-readiness-output-counters .school-demo-table td:first-child {
+  color: var(--school-demo-primary);
+  font-weight: 800;
+}
+
 .school-demo-delivery-preview-grid {
   align-items: start;
 }

@@ -61,6 +61,10 @@ interface SchoolDemoAssignmentPlanningViewProps {
   snapshot: SchoolDemoSnapshot;
 }
 
+interface SchoolDemoAssignmentReadinessViewProps {
+  snapshot: SchoolDemoSnapshot;
+}
+
 interface SchoolDemoDeliveryPreviewViewProps {
   snapshot: SchoolDemoSnapshot;
 }
@@ -153,6 +157,7 @@ type SchoolDemoGuidedWalkthroughStepKey =
   | "assignment-preview"
   | "assignment-drafts"
   | "assignment-planning"
+  | "assignment-readiness"
   | "delivery-preview"
   | "student-preview"
   | "review-queue"
@@ -175,6 +180,7 @@ const schoolDemoGuidedWalkthroughStepOrder: SchoolDemoGuidedWalkthroughStepKey[]
   "assignment-preview",
   "assignment-drafts",
   "assignment-planning",
+  "assignment-readiness",
   "delivery-preview",
   "student-preview",
   "review-queue",
@@ -328,6 +334,36 @@ export interface SchoolDemoAssignmentPlanningPreview {
     realSchoolCount: 0;
     targetCount: number;
     teacherCount: number;
+  };
+}
+
+export interface SchoolDemoAssignmentReadinessPreview {
+  blockedReasons: string[];
+  readinessRows: Array<{
+    assignmentCode: string;
+    classCode: string;
+    deliveryGate: "DISPLAY_ONLY" | "STOP_GATED" | "BLOCKED";
+    draftGate: "DISPLAY_ONLY" | "STOP_GATED" | "BLOCKED";
+    packageCode: string;
+    printGate: "DISPLAY_ONLY" | "STOP_GATED" | "BLOCKED";
+    reviewGate: "DISPLAY_ONLY" | "STOP_GATED" | "BLOCKED";
+    targetCount: number;
+    teacherDemoCode: string;
+  }>;
+  readinessState: "ASSIGNMENT_READINESS_READY" | "ASSIGNMENT_READINESS_BLOCKED";
+  safetyChecklist: string[];
+  stopGateRows: Array<{
+    gate: string;
+    note: string;
+    state: "STOP_GATED" | "DISPLAY_ONLY";
+  }>;
+  totals: {
+    draftCount: number;
+    launchWrites: 0;
+    productionDataCount: 0;
+    realSchoolCount: 0;
+    stopGates: number;
+    targetCount: number;
   };
 }
 
@@ -1197,6 +1233,72 @@ export function buildSchoolDemoAssignmentPlanningPreview(
       realSchoolCount: snapshot.boundary.realSchoolCount,
       targetCount: projection.totals.targetCount,
       teacherCount: teacherPlanRows.length,
+    },
+  };
+}
+
+export function buildSchoolDemoAssignmentReadinessPreview(
+  snapshot: SchoolDemoSnapshot,
+): SchoolDemoAssignmentReadinessPreview {
+  const projection = buildSchoolDemoPersistedAssignmentDraftsPreview(snapshot);
+  const planning = buildSchoolDemoAssignmentPlanningPreview(snapshot);
+  const blockedReasons = [...projection.blockedReasons, ...planning.blockedReasons].filter(
+    (reason, index, allReasons) => allReasons.indexOf(reason) === index,
+  );
+  const rowState = blockedReasons.length === 0 ? ("DISPLAY_ONLY" as const) : ("BLOCKED" as const);
+  const readinessRows = projection.draftRows.map((draft) => ({
+    assignmentCode: draft.assignmentCode,
+    classCode: draft.classCode,
+    deliveryGate: rowState,
+    draftGate: rowState,
+    packageCode: draft.packageCode,
+    printGate: rowState,
+    reviewGate: rowState,
+    targetCount: draft.targetCount,
+    teacherDemoCode: draft.teacherDemoCode,
+  }));
+  const stopGateRows = [
+    {
+      gate: "Real publication",
+      note: "Named school beta gates must approve real launch before any assignment can be published.",
+      state: "STOP_GATED" as const,
+    },
+    {
+      gate: "Learner delivery",
+      note: "Delivery rehearsal remains display-only and cannot create learner records.",
+      state: "STOP_GATED" as const,
+    },
+    {
+      gate: "Teacher decisions",
+      note: "Review queue and rubric surfaces show no scores, grades or teacher decision writes.",
+      state: "STOP_GATED" as const,
+    },
+    {
+      gate: "Print outputs",
+      note: "Browser print pack creates no generated files, storage objects or server jobs.",
+      state: "DISPLAY_ONLY" as const,
+    },
+  ];
+
+  return {
+    blockedReasons,
+    readinessRows,
+    readinessState:
+      blockedReasons.length === 0 ? "ASSIGNMENT_READINESS_READY" : "ASSIGNMENT_READINESS_BLOCKED",
+    safetyChecklist: [
+      "Launch readiness board reads seeded synthetic draft metadata only.",
+      "Every gate is display-only or stop-gated; no launch action is available.",
+      "No learner work, scores, grades, teacher decisions or production records are created.",
+      "Real school launch waits for business, legal, security and tenant approvals.",
+    ],
+    stopGateRows,
+    totals: {
+      draftCount: readinessRows.length,
+      launchWrites: 0,
+      productionDataCount: snapshot.boundary.productionDataCount,
+      realSchoolCount: snapshot.boundary.realSchoolCount,
+      stopGates: stopGateRows.filter((row) => row.state === "STOP_GATED").length,
+      targetCount: projection.totals.targetCount,
     },
   };
 }
@@ -2117,6 +2219,8 @@ function getSchoolDemoGuidedWalkthroughStepLabel(step: SchoolDemoGuidedWalkthrou
       return "Assignment draft rows";
     case "assignment-planning":
       return "Assignment planning board";
+    case "assignment-readiness":
+      return "Assignment launch readiness";
     case "delivery-preview":
       return "Delivery rehearsal";
     case "student-preview":
@@ -2227,6 +2331,14 @@ function buildGuidedWalkthroughSteps(): SchoolDemoGuidedWalkthroughStep[] {
       label: "Assignment planning board",
       note: "Group synthetic draft rows by class and teacher so a school can see the planning flow before real publication gates.",
       surface: "/school-demo/assignment-planning",
+    },
+    {
+      actionLabel: "Open readiness board",
+      href: "/school-demo/assignment-readiness",
+      key: "assignment-readiness",
+      label: "Assignment launch readiness",
+      note: "Check each synthetic draft against delivery, review and print stop gates without enabling real launch.",
+      surface: "/school-demo/assignment-readiness",
     },
     {
       actionLabel: "Open delivery rehearsal",
@@ -3748,9 +3860,9 @@ export function SchoolDemoAssignmentPreviewView({
               "a",
               {
                 className: "button-link school-demo-secondary-link",
-                href: "/school-demo/assignment-planning",
+                href: "/school-demo/assignment-readiness",
               },
-              "Open planning board",
+              "Open launch readiness",
             ),
           ),
           createElement(
@@ -3955,6 +4067,18 @@ export function SchoolDemoAssignmentDraftsView({ snapshot }: SchoolDemoAssignmen
                 href: "/school-demo/delivery-preview",
               },
               "Open delivery rehearsal",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/assignment-readiness",
+              },
+              "Open launch readiness",
             ),
           ),
           createElement(
@@ -4307,6 +4431,174 @@ export function SchoolDemoAssignmentPlanningView({
                 href: "/school-demo/print-pack",
               },
               "Open print pack",
+            ),
+          ),
+        ),
+        true,
+      ),
+    ),
+  );
+}
+
+export function SchoolDemoAssignmentReadinessView({
+  snapshot,
+}: SchoolDemoAssignmentReadinessViewProps) {
+  const classOverviews = buildClassOverviews(snapshot);
+  const guidedClassCode = classOverviews[0]?.code;
+  const preview = buildSchoolDemoAssignmentReadinessPreview(snapshot);
+
+  return createElement(
+    "main",
+    {
+      className: "app-shell school-demo-shell school-demo-summary-shell",
+      "data-school-demo-theme": "light",
+      "data-school-demo-transition": "idle",
+    },
+    renderHeader({
+      actionHref: "/school-demo/assignment-planning",
+      actionLabel: "Back to planning board",
+      secondaryActionHref: "/school-demo/delivery-preview",
+      secondaryActionLabel: "Delivery rehearsal",
+      subtitle:
+        "Read-only launch readiness board for synthetic assignment drafts. It shows stop gates for delivery, review and print without enabling real publication.",
+      title: "School demo assignment launch readiness",
+    }),
+    renderStatusStrip(snapshot),
+    renderGuidedWalkthrough({
+      activeStep: "assignment-readiness",
+      classCode: guidedClassCode,
+      snapshot,
+    }),
+    createElement(
+      "section",
+      {
+        "aria-label": "Assignment readiness metrics",
+        className: "school-demo-compact-kpi-grid",
+      },
+      renderMetric("Readiness state", preview.readinessState, "Display-only"),
+      renderMetric("Drafts", preview.totals.draftCount, "Seeded rows"),
+      renderMetric("Targets", preview.totals.targetCount, "Demo student codes"),
+      renderMetric("Stop gates", preview.totals.stopGates, "Real launch blocked"),
+      renderMetric("Launch writes", preview.totals.launchWrites, "Disabled"),
+      renderMetric("Production data", preview.totals.productionDataCount, "Must stay zero"),
+      renderMetric("Real schools", preview.totals.realSchoolCount, "Must stay zero"),
+    ),
+    createElement(
+      "div",
+      { className: "school-demo-summary-grid school-demo-assignment-readiness-grid" },
+      renderPanel(
+        "school-demo-assignment-readiness-board",
+        "Launch readiness board",
+        renderTable({
+          emptyLabel: "No assignment readiness rows are available.",
+          headers: ["Draft", "Class", "Teacher", "Targets", "Delivery", "Review", "Print"],
+          rows: preview.readinessRows.map((row) => ({
+            cells: [
+              createElement(
+                "a",
+                {
+                  className: "button-link school-demo-secondary-link",
+                  href: `/school-demo/assignment-drafts/${encodeURIComponent(row.assignmentCode)}`,
+                  key: "draft",
+                },
+                row.assignmentCode,
+              ),
+              row.classCode,
+              row.teacherDemoCode,
+              row.targetCount,
+              row.deliveryGate,
+              row.reviewGate,
+              row.printGate,
+            ],
+            key: row.assignmentCode,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-assignment-readiness-stop-gates",
+        "Stop-gated launch checks",
+        renderTable({
+          emptyLabel: "No stop-gated launch checks are available.",
+          headers: ["Gate", "State", "Note"],
+          rows: preview.stopGateRows.map((row) => ({
+            cells: [createElement("strong", { key: "gate" }, row.gate), row.state, row.note],
+            key: row.gate,
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-assignment-readiness-output-counters",
+        "Launch output counters",
+        renderTable({
+          emptyLabel: "No launch output counters are available.",
+          headers: ["Counter", "Value"],
+          rows: [
+            ["Launch writes", preview.totals.launchWrites],
+            ["Production data", preview.totals.productionDataCount],
+            ["Real schools", preview.totals.realSchoolCount],
+            ["Stop gates", preview.totals.stopGates],
+          ].map(([label, value]) => ({
+            cells: [createElement("strong", { key: "label" }, label), value],
+            key: String(label),
+          })),
+        }),
+        true,
+      ),
+      renderPanel(
+        "school-demo-assignment-readiness-blockers",
+        "Blocked reasons",
+        preview.blockedReasons.length > 0
+          ? renderList(preview.blockedReasons)
+          : createElement(
+              "p",
+              { className: "school-demo-muted" },
+              "No local readiness blockers. Real launch still remains blocked by school beta gates.",
+            ),
+        true,
+      ),
+      renderPanel(
+        "school-demo-assignment-readiness-boundary",
+        "Launch readiness boundary",
+        createElement(
+          "div",
+          { className: "school-demo-assignment-readiness-boundary" },
+          renderList(preview.safetyChecklist),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/assignment-planning",
+              },
+              "Open planning board",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/delivery-preview",
+              },
+              "Open delivery rehearsal",
+            ),
+          ),
+          createElement(
+            "p",
+            null,
+            createElement(
+              "a",
+              {
+                className: "button-link school-demo-secondary-link",
+                href: "/school-demo/review-queue",
+              },
+              "Open review queue",
             ),
           ),
         ),
